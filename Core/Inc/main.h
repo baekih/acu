@@ -59,8 +59,30 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define MCU_LCD_SCL_Pin GPIO_PIN_8
 #define MCU_LCD_SCL_GPIO_Port GPIOB
+#define MCU_KEY4_Pin GPIO_PIN_12
+#define MCU_KEY4_GPIO_Port GPIOC
 #define MCU_LCD_SDA_Pin GPIO_PIN_9
 #define MCU_LCD_SDA_GPIO_Port GPIOB
+#define MCU_KEY3_Pin GPIO_PIN_11
+#define MCU_KEY3_GPIO_Port GPIOC
+#define MCU_KEY2_Pin GPIO_PIN_10
+#define MCU_KEY2_GPIO_Port GPIOC
+#define MCU_PWR_SW_Pin GPIO_PIN_13
+#define MCU_PWR_SW_GPIO_Port GPIOC
+#define MCU_KEY1_Pin GPIO_PIN_8
+#define MCU_KEY1_GPIO_Port GPIOC
+#define PWR_HOLD_Pin GPIO_PIN_6
+#define PWR_HOLD_GPIO_Port GPIOC
+#define LCD_INT_Pin GPIO_PIN_4
+#define LCD_INT_GPIO_Port GPIOA
+#define nTOUCH_RST_Pin GPIO_PIN_5
+#define nTOUCH_RST_GPIO_Port GPIOA
+#define nLCD_RST_Pin GPIO_PIN_3
+#define nLCD_RST_GPIO_Port GPIOA
+#define DBG_TX_Pin GPIO_PIN_14
+#define DBG_TX_GPIO_Port GPIOB
+#define DBG_RX_Pin GPIO_PIN_15
+#define DBG_RX_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
