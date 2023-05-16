@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>fi-din</name>
+	<name>fi-din-767</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -29,12 +29,13 @@
 		<nature>com.st.stm32cube.ide.mcu.MCURootProjectNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
 	</natures>
 	<linkedResources>
 		<link>
-			<name>fi-din.ioc</name>
+			<name>fi-din-767.ioc</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/fi-din.ioc</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/fi-din-767.ioc</locationURI>
 		</link>
 		<link>
 			<name>Drivers/CMSIS/system_stm32f7xx.c</name>
