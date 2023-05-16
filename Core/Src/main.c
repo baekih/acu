@@ -26,6 +26,7 @@
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
+typedef StaticQueue_t osStaticMessageQDef_t;
 /* USER CODE BEGIN PTD */
 
 /* USER CODE END PTD */
@@ -68,6 +69,67 @@ const osThreadAttr_t defaultTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for EcoTask01 */
+osThreadId_t EcoTask01Handle;
+const osThreadAttr_t EcoTask01_attributes = {
+  .name = "EcoTask01",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for EcoTaskUART */
+osThreadId_t EcoTaskUARTHandle;
+const osThreadAttr_t EcoTaskUART_attributes = {
+  .name = "EcoTaskUART",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for EcoTaskNMEA2KRx */
+osThreadId_t EcoTaskNMEA2KRxHandle;
+const osThreadAttr_t EcoTaskNMEA2KRx_attributes = {
+  .name = "EcoTaskNMEA2KRx",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for EcoTaskNMEA2KTx */
+osThreadId_t EcoTaskNMEA2KTxHandle;
+const osThreadAttr_t EcoTaskNMEA2KTx_attributes = {
+  .name = "EcoTaskNMEA2KTx",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for EcoQueueUART1 */
+osMessageQueueId_t EcoQueueUART1Handle;
+uint8_t EcoQueueUART1Buffer[ 256 * sizeof( uint8_t ) ];
+osStaticMessageQDef_t EcoQueueUART1CtrlBlock;
+const osMessageQueueAttr_t EcoQueueUART1_attributes = {
+  .name = "EcoQueueUART1",
+  .cb_mem = &EcoQueueUART1CtrlBlock,
+  .cb_size = sizeof(EcoQueueUART1CtrlBlock),
+  .mq_mem = &EcoQueueUART1Buffer,
+  .mq_size = sizeof(EcoQueueUART1Buffer)
+};
+/* Definitions for EcoQueueNMEA2KRX1 */
+osMessageQueueId_t EcoQueueNMEA2KRX1Handle;
+uint8_t EcoQueueNMEA2KRX1Buffer[ 32 * sizeof( uint8_t ) ];
+osStaticMessageQDef_t EcoQueueNMEA2KRX1CtrlBlock;
+const osMessageQueueAttr_t EcoQueueNMEA2KRX1_attributes = {
+  .name = "EcoQueueNMEA2KRX1",
+  .cb_mem = &EcoQueueNMEA2KRX1CtrlBlock,
+  .cb_size = sizeof(EcoQueueNMEA2KRX1CtrlBlock),
+  .mq_mem = &EcoQueueNMEA2KRX1Buffer,
+  .mq_size = sizeof(EcoQueueNMEA2KRX1Buffer)
+};
+/* Definitions for EcoQueueNMEA2KTX1 */
+osMessageQueueId_t EcoQueueNMEA2KTX1Handle;
+uint8_t EcoQueueNMEA2KTX1Buffer[ 256 * sizeof( uint8_t ) ];
+osStaticMessageQDef_t EcoQueueNMEA2KTX1CtrlBlock;
+const osMessageQueueAttr_t EcoQueueNMEA2KTX1_attributes = {
+  .name = "EcoQueueNMEA2KTX1",
+  .cb_mem = &EcoQueueNMEA2KTX1CtrlBlock,
+  .cb_size = sizeof(EcoQueueNMEA2KTX1CtrlBlock),
+  .mq_mem = &EcoQueueNMEA2KTX1Buffer,
+  .mq_size = sizeof(EcoQueueNMEA2KTX1Buffer)
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -87,6 +149,10 @@ static void MX_TIM3_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
 void StartDefaultTask(void *argument);
+extern void runEcoTask01(void *argument);
+extern void runEcoTaskUART(void *argument);
+extern void runEcoTaskNMEA2KRx(void *argument);
+extern void runEcoTaskNMEA2KTx(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -161,6 +227,16 @@ int main(void)
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
+  /* Create the queue(s) */
+  /* creation of EcoQueueUART1 */
+  EcoQueueUART1Handle = osMessageQueueNew (256, sizeof(uint8_t), &EcoQueueUART1_attributes);
+
+  /* creation of EcoQueueNMEA2KRX1 */
+  EcoQueueNMEA2KRX1Handle = osMessageQueueNew (32, sizeof(uint8_t), &EcoQueueNMEA2KRX1_attributes);
+
+  /* creation of EcoQueueNMEA2KTX1 */
+  EcoQueueNMEA2KTX1Handle = osMessageQueueNew (256, sizeof(uint8_t), &EcoQueueNMEA2KTX1_attributes);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -168,6 +244,18 @@ int main(void)
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* creation of EcoTask01 */
+  EcoTask01Handle = osThreadNew(runEcoTask01, NULL, &EcoTask01_attributes);
+
+  /* creation of EcoTaskUART */
+  EcoTaskUARTHandle = osThreadNew(runEcoTaskUART, NULL, &EcoTaskUART_attributes);
+
+  /* creation of EcoTaskNMEA2KRx */
+  EcoTaskNMEA2KRxHandle = osThreadNew(runEcoTaskNMEA2KRx, NULL, &EcoTaskNMEA2KRx_attributes);
+
+  /* creation of EcoTaskNMEA2KTx */
+  EcoTaskNMEA2KTxHandle = osThreadNew(runEcoTaskNMEA2KTx, NULL, &EcoTaskNMEA2KTx_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
