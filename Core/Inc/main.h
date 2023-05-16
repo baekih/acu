@@ -49,6 +49,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -57,10 +59,20 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define QSPI_BK1_CSn_Pin GPIO_PIN_4
+#define QSPI_BK1_CSn_GPIO_Port GPIOE
+#define MCU_SDRAM_DQMH_Pin GPIO_PIN_1
+#define MCU_SDRAM_DQMH_GPIO_Port GPIOE
+#define MCU_SDRAM_DQML_Pin GPIO_PIN_0
+#define MCU_SDRAM_DQML_GPIO_Port GPIOE
 #define MCU_LCD_SCL_Pin GPIO_PIN_8
 #define MCU_LCD_SCL_GPIO_Port GPIOB
+#define LCD_ON_PWM_Pin GPIO_PIN_3
+#define LCD_ON_PWM_GPIO_Port GPIOB
 #define MCU_KEY4_Pin GPIO_PIN_12
 #define MCU_KEY4_GPIO_Port GPIOC
+#define WDI_Pin GPIO_PIN_15
+#define WDI_GPIO_Port GPIOA
 #define MCU_LCD_SDA_Pin GPIO_PIN_9
 #define MCU_LCD_SDA_GPIO_Port GPIOB
 #define MCU_KEY3_Pin GPIO_PIN_11
@@ -69,16 +81,28 @@ void Error_Handler(void);
 #define MCU_KEY2_GPIO_Port GPIOC
 #define MCU_PWR_SW_Pin GPIO_PIN_13
 #define MCU_PWR_SW_GPIO_Port GPIOC
+#define MCU_CAN_STB_Pin GPIO_PIN_10
+#define MCU_CAN_STB_GPIO_Port GPIOA
+#define LCD_LEFTRIGHT_Pin GPIO_PIN_9
+#define LCD_LEFTRIGHT_GPIO_Port GPIOA
+#define LCD_UPDN_Pin GPIO_PIN_8
+#define LCD_UPDN_GPIO_Port GPIOA
 #define MCU_KEY1_Pin GPIO_PIN_8
 #define MCU_KEY1_GPIO_Port GPIOC
 #define PWR_HOLD_Pin GPIO_PIN_6
 #define PWR_HOLD_GPIO_Port GPIOC
 #define LCD_INT_Pin GPIO_PIN_4
 #define LCD_INT_GPIO_Port GPIOA
-#define nTOUCH_RST_Pin GPIO_PIN_5
-#define nTOUCH_RST_GPIO_Port GPIOA
-#define nLCD_RST_Pin GPIO_PIN_3
-#define nLCD_RST_GPIO_Port GPIOA
+#define LCD_STBY_Pin GPIO_PIN_2
+#define LCD_STBY_GPIO_Port GPIOA
+#define TOUCH_RSTn_Pin GPIO_PIN_5
+#define TOUCH_RSTn_GPIO_Port GPIOA
+#define LCD_RSTn_Pin GPIO_PIN_3
+#define LCD_RSTn_GPIO_Port GPIOA
+#define LCD_BL_CTL_Pin GPIO_PIN_7
+#define LCD_BL_CTL_GPIO_Port GPIOA
+#define BUZZER_ON_PWM_Pin GPIO_PIN_0
+#define BUZZER_ON_PWM_GPIO_Port GPIOB
 #define DBG_TX_Pin GPIO_PIN_14
 #define DBG_TX_GPIO_Port GPIOB
 #define DBG_RX_Pin GPIO_PIN_15
