@@ -67,14 +67,14 @@ void Error_Handler(void);
 #define MCU_SDRAM_DQML_GPIO_Port GPIOE
 #define MCU_LCD_SCL_Pin GPIO_PIN_8
 #define MCU_LCD_SCL_GPIO_Port GPIOB
-#define LCD_ON_PWM_Pin GPIO_PIN_3
-#define LCD_ON_PWM_GPIO_Port GPIOB
 #define MCU_KEY4_Pin GPIO_PIN_12
 #define MCU_KEY4_GPIO_Port GPIOC
 #define WDI_Pin GPIO_PIN_15
 #define WDI_GPIO_Port GPIOA
 #define MCU_LCD_SDA_Pin GPIO_PIN_9
 #define MCU_LCD_SDA_GPIO_Port GPIOB
+#define LCD_ON_PWM_Pin GPIO_PIN_7
+#define LCD_ON_PWM_GPIO_Port GPIOB
 #define MCU_KEY3_Pin GPIO_PIN_11
 #define MCU_KEY3_GPIO_Port GPIOC
 #define MCU_KEY2_Pin GPIO_PIN_10
