@@ -15,6 +15,7 @@
 
 #include "cmsis_os.h"
 #include "main.h"
+#include "printf.h"
 //#include "stm32f769i_fi-din_lcd.h"
 
 #pragma pack(push,1)

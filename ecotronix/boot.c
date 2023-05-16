@@ -9,9 +9,6 @@
 #include "common.h"
 #include "boot.h"
 #include "nmea2k.h"
-//#include "fonts.h"
-
-uint8_t err_msg[128];
 
 void runEcoTask01(void *argument)
 {
