@@ -61,6 +61,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define QSPI_BK1_CSn_Pin GPIO_PIN_4
 #define QSPI_BK1_CSn_GPIO_Port GPIOE
+#define BUZZER_ON_Pin GPIO_PIN_3
+#define BUZZER_ON_GPIO_Port GPIOE
+#define LED_ON_Pin GPIO_PIN_2
+#define LED_ON_GPIO_Port GPIOE
 #define MCU_SDRAM_DQMH_Pin GPIO_PIN_1
 #define MCU_SDRAM_DQMH_GPIO_Port GPIOE
 #define MCU_SDRAM_DQML_Pin GPIO_PIN_0

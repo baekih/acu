@@ -243,3 +243,13 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
     }
 }
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+//	printf("%s() Enter...\n",__FUNCTION__);
+	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY1_GPIO_Port, MCU_KEY1_Pin)) printf("MCU_KEY1 pressed\n");
+	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY2_GPIO_Port, MCU_KEY2_Pin)) printf("MCU_KEY2 pressed\n");
+	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY3_GPIO_Port, MCU_KEY3_Pin)) printf("MCU_KEY3 pressed\n");
+	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY4_GPIO_Port, MCU_KEY4_Pin)) printf("MCU_KEY4 pressed\n");
+	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin)) printf("MCU_PWR pressed\n");
+}

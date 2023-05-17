@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "printf.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,6 +56,7 @@ QSPI_HandleTypeDef hqspi;
 
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim7;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -148,6 +149,7 @@ static void MX_LTDC_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
+static void MX_TIM7_Init(void);
 void StartDefaultTask(void *argument);
 extern void runEcoTask01(void *argument);
 extern void runEcoTaskUART(void *argument);
@@ -208,6 +210,7 @@ int main(void)
   MX_TIM3_Init();
   MX_USART2_UART_Init();
   MX_TIM4_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -579,7 +582,7 @@ static void MX_QUADSPI_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN QUADSPI_Init 2 */
-
+//  EcoQSPIInit();
   /* USER CODE END QUADSPI_Init 2 */
 
 }
@@ -699,6 +702,44 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 2 */
   HAL_TIM_MspPostInit(&htim4);
+
+}
+
+/**
+  * @brief TIM7 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM7_Init(void)
+{
+
+  /* USER CODE BEGIN TIM7_Init 0 */
+
+  /* USER CODE END TIM7_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM7_Init 1 */
+
+  /* USER CODE END TIM7_Init 1 */
+  htim7.Instance = TIM7;
+  htim7.Init.Prescaler = 10800-1;
+  htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim7.Init.Period = 10000-1;
+  htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM7_Init 2 */
+  HAL_TIM_Base_Start_IT(&htim7);
+  /* USER CODE END TIM7_Init 2 */
 
 }
 
@@ -844,7 +885,8 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, QSPI_BK1_CSn_Pin|MCU_SDRAM_DQMH_Pin|MCU_SDRAM_DQML_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, QSPI_BK1_CSn_Pin|BUZZER_ON_Pin|LED_ON_Pin|MCU_SDRAM_DQMH_Pin
+                          |MCU_SDRAM_DQML_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_LEFTRIGHT_Pin|LCD_UPDN_Pin
@@ -853,12 +895,19 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PWR_HOLD_GPIO_Port, PWR_HOLD_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : QSPI_BK1_CSn_Pin MCU_SDRAM_DQMH_Pin MCU_SDRAM_DQML_Pin */
-  GPIO_InitStruct.Pin = QSPI_BK1_CSn_Pin|MCU_SDRAM_DQMH_Pin|MCU_SDRAM_DQML_Pin;
+  /*Configure GPIO pins : QSPI_BK1_CSn_Pin LED_ON_Pin MCU_SDRAM_DQMH_Pin MCU_SDRAM_DQML_Pin */
+  GPIO_InitStruct.Pin = QSPI_BK1_CSn_Pin|LED_ON_Pin|MCU_SDRAM_DQMH_Pin|MCU_SDRAM_DQML_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : BUZZER_ON_Pin */
+  GPIO_InitStruct.Pin = BUZZER_ON_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(BUZZER_ON_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : MCU_KEY4_Pin MCU_KEY3_Pin MCU_KEY2_Pin MCU_PWR_SW_Pin
                            MCU_KEY1_Pin */
@@ -943,6 +992,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+  if (htim->Instance == TIM7)
+  {
+//	printf("TIM7\n");
+  }
 
   /* USER CODE END Callback 1 */
 }

@@ -36,6 +36,7 @@ typedef struct __TxProtocol
 
 extern UART_HandleTypeDef huart1;
 extern CAN_HandleTypeDef hcan1;
+extern QSPI_HandleTypeDef hqspi;
 extern osMessageQueueId_t EcoQueueUART1Handle;
 extern osMessageQueueId_t EcoQueueNMEA2KRX1Handle;
 extern osMessageQueueId_t EcoQueueNMEA2KTX1Handle;
@@ -43,5 +44,7 @@ extern const osMessageQueueAttr_t EcoQueueNMEA2KRX1_attributes;
 
 void EcoQueuePut(osMessageQueueId_t handle, uint8_t* pbuf, uint8_t len);
 void EcoQueueWait(osMessageQueueId_t handle, uint8_t* pbuf, uint8_t len);
+void EcoQSPIInit(void);
+
 
 #endif /* APPLICATION_USER_ECOTRONIX_INC_COMMON_H_ */
