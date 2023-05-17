@@ -59,8 +59,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define QSPI_BK1_CSn_Pin GPIO_PIN_4
-#define QSPI_BK1_CSn_GPIO_Port GPIOE
 #define BUZZER_ON_Pin GPIO_PIN_3
 #define BUZZER_ON_GPIO_Port GPIOE
 #define LED_ON_Pin GPIO_PIN_2
@@ -91,10 +89,10 @@ void Error_Handler(void);
 #define MCU_PWR_SW_EXTI_IRQn EXTI15_10_IRQn
 #define MCU_CAN_STB_Pin GPIO_PIN_10
 #define MCU_CAN_STB_GPIO_Port GPIOA
-#define LCD_LEFTRIGHT_Pin GPIO_PIN_9
-#define LCD_LEFTRIGHT_GPIO_Port GPIOA
-#define LCD_UPDN_Pin GPIO_PIN_8
-#define LCD_UPDN_GPIO_Port GPIOA
+#define LCD_LR_Pin GPIO_PIN_9
+#define LCD_LR_GPIO_Port GPIOA
+#define LCD_UD_Pin GPIO_PIN_8
+#define LCD_UD_GPIO_Port GPIOA
 #define MCU_KEY1_Pin GPIO_PIN_8
 #define MCU_KEY1_GPIO_Port GPIOC
 #define MCU_KEY1_EXTI_IRQn EXTI9_5_IRQn

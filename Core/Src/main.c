@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "printf.h"
+#include "common.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -582,7 +582,7 @@ static void MX_QUADSPI_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN QUADSPI_Init 2 */
-//  EcoQSPIInit();
+  EcoQSPIInit();
   /* USER CODE END QUADSPI_Init 2 */
 
 }
@@ -885,22 +885,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, QSPI_BK1_CSn_Pin|BUZZER_ON_Pin|LED_ON_Pin|MCU_SDRAM_DQMH_Pin
-                          |MCU_SDRAM_DQML_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin|MCU_SDRAM_DQMH_Pin|MCU_SDRAM_DQML_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_LEFTRIGHT_Pin|LCD_UPDN_Pin
+  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
                           |LCD_STBY_Pin|TOUCH_RSTn_Pin|LCD_RSTn_Pin|LCD_BL_CTL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PWR_HOLD_GPIO_Port, PWR_HOLD_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pins : QSPI_BK1_CSn_Pin LED_ON_Pin MCU_SDRAM_DQMH_Pin MCU_SDRAM_DQML_Pin */
-  GPIO_InitStruct.Pin = QSPI_BK1_CSn_Pin|LED_ON_Pin|MCU_SDRAM_DQMH_Pin|MCU_SDRAM_DQML_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BUZZER_ON_Pin */
   GPIO_InitStruct.Pin = BUZZER_ON_Pin;
@@ -908,6 +900,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(BUZZER_ON_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : LED_ON_Pin MCU_SDRAM_DQMH_Pin MCU_SDRAM_DQML_Pin */
+  GPIO_InitStruct.Pin = LED_ON_Pin|MCU_SDRAM_DQMH_Pin|MCU_SDRAM_DQML_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : MCU_KEY4_Pin MCU_KEY3_Pin MCU_KEY2_Pin MCU_PWR_SW_Pin
                            MCU_KEY1_Pin */
@@ -917,9 +916,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : WDI_Pin MCU_CAN_STB_Pin LCD_LEFTRIGHT_Pin LCD_UPDN_Pin
+  /*Configure GPIO pins : WDI_Pin MCU_CAN_STB_Pin LCD_LR_Pin LCD_UD_Pin
                            LCD_STBY_Pin TOUCH_RSTn_Pin LCD_RSTn_Pin LCD_BL_CTL_Pin */
-  GPIO_InitStruct.Pin = WDI_Pin|MCU_CAN_STB_Pin|LCD_LEFTRIGHT_Pin|LCD_UPDN_Pin
+  GPIO_InitStruct.Pin = WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
                           |LCD_STBY_Pin|TOUCH_RSTn_Pin|LCD_RSTn_Pin|LCD_BL_CTL_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
