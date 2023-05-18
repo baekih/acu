@@ -512,14 +512,14 @@ static void MX_LTDC_Init(void)
   hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AL;
   hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
   hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;
-  hltdc.Init.HorizontalSync = 0;
-  hltdc.Init.VerticalSync = 0;
-  hltdc.Init.AccumulatedHBP = 1;
-  hltdc.Init.AccumulatedVBP = 1;
-  hltdc.Init.AccumulatedActiveW = 801;
-  hltdc.Init.AccumulatedActiveH = 481;
-  hltdc.Init.TotalWidth = 802;
-  hltdc.Init.TotalHeigh = 482;
+  hltdc.Init.HorizontalSync = 9;
+  hltdc.Init.VerticalSync = 2;
+  hltdc.Init.AccumulatedHBP = 19;
+  hltdc.Init.AccumulatedVBP = 5;
+  hltdc.Init.AccumulatedActiveW = 819;
+  hltdc.Init.AccumulatedActiveH = 485;
+  hltdc.Init.TotalWidth = 829;
+  hltdc.Init.TotalHeigh = 488;
   hltdc.Init.Backcolor.Blue = 0;
   hltdc.Init.Backcolor.Green = 0;
   hltdc.Init.Backcolor.Red = 0;
@@ -889,10 +889,13 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
-                          |LCD_STBY_Pin|TOUCH_RSTn_Pin|LCD_RSTn_Pin|LCD_BL_CTL_Pin, GPIO_PIN_RESET);
+                          |LCD_STBY_Pin|TOUCH_RSTn_Pin|LCD_BL_CTL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PWR_HOLD_GPIO_Port, PWR_HOLD_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : BUZZER_ON_Pin */
   GPIO_InitStruct.Pin = BUZZER_ON_Pin;

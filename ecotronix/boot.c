@@ -22,6 +22,8 @@ void runEcoTask01(void *argument)
         sprintf((char*)print_buf, "%07ld:\n", ++timer_sec_1);
         printf("%s", print_buf);
 
+//        HAL_GPIO_TogglePin(TOUCH_RSTn_GPIO_Port, TOUCH_RSTn_Pin);
+
         osDelayUntil(tick);
     }
 }
