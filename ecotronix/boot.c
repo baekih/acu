@@ -18,11 +18,13 @@ void runEcoTask01(void *argument)
     /* Infinite loop */
     for(;;)
     {
-        tick += 1000;
-        sprintf((char*)print_buf, "%07ld:\n", ++timer_sec_1);
-        printf("%s", print_buf);
-
-//        HAL_GPIO_TogglePin(TOUCH_RSTn_GPIO_Port, TOUCH_RSTn_Pin);
+        tick += 100;
+        HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
+        if(tick%1000 == 0)
+        {
+            sprintf((char*)print_buf, "%07ld:\n", ++timer_sec_1);
+            printf("%s", print_buf);
+        }
 
         osDelayUntil(tick);
     }
