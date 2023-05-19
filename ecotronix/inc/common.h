@@ -34,7 +34,7 @@ typedef struct __TxProtocol
 } TxProtocol ;
 #pragma pack(pop)
 
-extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
 extern QSPI_HandleTypeDef hqspi;
 extern osMessageQueueId_t EcoQueueUART1Handle;

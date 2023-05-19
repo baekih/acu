@@ -24,6 +24,7 @@ void runEcoTask01(void *argument)
         {
             sprintf((char*)print_buf, "%07ld:\n", ++timer_sec_1);
             printf("%s", print_buf);
+            HAL_UART_Transmit_IT(&huart2, print_buf, strlen((char*)print_buf));
         }
 
         osDelayUntil(tick);
