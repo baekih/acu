@@ -839,6 +839,8 @@ static void MX_FMC_Init(void)
 {
 
   /* USER CODE BEGIN FMC_Init 0 */
+  FMC_SDRAM_CommandTypeDef Command;
+  DMA_HandleTypeDef dma_handle;
 
   /* USER CODE END FMC_Init 0 */
 
@@ -853,22 +855,22 @@ static void MX_FMC_Init(void)
   hsdram1.Instance = FMC_SDRAM_DEVICE;
   /* hsdram1.Init */
   hsdram1.Init.SDBank = FMC_SDRAM_BANK1;
-  hsdram1.Init.ColumnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_8;
+  hsdram1.Init.ColumnBitsNumber = FMC_SDRAM_COLUMN_BITS_NUM_9;
   hsdram1.Init.RowBitsNumber = FMC_SDRAM_ROW_BITS_NUM_12;
   hsdram1.Init.MemoryDataWidth = FMC_SDRAM_MEM_BUS_WIDTH_16;
   hsdram1.Init.InternalBankNumber = FMC_SDRAM_INTERN_BANKS_NUM_4;
   hsdram1.Init.CASLatency = FMC_SDRAM_CAS_LATENCY_3;
-  hsdram1.Init.WriteProtection = FMC_SDRAM_WRITE_PROTECTION_ENABLE;
+  hsdram1.Init.WriteProtection = FMC_SDRAM_WRITE_PROTECTION_DISABLE;
   hsdram1.Init.SDClockPeriod = FMC_SDRAM_CLOCK_PERIOD_2;
   hsdram1.Init.ReadBurst = FMC_SDRAM_RBURST_ENABLE;
   hsdram1.Init.ReadPipeDelay = FMC_SDRAM_RPIPE_DELAY_0;
   /* SdramTiming */
   SdramTiming.LoadToActiveDelay = 2;
   SdramTiming.ExitSelfRefreshDelay = 7;
-  SdramTiming.SelfRefreshTime = 4;
-  SdramTiming.RowCycleDelay = 7;
-  SdramTiming.WriteRecoveryTime = 2;
-  SdramTiming.RPDelay = 2;
+  SdramTiming.SelfRefreshTime = 7;
+  SdramTiming.RowCycleDelay = 10;
+  SdramTiming.WriteRecoveryTime = 4;
+  SdramTiming.RPDelay = 3;
   SdramTiming.RCDDelay = 3;
 
   if (HAL_SDRAM_Init(&hsdram1, &SdramTiming) != HAL_OK)
@@ -877,6 +879,77 @@ static void MX_FMC_Init(void)
   }
 
   /* USER CODE BEGIN FMC_Init 2 */
+  /* Step 1: Configure a clock configuration enable command */
+  Command.CommandMode            = FMC_SDRAM_CMD_CLK_ENABLE;
+  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
+  Command.AutoRefreshNumber      = 1;
+  Command.ModeRegisterDefinition = 0;
+  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
+
+  /* Step 2: Insert 100 us minimum delay */
+  /* Inserted delay is equal to 1 ms due to systick time base unit (ms) */
+  HAL_Delay(1);
+
+  /* Step 3: Configure a PALL (precharge all) command */
+  Command.CommandMode            = FMC_SDRAM_CMD_PALL;
+  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
+  Command.AutoRefreshNumber      = 1;
+  Command.ModeRegisterDefinition = 0;
+  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
+
+  /* Step 4: Configure an Auto Refresh command */
+  Command.CommandMode            = FMC_SDRAM_CMD_AUTOREFRESH_MODE;
+  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
+  Command.AutoRefreshNumber      = 8;
+  Command.ModeRegisterDefinition = 0;
+  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
+
+  /* Step 5: Program the external memory mode register */
+  __IO uint32_t tmpmrd = (uint32_t)SDRAM_MODEREG_BURST_LENGTH_1          |\
+                                   SDRAM_MODEREG_BURST_TYPE_SEQUENTIAL   |\
+                                   SDRAM_MODEREG_CAS_LATENCY_3           |\
+                                   SDRAM_MODEREG_OPERATING_MODE_STANDARD |\
+                                   SDRAM_MODEREG_WRITEBURST_MODE_SINGLE;
+
+  Command.CommandMode            = FMC_SDRAM_CMD_LOAD_MODE;
+  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
+  Command.AutoRefreshNumber      = 1;
+  Command.ModeRegisterDefinition = tmpmrd;
+  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
+
+  /* Step 6: Set the refresh rate counter */
+  /* Set the device refresh rate */
+  HAL_SDRAM_ProgramRefreshRate(&hsdram1, REFRESH_COUNT);
+
+  /* Configure common DMA parameters */
+  dma_handle.Init.Channel             = SDRAM_DMAx_CHANNEL;
+  dma_handle.Init.Direction           = DMA_MEMORY_TO_MEMORY;
+  dma_handle.Init.PeriphInc           = DMA_PINC_ENABLE;
+  dma_handle.Init.MemInc              = DMA_MINC_ENABLE;
+  dma_handle.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+  dma_handle.Init.MemDataAlignment    = DMA_MDATAALIGN_WORD;
+  dma_handle.Init.Mode                = DMA_NORMAL;
+  dma_handle.Init.Priority            = DMA_PRIORITY_HIGH;
+  dma_handle.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
+  dma_handle.Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
+  dma_handle.Init.MemBurst            = DMA_MBURST_SINGLE;
+  dma_handle.Init.PeriphBurst         = DMA_PBURST_SINGLE;
+
+  dma_handle.Instance = SDRAM_DMAx_STREAM;
+
+   /* Associate the DMA handle */
+  __HAL_LINKDMA(&hsdram1, hdma, dma_handle);
+
+  /* Deinitialize the stream for new transfer */
+  HAL_DMA_DeInit(&dma_handle);
+
+  /* Configure the DMA stream */
+  HAL_DMA_Init(&dma_handle);
+
+  /* NVIC configuration for DMA transfer complete interrupt */
+  HAL_NVIC_SetPriority(SDRAM_DMAx_IRQn, 0x0F, 0);
+  HAL_NVIC_EnableIRQ(SDRAM_DMAx_IRQn);
+
 
   /* USER CODE END FMC_Init 2 */
 }
@@ -906,7 +979,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin|MCU_SDRAM_DQMH_Pin|MCU_SDRAM_DQML_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
@@ -925,12 +998,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(BUZZER_ON_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED_ON_Pin MCU_SDRAM_DQMH_Pin MCU_SDRAM_DQML_Pin */
-  GPIO_InitStruct.Pin = LED_ON_Pin|MCU_SDRAM_DQMH_Pin|MCU_SDRAM_DQML_Pin;
+  /*Configure GPIO pin : LED_ON_Pin */
+  GPIO_InitStruct.Pin = LED_ON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+  HAL_GPIO_Init(LED_ON_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : MCU_KEY4_Pin MCU_KEY3_Pin MCU_KEY2_Pin MCU_PWR_SW_Pin
                            MCU_KEY1_Pin */

@@ -12,8 +12,10 @@
 
 void runEcoTask01(void *argument)
 {
-    uint32_t timer_sec_1 = 0;
+    uint32_t *ptimer_sec_1;
     uint8_t print_buf[32] = {0,};
+    ptimer_sec_1 = (uint32_t*)0xC0000000;
+    *ptimer_sec_1 = 0;
     int32_t tick = osKernelGetTickCount();
     /* Infinite loop */
     for(;;)
@@ -22,7 +24,8 @@ void runEcoTask01(void *argument)
         HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
         if(tick%1000 == 0)
         {
-            sprintf((char*)print_buf, "%07ld:\n", ++timer_sec_1);
+            sprintf((char*)print_buf, "%07ld:\n", ++(*ptimer_sec_1));
+//            sprintf((char*)print_buf, "%07ld:\n", ++timer_sec_1);
             printf("%s", print_buf);
             HAL_UART_Transmit_IT(&huart2, print_buf, strlen((char*)print_buf));
         }

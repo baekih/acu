@@ -16,7 +16,7 @@
 #include "cmsis_os.h"
 #include "main.h"
 #include "printf.h"
-//#include "stm32f769i_fi-din_lcd.h"
+#include "stm32f769i_fi-din_sdram.h"
 
 #pragma pack(push,1)
 typedef struct __RxProtocol

@@ -63,10 +63,6 @@ void Error_Handler(void);
 #define BUZZER_ON_GPIO_Port GPIOE
 #define LED_ON_Pin GPIO_PIN_2
 #define LED_ON_GPIO_Port GPIOE
-#define MCU_SDRAM_DQMH_Pin GPIO_PIN_1
-#define MCU_SDRAM_DQMH_GPIO_Port GPIOE
-#define MCU_SDRAM_DQML_Pin GPIO_PIN_0
-#define MCU_SDRAM_DQML_GPIO_Port GPIOE
 #define MCU_LCD_SCL_Pin GPIO_PIN_8
 #define MCU_LCD_SCL_GPIO_Port GPIOB
 #define MCU_KEY4_Pin GPIO_PIN_12
