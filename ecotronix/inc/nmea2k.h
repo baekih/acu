@@ -206,6 +206,13 @@
 #define PGN126720_11DAT_CHKSUM_SIZE                     (2U)
 #define PGN126720_11DAT_DAT_MAX                         (32U)
 
+#define PGN126993_NUM                           (126993UL)
+#define PGN126993_PRI                           (7UL)
+#define PGN126993_UPDATE_RATE                   (60000ULL)
+#define PGN126993_CAN_STATUS_1                  (0ULL)
+#define PGN126993_CAN_STATUS_2                  (0ULL)
+#define PGN126993_EQUIP_STATUS                  (0ULL)
+
 #define PGN126996_NUM                           (126996UL)
 #define PGN126996_PRI                           (6U)
 #define PGN126996_LEN                           (134U)
@@ -315,4 +322,5 @@ bool     IsKnownPGN(uint32_t PGN);
 void NMEA2KProc(RxProtocol rxpacket);
 void NMEA2KInit(void);
 
+int32_t Pgn126993HeartBeat(void);
 #endif /* APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_ */

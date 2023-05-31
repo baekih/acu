@@ -33,7 +33,7 @@ uint64_t g_pgn060928_dat_raw =   \
     (DEV_FUNC           << 40) | \
     (DEV_INSTANCE_HI    << 35) | \
     (DEV_INSTANCE_LO    << 32) | \
-    (MFG_CODE    << 21) | \
+    (MFG_CODE           << 21) | \
     (NMEA2K_ID          << 0);
 
 pgn126996_dat g_pgn126996_dat =
@@ -837,6 +837,33 @@ int32_t Pgn126720Proc(fastpacket* pfastpkt)
 
     vPortFree(pfastpkt_dat);
     return ret;
+}
+
+int32_t Pgn126993HeartBeat(void)
+{
+    static uint8_t cnt_heartbeat = 0;
+    TxProtocol txpkt =
+    {
+//        (PGN126993_PRI << 26) | ((PGN126993_NUM + BROADCAST_DEST_ADDR) << 8) | (NMEA2K_THIS_ADDR << 0),
+        (PGN126993_PRI << 26) | (PGN126993_NUM << 8) | (NMEA2K_THIS_ADDR << 0),
+        {},
+        sizeof(uint64_t)
+    };
+
+    *((uint64_t*)txpkt.dat) = \
+        (0xFFFFFFFFULL           << 32) | \
+        (0x3ULL                  << 30) | \
+        (PGN126993_EQUIP_STATUS  << 28) | \
+        (PGN126993_CAN_STATUS_2  << 26) | \
+        (PGN126993_CAN_STATUS_1  << 24) | \
+        (cnt_heartbeat           << 16) | \
+        (PGN126993_UPDATE_RATE   <<  0);
+
+    if(252 < ++cnt_heartbeat) cnt_heartbeat = 0;
+
+    EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
+
+    return 0;
 }
 
 int32_t Pgn126996ProdInfo(void)
