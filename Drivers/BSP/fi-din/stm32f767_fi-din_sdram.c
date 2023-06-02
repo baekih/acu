@@ -67,7 +67,7 @@
 EndDependencies */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f769i_fi-din_sdram.h"
+#include <stm32f767_fi-din_sdram.h>
 
 /** @addtogroup BSP
   * @{

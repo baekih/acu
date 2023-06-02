@@ -38,7 +38,7 @@
 EndDependencies */
     
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f769i_fi-din.h"
+#include <stm32f767_fi-din.h>
 
 /**
  * @brief STM32F769I EVAL BSP Driver version number V2.1.1

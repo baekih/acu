@@ -38,6 +38,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/fi-din-767.ioc</locationURI>
 		</link>
 		<link>
+			<name>Res/Fonts</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Res/Fonts</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/Components</name>
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Drivers/BSP/Components</locationURI>

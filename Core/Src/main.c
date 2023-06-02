@@ -537,9 +537,9 @@ static void MX_LTDC_Init(void)
   hltdc.Init.VerticalSync = 2;
   hltdc.Init.AccumulatedHBP = 19;
   hltdc.Init.AccumulatedVBP = 5;
-  hltdc.Init.AccumulatedActiveW = 819;
+  hltdc.Init.AccumulatedActiveW = 659;
   hltdc.Init.AccumulatedActiveH = 485;
-  hltdc.Init.TotalWidth = 829;
+  hltdc.Init.TotalWidth = 669;
   hltdc.Init.TotalHeigh = 488;
   hltdc.Init.Backcolor.Blue = 0;
   hltdc.Init.Backcolor.Green = 0;
@@ -549,7 +549,7 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   pLayerCfg.WindowX0 = 0;
-  pLayerCfg.WindowX1 = 800;
+  pLayerCfg.WindowX1 = 640;
   pLayerCfg.WindowY0 = 0;
   pLayerCfg.WindowY1 = 480;
   pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_ARGB8888;
@@ -558,7 +558,7 @@ static void MX_LTDC_Init(void)
   pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
   pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
   pLayerCfg.FBStartAdress = 0xC0000000;
-  pLayerCfg.ImageWidth = 800;
+  pLayerCfg.ImageWidth = 640;
   pLayerCfg.ImageHeight = 480;
   pLayerCfg.Backcolor.Blue = 0;
   pLayerCfg.Backcolor.Green = 0;
@@ -983,13 +983,13 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
-                          |LCD_STBY_Pin|TOUCH_RSTn_Pin|LCD_BL_CTL_Pin, GPIO_PIN_RESET);
+                          |LCD_STBY_Pin|TOUCH_RSTn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PWR_HOLD_GPIO_Port, PWR_HOLD_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, LCD_RSTn_Pin|LCD_BL_CTL_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : BUZZER_ON_Pin */
   GPIO_InitStruct.Pin = BUZZER_ON_Pin;

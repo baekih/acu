@@ -28,10 +28,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
 
-#if !defined (USE_STM32F769I_EVAL)
- #define USE_STM32F769I_EVAL
-#endif
-
 #ifdef __cplusplus
 }
 #endif

@@ -16,21 +16,22 @@
 #include "cmsis_os.h"
 #include "main.h"
 #include "printf.h"
-#include "stm32f769i_fi-din_sdram.h"
+#include "stm32f767_fi-din_lcd.h"
+#include "stm32f767_fi-din_sdram.h"
 
 #pragma pack(push,1)
 typedef struct __RxProtocol
 {
-  uint32_t canid;
-  uint8_t  dat[8];
-  uint8_t  len;
+    uint32_t canid;
+    uint8_t  dat[8];
+    uint8_t  len;
 } RxProtocol ;
 
 typedef struct __TxProtocol
 {
-  uint32_t canid;
-  uint8_t  dat[8];
-  uint8_t  len;
+    uint32_t canid;
+    uint8_t  dat[8];
+    uint8_t  len;
 } TxProtocol ;
 #pragma pack(pop)
 
