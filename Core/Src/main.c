@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "common.h"
+#include "RGB565_480x272.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -520,7 +521,14 @@ static void MX_LTDC_Init(void)
 {
 
   /* USER CODE BEGIN LTDC_Init 0 */
-
+    HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_RESET);
+    HAL_Delay(5);
+    HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
+    HAL_Delay(5);
+    HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
+    HAL_Delay(120);
+    HAL_GPIO_WritePin(LCD_BL_CTL_GPIO_Port, LCD_BL_CTL_Pin, GPIO_PIN_SET);
   /* USER CODE END LTDC_Init 0 */
 
   LTDC_LayerCfgTypeDef pLayerCfg = {0};
@@ -529,18 +537,18 @@ static void MX_LTDC_Init(void)
 
   /* USER CODE END LTDC_Init 1 */
   hltdc.Instance = LTDC;
-  hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;
-  hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AL;
+  hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AH;
+  hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AH;
   hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
   hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;
-  hltdc.Init.HorizontalSync = 19;
-  hltdc.Init.VerticalSync = 3;
-  hltdc.Init.AccumulatedHBP = 29;
-  hltdc.Init.AccumulatedVBP = 7;
-  hltdc.Init.AccumulatedActiveW = 669;
-  hltdc.Init.AccumulatedActiveH = 487;
-  hltdc.Init.TotalWidth = 679;
-  hltdc.Init.TotalHeigh = 497;
+  hltdc.Init.HorizontalSync = 9;
+  hltdc.Init.VerticalSync = 9;
+  hltdc.Init.AccumulatedHBP = 19;
+  hltdc.Init.AccumulatedVBP = 19;
+  hltdc.Init.AccumulatedActiveW = 659;
+  hltdc.Init.AccumulatedActiveH = 499;
+  hltdc.Init.TotalWidth = 669;
+  hltdc.Init.TotalHeigh = 509;
   hltdc.Init.Backcolor.Blue = 0;
   hltdc.Init.Backcolor.Green = 0;
   hltdc.Init.Backcolor.Red = 0;
@@ -549,17 +557,17 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   pLayerCfg.WindowX0 = 0;
-  pLayerCfg.WindowX1 = 640;
+  pLayerCfg.WindowX1 = 480;
   pLayerCfg.WindowY0 = 0;
-  pLayerCfg.WindowY1 = 480;
-  pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_ARGB8888;
+  pLayerCfg.WindowY1 = 272;
+  pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_RGB565;
   pLayerCfg.Alpha = 255;
   pLayerCfg.Alpha0 = 0;
   pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
   pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
   pLayerCfg.FBStartAdress = 0xC0000000;
-  pLayerCfg.ImageWidth = 640;
-  pLayerCfg.ImageHeight = 480;
+  pLayerCfg.ImageWidth = 480;
+  pLayerCfg.ImageHeight = 272;
   pLayerCfg.Backcolor.Blue = 0;
   pLayerCfg.Backcolor.Green = 0;
   pLayerCfg.Backcolor.Red = 0;
@@ -568,7 +576,8 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
-
+  pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)RGB565_480x272);
+  HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
   /* USER CODE END LTDC_Init 2 */
 
 }
@@ -982,14 +991,14 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
-                          |LCD_STBY_Pin|TOUCH_RSTn_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_UD_Pin|LCD_STBY_Pin
+                          |TOUCH_RSTn_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_RSTn_Pin|LCD_BL_CTL_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PWR_HOLD_GPIO_Port, PWR_HOLD_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LCD_RSTn_Pin|LCD_BL_CTL_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : BUZZER_ON_Pin */
   GPIO_InitStruct.Pin = BUZZER_ON_Pin;
