@@ -441,11 +441,11 @@ static void MX_DMA2D_Init(void)
 
   /* USER CODE END DMA2D_Init 1 */
   hdma2d.Instance = DMA2D;
-  hdma2d.Init.Mode = DMA2D_M2M;
+  hdma2d.Init.Mode = DMA2D_M2M_PFC;
   hdma2d.Init.ColorMode = DMA2D_OUTPUT_ARGB8888;
   hdma2d.Init.OutputOffset = 0;
   hdma2d.LayerCfg[1].InputOffset = 0;
-  hdma2d.LayerCfg[1].InputColorMode = DMA2D_INPUT_ARGB8888;
+  hdma2d.LayerCfg[1].InputColorMode = DMA2D_INPUT_RGB565;
   hdma2d.LayerCfg[1].AlphaMode = DMA2D_NO_MODIF_ALPHA;
   hdma2d.LayerCfg[1].InputAlpha = 0;
   hdma2d.LayerCfg[1].AlphaInverted = DMA2D_REGULAR_ALPHA;
@@ -521,20 +521,18 @@ static void MX_LTDC_Init(void)
 {
 
   /* USER CODE BEGIN LTDC_Init 0 */
-    HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_RESET);
-    HAL_Delay(5);
-    HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
-    HAL_Delay(5);
-    HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
-    HAL_Delay(120);
-    HAL_GPIO_WritePin(LCD_BL_CTL_GPIO_Port, LCD_BL_CTL_Pin, GPIO_PIN_SET);
+  uint32_t* pdst = (uint32_t*)0xC0000000;
+  memcpy(pdst, &RGB565_480x272[0], 65280*4);
   /* USER CODE END LTDC_Init 0 */
 
   LTDC_LayerCfgTypeDef pLayerCfg = {0};
 
   /* USER CODE BEGIN LTDC_Init 1 */
-
+  HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
+  HAL_Delay(5);
+  HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
+//    HAL_Delay(120);
+//    HAL_GPIO_WritePin(LCD_BL_CTL_GPIO_Port, LCD_BL_CTL_Pin, GPIO_PIN_SET);
   /* USER CODE END LTDC_Init 1 */
   hltdc.Instance = LTDC;
   hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AH;
@@ -576,8 +574,8 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
-  pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)RGB565_480x272);
-  HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
+//  pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)RGB565_480x272);
+//  HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
   /* USER CODE END LTDC_Init 2 */
 
 }
@@ -992,10 +990,10 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_UD_Pin|LCD_STBY_Pin
-                          |TOUCH_RSTn_Pin, GPIO_PIN_RESET);
+                          |TOUCH_RSTn_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_RSTn_Pin|LCD_BL_CTL_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_BL_CTL_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PWR_HOLD_GPIO_Port, PWR_HOLD_Pin, GPIO_PIN_RESET);
