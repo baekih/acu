@@ -23,7 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "common.h"
-#include "RGB565_480x272.h"
+#include "images.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -271,7 +271,6 @@ int main(void)
 
   /* Start scheduler */
   osKernelStart();
-
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -522,8 +521,7 @@ static void MX_LTDC_Init(void)
 {
 
   /* USER CODE BEGIN LTDC_Init 0 */
-  uint32_t* pdst = (uint32_t*)0xC0000000;
-  memcpy(pdst, &RGB565_480x272[0], 65280*4);
+
   /* USER CODE END LTDC_Init 0 */
 
   LTDC_LayerCfgTypeDef pLayerCfg = {0};
@@ -575,6 +573,8 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
+  uint32_t* pdst = (uint32_t*)0xC0000000;
+  memcpy(pdst, &image_kitten_480x272[0], 65280*4);
 //  pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)RGB565_480x272);
 //  HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
   /* USER CODE END LTDC_Init 2 */
