@@ -72,8 +72,8 @@ void Error_Handler(void);
 #define WDI_GPIO_Port GPIOA
 #define MCU_LCD_SDA_Pin GPIO_PIN_9
 #define MCU_LCD_SDA_GPIO_Port GPIOB
-#define LCD_ON_PWM_Pin GPIO_PIN_7
-#define LCD_ON_PWM_GPIO_Port GPIOB
+#define LED_PWM_Pin GPIO_PIN_7
+#define LED_PWM_GPIO_Port GPIOB
 #define MCU_KEY3_Pin GPIO_PIN_11
 #define MCU_KEY3_GPIO_Port GPIOC
 #define MCU_KEY3_EXTI_IRQn EXTI15_10_IRQn
@@ -103,10 +103,10 @@ void Error_Handler(void);
 #define TOUCH_RSTn_GPIO_Port GPIOA
 #define LCD_RSTn_Pin GPIO_PIN_3
 #define LCD_RSTn_GPIO_Port GPIOA
-#define LCD_BL_CTL_Pin GPIO_PIN_7
-#define LCD_BL_CTL_GPIO_Port GPIOA
-#define BUZZER_ON_PWM_Pin GPIO_PIN_0
-#define BUZZER_ON_PWM_GPIO_Port GPIOB
+#define LCD_BKL_PWM_Pin GPIO_PIN_7
+#define LCD_BKL_PWM_GPIO_Port GPIOA
+#define BUZZER_PWM_Pin GPIO_PIN_0
+#define BUZZER_PWM_GPIO_Port GPIOB
 #define DBG_TX_Pin GPIO_PIN_14
 #define DBG_TX_GPIO_Port GPIOB
 #define DBG_RX_Pin GPIO_PIN_15
