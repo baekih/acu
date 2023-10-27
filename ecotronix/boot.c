@@ -26,9 +26,7 @@ void runEcoTask01(void *argument)
         HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
         if(tick%1000 == 0)
         {
-            sprintf((char*)print_buf, "%07ld:\n", ++(*ptimer_sec_1));
-//            sprintf((char*)print_buf, "%07ld:\n", ++timer_sec_1);
-            printf("%s", print_buf);
+            printf("[%08ld]\n", ++(*ptimer_sec_1));
             HAL_UART_Transmit_IT(&huart2, print_buf, strlen((char*)print_buf));
 //            Pgn126993HeartBeat();
         }
