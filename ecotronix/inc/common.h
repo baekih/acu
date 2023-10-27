@@ -38,6 +38,7 @@ typedef struct __TxProtocol
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
 extern QSPI_HandleTypeDef hqspi;
+extern TIM_HandleTypeDef htim3;
 extern osMessageQueueId_t EcoQueueUART1Handle;
 extern osMessageQueueId_t EcoQueueNMEA2KRX1Handle;
 extern osMessageQueueId_t EcoQueueNMEA2KTX1Handle;

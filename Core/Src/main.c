@@ -576,9 +576,9 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
-  memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
+//  memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
 //  memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
-//  memset((uint32_t*)0xC0000000, 0xFF, 800*480*2);
+  memset((uint32_t*)0xC0000000, 0xFF, 800*480*2);
   /* USER CODE END LTDC_Init 2 */
 
 }
@@ -638,11 +638,11 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
+  htim3.Init.Prescaler = 108-1;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 65535;
+  htim3.Init.Period = 250-1;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
@@ -671,7 +671,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM3_Init 2 */
-
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
   /* USER CODE END TIM3_Init 2 */
   HAL_TIM_MspPostInit(&htim3);
 
@@ -1143,7 +1143,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 1 */
   if (htim->Instance == TIM7)
   {
-    printf("TIM7\n");
+//    printf("TIM7\n");
   }
 
   /* USER CODE END Callback 1 */

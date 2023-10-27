@@ -249,10 +249,32 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-//	printf("%s() Enter...\n",__FUNCTION__);
-	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY1_GPIO_Port, MCU_KEY1_Pin)) printf("MCU_KEY1 pressed\n");
-	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY2_GPIO_Port, MCU_KEY2_Pin)) printf("MCU_KEY2 pressed\n");
-	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY3_GPIO_Port, MCU_KEY3_Pin)) printf("MCU_KEY3 pressed\n");
-	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY4_GPIO_Port, MCU_KEY4_Pin)) printf("MCU_KEY4 pressed\n");
-	if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin)) printf("MCU_PWR pressed\n");
+    static bool buzzer_on = false;
+    TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 125-1, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
+
+//    printf("%s() Enter...\n",__FUNCTION__);
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY1_GPIO_Port, MCU_KEY1_Pin))
+    {
+        HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
+        if(buzzer_on == false)
+        {
+            buzzer_on = true;
+            sConfigOC.Pulse = 12 - 1;
+            printf("buzzer on\n");
+        }
+        else
+        {
+            buzzer_on = false;
+            sConfigOC.Pulse = 0;
+            printf("buzzer off\n");
+        }
+        HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
+        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+    }
+
+//    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY1_GPIO_Port, MCU_KEY1_Pin)) printf("MCU_KEY1 pressed\n");
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY2_GPIO_Port, MCU_KEY2_Pin)) printf("MCU_KEY2 pressed\n");
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY3_GPIO_Port, MCU_KEY3_Pin)) printf("MCU_KEY3 pressed\n");
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY4_GPIO_Port, MCU_KEY4_Pin)) printf("MCU_KEY4 pressed\n");
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin)) printf("MCU_PWR pressed\n");
 }
