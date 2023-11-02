@@ -274,6 +274,7 @@ int main(void)
 
   /* Start scheduler */
   osKernelStart();
+
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -576,9 +577,9 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
-//  memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
+  memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
 //  memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
-  memset((uint32_t*)0xC0000000, 0xFF, 800*480*2);
+//  memset((uint32_t*)0xC0000000, 0xFF, 800*480*2);
   /* USER CODE END LTDC_Init 2 */
 
 }
