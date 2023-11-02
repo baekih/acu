@@ -584,6 +584,7 @@ int32_t Pgn060416MultiPktCtrl(RxProtocol rxpkt)
 
 int32_t Pgn060928ISOAddrClame(RxProtocol rxpkt)
 {
+//    printf("%s() Enter\n",__FUNCTION__);
     TxProtocol txpkt =
     {
         (PGN060928_PRI << 26) | ((PGN060928_NUM + getRxSA(rxpkt.canid)) << 8) | (NMEA2K_THIS_ADDR << 0),

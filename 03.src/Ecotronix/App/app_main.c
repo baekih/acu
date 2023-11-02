@@ -17,7 +17,8 @@ void runEcoTaskDefault(void *argument)
     uint32_t timer_sec_1 = 0;
     int32_t tick = osKernelGetTickCount();
 
-    memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
+//    memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
+    memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
 
     /* Infinite loop */
     for(;;)
@@ -26,8 +27,8 @@ void runEcoTaskDefault(void *argument)
         HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
         if(tick%1000 == 0)
         {
-            printf("[%08ld]\n", ++timer_sec_1);
-//            Pgn126993HeartBeat();
+            printf("[%08ld] call Pgn126993HeartBeat()\n", ++timer_sec_1);
+            Pgn126993HeartBeat();
         }
 
         osDelayUntil(tick);
@@ -255,6 +256,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     static bool buzzer_on = false;
+    static uint8_t image_sel = 0;
     TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 125-1, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
 
 //    printf("%s() Enter...\n",__FUNCTION__);
@@ -275,6 +277,50 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         }
         HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
         HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY2_GPIO_Port, MCU_KEY2_Pin))
+    {
+        uint16_t *pbuf = (uint16_t*)0xC0000000;
+        switch(image_sel)
+        {
+        case 0:
+            image_sel++;
+//            memcpy((uint8_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
+            memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
+            printf("MCU_KEY2 image_kitten_800x480\n");
+            break;
+        case 1:
+            image_sel++;
+            for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0xFFFF;
+            printf("MCU_KEY2 white_800x480\n");
+            break;
+        case 2:
+            image_sel++;
+            for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0x0000;
+            printf("MCU_KEY2 black_800x480\n");
+            break;
+        case 3:
+            image_sel++;
+            for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0x00F8;
+            printf("MCU_KEY2 red_800x480\n");
+            break;
+        case 4:
+            image_sel++;
+            for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0xE007;
+            printf("MCU_KEY2 green_800x480\n");
+            break;
+        case 5:
+            image_sel = 0;
+            for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0x1F00;
+            printf("MCU_KEY2 blue_800x480\n");
+            break;
+        default:
+            image_sel = 0;
+//            memcpy((uint8_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
+            memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
+            printf("image_kitten_800x480\n");
+        }
     }
 
 //    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY1_GPIO_Port, MCU_KEY1_Pin)) printf("MCU_KEY1 pressed\n");

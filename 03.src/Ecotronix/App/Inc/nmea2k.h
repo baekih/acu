@@ -40,7 +40,7 @@
 
 #define NMEA_NET_MSG_DB_VER                 (2100UL)
 #define NMEA_MFG_PROD_CODE                  (6U)
-#define MFG_MODEL_ID                        "FI-xxDIN"
+#define MFG_MODEL_ID                        "FI-DIN"
 #define MFG_SW_VER_CODE                     "00.01:00.01"
 #define MFG_MODEL_VER                       "1"
 #define MFG_MODEL_SER_CODE                  "0000"
