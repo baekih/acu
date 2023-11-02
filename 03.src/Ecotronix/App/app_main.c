@@ -17,8 +17,8 @@ void runEcoTaskDefault(void *argument)
     uint32_t timer_sec_1 = 0;
     int32_t tick = osKernelGetTickCount();
 
-//    memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
-    memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
+    memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
+//    memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
 
     /* Infinite loop */
     for(;;)
@@ -286,40 +286,117 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         {
         case 0:
             image_sel++;
-//            memcpy((uint8_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
-            memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
-            printf("MCU_KEY2 image_kitten_800x480\n");
+            for(uint32_t y=0; y<480; y++)
+            {
+                for(uint32_t x=0; x<800; x++)
+                {
+                    if(0<=x && x<160)
+                    {
+                        if(0<=y && y<160)
+                        {
+                            *(pbuf+x+y*800) = 0xFFFF;
+                        }
+                        else if(160<=y && y<320)
+                        {
+                            *(pbuf+x+y*800) = 0x0000;
+                        }
+                        else if(320<=y && y<480)
+                        {
+                            *(pbuf+x+y*800) = 0xFFFF;
+                        }
+                    }
+                    else if(160<=x && x<320)
+                    {
+                        if(0<=y && y<160)
+                        {
+                            *(pbuf+x+y*800) = 0x0000;
+                        }
+                        else if(160<=y && y<320)
+                        {
+                            *(pbuf+x+y*800) = 0xFFFF;
+                        }
+                        else if(320<=y && y<480)
+                        {
+                            *(pbuf+x+y*800) = 0x0000;
+                        }
+                    }
+                    else if(320<=x && x<480)
+                    {
+                        if(0<=y && y<160)
+                        {
+                            *(pbuf+x+y*800) = 0xFFFF;
+                        }
+                        else if(160<=y && y<320)
+                        {
+                            *(pbuf+x+y*800) = 0x0000;
+                        }
+                        else if(320<=y && y<480)
+                        {
+                            *(pbuf+x+y*800) = 0xFFFF;
+                        }
+                    }
+                    else if(480<=x && x<640)
+                    {
+                        if(0<=y && y<160)
+                        {
+                            *(pbuf+x+y*800) = 0x0000;
+                        }
+                        else if(160<=y && y<320)
+                        {
+                            *(pbuf+x+y*800) = 0xFFFF;
+                        }
+                        else if(320<=y && y<480)
+                        {
+                            *(pbuf+x+y*800) = 0x0000;
+                        }
+                    }
+                    else if(640<=x && x<800)
+                    {
+                        if(0<=y && y<160)
+                        {
+                            *(pbuf+x+y*800) = 0xFFFF;
+                        }
+                        else if(160<=y && y<320)
+                        {
+                            *(pbuf+x+y*800) = 0x0000;
+                        }
+                        else if(320<=y && y<480)
+                        {
+                            *(pbuf+x+y*800) = 0xFFFF;
+                        }
+                    }
+                }
+            }
+            printf("MCU_KEY2 check pattern\n");
             break;
         case 1:
             image_sel++;
             for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0xFFFF;
-            printf("MCU_KEY2 white_800x480\n");
+            printf("MCU_KEY2 whtie_800x480\n");
             break;
         case 2:
-            image_sel++;
-            for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0x0000;
-            printf("MCU_KEY2 black_800x480\n");
-            break;
-        case 3:
             image_sel++;
             for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0x00F8;
             printf("MCU_KEY2 red_800x480\n");
             break;
-        case 4:
+        case 3:
             image_sel++;
             for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0xE007;
             printf("MCU_KEY2 green_800x480\n");
             break;
-        case 5:
-            image_sel = 0;
+        case 4:
+            image_sel++;
             for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0x1F00;
             printf("MCU_KEY2 blue_800x480\n");
             break;
+        case 5:
+            image_sel = 0;
+            memcpy((uint8_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
+            printf("MCU_KEY2 image_kitten_800x480\n");
+            break;
         default:
             image_sel = 0;
-//            memcpy((uint8_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
-            memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
-            printf("image_kitten_800x480\n");
+            printf("error\n");
         }
     }
 
