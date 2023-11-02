@@ -1,0 +1,26 @@
+명령이름
+	makeax input_filename [/o output_filename] [/pd] [/pc] [/bv] [/fv] [/su] [/cm] [/pn]
+	makeax @commandfile [/o output_filename]
+
+명령줄 옵션
+	/o  output_filename
+	/pd product_code(1|2)
+	/pc processor_code(0-65535)
+	/bv minimum_bootloader_version(0-65535)
+	/fv firmware_version(0-65535)
+	/su checksum(00000000-FFFFFFFF)
+	/cm copyright_message(ASCII)
+	/pn product_name(ASCII)
+
+명령 파일
+
+	mot각 파일에 대한 명령 행 옵션을 한 줄 설명
+	#행은 주석으로 취급
+	명령 파일의/o 옵션은 무시
+
+	e.g.)
+    	 # 코멘트
+	     prog1.mot /pd 1 /pc 1000 /bv 200 /fv 300 /su 00000000 /cm "FURUNO SOFTECH Co." /pn "FS-100"
+    	 prog2.mot /pd 1 /pc 1000 /bv 200 /fv 400 /su 00000000 /cm "FURUNO SOFTECH Co." /pn "FS-100"
+	     prog3.mot /pd 1 /pc 1000 /bv 200 /fv 500 /su 00000000 /cm "FURUNO SOFTECH Co." /pn "FS-100"
+

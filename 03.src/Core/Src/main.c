@@ -23,7 +23,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "common.h"
-#include "images.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,17 +64,10 @@ UART_HandleTypeDef huart2;
 
 SDRAM_HandleTypeDef hsdram1;
 
-/* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
-/* Definitions for EcoTask01 */
-osThreadId_t EcoTask01Handle;
-const osThreadAttr_t EcoTask01_attributes = {
-  .name = "EcoTask01",
+/* Definitions for EcoTaskDefault */
+osThreadId_t EcoTaskDefaultHandle;
+const osThreadAttr_t EcoTaskDefault_attributes = {
+  .name = "EcoTaskDefault",
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -153,8 +145,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_TIM14_Init(void);
-void StartDefaultTask(void *argument);
-extern void runEcoTask01(void *argument);
+void runEcoTaskDefault(void *argument);
 extern void runEcoTaskUART(void *argument);
 extern void runEcoTaskNMEA2KRx(void *argument);
 extern void runEcoTaskNMEA2KTx(void *argument);
@@ -249,11 +240,8 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
-
-  /* creation of EcoTask01 */
-  EcoTask01Handle = osThreadNew(runEcoTask01, NULL, &EcoTask01_attributes);
+  /* creation of EcoTaskDefault */
+  EcoTaskDefaultHandle = osThreadNew(runEcoTaskDefault, NULL, &EcoTaskDefault_attributes);
 
   /* creation of EcoTaskUART */
   EcoTaskUARTHandle = osThreadNew(runEcoTaskUART, NULL, &EcoTaskUART_attributes);
@@ -577,9 +565,7 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
-  memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
-//  memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
-//  memset((uint32_t*)0xC0000000, 0xFF, 800*480*2);
+
   /* USER CODE END LTDC_Init 2 */
 
 }
@@ -1107,14 +1093,14 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_runEcoTaskDefault */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the EcoTaskDefault thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+/* USER CODE END Header_runEcoTaskDefault */
+__weak void runEcoTaskDefault(void *argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
