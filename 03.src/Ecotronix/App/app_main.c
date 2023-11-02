@@ -286,6 +286,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         {
         case 0:
             image_sel++;
+
             for(uint32_t y=0; y<480; y++)
             {
                 for(uint32_t x=0; x<800; x++)
@@ -372,7 +373,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         case 1:
             image_sel++;
             for(uint32_t i=0; i<(800*480); i++) *(pbuf+i) = 0xFFFF;
-            printf("MCU_KEY2 whtie_800x480\n");
+            printf("MCU_KEY2 white_800x480\n");
             break;
         case 2:
             image_sel++;

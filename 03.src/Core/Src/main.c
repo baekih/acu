@@ -1025,8 +1025,11 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
-                          |LCD_STBY_Pin|TOUCH_RSTn_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_STBY_Pin
+                          |TOUCH_RSTn_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LCD_UD_GPIO_Port, LCD_UD_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PWR_HOLD_GPIO_Port, PWR_HOLD_Pin, GPIO_PIN_RESET);
