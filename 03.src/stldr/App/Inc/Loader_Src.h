@@ -15,7 +15,7 @@
 #include "stm32f7xx_hal.h"
 #include "stm32f769i_eval.h"
 #include "stm32f7xx_hal_qspi.h"
-#include "stm32f769i_eval_qspi.h"
+//#include "stm32f769i_eval_qspi.h"
 #include "n25q512a.h"
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -45,7 +45,7 @@ extern uint32_t _qspi_init_length;
 #define StartRamAddress          0x20000000
 #define EndRamAddress            0x20080000
 
-
+#define QSPI_FLASH_SIZE            25     /* Address bus width to access whole memory space */
 
 #define QSPI_ADDRESS_WIDTH QSPI_ADDRESS_32_BITS
 

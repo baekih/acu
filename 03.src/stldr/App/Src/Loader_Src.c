@@ -9,17 +9,15 @@
   */
 
 #include "Loader_Src.h"
-#include "stm32f769i_eval_qspi.h"
+//#include "stm32f769i_eval_qspi.h"
 #include <string.h>
 
 
 /* Private variables ---------------------------------------------------------*/
 //QSPI structure
-extern QSPI_HandleTypeDef QSPIHandle; 
+QSPI_HandleTypeDef QSPIHandle;
 QSPI_CommandTypeDef sCommand;
 QSPI_AutoPollingTypeDef sConfig;
-
-
 
 /**
   * @brief  System initialization.
