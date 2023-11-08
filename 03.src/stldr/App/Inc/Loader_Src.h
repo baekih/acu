@@ -13,34 +13,15 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
-#include "stm32f769i_eval.h"
 #include "stm32f7xx_hal_qspi.h"
-//#include "stm32f769i_eval_qspi.h"
-#include "n25q512a.h"
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
 
-#if defined(__CC_ARM)
-extern uint32_t Load$$QSPI$$Base;
-extern uint32_t Load$$QSPI$$Length;
-#elif defined(__ICCARM__)
-#pragma section =".qspi"
-#pragma section =".qspi_init"
-#elif defined(__GNUC__)
 extern uint32_t _qspi_init_base;
 extern uint32_t _qspi_init_length;
-#endif
 
-
-#ifdef __ICCARM__                //IAR
-#define KeepInCompilation __root 
-#elif __CC_ARM                   //MDK-ARM
 #define KeepInCompilation __attribute__((used))
-#else //TASKING               //TrueStudio
-#define KeepInCompilation __attribute__((used))
-#endif
-
 
 #define StartRamAddress          0x20000000
 #define EndRamAddress            0x20080000
