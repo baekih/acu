@@ -19,9 +19,7 @@ extern QSPI_HandleTypeDef QSPIHandle;
 QSPI_CommandTypeDef sCommand;
 QSPI_AutoPollingTypeDef sConfig;
 
-extern void SystemClock_Config(void);
-extern void MX_QUADSPI_Init(void);
-extern void MX_GPIO_Init(void);
+
 
 /**
   * @brief  System initialization.
@@ -31,21 +29,34 @@ extern void MX_GPIO_Init(void);
   */
 int Init (uint8_t configureMemoryMappedMode)
 {
-  SystemInit();
-
+   SystemInit();
+   SystemClock_Config_stldr();
+  
+  /* Zero Init structs */
+  memset(&QSPIHandle, 0, sizeof(QSPIHandle));
+  memset(&sCommand, 0, sizeof(sCommand));
+  memset(&sConfig, 0, sizeof(sConfig));
+ 
   /* Initialize QuadSPI ------------------------------------------------------ */
   QSPIHandle.Instance = QUADSPI;	  
   HAL_QSPI_DeInit(&QSPIHandle) ;
-  HAL_DeInit();
-  HAL_Init();
-
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_QUADSPI_Init();
-
+  
+  QSPIHandle.Init.ClockPrescaler     = 2;
+  QSPIHandle.Init.FifoThreshold      = 1;
+  QSPIHandle.Init.SampleShifting     = QSPI_SAMPLE_SHIFTING_NONE; 
+  QSPIHandle.Init.FlashSize          = QSPI_FLASH_SIZE;
+  QSPIHandle.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_3_CYCLE; 
+  QSPIHandle.Init.ClockMode          = QSPI_CLOCK_MODE_0;
+  QSPIHandle.Init.DualFlash          = QSPI_DUALFLASH_DISABLE;
+  QSPIHandle.Init.FlashID            = QSPI_FLASH_ID_1;
+  
+  if (HAL_QSPI_Init(&QSPIHandle) != HAL_OK)
+  {
+    return 0;
+  }
+  
+  ResetMemory(&QSPIHandle);
+  
   /* Enable 32-Bit address mode */
   sCommand.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
   sCommand.AddressSize       = QSPI_ADDRESS_32_BITS;
@@ -548,7 +559,7 @@ void HAL_Delay(__IO uint32_t Delay)
   for(int i=0;i<Delay*216000;i++);
 }
 
-#if 0
+
 /**
   * @brief  System Clock Configuration
   *         The system Clock is configured as follow : 
@@ -569,7 +580,7 @@ void HAL_Delay(__IO uint32_t Delay)
   * @param  None
   * @retval None
   */
-void SystemClock_Config(void)
+void SystemClock_Config_stldr(void)
 {
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_OscInitTypeDef RCC_OscInitStruct;
@@ -612,7 +623,7 @@ void SystemClock_Config(void)
     while(1) { ; }
   }  
 }
-#endif
+
 /**
   * Description :
   * Calculates checksum value of the memory zone

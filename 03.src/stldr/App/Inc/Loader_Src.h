@@ -216,7 +216,7 @@ void ResetMemory(QSPI_HandleTypeDef *hqspi);
 static int QSPI_DummyCyclesCfg(QSPI_HandleTypeDef *hqspi);
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority);
 void HAL_Delay(__IO uint32_t Delay);
-//void SystemClock_Config(void);
+void SystemClock_Config_stldr(void);
 int QUADSPI_MappedMode(void);
 
 //All system initialisation
