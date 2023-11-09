@@ -60,7 +60,7 @@ enum{
     FLASHIF_PROTECTION_RDPENABLED   = 0x4,
 };
 
-void runEcoTask01(void *argument);
+void runEcoTaskDefault(void *argument);
 void runEcoTaskUART(void *argument);
 void runEcoTaskNMEA2KRx(void *argument);
 void runEcoTaskNMEA2KTx(void *argument);
