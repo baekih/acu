@@ -12,6 +12,54 @@
 
 #include "app_main.h"
 
+void setBuzzer(uint8_t snd_vol)
+{
+    static uint8_t snd_vol_prev = 0;
+    TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
+
+    if(snd_vol_prev == snd_vol) return;
+    snd_vol_prev = snd_vol;
+
+    HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
+
+    if(snd_vol != 0) sConfigOC.Pulse = 125 - 1;
+    else             sConfigOC.Pulse = 0;
+
+    HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
+    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+
+    return;
+}
+
+void setLCDBkl(uint8_t lcd_bl)
+{
+    static uint8_t lcd_bl_prev = 0;
+    TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
+
+    if(lcd_bl_prev == lcd_bl) return;
+    lcd_bl_prev = lcd_bl;
+
+    HAL_TIM_PWM_Stop(&htim14, TIM_CHANNEL_1);
+
+    if(lcd_bl==0) sConfigOC.Pulse = 0;
+    else sConfigOC.Pulse = (0x0008<<((lcd_bl+1)/10))*8 - 1;
+    //10 : 8192 0x2000
+    // 9 : 4096 0x1000
+    // 8 : 2048 0x0800
+    // 7 : 1024 0x0400
+    // 6 :  512 0x0200
+    // 5 :  256 0x0100
+    // 4 :  128 0x0080
+    // 3 :   64 0x0040
+    // 2 :   32 0x0020
+    // 1 :   16 0x0010
+    // 0 :    8 0x0008
+
+    HAL_TIM_PWM_ConfigChannel(&htim14, &sConfigOC, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
+    return;
+}
+
 void runEcoTaskDefault(void *argument)
 {
     uint32_t timer_sec_1 = 0;
@@ -25,6 +73,13 @@ void runEcoTaskDefault(void *argument)
     {
         tick += 100;
         HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
+
+        if(tick%100 == 0)
+        {
+            setBuzzer(g_switch_bank[0]);
+            setLCDBkl(g_lcd_bkl);
+        }
+
         if(tick%1000 == 0)
         {
             printf("[%08ld] call Pgn126993HeartBeat()\n", ++timer_sec_1);
@@ -255,28 +310,13 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    static bool buzzer_on = false;
     static uint8_t image_sel = 0;
-    TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 125-1, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
 
 //    printf("%s() Enter...\n",__FUNCTION__);
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY1_GPIO_Port, MCU_KEY1_Pin))
     {
-        HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
-        if(buzzer_on == false)
-        {
-            buzzer_on = true;
-            sConfigOC.Pulse = 12 - 1;
-            printf("buzzer on\n");
-        }
-        else
-        {
-            buzzer_on = false;
-            sConfigOC.Pulse = 0;
-            printf("buzzer off\n");
-        }
-        HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
-        HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+        if(g_switch_bank[0] == 0) g_switch_bank[0] = 1;
+        else                      g_switch_bank[0] = 0;
     }
 
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY2_GPIO_Port, MCU_KEY2_Pin))

@@ -12,6 +12,9 @@ fastpacket g_fastpacket[FASTPACKET_ARRAY_MAX];
 multipacket g_multipacket;
 version_dat g_version_dat;
 
+uint8_t g_lcd_bkl = 100;
+uint8_t g_switch_bank[6];
+
 pgn060928_dat g_pgn60928_dat =
 {
     NMEA2K_ID,
@@ -60,6 +63,7 @@ bool IsKnownPGN(uint32_t PGN)
         127488,  // Engine parameters rapid, rapid Update, pri=2, period=100
         127493,  // Transmission parameters: dynamic, pri=2, period=100
         127501,  // Binary status report, pri=3, period=NA
+        127502,  // Switch bank control, pri=3, period=NA
         127505,  // Fluid level, pri=6, period=2500
         127508,  // Battery Status, pri=6, period=1500
         128259,  // Boat speed, pri=2, period=1000
@@ -418,6 +422,22 @@ static int32_t opChkMultiPktRunning(RxProtocol *prxpkt)
     return 0;
 }
 
+static int32_t opSwitchBankControl(uint8_t *prxdat)
+{
+    g_lcd_bkl = *prxdat;
+    g_switch_bank[0] = (*(prxdat+1)>>0) & 0x03;
+    g_switch_bank[1] = (*(prxdat+1)>>2) & 0x03;
+    g_switch_bank[2] = (*(prxdat+1)>>4) & 0x03;
+    g_switch_bank[3] = (*(prxdat+1)>>6) & 0x03;
+    g_switch_bank[4] = (*(prxdat+2)>>0) & 0x03;
+    g_switch_bank[5] = (*(prxdat+2)>>2) & 0x03;
+
+    printf("lcd_bkl[%02d] SwitchBank[%d:%d:%d:%d:%d:%d]\n", g_lcd_bkl,
+           g_switch_bank[0],g_switch_bank[1],g_switch_bank[2],g_switch_bank[3],g_switch_bank[4],g_switch_bank[5]);
+
+    return 0;
+}
+
 int32_t Pgn060416CTSPostProc(void)
 {
     TxProtocol txpkt =
@@ -636,7 +656,31 @@ int32_t Pgn065285BootStatAck(void)//	Boot State Acknowledgment
 
     EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
 
-	return 0;
+    return 0;
+}
+
+int32_t Pgn065288Brightness(void)//    Brightness
+{
+    printf("%s() Called\n",__FUNCTION__);
+    TxProtocol txpkt =
+    {
+        (PGN065288_PRI << 26) | ((PGN065288_NUM) << 8) | (NMEA2K_THIS_ADDR << 0),
+        {
+            PPGN_MFGCODE & 0xFF,
+            (PPGN_MFGCODE>>8) & 0xFF,
+            0,          // Instance - fixed to 0
+            0x40,       // Brightness {preset[0:Daytime 1:Dusk 4:Manual] | source[0:LCD 1:Keypad]}
+            50,         // Brightness percent - 0~99
+            0xff,
+            0xff,
+            0xff
+        },
+        sizeof(uint64_t)
+    };
+
+    EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
+
+    return 0;
 }
 
 int32_t Pgn126720BootldrVer(fastpacket* pfastpkt)
@@ -1030,6 +1074,9 @@ int32_t Pgn126208GrpFuncReq(fastpacket *pfastpkt)
         Pgn126720BootldrVer(pfastpkt);
     }
         break;
+    case PGN065288_NUM:
+        printf("PGN065288 requested\n");
+        break;
 
     default:
         break;
@@ -1055,6 +1102,30 @@ int32_t Pgn126208Proc(fastpacket *pfastpkt)
         printf("PGN126208:%02d No vaild grp_func_code\n", grp_func_code);
         break;
     }
+
+    return 0;
+}
+
+int32_t Pgn127502SwitchBankControl(void)
+{
+    printf("%s() Called\n",__FUNCTION__);
+    TxProtocol txpkt =
+    {
+        (PGN127502_PRI << 26) | ((PGN127502_NUM) << 8) | (NMEA2K_THIS_ADDR << 0),
+        {
+            0,
+            0x00,
+            0xfc,
+            0xff,
+            0xff,
+            0xff,
+            0xff,
+            0xff
+        },
+        sizeof(uint64_t)
+    };
+
+    EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
 
     return 0;
 }
@@ -1086,8 +1157,14 @@ void NMEA2KProc(RxProtocol rxpacket)
         case PGN060928_NUM:
             Pgn060928ISOAddrClame(rxpacket);
             break;
+        case PGN065288_NUM: // Brightness control
+            Pgn065288Brightness();
+            break;
         case PGN126996_NUM:
             Pgn126996ProdInfo();
+            break;
+        case PGN127502_NUM:
+            Pgn127502SwitchBankControl();
             break;
         default:
             if(BROADCAST_DEST_ADDR != getRxPS(rxpacket.canid)) Pgn059392ISOAck(rxpacket);
@@ -1107,6 +1184,9 @@ void NMEA2KProc(RxProtocol rxpacket)
     case PGN126208_NUM: // NMEA2K Group Function
     case PGN126720_NUM: // Various Function
         opFastpacketBuildup(&rxpacket);
+        break;
+    case PGN127502_NUM: // Switch bank control
+        opSwitchBankControl(&rxdat[0]);
         break;
     default:
         printf("Single PGNError[%ld]\n", rxpgn);

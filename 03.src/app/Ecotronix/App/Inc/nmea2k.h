@@ -102,6 +102,9 @@
 
 #define PGN065286_NUM                       (65286UL)
 
+#define PGN065288_NUM                       (65288UL)
+#define PGN065288_PRI                       (7UL)
+
 #define PGN126208_NUM                                   (126208UL)
 #define PGN126208_PRI                                   (3U)
 #define PGN126208_REQ_CODE                              (0U)
@@ -218,6 +221,9 @@
 #define PGN126996_LEN                           (134U)
 #define PGN126996_NMEA_MFG_PROD_CODE_POS        (2U)
 
+#define PGN127502_NUM                       (127502UL)
+#define PGN127502_PRI                       (3UL)
+
 #define BROADCAST_DEST_ADDR                     (255U)
 #define NMEA2K_THIS_ADDR                        (110U)
 
@@ -323,4 +329,8 @@ void NMEA2KProc(RxProtocol rxpacket);
 void NMEA2KInit(void);
 
 int32_t Pgn126993HeartBeat(void);
+
+extern uint8_t g_lcd_bkl;
+extern uint8_t g_switch_bank[6];
+
 #endif /* APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_ */
