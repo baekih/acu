@@ -64,10 +64,10 @@ UART_HandleTypeDef huart2;
 
 SDRAM_HandleTypeDef hsdram1;
 
-/* Definitions for EcoTaskDefault */
-osThreadId_t EcoTaskDefaultHandle;
-const osThreadAttr_t EcoTaskDefault_attributes = {
-  .name = "EcoTaskDefault",
+/* Definitions for EcoTaskMain */
+osThreadId_t EcoTaskMainHandle;
+const osThreadAttr_t EcoTaskMain_attributes = {
+  .name = "EcoTaskMain",
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -145,7 +145,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_TIM14_Init(void);
-void runEcoTaskDefault(void *argument);
+void runEcoTaskMain(void *argument);
 extern void runEcoTaskUART(void *argument);
 extern void runEcoTaskNMEA2KRx(void *argument);
 extern void runEcoTaskNMEA2KTx(void *argument);
@@ -240,8 +240,8 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of EcoTaskDefault */
-  EcoTaskDefaultHandle = osThreadNew(runEcoTaskDefault, NULL, &EcoTaskDefault_attributes);
+  /* creation of EcoTaskMain */
+  EcoTaskMainHandle = osThreadNew(runEcoTaskMain, NULL, &EcoTaskMain_attributes);
 
   /* creation of EcoTaskUART */
   EcoTaskUARTHandle = osThreadNew(runEcoTaskUART, NULL, &EcoTaskUART_attributes);
@@ -1006,6 +1006,20 @@ static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  GPIO_InitStruct.Pin = MCU_PWR_SW_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
+  {
+      HAL_Delay(100);
+  }
+
+  while(GPIO_PIN_SET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
+  {
+      HAL_Delay(100);
+  }
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
@@ -1096,14 +1110,14 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_runEcoTaskDefault */
+/* USER CODE BEGIN Header_runEcoTaskMain */
 /**
-  * @brief  Function implementing the EcoTaskDefault thread.
+  * @brief  Function implementing the EcoTaskMain thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_runEcoTaskDefault */
-__weak void runEcoTaskDefault(void *argument)
+/* USER CODE END Header_runEcoTaskMain */
+__weak void runEcoTaskMain(void *argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
