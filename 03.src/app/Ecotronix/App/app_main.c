@@ -63,7 +63,9 @@ void setLCDBkl(uint8_t lcd_bl)
 void runEcoTaskMain(void *argument)
 {
     uint32_t timer_sec_1 = 0;
+#ifdef FI_DIN_LCD4
     uint8_t  timer_pwroff = 0;
+#endif
     int32_t tick = osKernelGetTickCount();
 
     printf("FI-DIN start...\n");
@@ -85,13 +87,14 @@ void runEcoTaskMain(void *argument)
 
         if(tick%1000 == 0)
         {
+#ifdef FI_DIN_LCD4
             if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
             {
                 printf("Push PWR_SW %d sec\n", timer_pwroff++);
                 if(3 < timer_pwroff) NVIC_SystemReset();
             }
             else timer_pwroff = 0;
-
+#endif
             printf("[%08ld] call Pgn126993HeartBeat()\n", ++timer_sec_1);
             Pgn126993HeartBeat();
         }

@@ -181,10 +181,11 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+#ifdef FI_DIN_LCD4
+  SystemClock_pwrsav_Config();
+
   {
       GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-      SystemClock_pwrsav_Config();
 
       __HAL_RCC_GPIOC_CLK_ENABLE();
       GPIO_InitStruct.Pin = MCU_PWR_SW_Pin;
@@ -201,6 +202,7 @@ int main(void)
           HAL_Delay(100);
       }
   }
+#endif
   /* USER CODE END Init */
 
   /* Configure the system clock */
