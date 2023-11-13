@@ -31,7 +31,7 @@ void setBuzzer(uint8_t snd_vol)
     return;
 }
 
-void setLCDBkl(uint8_t lcd_bl)
+void setLCDBL(uint8_t lcd_bl)
 {
     static uint8_t lcd_bl_prev = 0;
     TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
@@ -42,7 +42,9 @@ void setLCDBkl(uint8_t lcd_bl)
     HAL_TIM_PWM_Stop(&htim14, TIM_CHANNEL_1);
 
     if(lcd_bl==0) sConfigOC.Pulse = 0;
-    else sConfigOC.Pulse = (0x0008<<((lcd_bl+1)/10))*8 - 1;
+    else sConfigOC.Pulse = 100*lcd_bl - 1;
+//    else sConfigOC.Pulse = (0x0001<<((lcd_bl+1)/10))*8 - 1;
+    printf("set lcd_bl[%d] Pulse[%d]\n", lcd_bl, sConfigOC.Pulse);
     //10 : 8192 0x2000
     // 9 : 4096 0x1000
     // 8 : 2048 0x0800
@@ -82,7 +84,7 @@ void runEcoTaskMain(void *argument)
         if(tick%100 == 0)
         {
             setBuzzer(g_switch_bank[0]);
-            setLCDBkl(g_lcd_bkl);
+            setLCDBL(g_lcd_bl);
         }
 
         if(tick%1000 == 0)
@@ -323,6 +325,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+#ifdef FI_DIN_LCD4
     static uint8_t image_sel = 0;
 
 //    printf("%s() Enter...\n",__FUNCTION__);
@@ -459,4 +462,5 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY3_GPIO_Port, MCU_KEY3_Pin)) printf("MCU_KEY3 pressed\n");
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY4_GPIO_Port, MCU_KEY4_Pin)) printf("MCU_KEY4 pressed\n");
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin)) printf("MCU_PWR pressed\n");
+#endif
 }

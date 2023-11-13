@@ -330,7 +330,7 @@ void NMEA2KInit(void);
 
 int32_t Pgn126993HeartBeat(void);
 
-extern uint8_t g_lcd_bkl;
+extern uint8_t g_lcd_bl;
 extern uint8_t g_switch_bank[6];
 
 #endif /* APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_ */

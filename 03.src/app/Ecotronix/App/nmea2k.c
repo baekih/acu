@@ -12,7 +12,7 @@ fastpacket g_fastpacket[FASTPACKET_ARRAY_MAX];
 multipacket g_multipacket;
 version_dat g_version_dat;
 
-uint8_t g_lcd_bkl = 100;
+uint8_t g_lcd_bl = 100;
 uint8_t g_switch_bank[6];
 
 pgn060928_dat g_pgn60928_dat =
@@ -424,7 +424,7 @@ static int32_t opChkMultiPktRunning(RxProtocol *prxpkt)
 
 static int32_t opSwitchBankControl(uint8_t *prxdat)
 {
-    g_lcd_bkl = *prxdat;
+    g_lcd_bl = *prxdat;
     g_switch_bank[0] = (*(prxdat+1)>>0) & 0x03;
     g_switch_bank[1] = (*(prxdat+1)>>2) & 0x03;
     g_switch_bank[2] = (*(prxdat+1)>>4) & 0x03;
@@ -432,7 +432,7 @@ static int32_t opSwitchBankControl(uint8_t *prxdat)
     g_switch_bank[4] = (*(prxdat+2)>>0) & 0x03;
     g_switch_bank[5] = (*(prxdat+2)>>2) & 0x03;
 
-    printf("lcd_bkl[%02d] SwitchBank[%d:%d:%d:%d:%d:%d]\n", g_lcd_bkl,
+    printf("lcd_bl[%02d] SwitchBank[%d:%d:%d:%d:%d:%d]\n", g_lcd_bl,
            g_switch_bank[0],g_switch_bank[1],g_switch_bank[2],g_switch_bank[3],g_switch_bank[4],g_switch_bank[5]);
 
     return 0;
