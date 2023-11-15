@@ -1,12 +1,14 @@
 /*
- * boot.h
+ * sys.h
  *
- *  Created on: Mar 23, 2023
+ *  Created on: Nov 15, 2023
  *      Author: ihbaek
  */
 
-#ifndef APPLICATION_USER_ECOTRONIX_INC_APP_H_
-#define APPLICATION_USER_ECOTRONIX_INC_APP_H_
+#ifndef APP_INC_SYS_H_
+#define APP_INC_SYS_H_
+
+#include "common.h"
 
 /*  STM32L431RB flash 1bank * 64 block-total * 2048byte per block */
 #define FLASH_START_ADRESS        0x08000000
@@ -60,9 +62,19 @@ enum{
     FLASHIF_PROTECTION_RDPENABLED   = 0x4,
 };
 
-void runEcoTaskDefault(void *argument);
-void runEcoTaskUART(void *argument);
-void runEcoTaskNMEA2KRx(void *argument);
-void runEcoTaskNMEA2KTx(void *argument);
+#define LCD_TST_IMG_CHESS       0
+#define LCD_TST_IMG_WHITE       1
+#define LCD_TST_IMG_RED         2
+#define LCD_TST_IMG_GREEN       3
+#define LCD_TST_IMG_BLUE        4
+#define LCD_TST_IMG_GRAY        5
+#define LCD_TST_IMG_KITTEN      6
 
-#endif /* APPLICATION_USER_ECOTRONIX_INC_APP_H_ */
+uint32_t doFlashErase(void);
+uint32_t doFlashWrite(uint32_t, uint64_t*, uint32_t);
+
+void setBuzzer(uint8_t);
+void setLCDBL(uint8_t);
+void setLCDTestImage(uint32_t);
+
+#endif /* APP_INC_SYS_H_ */

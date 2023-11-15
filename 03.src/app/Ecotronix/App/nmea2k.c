@@ -6,6 +6,7 @@
  */
 
 #include "common.h"
+#include "sys.h"
 #include "nmea2k.h"
 
 fastpacket g_fastpacket[FASTPACKET_ARRAY_MAX];
@@ -14,6 +15,7 @@ version_dat g_version_dat;
 
 uint8_t g_lcd_bl = 100;
 uint8_t g_switch_bank[6];
+uint8_t g_lcd_img_idx = 0;
 
 pgn060928_dat g_pgn60928_dat =
 {

@@ -10,12 +10,14 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "cmsis_os.h"
 #include "main.h"
 #include "printf.h"
+
 #include "stm32f767_fi-din_lcd.h"
 #include "stm32f767_fi-din_sdram.h"
 
