@@ -87,13 +87,14 @@ void setBuzzer(uint8_t bzr_vol)
     static uint8_t bzr_vol_prev = 0;
     TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
 
+    if(100 < bzr_vol) bzr_vol = 100;
     if(bzr_vol_prev == bzr_vol) return;
     bzr_vol_prev = bzr_vol;
 
+    sConfigOC.Pulse = (125*bzr_vol)/100;
+    printf("set bzr_vol[%d] Pulse[%d]\n", bzr_vol, sConfigOC.Pulse);
+
     HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
-
-    sConfigOC.Pulse = (125*(bzr_vol))/100;
-
     HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 
@@ -105,27 +106,14 @@ void setLCDBL(uint8_t lcd_bl)
     static uint8_t lcd_bl_prev = 0;
     TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
 
+    if(100 < lcd_bl) lcd_bl = 100;
     if(lcd_bl_prev == lcd_bl) return;
     lcd_bl_prev = lcd_bl;
 
-    HAL_TIM_PWM_Stop(&htim14, TIM_CHANNEL_1);
-
-    if(lcd_bl==0) sConfigOC.Pulse = 0;
-    else sConfigOC.Pulse = 100*lcd_bl - 1;
-//    else sConfigOC.Pulse = (0x0001<<((lcd_bl+1)/10))*8 - 1;
+    sConfigOC.Pulse = (9000*lcd_bl)/100;
     printf("set lcd_bl[%d] Pulse[%d]\n", lcd_bl, sConfigOC.Pulse);
-    //10 : 8192 0x2000
-    // 9 : 4096 0x1000
-    // 8 : 2048 0x0800
-    // 7 : 1024 0x0400
-    // 6 :  512 0x0200
-    // 5 :  256 0x0100
-    // 4 :  128 0x0080
-    // 3 :   64 0x0040
-    // 2 :   32 0x0020
-    // 1 :   16 0x0010
-    // 0 :    8 0x0008
 
+    HAL_TIM_PWM_Stop(&htim14, TIM_CHANNEL_1);
     HAL_TIM_PWM_ConfigChannel(&htim14, &sConfigOC, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
     return;

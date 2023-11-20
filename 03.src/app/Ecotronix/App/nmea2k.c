@@ -14,7 +14,7 @@ multipacket g_multipacket;
 version_dat g_version_dat;
 
 uint8_t g_lcd_bl = 100;
-uint8_t g_bzr_vol = 100;
+uint8_t g_bzr_vol = 0;
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx = 0;
 

@@ -33,7 +33,7 @@ void runEcoTaskMain(void *argument)
 
         if(tick%100 == 0)
         {
-            setBuzzer(g_switch_bank[0]);
+            setBuzzer(g_bzr_vol);
             setLCDBL(g_lcd_bl);
             if(g_lcd_img_idx != g_switch_bank[1])
             {
@@ -67,7 +67,12 @@ void runEcoTaskMain(void *argument)
             }
             else timer_pwroff = 0;
 #endif
-            printf("[%08ld] call Pgn126993HeartBeat()\n", ++timer_sec_1);
+        }
+
+        if(tick%3000 == 0)
+        {
+            timer_sec_1 += 3;
+            printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
             Pgn126993HeartBeat();
         }
 
