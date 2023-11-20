@@ -82,18 +82,17 @@ uint32_t doFlashWrite(uint32_t addr, uint64_t* pdata, uint32_t len)
     return (FLASHIF_OK);
 }
 
-void setBuzzer(uint8_t snd_vol)
+void setBuzzer(uint8_t bzr_vol)
 {
-    static uint8_t snd_vol_prev = 0;
+    static uint8_t bzr_vol_prev = 0;
     TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
 
-    if(snd_vol_prev == snd_vol) return;
-    snd_vol_prev = snd_vol;
+    if(bzr_vol_prev == bzr_vol) return;
+    bzr_vol_prev = bzr_vol;
 
     HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
 
-    if(snd_vol != 0) sConfigOC.Pulse = 125 - 1;
-    else             sConfigOC.Pulse = 0;
+    sConfigOC.Pulse = (125*(bzr_vol))/100;
 
     HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);

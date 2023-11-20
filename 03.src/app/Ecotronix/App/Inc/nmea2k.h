@@ -331,6 +331,7 @@ void NMEA2KInit(void);
 int32_t Pgn126993HeartBeat(void);
 
 extern uint8_t g_lcd_bl;
+extern uint8_t g_bzr_vol;
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
 

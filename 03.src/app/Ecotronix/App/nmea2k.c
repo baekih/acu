@@ -14,6 +14,7 @@ multipacket g_multipacket;
 version_dat g_version_dat;
 
 uint8_t g_lcd_bl = 100;
+uint8_t g_bzr_vol = 100;
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx = 0;
 
@@ -426,7 +427,7 @@ static int32_t opChkMultiPktRunning(RxProtocol *prxpkt)
 
 static int32_t opSwitchBankControl(uint8_t *prxdat)
 {
-    g_lcd_bl = *prxdat;
+    g_bzr_vol = *prxdat;
     g_switch_bank[0] = (*(prxdat+1)>>0) & 0x03;
     g_switch_bank[1] = (*(prxdat+1)>>2) & 0x03;
     g_switch_bank[2] = (*(prxdat+1)>>4) & 0x03;
@@ -434,8 +435,17 @@ static int32_t opSwitchBankControl(uint8_t *prxdat)
     g_switch_bank[4] = (*(prxdat+2)>>0) & 0x03;
     g_switch_bank[5] = (*(prxdat+2)>>2) & 0x03;
 
-    printf("lcd_bl[%02d] SwitchBank[%d:%d:%d:%d:%d:%d]\n", g_lcd_bl,
+    printf("bzr_vol[%02d] SwitchBank[%d:%d:%d:%d:%d:%d]\n", g_bzr_vol,
            g_switch_bank[0],g_switch_bank[1],g_switch_bank[2],g_switch_bank[3],g_switch_bank[4],g_switch_bank[5]);
+
+    return 0;
+}
+
+static int32_t opLCDBrightness(uint8_t *prxdat)
+{
+    g_lcd_bl = *(prxdat+4);
+
+    printf("lcd_bl[%02d]\n", g_lcd_bl);
 
     return 0;
 }
@@ -1182,7 +1192,10 @@ void NMEA2KProc(RxProtocol rxpacket)
     case PGN065286_NUM: // Boot State Request
         Pgn065285BootStatAck();
         break;
-    //Fastpacket build-up.
+    case PGN065288_NUM: // Boot State Request
+        opLCDBrightness(&rxdat[0]);
+        break;
+        //Fastpacket build-up.
     case PGN126208_NUM: // NMEA2K Group Function
     case PGN126720_NUM: // Various Function
         opFastpacketBuildup(&rxpacket);
