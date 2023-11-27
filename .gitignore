@@ -1,4 +1,5 @@
-/03.src/.settings/language.settings.xml
 ~*
-/02.tools/nmea2000/simulator/5.3.11/NMEA2000.mcr.lock
-/03.src/app/.settings
+02.tools/nmea2000/simulator/5.3.11/NMEA2000.mcr.lock
+03.src/.settings/language.settings.xml
+03.src/app/.settings/language.settings.xml
+03.src/stldr/.settings/language.settings.xml
