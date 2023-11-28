@@ -18,22 +18,59 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "common.h"
-#include "sys.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
-typedef StaticQueue_t osStaticMessageQDef_t;
 /* USER CODE BEGIN PTD */
+enum
+{
+  FLASHIF_OK = 0,
+  FLASHIF_ERASEKO,
+  FLASHIF_WRITINGCTRL_ERROR,
+  FLASHIF_WRITING_ERROR
+};
 
+enum
+{
+  FLASHIF_PROTECTION_NONE         = 0,
+  FLASHIF_PROTECTION_PCROPENABLED = 0x1,
+  FLASHIF_PROTECTION_WRPENABLED   = 0x2,
+  FLASHIF_PROTECTION_RDPENABLED   = 0x4,
+};
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define ADDR_FLASH_SECTOR_0     ((uint32_t)0x08000000) /* Base @ of Sector 0, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_1     ((uint32_t)0x08008000) /* Base @ of Sector 1, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_2     ((uint32_t)0x08010000) /* Base @ of Sector 2, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_3     ((uint32_t)0x08018000) /* Base @ of Sector 3, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_4     ((uint32_t)0x08020000) /* Base @ of Sector 4, 128 Kbyte */
+#define ADDR_FLASH_SECTOR_5     ((uint32_t)0x08040000) /* Base @ of Sector 5, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_6     ((uint32_t)0x08080000) /* Base @ of Sector 6, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_7     ((uint32_t)0x080C0000) /* Base @ of Sector 7, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_8     ((uint32_t)0x08100000) /* Base @ of Sector 8, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_9     ((uint32_t)0x08140000) /* Base @ of Sector 9, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_10    ((uint32_t)0x08180000) /* Base @ of Sector 10, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_11    ((uint32_t)0x081C0000) /* Base @ of Sector 11, 256 Kbyte */
+
+/* End of the Flash address */
+#define USER_FLASH_END_ADDRESS      (uint32_t)0x08020000
+/* Define the user application size */
+#define USER_FLASH_SIZE   (USER_FLASH_END_ADDRESS - APPLICATION_ADDRESS + 1)
+
+/* Define the address from where user application will be loaded.
+   Note: the 1st sector 0x08000000-0x08003FFF is reserved for the IAP code */
+#define APPLICATION_ADDRESS        (uint32_t)0x08018000
+
+/* Define bitmap representing user flash area that could be write protected (check restricted to pages 8-39). */
+#define FLASH_SECTOR_TO_BE_PROTECTED (OB_WRP_SECTOR_0 | OB_WRP_SECTOR_1 | OB_WRP_SECTOR_2 | OB_WRP_SECTOR_3 |\
+                                    OB_WRP_SECTOR_4 | OB_WRP_SECTOR_5 | OB_WRP_SECTOR_6 | OB_WRP_SECTOR_7 |\
+                                    OB_WRP_SECTOR_8 | OB_WRP_SECTOR_9 | OB_WRP_SECTOR_10 | OB_WRP_SECTOR_11)
 
 /* USER CODE END PD */
 
@@ -65,67 +102,6 @@ UART_HandleTypeDef huart2;
 
 SDRAM_HandleTypeDef hsdram1;
 
-/* Definitions for EcoTaskMain */
-osThreadId_t EcoTaskMainHandle;
-const osThreadAttr_t EcoTaskMain_attributes = {
-  .name = "EcoTaskMain",
-  .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
-/* Definitions for EcoTaskUART */
-osThreadId_t EcoTaskUARTHandle;
-const osThreadAttr_t EcoTaskUART_attributes = {
-  .name = "EcoTaskUART",
-  .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
-/* Definitions for EcoTaskNMEA2KRx */
-osThreadId_t EcoTaskNMEA2KRxHandle;
-const osThreadAttr_t EcoTaskNMEA2KRx_attributes = {
-  .name = "EcoTaskNMEA2KRx",
-  .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
-/* Definitions for EcoTaskNMEA2KTx */
-osThreadId_t EcoTaskNMEA2KTxHandle;
-const osThreadAttr_t EcoTaskNMEA2KTx_attributes = {
-  .name = "EcoTaskNMEA2KTx",
-  .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
-/* Definitions for EcoQueueUART1 */
-osMessageQueueId_t EcoQueueUART1Handle;
-uint8_t EcoQueueUART1Buffer[ 256 * sizeof( uint8_t ) ];
-osStaticMessageQDef_t EcoQueueUART1CtrlBlock;
-const osMessageQueueAttr_t EcoQueueUART1_attributes = {
-  .name = "EcoQueueUART1",
-  .cb_mem = &EcoQueueUART1CtrlBlock,
-  .cb_size = sizeof(EcoQueueUART1CtrlBlock),
-  .mq_mem = &EcoQueueUART1Buffer,
-  .mq_size = sizeof(EcoQueueUART1Buffer)
-};
-/* Definitions for EcoQueueNMEA2KRX1 */
-osMessageQueueId_t EcoQueueNMEA2KRX1Handle;
-uint8_t EcoQueueNMEA2KRX1Buffer[ 32 * sizeof( uint8_t ) ];
-osStaticMessageQDef_t EcoQueueNMEA2KRX1CtrlBlock;
-const osMessageQueueAttr_t EcoQueueNMEA2KRX1_attributes = {
-  .name = "EcoQueueNMEA2KRX1",
-  .cb_mem = &EcoQueueNMEA2KRX1CtrlBlock,
-  .cb_size = sizeof(EcoQueueNMEA2KRX1CtrlBlock),
-  .mq_mem = &EcoQueueNMEA2KRX1Buffer,
-  .mq_size = sizeof(EcoQueueNMEA2KRX1Buffer)
-};
-/* Definitions for EcoQueueNMEA2KTX1 */
-osMessageQueueId_t EcoQueueNMEA2KTX1Handle;
-uint8_t EcoQueueNMEA2KTX1Buffer[ 256 * sizeof( uint8_t ) ];
-osStaticMessageQDef_t EcoQueueNMEA2KTX1CtrlBlock;
-const osMessageQueueAttr_t EcoQueueNMEA2KTX1_attributes = {
-  .name = "EcoQueueNMEA2KTX1",
-  .cb_mem = &EcoQueueNMEA2KTX1CtrlBlock,
-  .cb_size = sizeof(EcoQueueNMEA2KTX1CtrlBlock),
-  .mq_mem = &EcoQueueNMEA2KTX1Buffer,
-  .mq_size = sizeof(EcoQueueNMEA2KTX1Buffer)
-};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -146,17 +122,131 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_TIM14_Init(void);
-void runEcoTaskMain(void *argument);
-extern void runEcoTaskUART(void *argument);
-extern void runEcoTaskNMEA2KRx(void *argument);
-extern void runEcoTaskNMEA2KTx(void *argument);
-
 /* USER CODE BEGIN PFP */
-void SystemClock_pwrsav_Config(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static uint32_t GetSector(uint32_t Address)
+{
+  uint32_t sector = 0;
+
+  if((Address < ADDR_FLASH_SECTOR_1) && (Address >= ADDR_FLASH_SECTOR_0))
+  {
+    sector = FLASH_SECTOR_0;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_2) && (Address >= ADDR_FLASH_SECTOR_1))
+  {
+    sector = FLASH_SECTOR_1;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_3) && (Address >= ADDR_FLASH_SECTOR_2))
+  {
+    sector = FLASH_SECTOR_2;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_4) && (Address >= ADDR_FLASH_SECTOR_3))
+  {
+    sector = FLASH_SECTOR_3;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_5) && (Address >= ADDR_FLASH_SECTOR_4))
+  {
+    sector = FLASH_SECTOR_4;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_6) && (Address >= ADDR_FLASH_SECTOR_5))
+  {
+    sector = FLASH_SECTOR_5;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_7) && (Address >= ADDR_FLASH_SECTOR_6))
+  {
+    sector = FLASH_SECTOR_6;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_8) && (Address >= ADDR_FLASH_SECTOR_7))
+  {
+    sector = FLASH_SECTOR_7;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_9) && (Address >= ADDR_FLASH_SECTOR_8))
+  {
+    sector = FLASH_SECTOR_8;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_10) && (Address >= ADDR_FLASH_SECTOR_9))
+  {
+    sector = FLASH_SECTOR_9;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_11) && (Address >= ADDR_FLASH_SECTOR_10))
+  {
+    sector = FLASH_SECTOR_10;
+  }
+  else /*(Address < FLASH_END_ADDR) && (Address >= ADDR_FLASH_SECTOR_11))*/
+  {
+    sector = FLASH_SECTOR_11;
+  }
+
+  return sector;
+}
+
+void FLASH_If_Init(void)
+{
+  HAL_FLASH_Unlock();
+
+  /* Clear pending flags (if any) */
+  __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
+                         FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_ERSERR);
+}
+
+uint32_t FLASH_If_Erase(uint32_t StartSector)
+{
+  uint32_t UserStartSector;
+  uint32_t SectorError;
+  FLASH_EraseInitTypeDef pEraseInit;
+
+  /* Unlock the Flash to enable the flash control register access *************/
+  FLASH_If_Init();
+
+  /* Get the sector where start the user flash area */
+  UserStartSector = GetSector(APPLICATION_ADDRESS);
+
+  pEraseInit.TypeErase = TYPEERASE_SECTORS;
+  pEraseInit.Sector = UserStartSector;
+  pEraseInit.NbSectors = 1;
+  pEraseInit.VoltageRange = VOLTAGE_RANGE_3;
+
+  if (HAL_FLASHEx_Erase(&pEraseInit, &SectorError) != HAL_OK)
+  {
+     /* Error occurred while page erase */
+     return (1);
+  }
+
+  return (0);
+}
+
+uint32_t FLASH_If_Write(uint32_t FlashAddress, uint32_t* Data ,uint32_t DataLength)
+{
+  uint32_t i = 0;
+
+  for (i = 0; (i < DataLength) && (FlashAddress <= (USER_FLASH_END_ADDRESS-4)); i++)
+  {
+    /* Device voltage range supposed to be [2.7V to 3.6V], the operation will
+       be done by word */
+    if (HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress, *(uint32_t*)(Data+i)) == HAL_OK)
+    {
+     /* Check the written value */
+      if (*(uint32_t*)FlashAddress != *(uint32_t*)(Data+i))
+      {
+        /* Flash content doesn't match SRAM content */
+        return(FLASHIF_WRITINGCTRL_ERROR);
+      }
+      /* Increment FLASH destination address */
+      FlashAddress += 4;
+    }
+    else
+    {
+      /* Error occurred while writing data in Flash memory */
+      return (FLASHIF_WRITING_ERROR);
+    }
+  }
+
+  return (FLASHIF_OK);
+}
 
 /* USER CODE END 0 */
 
@@ -169,6 +259,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
+/* Enable the CPU Cache */
 
   /* Enable I-Cache---------------------------------------------------------*/
   SCB_EnableICache();
@@ -182,34 +273,17 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-#ifdef FI_DIN_LCD4
-  SystemClock_pwrsav_Config();
 
-  {
-      GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-      __HAL_RCC_GPIOC_CLK_ENABLE();
-      GPIO_InitStruct.Pin = MCU_PWR_SW_Pin;
-      GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-      GPIO_InitStruct.Pull = GPIO_NOPULL;
-      HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-      while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
-      {
-          HAL_Delay(100);
-      }
-
-      while(GPIO_PIN_SET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
-      {
-          HAL_Delay(100);
-      }
-  }
-#endif
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+  FLASH_If_Erase(0x08018000);
+  HAL_FLASH_Program(TYPEPROGRAM_WORD, APPLICATION_ADDRESS + 0, 0xBEADBEAD);
+  HAL_FLASH_Program(TYPEPROGRAM_WORD, APPLICATION_ADDRESS + 4, 0xADEAADEA);
+  while(1);
 
   /* USER CODE END SysInit */
 
@@ -232,60 +306,6 @@ int main(void)
 
   /* USER CODE END 2 */
 
-  /* Init scheduler */
-  osKernelInitialize();
-
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
-
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
-
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
-
-  /* Create the queue(s) */
-  /* creation of EcoQueueUART1 */
-  EcoQueueUART1Handle = osMessageQueueNew (256, sizeof(uint8_t), &EcoQueueUART1_attributes);
-
-  /* creation of EcoQueueNMEA2KRX1 */
-  EcoQueueNMEA2KRX1Handle = osMessageQueueNew (32, sizeof(uint8_t), &EcoQueueNMEA2KRX1_attributes);
-
-  /* creation of EcoQueueNMEA2KTX1 */
-  EcoQueueNMEA2KTX1Handle = osMessageQueueNew (256, sizeof(uint8_t), &EcoQueueNMEA2KTX1_attributes);
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
-
-  /* Create the thread(s) */
-  /* creation of EcoTaskMain */
-  EcoTaskMainHandle = osThreadNew(runEcoTaskMain, NULL, &EcoTaskMain_attributes);
-
-  /* creation of EcoTaskUART */
-  EcoTaskUARTHandle = osThreadNew(runEcoTaskUART, NULL, &EcoTaskUART_attributes);
-
-  /* creation of EcoTaskNMEA2KRx */
-  EcoTaskNMEA2KRxHandle = osThreadNew(runEcoTaskNMEA2KRx, NULL, &EcoTaskNMEA2KRx_attributes);
-
-  /* creation of EcoTaskNMEA2KTx */
-  EcoTaskNMEA2KTxHandle = osThreadNew(runEcoTaskNMEA2KTx, NULL, &EcoTaskNMEA2KTx_attributes);
-
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
-
-  /* USER CODE BEGIN RTOS_EVENTS */
-  /* add events, ... */
-  /* USER CODE END RTOS_EVENTS */
-
-  /* Start scheduler */
-  osKernelStart();
-
-  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -359,7 +379,6 @@ static void MX_CAN1_Init(void)
 {
 
   /* USER CODE BEGIN CAN1_Init 0 */
-  CAN_FilterTypeDef  sFilterConfig;
 
   /* USER CODE END CAN1_Init 0 */
 
@@ -383,26 +402,6 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-  /* Configure the CAN Filter */
-  sFilterConfig.FilterBank = 0;
-  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-  sFilterConfig.FilterIdHigh = 0x0000;
-  sFilterConfig.FilterIdLow = 0x0000;
-  sFilterConfig.FilterMaskIdHigh = 0x0000;
-  sFilterConfig.FilterMaskIdLow = 0x0000;
-  sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-  sFilterConfig.FilterActivation = ENABLE;
-  sFilterConfig.SlaveStartFilterBank = 14;
-
-  /* Filter configuration Error */
-  if(HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK) Error_Handler();
-
-  /* Start the CAN peripheral */
-  if(HAL_CAN_Start(&hcan1) != HAL_OK) Error_Handler();
-
-  /* Activate CAN RX notification */
-  if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) Error_Handler();
 
   /* USER CODE END CAN1_Init 2 */
 
@@ -541,11 +540,7 @@ static void MX_LTDC_Init(void)
   LTDC_LayerCfgTypeDef pLayerCfg = {0};
 
   /* USER CODE BEGIN LTDC_Init 1 */
-  HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
-  HAL_Delay(5);
-  HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
-//    HAL_Delay(120);
-//    HAL_GPIO_WritePin(LCD_BL_CTL_GPIO_Port, LCD_BL_CTL_Pin, GPIO_PIN_SET);
+
   /* USER CODE END LTDC_Init 1 */
   hltdc.Instance = LTDC;
   hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AH;
@@ -622,7 +617,7 @@ static void MX_QUADSPI_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN QUADSPI_Init 2 */
-  EcoQSPIInit();
+
   /* USER CODE END QUADSPI_Init 2 */
 
 }
@@ -680,7 +675,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM3_Init 2 */
-  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+
   /* USER CODE END TIM3_Init 2 */
   HAL_TIM_MspPostInit(&htim3);
 
@@ -739,7 +734,7 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM4_Init 2 */
-  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+
   /* USER CODE END TIM4_Init 2 */
   HAL_TIM_MspPostInit(&htim4);
 
@@ -778,7 +773,7 @@ static void MX_TIM7_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM7_Init 2 */
-  HAL_TIM_Base_Start_IT(&htim7);
+
   /* USER CODE END TIM7_Init 2 */
 
 }
@@ -823,7 +818,7 @@ static void MX_TIM14_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM14_Init 2 */
-  HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
+
   /* USER CODE END TIM14_Init 2 */
   HAL_TIM_MspPostInit(&htim14);
 
@@ -904,8 +899,6 @@ static void MX_FMC_Init(void)
 {
 
   /* USER CODE BEGIN FMC_Init 0 */
-  FMC_SDRAM_CommandTypeDef Command;
-  DMA_HandleTypeDef dma_handle;
 
   /* USER CODE END FMC_Init 0 */
 
@@ -944,77 +937,6 @@ static void MX_FMC_Init(void)
   }
 
   /* USER CODE BEGIN FMC_Init 2 */
-  /* Step 1: Configure a clock configuration enable command */
-  Command.CommandMode            = FMC_SDRAM_CMD_CLK_ENABLE;
-  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
-  Command.AutoRefreshNumber      = 1;
-  Command.ModeRegisterDefinition = 0;
-  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
-
-  /* Step 2: Insert 100 us minimum delay */
-  /* Inserted delay is equal to 1 ms due to systick time base unit (ms) */
-  HAL_Delay(1);
-
-  /* Step 3: Configure a PALL (precharge all) command */
-  Command.CommandMode            = FMC_SDRAM_CMD_PALL;
-  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
-  Command.AutoRefreshNumber      = 1;
-  Command.ModeRegisterDefinition = 0;
-  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
-
-  /* Step 4: Configure an Auto Refresh command */
-  Command.CommandMode            = FMC_SDRAM_CMD_AUTOREFRESH_MODE;
-  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
-  Command.AutoRefreshNumber      = 8;
-  Command.ModeRegisterDefinition = 0;
-  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
-
-  /* Step 5: Program the external memory mode register */
-  __IO uint32_t tmpmrd = (uint32_t)SDRAM_MODEREG_BURST_LENGTH_1          |\
-                                   SDRAM_MODEREG_BURST_TYPE_SEQUENTIAL   |\
-                                   SDRAM_MODEREG_CAS_LATENCY_3           |\
-                                   SDRAM_MODEREG_OPERATING_MODE_STANDARD |\
-                                   SDRAM_MODEREG_WRITEBURST_MODE_SINGLE;
-
-  Command.CommandMode            = FMC_SDRAM_CMD_LOAD_MODE;
-  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
-  Command.AutoRefreshNumber      = 1;
-  Command.ModeRegisterDefinition = tmpmrd;
-  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
-
-  /* Step 6: Set the refresh rate counter */
-  /* Set the device refresh rate */
-  HAL_SDRAM_ProgramRefreshRate(&hsdram1, REFRESH_COUNT);
-
-  /* Configure common DMA parameters */
-  dma_handle.Init.Channel             = SDRAM_DMAx_CHANNEL;
-  dma_handle.Init.Direction           = DMA_MEMORY_TO_MEMORY;
-  dma_handle.Init.PeriphInc           = DMA_PINC_ENABLE;
-  dma_handle.Init.MemInc              = DMA_MINC_ENABLE;
-  dma_handle.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
-  dma_handle.Init.MemDataAlignment    = DMA_MDATAALIGN_WORD;
-  dma_handle.Init.Mode                = DMA_NORMAL;
-  dma_handle.Init.Priority            = DMA_PRIORITY_HIGH;
-  dma_handle.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
-  dma_handle.Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
-  dma_handle.Init.MemBurst            = DMA_MBURST_SINGLE;
-  dma_handle.Init.PeriphBurst         = DMA_PBURST_SINGLE;
-
-  dma_handle.Instance = SDRAM_DMAx_STREAM;
-
-   /* Associate the DMA handle */
-  __HAL_LINKDMA(&hsdram1, hdma, dma_handle);
-
-  /* Deinitialize the stream for new transfer */
-  HAL_DMA_DeInit(&dma_handle);
-
-  /* Configure the DMA stream */
-  HAL_DMA_Init(&dma_handle);
-
-  /* NVIC configuration for DMA transfer complete interrupt */
-  HAL_NVIC_SetPriority(SDRAM_DMAx_IRQn, 0x0F, 0);
-  HAL_NVIC_EnableIRQ(SDRAM_DMAx_IRQn);
-
 
   /* USER CODE END FMC_Init 2 */
 }
@@ -1028,8 +950,7 @@ static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
-
-  /* USER CODE END MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
@@ -1102,13 +1023,13 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(LCD_INT_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI4_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -1116,65 +1037,8 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_pwrsav_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
-  */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
-
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-  {
-    Error_Handler();
-  }
-}
 /* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_runEcoTaskMain */
-/**
-  * @brief  Function implementing the EcoTaskMain thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_runEcoTaskMain */
-__weak void runEcoTaskMain(void *argument)
-{
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */
-}
 
 /**
   * @brief  Period elapsed callback in non blocking mode
@@ -1193,10 +1057,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-  if (htim->Instance == TIM7)
-  {
-//    printf("TIM7\n");
-  }
 
   /* USER CODE END Callback 1 */
 }

@@ -5,77 +5,63 @@
  *      Author: ihbaek
  */
 #include "sys.h"
+#include "nmea2k.h"
 #include "images.h"
 #include "printf.h"
 
-static uint32_t getFlashSector(uint32_t Address)
-{
-    uint32_t sector = 0;
-
-    if     ((Address < ADDR_FLASH_SECTOR_1)  && (Address >= ADDR_FLASH_SECTOR_0))  sector = FLASH_SECTOR_0;
-    else if((Address < ADDR_FLASH_SECTOR_2)  && (Address >= ADDR_FLASH_SECTOR_1))  sector = FLASH_SECTOR_1;
-    else if((Address < ADDR_FLASH_SECTOR_3)  && (Address >= ADDR_FLASH_SECTOR_2))  sector = FLASH_SECTOR_2;
-    else if((Address < ADDR_FLASH_SECTOR_4)  && (Address >= ADDR_FLASH_SECTOR_3))  sector = FLASH_SECTOR_3;
-    else if((Address < ADDR_FLASH_SECTOR_5)  && (Address >= ADDR_FLASH_SECTOR_4))  sector = FLASH_SECTOR_4;
-    else if((Address < ADDR_FLASH_SECTOR_6)  && (Address >= ADDR_FLASH_SECTOR_5))  sector = FLASH_SECTOR_5;
-    else if((Address < ADDR_FLASH_SECTOR_7)  && (Address >= ADDR_FLASH_SECTOR_6))  sector = FLASH_SECTOR_6;
-    else if((Address < ADDR_FLASH_SECTOR_8)  && (Address >= ADDR_FLASH_SECTOR_7))  sector = FLASH_SECTOR_7;
-    else if((Address < ADDR_FLASH_SECTOR_9)  && (Address >= ADDR_FLASH_SECTOR_8))  sector = FLASH_SECTOR_8;
-    else if((Address < ADDR_FLASH_SECTOR_10) && (Address >= ADDR_FLASH_SECTOR_9))  sector = FLASH_SECTOR_9;
-    else if((Address < ADDR_FLASH_SECTOR_11) && (Address >= ADDR_FLASH_SECTOR_10)) sector = FLASH_SECTOR_10;
-    else /*(Address < FLASH_END_ADDR) && (Address >= ADDR_FLASH_SECTOR_11))*/      sector = FLASH_SECTOR_11;
-
-    return sector;
-}
+app_dat g_app_dat_org = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0, .chksum = 0};
+app_dat g_app_dat;
 
 uint32_t doFlashErase(void)
 {
-    uint32_t UserStartSector;
     uint32_t SectorError;
-    FLASH_EraseInitTypeDef pEraseInit;
+    FLASH_EraseInitTypeDef pEraseInit =
+    {
+        .TypeErase = TYPEERASE_SECTORS,
+        .Sector = FLASH_SECTOR_3,
+        .NbSectors = 1,
+        .VoltageRange = VOLTAGE_RANGE_3
+    };
+
+    /* Unlock the Flash to enable the flash control register access *************/
+    HAL_FLASH_Unlock();
 
     /* Clear pending flags (if any) */
-    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP    | FLASH_FLAG_OPERR  | FLASH_FLAG_WRPERR |
                            FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_ERSERR);
-
-    /* Get the sector where start the user flash area */
-    UserStartSector = getFlashSector(APPLICATION_ADDRESS);
-
-    pEraseInit.TypeErase = TYPEERASE_SECTORS;
-    pEraseInit.Sector = UserStartSector;
-    pEraseInit.NbSectors = 2;
-    pEraseInit.VoltageRange = VOLTAGE_RANGE_3;
 
     if (HAL_FLASHEx_Erase(&pEraseInit, &SectorError) != HAL_OK)
     {
        /* Error occurred while page erase */
-       return FLASHIF_WRITINGCTRL_ERROR;
+       return (FLASHIF_ERASE_ERROR);
     }
 
-    return FLASHIF_OK;
+    return (FLASHIF_OK);
 }
 
-uint32_t doFlashWrite(uint32_t addr, uint64_t* pdata, uint32_t len)
+uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
 {
-    for (uint32_t i = 0; (i < len) && (addr <= (USER_FLASH_END_ADDRESS-8)); i++)
+    uint32_t i = 0;
+
+    for (i = 0; (i < len) && (addr <= (USER_FLASH_END_ADDRESS-4)); i++)
     {
       /* Device voltage range supposed to be [2.7V to 3.6V], the operation will
          be done by word */
-      if (HAL_FLASH_Program(TYPEPROGRAM_DOUBLEWORD, addr, *(uint64_t*)(pdata+i)) == HAL_OK)
+      if (HAL_FLASH_Program(TYPEPROGRAM_WORD, addr, *(uint32_t*)(pdata+i)) == HAL_OK)
       {
        /* Check the written value */
         if (*(uint32_t*)addr != *(uint32_t*)(pdata+i))
         {
           /* Flash content doesn't match SRAM content */
-          return FLASHIF_WRITINGCTRL_ERROR;
+          return(FLASHIF_WRITINGCTRL_ERROR);
         }
         /* Increment FLASH destination address */
-        addr += 8;
+        addr += 4;
       }
       else
       {
         /* Error occurred while writing data in Flash memory */
-        return FLASHIF_WRITING_ERROR;
+        return (FLASHIF_WRITING_ERROR);
       }
     }
 
@@ -91,7 +77,7 @@ void setBuzzer(uint8_t bzr_vol)
     if(bzr_vol_prev == bzr_vol) return;
     bzr_vol_prev = bzr_vol;
 
-    sConfigOC.Pulse = (125*bzr_vol)/100;
+    sConfigOC.Pulse = (125*bzr_vol)/200;
     printf("set bzr_vol[%d] Pulse[%d]\n", bzr_vol, sConfigOC.Pulse);
 
     HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
@@ -116,6 +102,20 @@ void setLCDBL(uint8_t lcd_bl)
     HAL_TIM_PWM_Stop(&htim14, TIM_CHANNEL_1);
     HAL_TIM_PWM_ConfigChannel(&htim14, &sConfigOC, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
+    return;
+}
+
+void setFlashDAT(app_dat app_dat_local)
+{
+//    uint32_t *pval = (uint32_t*)APPLICATION_ADDRESS;
+    app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
+    if(memcmp(&app_dat_local, papp_dat, sizeof(app_dat)))
+    {
+        printf("Flash write run lcd_bl[%d] bzr_vol[%d]\n", app_dat_local.lcd_bl, app_dat_local.bzr_vol);
+        doFlashErase();
+        doFlashWrite(APPLICATION_ADDRESS, (uint32_t*)&g_app_dat, 1);
+    }
+
     return;
 }
 
