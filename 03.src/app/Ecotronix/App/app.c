@@ -52,7 +52,8 @@ void runEcoTaskMain(void *argument)
 
         if(tick%100 == 0)
         {
-            setBuzzer(g_app_dat.bzr_vol);
+            if(g_switch_bank[0] != 0) setBuzzer(g_app_dat.bzr_vol);
+            else                      setBuzzer(0);
             setLCDBL(g_app_dat.lcd_bl);
             setFlashDAT(g_app_dat);
             if(g_lcd_img_idx != g_switch_bank[1])
