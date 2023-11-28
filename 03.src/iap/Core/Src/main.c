@@ -26,11 +26,51 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+enum
+{
+  FLASHIF_OK = 0,
+  FLASHIF_ERASEKO,
+  FLASHIF_WRITINGCTRL_ERROR,
+  FLASHIF_WRITING_ERROR
+};
 
+enum
+{
+  FLASHIF_PROTECTION_NONE         = 0,
+  FLASHIF_PROTECTION_PCROPENABLED = 0x1,
+  FLASHIF_PROTECTION_WRPENABLED   = 0x2,
+  FLASHIF_PROTECTION_RDPENABLED   = 0x4,
+};
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define ADDR_FLASH_SECTOR_0     ((uint32_t)0x08000000) /* Base @ of Sector 0, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_1     ((uint32_t)0x08008000) /* Base @ of Sector 1, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_2     ((uint32_t)0x08010000) /* Base @ of Sector 2, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_3     ((uint32_t)0x08018000) /* Base @ of Sector 3, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_4     ((uint32_t)0x08020000) /* Base @ of Sector 4, 128 Kbyte */
+#define ADDR_FLASH_SECTOR_5     ((uint32_t)0x08040000) /* Base @ of Sector 5, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_6     ((uint32_t)0x08080000) /* Base @ of Sector 6, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_7     ((uint32_t)0x080C0000) /* Base @ of Sector 7, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_8     ((uint32_t)0x08100000) /* Base @ of Sector 8, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_9     ((uint32_t)0x08140000) /* Base @ of Sector 9, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_10    ((uint32_t)0x08180000) /* Base @ of Sector 10, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_11    ((uint32_t)0x081C0000) /* Base @ of Sector 11, 256 Kbyte */
+
+/* End of the Flash address */
+#define USER_FLASH_END_ADDRESS      (uint32_t)0x08020000
+/* Define the user application size */
+#define USER_FLASH_SIZE   (USER_FLASH_END_ADDRESS - APPLICATION_ADDRESS + 1)
+
+/* Define the address from where user application will be loaded.
+   Note: the 1st sector 0x08000000-0x08003FFF is reserved for the IAP code */
+#define APPLICATION_ADDRESS        (uint32_t)0x08018000
+
+/* Define bitmap representing user flash area that could be write protected (check restricted to pages 8-39). */
+#define FLASH_SECTOR_TO_BE_PROTECTED (OB_WRP_SECTOR_0 | OB_WRP_SECTOR_1 | OB_WRP_SECTOR_2 | OB_WRP_SECTOR_3 |\
+                                    OB_WRP_SECTOR_4 | OB_WRP_SECTOR_5 | OB_WRP_SECTOR_6 | OB_WRP_SECTOR_7 |\
+                                    OB_WRP_SECTOR_8 | OB_WRP_SECTOR_9 | OB_WRP_SECTOR_10 | OB_WRP_SECTOR_11)
 
 /* USER CODE END PD */
 
@@ -88,6 +128,125 @@ static void MX_TIM14_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static uint32_t GetSector(uint32_t Address)
+{
+  uint32_t sector = 0;
+
+  if((Address < ADDR_FLASH_SECTOR_1) && (Address >= ADDR_FLASH_SECTOR_0))
+  {
+    sector = FLASH_SECTOR_0;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_2) && (Address >= ADDR_FLASH_SECTOR_1))
+  {
+    sector = FLASH_SECTOR_1;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_3) && (Address >= ADDR_FLASH_SECTOR_2))
+  {
+    sector = FLASH_SECTOR_2;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_4) && (Address >= ADDR_FLASH_SECTOR_3))
+  {
+    sector = FLASH_SECTOR_3;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_5) && (Address >= ADDR_FLASH_SECTOR_4))
+  {
+    sector = FLASH_SECTOR_4;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_6) && (Address >= ADDR_FLASH_SECTOR_5))
+  {
+    sector = FLASH_SECTOR_5;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_7) && (Address >= ADDR_FLASH_SECTOR_6))
+  {
+    sector = FLASH_SECTOR_6;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_8) && (Address >= ADDR_FLASH_SECTOR_7))
+  {
+    sector = FLASH_SECTOR_7;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_9) && (Address >= ADDR_FLASH_SECTOR_8))
+  {
+    sector = FLASH_SECTOR_8;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_10) && (Address >= ADDR_FLASH_SECTOR_9))
+  {
+    sector = FLASH_SECTOR_9;
+  }
+  else if((Address < ADDR_FLASH_SECTOR_11) && (Address >= ADDR_FLASH_SECTOR_10))
+  {
+    sector = FLASH_SECTOR_10;
+  }
+  else /*(Address < FLASH_END_ADDR) && (Address >= ADDR_FLASH_SECTOR_11))*/
+  {
+    sector = FLASH_SECTOR_11;
+  }
+
+  return sector;
+}
+
+void FLASH_If_Init(void)
+{
+  HAL_FLASH_Unlock();
+
+  /* Clear pending flags (if any) */
+  __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
+                         FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_ERSERR);
+}
+
+uint32_t FLASH_If_Erase(uint32_t StartSector)
+{
+  uint32_t UserStartSector;
+  uint32_t SectorError;
+  FLASH_EraseInitTypeDef pEraseInit;
+
+  /* Unlock the Flash to enable the flash control register access *************/
+  FLASH_If_Init();
+
+  /* Get the sector where start the user flash area */
+  UserStartSector = GetSector(APPLICATION_ADDRESS);
+
+  pEraseInit.TypeErase = TYPEERASE_SECTORS;
+  pEraseInit.Sector = UserStartSector;
+  pEraseInit.NbSectors = 1;
+  pEraseInit.VoltageRange = VOLTAGE_RANGE_3;
+
+  if (HAL_FLASHEx_Erase(&pEraseInit, &SectorError) != HAL_OK)
+  {
+     /* Error occurred while page erase */
+     return (1);
+  }
+
+  return (0);
+}
+
+uint32_t FLASH_If_Write(uint32_t FlashAddress, uint32_t* Data ,uint32_t DataLength)
+{
+  uint32_t i = 0;
+
+  for (i = 0; (i < DataLength) && (FlashAddress <= (USER_FLASH_END_ADDRESS-4)); i++)
+  {
+    /* Device voltage range supposed to be [2.7V to 3.6V], the operation will
+       be done by word */
+    if (HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress, *(uint32_t*)(Data+i)) == HAL_OK)
+    {
+     /* Check the written value */
+      if (*(uint32_t*)FlashAddress != *(uint32_t*)(Data+i))
+      {
+        /* Flash content doesn't match SRAM content */
+        return(FLASHIF_WRITINGCTRL_ERROR);
+      }
+      /* Increment FLASH destination address */
+      FlashAddress += 4;
+    }
+    else
+    {
+      /* Error occurred while writing data in Flash memory */
+      return (FLASHIF_WRITING_ERROR);
+    }
+  }
+
+  return (FLASHIF_OK);
+}
 
 /* USER CODE END 0 */
 
@@ -121,6 +280,10 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+  FLASH_If_Erase(0x08018000);
+  HAL_FLASH_Program(TYPEPROGRAM_WORD, APPLICATION_ADDRESS + 0, 0xBEADBEAD);
+  HAL_FLASH_Program(TYPEPROGRAM_WORD, APPLICATION_ADDRESS + 4, 0xADEAADEA);
+  while(1);
 
   /* USER CODE END SysInit */
 

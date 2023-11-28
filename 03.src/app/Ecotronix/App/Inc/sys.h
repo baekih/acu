@@ -34,13 +34,13 @@
 #define ADDR_FLASH_SECTOR_11    ((uint32_t)0x081C0000) /* Base @ of Sector 11, 256 Kbyte */
 
 /* End of the Flash address */
-#define USER_FLASH_END_ADDRESS      (uint32_t)0x0800FFFF
+#define USER_FLASH_END_ADDRESS      (uint32_t)0x08020000
 /* Define the user application size */
 #define USER_FLASH_SIZE   (USER_FLASH_END_ADDRESS - APPLICATION_ADDRESS + 1)
 
 /* Define the address from where user application will be loaded.
  Note: the 1st sector 0x08000000-0x08003FFF is reserved for the IAP code */
-#define APPLICATION_ADDRESS        (uint32_t)0x08008000
+#define APPLICATION_ADDRESS        (uint32_t)0x08018000
 
 /* Define bitmap representing user flash area that could be write protected (check restricted to pages 8-39). */
 #define FLASH_SECTOR_TO_BE_PROTECTED (OB_WRP_SECTOR_0 | OB_WRP_SECTOR_1 | OB_WRP_SECTOR_2 | OB_WRP_SECTOR_3 |\
@@ -71,7 +71,7 @@ enum{
 #define LCD_TST_IMG_KITTEN      6
 
 uint32_t doFlashErase(void);
-uint32_t doFlashWrite(uint32_t, uint64_t*, uint32_t);
+uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
