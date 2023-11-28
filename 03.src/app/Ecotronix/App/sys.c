@@ -5,8 +5,12 @@
  *      Author: ihbaek
  */
 #include "sys.h"
+#include "nmea2k.h"
 #include "images.h"
 #include "printf.h"
+
+app_dat g_app_dat_org = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0, .chksum = 0};
+app_dat g_app_dat;
 
 uint32_t doFlashErase(void)
 {
@@ -23,21 +27,16 @@ uint32_t doFlashErase(void)
     HAL_FLASH_Unlock();
 
     /* Clear pending flags (if any) */
-    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP    | FLASH_FLAG_OPERR  | FLASH_FLAG_WRPERR |
                            FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_ERSERR);
-
-//    pEraseInit.TypeErase = TYPEERASE_SECTORS;
-//    pEraseInit.Sector = FLASH_SECTOR_3;
-//    pEraseInit.NbSectors = 1;
-//    pEraseInit.VoltageRange = VOLTAGE_RANGE_3;
 
     if (HAL_FLASHEx_Erase(&pEraseInit, &SectorError) != HAL_OK)
     {
        /* Error occurred while page erase */
-       return (1);
+       return (FLASHIF_ERASE_ERROR);
     }
 
-    return (0);
+    return (FLASHIF_OK);
 }
 
 uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
@@ -78,7 +77,7 @@ void setBuzzer(uint8_t bzr_vol)
     if(bzr_vol_prev == bzr_vol) return;
     bzr_vol_prev = bzr_vol;
 
-    sConfigOC.Pulse = (125*bzr_vol)/100;
+    sConfigOC.Pulse = (125*bzr_vol)/200;
     printf("set bzr_vol[%d] Pulse[%d]\n", bzr_vol, sConfigOC.Pulse);
 
     HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
@@ -103,6 +102,20 @@ void setLCDBL(uint8_t lcd_bl)
     HAL_TIM_PWM_Stop(&htim14, TIM_CHANNEL_1);
     HAL_TIM_PWM_ConfigChannel(&htim14, &sConfigOC, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
+    return;
+}
+
+void setFlashDAT(app_dat app_dat_local)
+{
+//    uint32_t *pval = (uint32_t*)APPLICATION_ADDRESS;
+    app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
+    if(memcmp(&app_dat_local, papp_dat, sizeof(app_dat)))
+    {
+        printf("Flash write run lcd_bl[%d] bzr_vol[%d]\n", app_dat_local.lcd_bl, app_dat_local.bzr_vol);
+        doFlashErase();
+        doFlashWrite(APPLICATION_ADDRESS, (uint32_t*)&g_app_dat, 1);
+    }
+
     return;
 }
 

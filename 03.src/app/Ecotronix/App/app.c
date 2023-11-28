@@ -22,6 +22,25 @@ void runEcoTaskMain(void *argument)
 
     printf("FI-DIN start...\n");
 
+    {
+        app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
+
+        printf("Init app_dat.\n");
+
+        if(papp_dat->chksum == 0xFF
+         &&papp_dat->lcd_bl == 0xFF
+         &&papp_dat->bzr_vol == 0xFF
+         &&papp_dat->rsv == 0xFF)
+        {
+            g_app_dat = g_app_dat_org;
+        }
+        else
+        {
+            memcpy(&g_app_dat, papp_dat, sizeof(app_dat));
+        }
+
+        printf("Init app_dat[%d:%d:%d:%d]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.chksum);
+}
     memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
 //    memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
 
@@ -33,8 +52,9 @@ void runEcoTaskMain(void *argument)
 
         if(tick%100 == 0)
         {
-            setBuzzer(g_bzr_vol);
-            setLCDBL(g_lcd_bl);
+            setBuzzer(g_app_dat.bzr_vol);
+            setLCDBL(g_app_dat.lcd_bl);
+            setFlashDAT(g_app_dat);
             if(g_lcd_img_idx != g_switch_bank[1])
             {
                 g_lcd_img_idx = g_switch_bank[1];

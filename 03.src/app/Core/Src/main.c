@@ -210,12 +210,6 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  {
-      uint32_t val[] = {0x11111111*3, 0x11111111*4, 0x11111111*1, 0x11111111*5};
-      doFlashErase();
-      doFlashWrite(APPLICATION_ADDRESS, val, 4);
-//      FLASH_If_Write(APPLICATION_ADDRESS, val, 2);
-  }
 
   /* USER CODE END SysInit */
 

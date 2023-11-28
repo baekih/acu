@@ -47,10 +47,18 @@
                                       OB_WRP_SECTOR_4 | OB_WRP_SECTOR_5 | OB_WRP_SECTOR_6 | OB_WRP_SECTOR_7 |\
                                       OB_WRP_SECTOR_8 | OB_WRP_SECTOR_9 | OB_WRP_SECTOR_10 | OB_WRP_SECTOR_11)
 
+#define LCD_TST_IMG_CHESS       0
+#define LCD_TST_IMG_WHITE       1
+#define LCD_TST_IMG_RED         2
+#define LCD_TST_IMG_GREEN       3
+#define LCD_TST_IMG_BLUE        4
+#define LCD_TST_IMG_GRAY        5
+#define LCD_TST_IMG_KITTEN      6
+
 enum
 {
     FLASHIF_OK = 0,
-    FLASHIF_ERASEKO,
+    FLASHIF_ERASE_ERROR,
     FLASHIF_WRITINGCTRL_ERROR,
     FLASHIF_WRITING_ERROR
 };
@@ -62,19 +70,24 @@ enum{
     FLASHIF_PROTECTION_RDPENABLED   = 0x4,
 };
 
-#define LCD_TST_IMG_CHESS       0
-#define LCD_TST_IMG_WHITE       1
-#define LCD_TST_IMG_RED         2
-#define LCD_TST_IMG_GREEN       3
-#define LCD_TST_IMG_BLUE        4
-#define LCD_TST_IMG_GRAY        5
-#define LCD_TST_IMG_KITTEN      6
+typedef struct _app_dat
+{
+    uint8_t lcd_bl;
+    uint8_t bzr_vol;
+    uint8_t rsv;
+    uint8_t chksum;
+} app_dat  __attribute__((aligned(1)));
+
+extern uint32_t g_val;
+extern app_dat g_app_dat;
+extern app_dat g_app_dat_org;
 
 uint32_t doFlashErase(void);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
+void setFlashDAT(app_dat);
 void setLCDTestImage(uint32_t);
 
 #endif /* APP_INC_SYS_H_ */
