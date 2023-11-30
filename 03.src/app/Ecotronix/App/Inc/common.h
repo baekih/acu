@@ -21,7 +21,7 @@
 #include "stm32f767_fi-din_lcd.h"
 #include "stm32f767_fi-din_sdram.h"
 
-#define FI_DIN_LCD4
+//#define FI_DIN_LCD4
 
 #pragma pack(push,1)
 typedef struct __RxProtocol

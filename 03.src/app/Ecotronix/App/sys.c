@@ -71,6 +71,7 @@ uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
 void setBuzzer(uint8_t bzr_vol)
 {
     static uint8_t bzr_vol_prev = 0;
+
     TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
 
     if(100 < bzr_vol) bzr_vol = 100;
