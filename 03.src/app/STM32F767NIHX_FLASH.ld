@@ -188,21 +188,21 @@ SECTIONS
     *(ExtFlashSection ExtFlashSection.*)
     *(.gnu.linkonce.r.*)
     . = ALIGN(0x4);
-  } >FLASH_DATA
+  } >QUADSPI
 
   FontFlashSection :
   {
     *(FontFlashSection FontFlashSection.*)
     *(.gnu.linkonce.r.*)
     . = ALIGN(0x4);
-  } >FLASH_DATA
+  } >QUADSPI
 
   TextFlashSection :
   {
     *(TextFlashSection TextFlashSection.*)
     *(.gnu.linkonce.r.*)
     . = ALIGN(0x4);
-  } >FLASH_DATA
+  } >QUADSPI
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }

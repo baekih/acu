@@ -250,8 +250,8 @@ void setLCDTestImage(uint32_t img_sel)
         break;
     }
     case LCD_TST_IMG_KITTEN:
-        memcpy((uint8_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
-        printf("kitten_800x480\n");
+        memcpy((uint8_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+        printf("autopilot_800x480\n");
         break;
     }
 }
