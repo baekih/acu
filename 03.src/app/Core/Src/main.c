@@ -553,13 +553,13 @@ static void MX_LTDC_Init(void)
   hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AH;
   hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
   hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;
-  hltdc.Init.HorizontalSync = 13;
+  hltdc.Init.HorizontalSync = 6;
   hltdc.Init.VerticalSync = 6;
-  hltdc.Init.AccumulatedHBP = 23;
+  hltdc.Init.AccumulatedHBP = 13;
   hltdc.Init.AccumulatedVBP = 13;
-  hltdc.Init.AccumulatedActiveW = 823;
+  hltdc.Init.AccumulatedActiveW = 493;
   hltdc.Init.AccumulatedActiveH = 493;
-  hltdc.Init.TotalWidth = 833;
+  hltdc.Init.TotalWidth = 500;
   hltdc.Init.TotalHeigh = 500;
   hltdc.Init.Backcolor.Blue = 0;
   hltdc.Init.Backcolor.Green = 0;
@@ -569,7 +569,7 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   pLayerCfg.WindowX0 = 0;
-  pLayerCfg.WindowX1 = 800;
+  pLayerCfg.WindowX1 = 480;
   pLayerCfg.WindowY0 = 0;
   pLayerCfg.WindowY1 = 480;
   pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_RGB565;
@@ -578,7 +578,7 @@ static void MX_LTDC_Init(void)
   pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
   pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
   pLayerCfg.FBStartAdress = 0xC0000000;
-  pLayerCfg.ImageWidth = 800;
+  pLayerCfg.ImageWidth = 480;
   pLayerCfg.ImageHeight = 480;
   pLayerCfg.Backcolor.Blue = 0;
   pLayerCfg.Backcolor.Green = 0;

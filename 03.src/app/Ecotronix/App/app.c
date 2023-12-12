@@ -41,7 +41,8 @@ void runEcoTaskMain(void *argument)
 
         printf("Init app_dat[%d:%d:%d:%d]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.chksum);
 }
-    memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+    memcpy((uint32_t*)0xC0000000, &image_kitten_480x480[0], 480*480*2);
+//    memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 //    memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
 //    memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
 
