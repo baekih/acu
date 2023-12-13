@@ -188,7 +188,7 @@ SECTIONS
     *(ExtFlashSection ExtFlashSection.*)
     *(.gnu.linkonce.r.*)
     . = ALIGN(0x4);
-  } >QUADSPI
+  } >FLASH_DATA
 
   FontFlashSection :
   {

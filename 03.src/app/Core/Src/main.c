@@ -218,6 +218,16 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+#if 0
+#define LCD_BKL_Pin GPIO_PIN_7
+#define LCD_BKL_GPIO_Port GPIOA
+
+  MX_LTDC_Init();
+  HAL_GPIO_WritePin(LCD_BKL_GPIO_Port, LCD_BKL_Pin, GPIO_PIN_SET);
+
+  while(1) HAL_Delay(1000);
+
+#else
   MX_CAN1_Init();
   MX_I2C1_Init();
   MX_QUADSPI_Init();
@@ -230,6 +240,7 @@ int main(void)
   MX_TIM7_Init();
   MX_TIM14_Init();
   MX_DMA2D_Init();
+#endif
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -546,10 +557,7 @@ static void MX_LTDC_Init(void)
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_RESET);
   HAL_Delay(10);
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
-//  HAL_Delay(5);
-//  HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
-//    HAL_Delay(120);
-//    HAL_GPIO_WritePin(LCD_BL_CTL_GPIO_Port, LCD_BL_CTL_Pin, GPIO_PIN_SET);
+
   /* USER CODE END LTDC_Init 1 */
   hltdc.Instance = LTDC;
   hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;
@@ -593,7 +601,6 @@ static void MX_LTDC_Init(void)
   /* USER CODE BEGIN LTDC_Init 2 */
   pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)image_kitten_480x480);
   HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
-
   /* USER CODE END LTDC_Init 2 */
 
 }
