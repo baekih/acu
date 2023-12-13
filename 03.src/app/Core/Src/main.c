@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "common.h"
 #include "sys.h"
+#include "images.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -138,7 +139,6 @@ static void MX_CAN1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_QUADSPI_Init(void);
 static void MX_CRC_Init(void);
-static void MX_DMA2D_Init(void);
 static void MX_FMC_Init(void);
 static void MX_LTDC_Init(void);
 static void MX_TIM3_Init(void);
@@ -146,6 +146,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_TIM14_Init(void);
+static void MX_DMA2D_Init(void);
 void runEcoTaskMain(void *argument);
 extern void runEcoTaskUART(void *argument);
 extern void runEcoTaskNMEA2KRx(void *argument);
@@ -221,7 +222,6 @@ int main(void)
   MX_I2C1_Init();
   MX_QUADSPI_Init();
   MX_CRC_Init();
-  MX_DMA2D_Init();
   MX_FMC_Init();
   MX_LTDC_Init();
   MX_TIM3_Init();
@@ -229,6 +229,7 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM7_Init();
   MX_TIM14_Init();
+  MX_DMA2D_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -542,15 +543,17 @@ static void MX_LTDC_Init(void)
   LTDC_LayerCfgTypeDef pLayerCfg = {0};
 
   /* USER CODE BEGIN LTDC_Init 1 */
+  HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_RESET);
+  HAL_Delay(10);
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
-  HAL_Delay(5);
-  HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
+//  HAL_Delay(5);
+//  HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
 //    HAL_Delay(120);
 //    HAL_GPIO_WritePin(LCD_BL_CTL_GPIO_Port, LCD_BL_CTL_Pin, GPIO_PIN_SET);
   /* USER CODE END LTDC_Init 1 */
   hltdc.Instance = LTDC;
-  hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AH;
-  hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AH;
+  hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;
+  hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AL;
   hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
   hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;
   hltdc.Init.HorizontalSync = 6;
@@ -588,6 +591,8 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
+  pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)image_kitten_480x480);
+  HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
 
   /* USER CODE END LTDC_Init 2 */
 
@@ -1049,11 +1054,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_STBY_Pin|TOUCH_RSTn_Pin
-                          |LCD_RSTn_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_UD_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|TOUCH_RSTn_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PWR_HOLD_GPIO_Port, PWR_HOLD_Pin, GPIO_PIN_RESET);
@@ -1080,10 +1081,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : WDI_Pin MCU_CAN_STB_Pin LCD_LR_Pin LCD_UD_Pin
-                           LCD_STBY_Pin TOUCH_RSTn_Pin LCD_RSTn_Pin */
-  GPIO_InitStruct.Pin = WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
-                          |LCD_STBY_Pin|TOUCH_RSTn_Pin|LCD_RSTn_Pin;
+  /*Configure GPIO pins : WDI_Pin MCU_CAN_STB_Pin TOUCH_RSTn_Pin LCD_RSTn_Pin */
+  GPIO_InitStruct.Pin = WDI_Pin|MCU_CAN_STB_Pin|TOUCH_RSTn_Pin|LCD_RSTn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
