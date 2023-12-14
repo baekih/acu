@@ -184,7 +184,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-#ifdef FI_DIN_LCD4
+#ifdef FI_DIN_1_0
   SystemClock_pwrsav_Config();
 
   {
