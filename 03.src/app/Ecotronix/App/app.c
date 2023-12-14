@@ -15,13 +15,16 @@
 void runEcoTaskMain(void *argument)
 {
     uint32_t timer_sec_1 = 0;
-#ifdef FI_DIN_LCD4
+#ifdef FI_DIN_1_0
     uint8_t  timer_pwroff = 0;
 #endif
     int32_t tick = osKernelGetTickCount();
 
-    printf("FI-DIN start...\n");
-
+#ifdef FI_DIN_1_0
+    printf("FI-DIN 1.0 start...\n");
+#else
+    printf("FI-DIN 1.5 start...\n");
+#endif
     {
         app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
 
@@ -40,10 +43,13 @@ void runEcoTaskMain(void *argument)
         }
 
         printf("Init app_dat[%d:%d:%d:%d]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.chksum);
-}
+    }
+
+#ifdef FI_DIN_1_0
+    memcpy((uint32_t*)0xC0000000, &image_kitten_480x480[0], 480*480*2);
+#else
     memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
-//    memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
-//    memcpy((uint32_t*)0xC0000000, &image_chess_800x480[0], 800*480*2);
+#endif
 
     /* Infinite loop */
     for(;;)
@@ -81,7 +87,7 @@ void runEcoTaskMain(void *argument)
 
         if(tick%1000 == 0)
         {
-#ifdef FI_DIN_LCD4
+#ifdef FI_DIN_1_0
             if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
             {
                 printf("Push PWR_SW %d sec\n", timer_pwroff++);

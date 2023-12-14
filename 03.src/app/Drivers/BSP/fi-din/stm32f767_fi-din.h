@@ -28,6 +28,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
 
+extern UART_HandleTypeDef huart1, huart2;
+extern CAN_HandleTypeDef hcan1;
+extern QSPI_HandleTypeDef hqspi;
+extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim14;
+
 #ifdef __cplusplus
 }
 #endif
