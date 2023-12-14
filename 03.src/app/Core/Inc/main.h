@@ -85,6 +85,10 @@ void Error_Handler(void);
 #define MCU_PWR_SW_EXTI_IRQn EXTI15_10_IRQn
 #define MCU_CAN_STB_Pin GPIO_PIN_10
 #define MCU_CAN_STB_GPIO_Port GPIOA
+#define LCD_LR_Pin GPIO_PIN_9
+#define LCD_LR_GPIO_Port GPIOA
+#define LCD_UD_Pin GPIO_PIN_8
+#define LCD_UD_GPIO_Port GPIOA
 #define MCU_KEY1_Pin GPIO_PIN_8
 #define MCU_KEY1_GPIO_Port GPIOC
 #define MCU_KEY1_EXTI_IRQn EXTI9_5_IRQn
@@ -93,6 +97,8 @@ void Error_Handler(void);
 #define LCD_INT_Pin GPIO_PIN_4
 #define LCD_INT_GPIO_Port GPIOA
 #define LCD_INT_EXTI_IRQn EXTI4_IRQn
+#define LCD_STBY_Pin GPIO_PIN_2
+#define LCD_STBY_GPIO_Port GPIOA
 #define TOUCH_RSTn_Pin GPIO_PIN_5
 #define TOUCH_RSTn_GPIO_Port GPIOA
 #define LCD_RSTn_Pin GPIO_PIN_3
