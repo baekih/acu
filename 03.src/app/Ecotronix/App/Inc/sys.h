@@ -88,6 +88,6 @@ uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
 void setFlashDAT(app_dat);
-void setLCDTestImage(uint32_t);
+void setLCDTestImage(uint8_t);
 
 #endif /* APP_INC_SYS_H_ */

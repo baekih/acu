@@ -126,7 +126,7 @@ void setFlashDAT(app_dat app_dat_local)
     return;
 }
 
-void setLCDTestImage(uint32_t img_sel)
+void setLCDTestImage(uint8_t img_sel)
 {
     uint16_t *pbuf = (uint16_t*)0xC0000000;
 
@@ -291,7 +291,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     static uint8_t image_sel = 0;
-
 //    printf("%s() Enter...\n",__FUNCTION__);
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY1_GPIO_Port, MCU_KEY1_Pin))
     {
@@ -302,6 +301,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY2_GPIO_Port, MCU_KEY2_Pin))
     {
         setLCDTestImage(image_sel++);
+        if(LCD_TST_IMG_DEF < image_sel) image_sel = LCD_TST_IMG_CHESS;
     }
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY3_GPIO_Port, MCU_KEY3_Pin)) printf("MCU_KEY3 pressed\n");
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY4_GPIO_Port, MCU_KEY4_Pin)) printf("MCU_KEY4 pressed\n");
