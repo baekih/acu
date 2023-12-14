@@ -218,16 +218,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
-#if 0
-#define LCD_BKL_Pin GPIO_PIN_7
-#define LCD_BKL_GPIO_Port GPIOA
-
-  MX_LTDC_Init();
-  HAL_GPIO_WritePin(LCD_BKL_GPIO_Port, LCD_BKL_Pin, GPIO_PIN_SET);
-
-  while(1) HAL_Delay(1000);
-
-#else
   MX_CAN1_Init();
   MX_I2C1_Init();
   MX_QUADSPI_Init();
@@ -240,7 +230,6 @@ int main(void)
   MX_TIM7_Init();
   MX_TIM14_Init();
   MX_DMA2D_Init();
-#endif
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -599,8 +588,8 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
-  pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)image_kitten_480x480);
-  HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
+//  pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)image_kitten_480x480);
+//  HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
   /* USER CODE END LTDC_Init 2 */
 
 }
@@ -622,11 +611,11 @@ static void MX_QUADSPI_Init(void)
   /* USER CODE END QUADSPI_Init 1 */
   /* QUADSPI parameter configuration*/
   hqspi.Instance = QUADSPI;
-  hqspi.Init.ClockPrescaler = 1;
-  hqspi.Init.FifoThreshold = 4;
-  hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_HALFCYCLE;
-  hqspi.Init.FlashSize = 25;
-  hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_2_CYCLE;
+  hqspi.Init.ClockPrescaler = 2;
+  hqspi.Init.FifoThreshold = 6;
+  hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_NONE;
+  hqspi.Init.FlashSize = 24;
+  hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_6_CYCLE;
   hqspi.Init.ClockMode = QSPI_CLOCK_MODE_0;
   hqspi.Init.FlashID = QSPI_FLASH_ID_1;
   hqspi.Init.DualFlash = QSPI_DUALFLASH_DISABLE;
