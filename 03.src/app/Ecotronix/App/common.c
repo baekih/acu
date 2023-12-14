@@ -6,7 +6,6 @@
  */
 
 #include "common.h"
-//#include "n25q512a.h"
 
 #define QSPI_MMAP_LEN_MAX                    (0x0FFFFFFF) //256MB
 #define QSPI_PAGE_SIZE                       256
