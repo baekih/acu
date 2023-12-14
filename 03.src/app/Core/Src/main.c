@@ -187,6 +187,7 @@ int main(void)
 #ifdef FI_DIN_1_0
   SystemClock_pwrsav_Config();
 
+  if(0)
   {
       GPIO_InitTypeDef GPIO_InitStruct = {0};
 

@@ -53,7 +53,7 @@
 #define LCD_TST_IMG_GREEN       3
 #define LCD_TST_IMG_BLUE        4
 #define LCD_TST_IMG_GRAY        5
-#define LCD_TST_IMG_KITTEN      6
+#define LCD_TST_IMG_DEF         6
 
 enum
 {

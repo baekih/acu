@@ -2,15 +2,22 @@
  * image.h
  *
  *  Created on: 2023. 10. 26.
- *      Author: wcaba
+ *      Author: ihbaek
  */
 
 #ifndef INC_IMAGES_H_
 #define INC_IMAGES_H_
 
-extern const unsigned char image_kitten_800x480[];
+#include "common.h"
+
+#ifdef FI_DIN_1_0
 extern const unsigned char image_kitten_480x480[];
+extern const unsigned char image_compass_480x480[];
+#else
+extern const unsigned char image_kitten_800x480[];
 extern const unsigned char image_autopilot_800x480[];
 //extern const unsigned char image_chess_800x480[];
+#endif
+
 
 #endif /* INC_IMAGES_H_ */

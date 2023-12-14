@@ -46,7 +46,7 @@ void runEcoTaskMain(void *argument)
     }
 
 #ifdef FI_DIN_1_0
-    memcpy((uint32_t*)0xC0000000, &image_kitten_480x480[0], 480*480*2);
+    memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
 #else
     memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 #endif
@@ -70,7 +70,7 @@ void runEcoTaskMain(void *argument)
                 switch(g_lcd_img_idx)
                 {
                 case 0:
-                    setLCDTestImage(LCD_TST_IMG_KITTEN);
+                    setLCDTestImage(LCD_TST_IMG_DEF);
                     break;
                 case 1:
                     setLCDTestImage(LCD_TST_IMG_WHITE);
