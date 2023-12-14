@@ -21,7 +21,7 @@
 #include "stm32f767_fi-din_lcd.h"
 #include "stm32f767_fi-din_sdram.h"
 
-//#define FI_DIN_LCD4
+#define FI_DIN_1_0
 
 #pragma pack(push,1)
 typedef struct __RxProtocol
@@ -39,11 +39,6 @@ typedef struct __TxProtocol
 } TxProtocol ;
 #pragma pack(pop)
 
-extern UART_HandleTypeDef huart1, huart2;
-extern CAN_HandleTypeDef hcan1;
-extern QSPI_HandleTypeDef hqspi;
-extern TIM_HandleTypeDef htim3;
-extern TIM_HandleTypeDef htim14;
 extern osMessageQueueId_t EcoQueueUART1Handle;
 extern osMessageQueueId_t EcoQueueNMEA2KRX1Handle;
 extern osMessageQueueId_t EcoQueueNMEA2KTX1Handle;
