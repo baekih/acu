@@ -98,6 +98,13 @@ typedef struct _app_dat
     uint8_t chksum;
 } app_dat  __attribute__((aligned(1)));
 
+extern UART_HandleTypeDef huart1, huart2;
+extern CAN_HandleTypeDef hcan1;
+extern QSPI_HandleTypeDef hqspi;
+extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim14;
+extern I2C_HandleTypeDef hi2c1;
+
 extern uint32_t g_val;
 extern app_dat g_app_dat;
 extern app_dat g_app_dat_org;

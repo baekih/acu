@@ -16,6 +16,7 @@
 
 #include "cmsis_os.h"
 #include "main.h"
+#include "sys.h"
 #include "printf.h"
 
 #include "stm32f767_fi-din_lcd.h"

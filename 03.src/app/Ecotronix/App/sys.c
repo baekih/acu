@@ -24,14 +24,8 @@ void initTS(void)
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
-    HAL_Delay(10);
-    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(TS_INT_GPIO_Port, TS_INT_Pin, GPIO_PIN_RESET);
-    HAL_Delay(1);
     HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_SET);
-    HAL_Delay(5);
-    HAL_Delay(50);
+    HAL_Delay(60);
 
     GPIO_InitStruct.Pin = TS_INT_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -47,7 +41,8 @@ void initTS(void)
 
 void getTS(void)
 {
-    uint8_t pos[4] = {0};
+    uint8_t reg[4] = {0};
+    uint16_t pos[2] = {0};
     uint8_t stat = 0;
 
     if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
@@ -55,8 +50,11 @@ void getTS(void)
 
     if(stat&TS_STAT_BUF_EN_MSK)
     {
-        if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PTR1_REG, 2, &pos[0], TS_PTR1_LEN, 1000)) printf("%d error\n",__LINE__);
-        printf("TS STAT[0x%02x] X[%03d] Y[%03d]\n", stat, (pos[1]<<8) + pos[0], (pos[3]<<8) + pos[2]);
+        if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PTR1_REG, 2, &reg[0], TS_PTR1_LEN, 1000)) printf("%d error\n",__LINE__);
+        pos[0] = (reg[1]<<8) + reg[0];
+        pos[1] = (reg[3]<<8) + reg[2];
+        printf("TS STAT[0x%02x] X[%03d] Y[%03d]\n", stat, pos[0], pos[1]);
+
         stat = 0;
         if(HAL_OK != HAL_I2C_Mem_Write(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
     }
