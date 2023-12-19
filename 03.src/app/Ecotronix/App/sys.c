@@ -18,6 +18,50 @@
 app_dat g_app_dat_org = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0, .chksum = 0};
 app_dat g_app_dat;
 
+void initTS(void)
+{
+    uint8_t reg[4] = {0};
+
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
+    HAL_Delay(10);
+    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(TS_INT_GPIO_Port, TS_INT_Pin, GPIO_PIN_RESET);
+    HAL_Delay(1);
+    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_SET);
+    HAL_Delay(5);
+    HAL_Delay(50);
+
+    GPIO_InitStruct.Pin = TS_INT_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(TS_INT_GPIO_Port, &GPIO_InitStruct);
+
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PID_REG, 2, &reg[0], TS_PID_LEN, 1000)) printf("%d error\n",__LINE__);
+    else printf("PID[0x%02x%02x%02x%02x]\n", reg[3], reg[2],reg[1], reg[0]);
+
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_RES_REG, 2, &reg[0], TS_RES_LEN, 1000)) printf("%d error\n",__LINE__);
+    else printf("RES[%d:%d]\n", (reg[1]<<8) + reg[0], (reg[3]<<8) + reg[2]);
+}
+
+void getTS(void)
+{
+    uint8_t pos[4] = {0};
+    uint8_t stat = 0;
+
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
+//    printf("[%06ld] status[0x%02x]\n", cnt, dat[0]);
+
+    if(stat&TS_STAT_BUF_EN_MSK)
+    {
+        if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PTR1_REG, 2, &pos[0], TS_PTR1_LEN, 1000)) printf("%d error\n",__LINE__);
+        printf("TS STAT[0x%02x] X[%03d] Y[%03d]\n", stat, (pos[1]<<8) + pos[0], (pos[3]<<8) + pos[2]);
+        stat = 0;
+        if(HAL_OK != HAL_I2C_Mem_Write(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
+    }
+}
+
 uint32_t doFlashErase(void)
 {
     uint32_t SectorError;

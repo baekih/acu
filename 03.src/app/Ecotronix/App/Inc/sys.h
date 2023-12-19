@@ -55,6 +55,26 @@
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_DEF         6
 
+#define TS_I2C_ADR          0x5D
+
+#define TS_RES_W_REG        0x8048
+#define TS_RES_W_LEN        4
+
+#define TS_PID_REG          0x8140
+#define TS_PID_LEN          4
+#define TS_RES_REG          0x8146
+#define TS_RES_LEN          4
+#define TS_STAT_REG         0x814E
+#define TS_STAT_LEN         1
+#define TS_STAT_BUF_EN_MSK  0x80
+#define TS_STAT_STAT_MSK    0x0F
+#define TS_X1_REG           0x8150
+#define TS_X1_LEN           2
+#define TS_Y1_REG           0x8152
+#define TS_Y1_LEN           2
+#define TS_PTR1_REG         TS_X1_REG
+#define TS_PTR1_LEN         (TS_X1_LEN + TS_Y1_LEN)
+
 enum
 {
     FLASHIF_OK = 0,
@@ -85,6 +105,8 @@ extern app_dat g_app_dat_org;
 uint32_t doFlashErase(void);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
+void initTS(void);
+void getTS(void);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
 void setFlashDAT(app_dat);

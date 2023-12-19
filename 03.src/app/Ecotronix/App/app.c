@@ -25,6 +25,9 @@ void runEcoTaskMain(void *argument)
 #else
     printf("FI-DIN 1.5 start...\n");
 #endif
+
+    initTS();
+
     {
         app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
 
@@ -54,8 +57,13 @@ void runEcoTaskMain(void *argument)
     /* Infinite loop */
     for(;;)
     {
-        tick += 100;
+        tick += 10;
         HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
+
+        if(tick%10 == 0)
+        {
+            getTS();
+        }
 
         if(tick%100 == 0)
         {

@@ -1055,8 +1055,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_STBY_Pin|TOUCH_RSTn_Pin
-                          |LCD_RSTn_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|TS_INT_Pin|LCD_STBY_Pin
+                          |TS_RSTn_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_UD_Pin, GPIO_PIN_SET);
@@ -1087,9 +1087,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : WDI_Pin MCU_CAN_STB_Pin LCD_LR_Pin LCD_UD_Pin
-                           LCD_STBY_Pin TOUCH_RSTn_Pin LCD_RSTn_Pin */
+                           TS_INT_Pin LCD_STBY_Pin TS_RSTn_Pin LCD_RSTn_Pin */
   GPIO_InitStruct.Pin = WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
-                          |LCD_STBY_Pin|TOUCH_RSTn_Pin|LCD_RSTn_Pin;
+                          |TS_INT_Pin|LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1102,16 +1102,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(PWR_HOLD_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LCD_INT_Pin */
-  GPIO_InitStruct.Pin = LCD_INT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(LCD_INT_GPIO_Port, &GPIO_InitStruct);
-
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI4_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
-
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
