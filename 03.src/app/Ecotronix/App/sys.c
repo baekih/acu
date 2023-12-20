@@ -64,7 +64,7 @@ void getTS(void)
 
         if(memcmp(&pos_prev[0], &pos_curr[0], sizeof(ts_position)*5))
         {
-            printf("TS STAT[0x%02x] XY1[%03d:%03d] XY2[%03d:%03d] XY3[%03d:%03d] XY4[%03d:%03d] XY5[%03d:%03d]\n", stat,
+            printf("TS STAT[0x%02x] XY1[%03d:%03d] XY2[%03d:%03d] XY3[%03d:%03d] XY4[%03d:%03d] XY5[%03d:%03d]\r", stat,
                    pos_curr[0].x, pos_curr[0].y, pos_curr[1].x, pos_curr[1].y, pos_curr[2].x, pos_curr[2].y,
                    pos_curr[3].x, pos_curr[3].y, pos_curr[4].x, pos_curr[4].y);
             memcpy(&pos_prev[0], &pos_curr[0], sizeof(ts_position)*5);

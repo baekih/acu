@@ -64,16 +64,21 @@ void runEcoTaskMain(void *argument)
         if(tick%10 == 0)
         {
 #ifndef FI_DIN_1_0
-            getTS();
+            if(0!=g_ts_testmode_idx)
+            {
+                getTS();
+            }
 #endif
         }
 
         if(tick%100 == 0)
         {
-            if(g_switch_bank[0] != 0) setBuzzer(g_app_dat.bzr_vol);
-            else                      setBuzzer(0);
             setLCDBL(g_app_dat.lcd_bl);
             setFlashDAT(g_app_dat);
+
+            if(g_switch_bank[0] != 0) setBuzzer(g_app_dat.bzr_vol);
+            else                      setBuzzer(0);
+
             if(g_lcd_img_idx != g_switch_bank[1])
             {
                 g_lcd_img_idx = g_switch_bank[1];
@@ -94,6 +99,22 @@ void runEcoTaskMain(void *argument)
                     break;
                 }
             }
+
+            if(g_ts_testmode_idx != g_switch_bank[2])
+            {
+                g_ts_testmode_idx = g_switch_bank[2];
+                switch(g_ts_testmode_idx)
+                {
+                case 0:
+                    printf("touchscreen testmode exit...\n\n");
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                    printf("\n\ntouchscreen testmode enter...\n\n");
+                    break;
+                }
+            }
         }
 
         if(tick%1000 == 0)
@@ -111,7 +132,10 @@ void runEcoTaskMain(void *argument)
         if(tick%3000 == 0)
         {
             timer_sec_1 += 3;
-            printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
+            if(0==g_ts_testmode_idx)
+            {
+                printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
+            }
             Pgn126993HeartBeat();
         }
 

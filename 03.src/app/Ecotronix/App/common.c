@@ -61,9 +61,8 @@
 
 void _putchar(char ch)
 {
-    /* Place your implementation of fputc here */
-    /* e.g. write a character to the USART1 and Loop until the end of transmission */
     if(ch == '\n') osMessageQueuePut(EcoQueueUART1Handle, (uint8_t*)"\r", 0, 0);
+
     osMessageQueuePut(EcoQueueUART1Handle, (uint8_t*)&ch, 0, 0);
 }
 
