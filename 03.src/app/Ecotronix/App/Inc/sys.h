@@ -55,6 +55,8 @@
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_DEF         6
 
+#ifndef FI_DIN_1_0
+
 #define TS_I2C_ADR          0x5D
 
 #define TS_RES_W_REG        0x8048
@@ -67,13 +69,31 @@
 #define TS_STAT_REG         0x814E
 #define TS_STAT_LEN         1
 #define TS_STAT_BUF_EN_MSK  0x80
-#define TS_STAT_STAT_MSK    0x0F
+#define TS_STAT_NUM_MSK     0x0F
 #define TS_X1_REG           0x8150
 #define TS_X1_LEN           2
 #define TS_Y1_REG           0x8152
 #define TS_Y1_LEN           2
+#define TS_X2_REG           0x8158
+#define TS_X2_LEN           2
+#define TS_Y2_REG           0x815A
+#define TS_Y2_LEN           2
+#define TS_X3_REG           0x8160
+#define TS_X3_LEN           2
+#define TS_Y3_REG           0x8162
+#define TS_Y3_LEN           2
+#define TS_X4_REG           0x8168
+#define TS_X4_LEN           2
+#define TS_Y4_REG           0x816A
+#define TS_Y4_LEN           2
+#define TS_X5_REG           0x8170
+#define TS_X5_LEN           2
+#define TS_Y5_REG           0x8172
+#define TS_Y5_LEN           2
 #define TS_PTR1_REG         TS_X1_REG
 #define TS_PTR1_LEN         (TS_X1_LEN + TS_Y1_LEN)
+
+#endif // FI_DIN_1_0
 
 enum
 {
@@ -98,6 +118,14 @@ typedef struct _app_dat
     uint8_t chksum;
 } app_dat  __attribute__((aligned(1)));
 
+#ifndef FI_DIN_1_0
+typedef struct __ts_position
+{
+    uint16_t x;
+    uint16_t y;
+} ts_position;
+#endif // FI_DIN_1_0
+
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
 extern QSPI_HandleTypeDef hqspi;
@@ -112,8 +140,10 @@ extern app_dat g_app_dat_org;
 uint32_t doFlashErase(void);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
+#ifndef FI_DIN_1_0
 void initTS(void);
 void getTS(void);
+#endif
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
 void setFlashDAT(app_dat);

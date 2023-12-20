@@ -26,8 +26,9 @@ void runEcoTaskMain(void *argument)
     printf("FI-DIN 1.5 start...\n");
 #endif
 
+#ifndef FI_DIN_1_0
     initTS();
-
+#endif
     {
         app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
 
@@ -62,7 +63,9 @@ void runEcoTaskMain(void *argument)
 
         if(tick%10 == 0)
         {
+#ifndef FI_DIN_1_0
             getTS();
+#endif
         }
 
         if(tick%100 == 0)

@@ -17,7 +17,11 @@
 
 app_dat g_app_dat_org = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0, .chksum = 0};
 app_dat g_app_dat;
+#ifndef FI_DIN_1_0
+ts_position pos_curr[5] ={0}, pos_prev[5]={0};
+#endif
 
+#ifndef FI_DIN_1_0
 void initTS(void)
 {
     uint8_t reg[4] = {0};
@@ -42,7 +46,6 @@ void initTS(void)
 void getTS(void)
 {
     uint8_t reg[4] = {0};
-    uint16_t pos[2] = {0};
     uint8_t stat = 0;
 
     if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
@@ -50,15 +53,28 @@ void getTS(void)
 
     if(stat&TS_STAT_BUF_EN_MSK)
     {
-        if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PTR1_REG, 2, &reg[0], TS_PTR1_LEN, 1000)) printf("%d error\n",__LINE__);
-        pos[0] = (reg[1]<<8) + reg[0];
-        pos[1] = (reg[3]<<8) + reg[2];
-        printf("TS STAT[0x%02x] X[%03d] Y[%03d]\n", stat, pos[0], pos[1]);
+        memset(&pos_curr[0], 0x00, sizeof(ts_position)*5);
+
+        for(uint32_t i=0; i<(stat&TS_STAT_NUM_MSK); i++)
+        {
+            if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PTR1_REG+(i*8), 2, &reg[0], TS_PTR1_LEN, 1000)) printf("%d error\n",__LINE__);
+            pos_curr[i].x = (reg[1]<<8) + reg[0];
+            pos_curr[i].y = (reg[3]<<8) + reg[2];
+        }
+
+        if(memcmp(&pos_prev[0], &pos_curr[0], sizeof(ts_position)*5))
+        {
+            printf("TS STAT[0x%02x] XY1[%03d:%03d] XY2[%03d:%03d] XY3[%03d:%03d] XY4[%03d:%03d] XY5[%03d:%03d]\n", stat,
+                   pos_curr[0].x, pos_curr[0].y, pos_curr[1].x, pos_curr[1].y, pos_curr[2].x, pos_curr[2].y,
+                   pos_curr[3].x, pos_curr[3].y, pos_curr[4].x, pos_curr[4].y);
+            memcpy(&pos_prev[0], &pos_curr[0], sizeof(ts_position)*5);
+        }
 
         stat = 0;
         if(HAL_OK != HAL_I2C_Mem_Write(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
     }
 }
+#endif
 
 uint32_t doFlashErase(void)
 {
