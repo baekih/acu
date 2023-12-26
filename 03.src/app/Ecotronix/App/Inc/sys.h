@@ -47,6 +47,58 @@
                                       OB_WRP_SECTOR_4 | OB_WRP_SECTOR_5 | OB_WRP_SECTOR_6 | OB_WRP_SECTOR_7 |\
                                       OB_WRP_SECTOR_8 | OB_WRP_SECTOR_9 | OB_WRP_SECTOR_10 | OB_WRP_SECTOR_11)
 
+#define QSPI_MMAP_LEN_MAX                    (0x0FFFFFFF) //256MB
+#define QSPI_PAGE_SIZE                       256
+
+#define QSPI_CMD_WR_EN                       0x06
+#define QSPI_CMD_ADR32_EN_SET                0xB7
+#define QSPI_CMD_ADR32_EN_CLR                0xE9
+#define QSPI_CMD_SECTOR_ERASE                0xD8
+#define QSPI_CMD_SECTOR_ERASE_ADR32          0x21
+
+#define QSPI_CMD_RST_EN                      0x66
+#define QSPI_CMD_RST_START                   0x99
+
+#define QSPI_CMD_PROG_1_1_1                  0x02
+#define QSPI_CMD_PROG_1_1_4                  0x32
+#define QSPI_CMD_READ_1_1_1                  0x03
+#define QSPI_CMD_READ_1_1_1_DMY              0x0B
+#define QSPI_CMD_READ_1_1_4_DMY              0x6C
+#define QSPI_CMD_READ_1_4_4_DMY              0xEB
+
+#define QSPI_CMD_STAT1_REG_RD                0x05
+#define QSPI_STAT1_REG_WIP                   0x01
+#define QSPI_STAT1_REG_WIP_CLR               0x00
+#define QSPI_STAT1_REG_WIP_SET               0x01
+#define QSPI_STAT1_REG_WEL                   0x02
+#define QSPI_STAT1_REG_WEL_CLR               0x00
+#define QSPI_STAT1_REG_WEL_SET               0x02
+
+#define EN25QH256A_CMD_STAT2_REG_RD          0x09
+#define EN25QH256A_STAT2_REG_ADR4            0x10
+#define EN25QH256A_STAT2_REG_ADR4_CLR        0x00
+#define EN25QH256A_STAT2_REG_ADR4_SET        0x10
+
+#define EN25QH256A_CMD_STAT3_REG_RD          0x95
+#define EN25QH256A_CMD_STAT3_REG_WR          0xC0
+
+/* Default dummy clocks cycles */
+#define EN25QH256A_REG_1_1_1_DMY_CYCLE       0x20  //8cycle
+#define EN25QH256A_SET_1_1_1_DMY_CYCLE       8
+#define EN25QH256A_REG_1_1_4_DMY_CYCLE       0x20  //8cycle
+#define EN25QH256A_SET_1_1_4_DMY_CYCLE       8
+#define EN25QH256A_REG_1_4_4_DMY_CYCLE       0x00  //6cycle
+#define EN25QH256A_SET_1_4_4_DMY_CYCLE       6
+
+#define EN25QH256A_SUBSECTOR_ERASE_MAX_TIME  300
+
+/* QSPI Error codes */
+#define QSPI_OK            ((uint8_t)0x00)
+#define QSPI_ERROR         ((uint8_t)0x01)
+#define QSPI_BUSY          ((uint8_t)0x02)
+#define QSPI_NOT_SUPPORTED ((uint8_t)0x04)
+#define QSPI_SUSPENDED     ((uint8_t)0x08)
+
 #define LCD_TST_IMG_CHESS       0
 #define LCD_TST_IMG_WHITE       1
 #define LCD_TST_IMG_RED         2
@@ -144,6 +196,7 @@ uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 void initTS(void);
 void getTS(void);
 #endif
+void InitQSPI(void);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
 void setFlashDAT(app_dat);

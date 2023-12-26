@@ -132,6 +132,214 @@ uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
     return (FLASHIF_OK);
 }
 
+#if 0
+static uint8_t QSPI_AutoPollingMemReady(uint32_t Timeout)
+{
+    QSPI_CommandTypeDef scmd;
+    QSPI_AutoPollingTypeDef scfg;
+
+    /* Configure automatic polling mode to wait for memory ready ------ */
+    scmd.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
+    scmd.Instruction       = QSPI_CMD_STAT1_REG_RD;
+    scmd.AddressMode       = QSPI_ADDRESS_NONE;
+    scmd.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+    scmd.DataMode          = QSPI_DATA_1_LINE;
+    scmd.NbData            = 1;
+    scmd.DummyCycles       = 0;
+    scmd.DdrMode           = QSPI_DDR_MODE_DISABLE;
+    scmd.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+    scmd.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+
+
+    scfg.Match           = QSPI_STAT1_REG_WIP_CLR;
+    scfg.Mask            = QSPI_STAT1_REG_WIP;
+    scfg.MatchMode       = QSPI_MATCH_MODE_AND;
+    scfg.StatusBytesSize = 1;
+    scfg.Interval        = 0x10;
+    scfg.AutomaticStop   = QSPI_AUTOMATIC_STOP_ENABLE;
+
+    if(HAL_QSPI_AutoPolling(&hqspi, &scmd, &scfg, Timeout) != HAL_OK) return QSPI_ERROR;
+
+    return QSPI_OK;
+}
+#endif
+static uint8_t QSPI_WriteEnable(void)
+{
+    QSPI_CommandTypeDef scmd;
+    QSPI_AutoPollingTypeDef scfg;
+
+    /* Enable write operations ------------------------------------------ */
+    scmd.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
+    scmd.Instruction       = QSPI_CMD_WR_EN;
+    scmd.AddressMode       = QSPI_ADDRESS_NONE;
+    scmd.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+    scmd.DataMode          = QSPI_DATA_NONE;
+    scmd.DummyCycles       = 0;
+    scmd.DdrMode           = QSPI_DDR_MODE_DISABLE;
+    scmd.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+    scmd.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+
+    if(HAL_QSPI_Command(&hqspi, &scmd, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+
+    /* Configure automatic polling mode to wait for write enabling ---- */
+    scmd.Instruction    = QSPI_CMD_STAT1_REG_RD;
+    scmd.DataMode       = QSPI_DATA_1_LINE  ;
+    scmd.NbData         = 1;
+
+    scfg.Match           = QSPI_STAT1_REG_WEL;
+    scfg.Mask            = QSPI_STAT1_REG_WEL_SET;
+    scfg.MatchMode       = QSPI_MATCH_MODE_AND;
+    scfg.StatusBytesSize = 1;
+    scfg.Interval        = 0x10;
+    scfg.AutomaticStop   = QSPI_AUTOMATIC_STOP_ENABLE;
+
+    if(HAL_QSPI_AutoPolling(&hqspi, &scmd, &scfg, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+
+    return QSPI_OK;
+}
+
+static uint8_t QSPI_ResetMemory(void)
+{
+    QSPI_CommandTypeDef scmd;
+    QSPI_AutoPollingTypeDef scfg;
+
+    // EN25QH256A reset enable.
+    scmd.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
+    scmd.Instruction       = QSPI_CMD_RST_EN;
+    scmd.AddressMode       = QSPI_ADDRESS_NONE;
+    scmd.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+    scmd.DataMode          = QSPI_DATA_NONE;
+    scmd.DummyCycles       = 0;
+    scmd.DdrMode           = QSPI_DDR_MODE_DISABLE;
+    scmd.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+    scmd.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+    if(HAL_QSPI_Command(&hqspi, &scmd, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+
+    // EN25QH256A reset start.
+    scmd.Instruction       = QSPI_CMD_RST_START;
+    if(HAL_QSPI_Command(&hqspi, &scmd, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+
+    // EN25QH256A reset done check.
+    scmd.Instruction    = QSPI_CMD_STAT1_REG_RD;
+    scmd.DataMode       = QSPI_DATA_1_LINE;
+    scmd.NbData            = 1;
+
+    scfg.Match           = QSPI_STAT1_REG_WIP;
+    scfg.Mask            = QSPI_STAT1_REG_WIP_CLR;
+    scfg.MatchMode       = QSPI_MATCH_MODE_AND;
+    scfg.StatusBytesSize = 1;
+    scfg.Interval        = 0x10;
+    scfg.AutomaticStop   = QSPI_AUTOMATIC_STOP_ENABLE;
+
+    if(HAL_QSPI_AutoPolling(&hqspi, &scmd, &scfg, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+
+    return QSPI_OK;
+}
+
+static uint8_t QSPI_EnterFourBytesAddress(void)
+{
+    QSPI_CommandTypeDef scmd;
+    QSPI_AutoPollingTypeDef scfg;
+    /* Enable 32-Bit address mode */
+    scmd.Instruction       = QSPI_CMD_ADR32_EN_SET;
+    scmd.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
+    scmd.AddressMode       = QSPI_ADDRESS_NONE;
+    scmd.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+    scmd.DummyCycles       = 0;
+    scmd.DataMode          = QSPI_DATA_NONE;
+    scmd.DdrMode           = QSPI_DDR_MODE_DISABLE;
+    scmd.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+    scmd.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+
+    HAL_QSPI_Command(&hqspi, &scmd, 0x10);
+
+    scmd.Instruction       = EN25QH256A_CMD_STAT2_REG_RD;
+    scmd.DataMode          = QSPI_DATA_1_LINE  ;
+    scmd.NbData            = 1;
+
+    scfg.Match           = EN25QH256A_STAT2_REG_ADR4;
+    scfg.Mask            = EN25QH256A_STAT2_REG_ADR4_SET;
+    scfg.MatchMode       = QSPI_MATCH_MODE_AND;
+    scfg.StatusBytesSize = 1;
+    scfg.Interval        = 0x10;
+    scfg.AutomaticStop   = QSPI_AUTOMATIC_STOP_ENABLE;
+
+    if(HAL_QSPI_AutoPolling(&hqspi, &scmd, &scfg, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+
+    return QSPI_OK;
+}
+
+static uint8_t QSPI_DummyCyclesCfg(void)
+{
+    QSPI_CommandTypeDef scmd;
+    uint8_t reg;
+
+    /* Read Volatile Configuration register --------------------------- */
+    scmd.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
+    scmd.Instruction       = EN25QH256A_CMD_STAT3_REG_RD;
+    scmd.AddressMode       = QSPI_ADDRESS_NONE;
+    scmd.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
+    scmd.DataMode          = QSPI_DATA_1_LINE;
+    scmd.DummyCycles       = 0;
+    scmd.DdrMode           = QSPI_DDR_MODE_DISABLE;
+    scmd.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
+    scmd.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
+    scmd.NbData            = 1;
+
+    if(HAL_QSPI_Command(&hqspi, &scmd, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+    if(HAL_QSPI_Receive(&hqspi, &reg, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+
+    /* Enable write operations ---------------------------------------- */
+    if(!QSPI_WriteEnable()) return 0;
+
+    /* Write Volatile Configuration register (with new dummy cycles) -- */
+
+    reg &= ~(EN25QH256A_REG_1_4_4_DMY_CYCLE);
+    reg |= EN25QH256A_REG_1_4_4_DMY_CYCLE;
+
+    scmd.Instruction = EN25QH256A_CMD_STAT3_REG_WR;
+
+    if(HAL_QSPI_Command(&hqspi, &scmd, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+    if(HAL_QSPI_Transmit(&hqspi, &reg, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK) return QSPI_ERROR;
+
+    return QSPI_OK;
+}
+
+uint8_t QSPI_EnableMemoryMappedMode(void)
+{
+    QSPI_CommandTypeDef scmd;
+    QSPI_MemoryMappedTypeDef smmapcfg = {.TimeOutActivation = QSPI_TIMEOUT_COUNTER_DISABLE};
+
+    scmd.InstructionMode    = QSPI_INSTRUCTION_1_LINE;
+    scmd.Instruction        = QSPI_CMD_READ_1_4_4_DMY;
+    scmd.AddressMode        = QSPI_ADDRESS_4_LINES;
+    scmd.AddressSize        = QSPI_ADDRESS_32_BITS;
+    scmd.AlternateByteMode  = QSPI_ALTERNATE_BYTES_NONE;
+    scmd.DataMode           = QSPI_DATA_4_LINES;
+    scmd.DummyCycles        = EN25QH256A_SET_1_4_4_DMY_CYCLE;
+    scmd.DdrMode            = QSPI_DDR_MODE_DISABLE;
+    scmd.DdrHoldHalfCycle   = QSPI_DDR_HHC_ANALOG_DELAY;
+    scmd.SIOOMode           = QSPI_SIOO_INST_EVERY_CMD;
+
+    if(HAL_QSPI_MemoryMapped(&hqspi, &scmd, &smmapcfg) != HAL_OK) return QSPI_ERROR;
+
+    return QSPI_OK;
+}
+
+void InitQSPI(void)
+{
+    /* QSPI memory reset */
+    if(QSPI_ResetMemory() != QSPI_OK) Error_Handler();
+
+    /* Set the QSPI memory in 4-bytes address mode */
+    if(QSPI_EnterFourBytesAddress() != QSPI_OK) Error_Handler();
+
+    /* Configuration of the dummy cycles on QSPI memory side */
+    if (QSPI_DummyCyclesCfg() != QSPI_OK) Error_Handler();
+
+    QSPI_EnableMemoryMappedMode();
+}
+
 void setBuzzer(uint8_t bzr_vol)
 {
     static uint8_t bzr_vol_prev = 0;

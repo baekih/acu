@@ -629,7 +629,7 @@ static void MX_QUADSPI_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN QUADSPI_Init 2 */
-  EcoQSPIInit();
+  InitQSPI();
   /* USER CODE END QUADSPI_Init 2 */
 
 }
