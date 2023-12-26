@@ -161,7 +161,7 @@ void setLCDBL(uint8_t lcd_bl)
     if(lcd_bl_prev == lcd_bl) return;
     lcd_bl_prev = lcd_bl;
 
-    sConfigOC.Pulse = (10000*lcd_bl)/100 - 1;
+    sConfigOC.Pulse = (100*lcd_bl)/100;
     printf("set lcd_bl[%d] Pulse[%d]\n", lcd_bl, sConfigOC.Pulse);
 
     HAL_TIM_PWM_Stop(&htim14, TIM_CHANNEL_1);

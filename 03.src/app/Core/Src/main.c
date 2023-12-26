@@ -810,7 +810,7 @@ static void MX_TIM14_Init(void)
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = 108-1;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 10000-1;
+  htim14.Init.Period = 100-1;
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)
@@ -822,7 +822,7 @@ static void MX_TIM14_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 9000-1;
+  sConfigOC.Pulse = 100-1;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim14, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -1055,8 +1055,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|TS_INT_Pin|LCD_STBY_Pin
-                          |TS_RSTn_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_STBY_Pin|TS_RSTn_Pin
+                          |LCD_RSTn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_UD_Pin, GPIO_PIN_SET);
@@ -1087,9 +1087,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : WDI_Pin MCU_CAN_STB_Pin LCD_LR_Pin LCD_UD_Pin
-                           TS_INT_Pin LCD_STBY_Pin TS_RSTn_Pin LCD_RSTn_Pin */
+                           LCD_STBY_Pin TS_RSTn_Pin LCD_RSTn_Pin */
   GPIO_InitStruct.Pin = WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
-                          |TS_INT_Pin|LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
+                          |LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1101,6 +1101,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(PWR_HOLD_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : TS_INT_Pin */
+  GPIO_InitStruct.Pin = TS_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(TS_INT_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
