@@ -45,26 +45,11 @@ void STM32TouchController::init()
 
 bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
 {
-    static uint8_t cnt = 0, cnt_prev = 0;
     uint8_t xy1[TS2_XY1_LEN] = {0};
-    uint16_t x_dat, y_dat;
+    uint16_t x_cur = 0, y_cur = 0;
+    static uint16_t x_prv = 0, y_prv = 0;
 
 //    printf("%s\n",__PRETTY_FUNCTION__);
-
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS2_I2C_ADR)<<1, TS2_CNT_REG, 1, &cnt, TS2_CNT_LEN, 1000))
-    {
-        printf("%d i2c read cnt err\n",__LINE__);
-        return false;
-    }
-
-    if(cnt == cnt_prev)
-    {
-//        printf("%d no touch detected.\n",__LINE__);
-        return false;
-    }
-
-    printf("cnt[%d:%d]\n",cnt, cnt_prev);
-    cnt_prev = cnt;
 
     if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS2_I2C_ADR)<<1, TS2_XY1_REG, 1, &xy1[0], TS2_XY1_LEN, 1000))
     {
@@ -72,12 +57,16 @@ bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
         return false;
     }
 
-    x_dat = ((((uint16_t)xy1[0])&0x70)<<4) + xy1[1];
-    y_dat = ((((uint16_t)xy1[0])&0x07)<<8) + xy1[2];
-    x = (int32_t)x_dat;
-    y = (int32_t)y_dat;
+    x_cur = ((((uint16_t)xy1[0])&0x70)<<4) + xy1[1];
+    y_cur = ((((uint16_t)xy1[0])&0x07)<<8) + xy1[2];
+    if((x_prv == x_cur) && (y_prv == y_cur)) return false;
 
-    printf("xy1[%d:%d]\n", x_dat, y_dat);
+    x_prv = x_cur;
+    y_prv = y_cur;
+    x = (int32_t)x_cur;
+    y = (int32_t)y_cur;
+
+    printf("ts x[%d] y[%d]\n", x_cur, y_cur);
 
     return true;
 }
