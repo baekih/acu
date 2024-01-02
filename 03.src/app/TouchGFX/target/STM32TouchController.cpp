@@ -23,17 +23,18 @@
 /* USER CODE BEGIN STM32TouchController */
 
 #include <STM32TouchController.hpp>
+#include <printf.h>
+
+extern "C" void printk(const char* pstr, ...);
 
 void STM32TouchController::init()
 {
-    /**
-     * Initialize touch controller and driver
-     *
-     */
+    printk("%s\r\n",__PRETTY_FUNCTION__);
 }
 
 bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
 {
+//    printf("%s\n",__PRETTY_FUNCTION__);
     /**
      * By default sampleTouch returns false,
      * return true if a touch has been detected, otherwise false.

@@ -21,6 +21,19 @@ app_dat g_app_dat;
 ts_position pos_curr[5] ={0}, pos_prev[5]={0};
 #endif
 
+void printk(const char* pstr, ...)
+{
+    char buf[128] = {0};
+    va_list args;
+
+    va_start(args, pstr);
+    vsprintf(&buf[0], (const char *)pstr, args);
+    va_end(args);
+
+    while(HAL_BUSY == HAL_UART_Transmit(&huart1, (uint8_t*)&buf[0], strlen(buf), 1000)) osDelay(1);
+
+}
+
 #ifndef FI_DIN_1_0
 void initTS(void)
 {
