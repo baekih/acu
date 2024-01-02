@@ -1,0 +1,254 @@
+{
+  "Application": {
+    "Screens": [
+      {
+        "Name": "Main",
+        "Components": [
+          {
+            "Type": "Image",
+            "Name": "backgroundImage",
+            "Width": 480,
+            "Height": 272,
+            "RelativeFilename": "bg.png"
+          },
+          {
+            "Type": "RadioButton",
+            "Name": "radioButton1",
+            "X": 56,
+            "Y": 25,
+            "Width": 42,
+            "Height": 42,
+            "Selected": true,
+            "FileNameSelected": "radio_button_selected.png",
+            "FileNameSelectedPressed": "radio_button_selected_pressed.png",
+            "FileNameUnselected": "radio_button_unselected.png",
+            "FileNameUnselectedPressed": "radio_button_unselected_pressed.png",
+            "RadioButtonGroup": "radioButtonGroup"
+          },
+          {
+            "Type": "RadioButton",
+            "Name": "radioButton2",
+            "X": 56,
+            "Y": 78,
+            "Width": 42,
+            "Height": 42,
+            "FileNameSelected": "radio_button_selected.png",
+            "FileNameSelectedPressed": "radio_button_selected_pressed.png",
+            "FileNameUnselected": "radio_button_unselected.png",
+            "FileNameUnselectedPressed": "radio_button_unselected_pressed.png",
+            "RadioButtonGroup": "radioButtonGroup"
+          },
+          {
+            "Type": "RadioButton",
+            "Name": "radioButton3",
+            "X": 56,
+            "Y": 129,
+            "Width": 42,
+            "Height": 42,
+            "FileNameSelected": "radio_button_selected.png",
+            "FileNameSelectedPressed": "radio_button_selected_pressed.png",
+            "FileNameUnselected": "radio_button_unselected.png",
+            "FileNameUnselectedPressed": "radio_button_unselected_pressed.png",
+            "RadioButtonGroup": "radioButtonGroup"
+          },
+          {
+            "Type": "RadioButton",
+            "Name": "radioButton4",
+            "X": 56,
+            "Y": 181,
+            "Width": 42,
+            "Height": 42,
+            "FileNameSelected": "radio_button_selected.png",
+            "FileNameSelectedPressed": "radio_button_selected_pressed.png",
+            "FileNameUnselected": "radio_button_unselected.png",
+            "FileNameUnselectedPressed": "radio_button_unselected_pressed.png",
+            "RadioButtonGroup": "radioButtonGroup"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "selectedText",
+            "X": 114,
+            "Y": 137,
+            "Width": 204,
+            "Height": 23,
+            "TextId": "TextId1",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "UseBuffer": true,
+              "BufferSize": 3
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "deselectedText",
+            "X": 114,
+            "Y": 189,
+            "Width": 226,
+            "Height": 23,
+            "TextId": "TextId2",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "UseBuffer": true,
+              "BufferSize": 3
+            }
+          }
+        ],
+        "Interactions": [
+          {
+            "InteractionName": "RadioButton1Selected",
+            "Trigger": {
+              "Type": "TriggerRadioButtonSelected",
+              "TriggerComponent": "radioButton1"
+            },
+            "Action": {
+              "Type": "ActionExecuteCode",
+              "Code": "Unicode::snprintf(selectedTextBuffer, 4, \"%d\", 1);\r\nselectedText.resizeToCurrentText();\r\nselectedText.invalidate();"
+            }
+          },
+          {
+            "InteractionName": "RadioButton2Selected",
+            "Trigger": {
+              "Type": "TriggerRadioButtonSelected",
+              "TriggerComponent": "radioButton2"
+            },
+            "Action": {
+              "Type": "ActionExecuteCode",
+              "Code": "Unicode::snprintf(selectedTextBuffer, 4, \"%d\", 2);\r\nselectedText.resizeToCurrentText();\r\nselectedText.invalidate();"
+            }
+          },
+          {
+            "InteractionName": "RadioButton3Selected",
+            "Trigger": {
+              "Type": "TriggerRadioButtonSelected",
+              "TriggerComponent": "radioButton3"
+            },
+            "Action": {
+              "Type": "ActionExecuteCode",
+              "Code": "Unicode::snprintf(selectedTextBuffer, 4, \"%d\", 3);\r\nselectedText.resizeToCurrentText();\r\nselectedText.invalidate();"
+            }
+          },
+          {
+            "InteractionName": "RadioButton4Selected",
+            "Trigger": {
+              "Type": "TriggerRadioButtonSelected",
+              "TriggerComponent": "radioButton4"
+            },
+            "Action": {
+              "Type": "ActionExecuteCode",
+              "Code": "Unicode::snprintf(selectedTextBuffer, 4, \"%d\", 4);\r\nselectedText.resizeToCurrentText();\r\nselectedText.invalidate();"
+            }
+          },
+          {
+            "InteractionName": "RadioButton1Deselected",
+            "Trigger": {
+              "Type": "TriggerRadioButtonDeselected",
+              "TriggerComponent": "radioButton1"
+            },
+            "Action": {
+              "Type": "ActionExecuteCode",
+              "Code": "Unicode::snprintf(deselectedTextBuffer, 4, \"%d\", 1);\r\ndeselectedText.resizeToCurrentText();\r\ndeselectedText.invalidate();"
+            }
+          },
+          {
+            "InteractionName": "RadioButton2Deselected",
+            "Trigger": {
+              "Type": "TriggerRadioButtonDeselected",
+              "TriggerComponent": "radioButton2"
+            },
+            "Action": {
+              "Type": "ActionExecuteCode",
+              "Code": "Unicode::snprintf(deselectedTextBuffer, 4, \"%d\", 2);\r\ndeselectedText.resizeToCurrentText();\r\ndeselectedText.invalidate();"
+            }
+          },
+          {
+            "InteractionName": "RadioButton3Deselected",
+            "Trigger": {
+              "Type": "TriggerRadioButtonDeselected",
+              "TriggerComponent": "radioButton3"
+            },
+            "Action": {
+              "Type": "ActionExecuteCode",
+              "Code": "Unicode::snprintf(deselectedTextBuffer, 4, \"%d\", 3);\r\ndeselectedText.resizeToCurrentText();\r\ndeselectedText.invalidate();"
+            }
+          },
+          {
+            "InteractionName": "RadioButton4Deselected",
+            "Trigger": {
+              "Type": "TriggerRadioButtonDeselected",
+              "TriggerComponent": "radioButton4"
+            },
+            "Action": {
+              "Type": "ActionExecuteCode",
+              "Code": "Unicode::snprintf(deselectedTextBuffer, 4, \"%d\", 4);\r\ndeselectedText.resizeToCurrentText();\r\ndeselectedText.invalidate();"
+            }
+          }
+        ]
+      }
+    ],
+    "CustomContainerDefinitions": [],
+    "Name": "MyApplication",
+    "Resolution": {
+      "Width": 800,
+      "Height": 480
+    },
+    "SelectedColorDepth": 16,
+    "StartupScreenName": "Main",
+    "SelectedStartupLanguage": "GB",
+    "TouchGfxPath": "../Middlewares/ST/touchgfx",
+    "UIPath": ".",
+    "AvailableColorDepths": [
+      16
+    ],
+    "AvailableLCDs": {
+      "16": "LCD16bpp"
+    },
+    "AvailableSections": [
+      "ExtFlashSection",
+      "IntFlashSection"
+    ],
+    "AvailableResolutions": [
+      {
+        "Width": 800,
+        "Height": 480
+      }
+    ],
+    "PhysicalButtons": [],
+    "FrameworkFeatures": {
+      "LCD16bpp": {
+        "Id": "LCD16bpp",
+        "IsEnabled": true
+      }
+    },
+    "GenerateAssetsCommand": "make -f simulator/gcc/Makefile assets -j8",
+    "PostGenerateCommand": "touchgfx update_project --project-file=simulator/msvs/Application.vcxproj",
+    "PostGenerateTargetCommand": "touchgfx update_project",
+    "CompileSimulatorCommand": "make -f simulator/gcc/Makefile -j8",
+    "RunSimulatorCommand": "build\\bin\\simulator.exe",
+    "LandscapeSkinX": 0,
+    "LandscapeSkinY": 0,
+    "PortraitSkinX": 0,
+    "PortraitSkinY": 0,
+    "DisplayOrientation": "Landscape",
+    "Family": "STM32F7",
+    "SubFamily": "STM32F7x7",
+    "Toolchain": "STM32CubeIDE",
+    "Platform": "m7",
+    "ProjectFile": "../fi-din.ioc",
+    "OptionalComponentsRoot": "../Middlewares/ST/touchgfx_components",
+    "OptionalComponents": [],
+    "AdditionalFeatures": []
+  },
+  "Version": "4.23.0"
+}

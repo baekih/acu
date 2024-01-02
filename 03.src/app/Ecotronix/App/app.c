@@ -12,6 +12,7 @@
 #include "nmea2k.h"
 #include "images.h"
 
+#if 0
 void runEcoTaskMain(void *argument)
 {
     uint32_t timer_sec_1 = 0;
@@ -142,6 +143,7 @@ void runEcoTaskMain(void *argument)
         osDelayUntil(tick);
     }
 }
+#endif
 
 void runEcoTaskUART(void *argument)
 {
