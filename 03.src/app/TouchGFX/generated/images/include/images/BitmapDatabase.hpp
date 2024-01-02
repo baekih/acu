@@ -6,11 +6,12 @@
 #include <touchgfx/hal/Types.hpp>
 #include <touchgfx/Bitmap.hpp>
 
-const uint16_t BITMAP_BG_ID = 0;
-const uint16_t BITMAP_RADIO_BUTTON_SELECTED_ID = 1;
-const uint16_t BITMAP_RADIO_BUTTON_SELECTED_PRESSED_ID = 2;
-const uint16_t BITMAP_RADIO_BUTTON_UNSELECTED_ID = 3;
-const uint16_t BITMAP_RADIO_BUTTON_UNSELECTED_PRESSED_ID = 4;
+const uint16_t BITMAP_AUTOPILOT_800X480_ID = 0;
+const uint16_t BITMAP_BG_ID = 1;
+const uint16_t BITMAP_RADIO_BUTTON_SELECTED_ID = 2;
+const uint16_t BITMAP_RADIO_BUTTON_SELECTED_PRESSED_ID = 3;
+const uint16_t BITMAP_RADIO_BUTTON_UNSELECTED_ID = 4;
+const uint16_t BITMAP_RADIO_BUTTON_UNSELECTED_PRESSED_ID = 5;
 
 namespace BitmapDatabase
 {

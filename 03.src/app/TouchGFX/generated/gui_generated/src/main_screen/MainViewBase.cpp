@@ -15,7 +15,7 @@ MainViewBase::MainViewBase() :
     add(__background);
 
     backgroundImage.setXY(0, 0);
-    backgroundImage.setBitmap(touchgfx::Bitmap(BITMAP_BG_ID));
+    backgroundImage.setBitmap(touchgfx::Bitmap(BITMAP_AUTOPILOT_800X480_ID));
     add(backgroundImage);
 
     radioButtonGroup.setRadioButtonSelectedHandler(radioButtonSelectedCallback);
@@ -51,7 +51,7 @@ MainViewBase::MainViewBase() :
     add(radioButton4);
 
     selectedText.setXY(114, 137);
-    selectedText.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    selectedText.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
     selectedText.setLinespacing(0);
     selectedTextBuffer[0] = 0;
     selectedText.setWildcard(selectedTextBuffer);
@@ -60,7 +60,7 @@ MainViewBase::MainViewBase() :
     add(selectedText);
 
     deselectedText.setXY(114, 189);
-    deselectedText.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    deselectedText.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
     deselectedText.setLinespacing(0);
     deselectedTextBuffer[0] = 0;
     deselectedText.setWildcard(deselectedTextBuffer);

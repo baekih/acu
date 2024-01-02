@@ -7,9 +7,9 @@
           {
             "Type": "Image",
             "Name": "backgroundImage",
-            "Width": 480,
-            "Height": 272,
-            "RelativeFilename": "bg.png"
+            "Width": 800,
+            "Height": 480,
+            "RelativeFilename": "autopilot_800x480.png"
           },
           {
             "Type": "RadioButton",
@@ -73,11 +73,6 @@
             "Height": 23,
             "TextId": "TextId1",
             "TextRotation": "0",
-            "Color": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
             "AutoSize": true,
             "Wildcard1": {
               "UseBuffer": true,
@@ -93,11 +88,6 @@
             "Height": 23,
             "TextId": "TextId2",
             "TextRotation": "0",
-            "Color": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
             "AutoSize": true,
             "Wildcard1": {
               "UseBuffer": true,
