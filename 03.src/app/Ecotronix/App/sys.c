@@ -4,12 +4,9 @@
  *  Created on: Nov 15, 2023
  *      Author: ihbaek
  */
-#include "sys.h"
-#include "nmea2k.h"
-#include "images.h"
-#include "printf.h"
+#include "eco.h"
 
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
 #define  SYS_LCD_WIDTH   (480)
 #else
 #define  SYS_LCD_WIDTH   (800)
@@ -17,11 +14,11 @@
 
 app_dat g_app_dat_org = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0, .chksum = 0};
 app_dat g_app_dat;
-#ifndef FI_DIN_1_0
+#ifndef FEATURE_LCD4
 ts_position pos_curr[5] ={0}, pos_prev[5]={0};
 #endif
 
-#ifndef FI_DIN_1_0
+#ifndef FEATURE_LCD4
 void initTS(void)
 {
     uint8_t reg[4] = {0};
@@ -448,7 +445,7 @@ void setLCDTestImage(uint8_t img_sel)
                         *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
                     }
                 }
-#ifndef FI_DIN_1_0
+#ifndef FEATURE_LCD4
                 else if(480<=x && x<640)
                 {
                     if(0<=y && y<160)
@@ -524,7 +521,7 @@ void setLCDTestImage(uint8_t img_sel)
         break;
     }
     case LCD_TST_IMG_DEF:
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
         memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
         printf("compass\n");
 #else
@@ -553,24 +550,24 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     }
 }
 
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     static uint8_t image_sel = 0;
 //    printf("%s() Enter...\n",__FUNCTION__);
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY1_GPIO_Port, MCU_KEY1_Pin))
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
     {
         if(g_switch_bank[0] == 0) g_switch_bank[0] = 1;
         else                      g_switch_bank[0] = 0;
     }
 
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY2_GPIO_Port, MCU_KEY2_Pin))
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
     {
         setLCDTestImage(image_sel++);
         if(LCD_TST_IMG_DEF < image_sel) image_sel = LCD_TST_IMG_CHESS;
     }
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY3_GPIO_Port, MCU_KEY3_Pin)) printf("MCU_KEY3 pressed\n");
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY4_GPIO_Port, MCU_KEY4_Pin)) printf("MCU_KEY4 pressed\n");
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin)) printf("MCU_PWR pressed\n");
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin)) printf("KEY_SEL pressed\n");
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin)) printf("KEY_DN pressed\n");
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin)) printf("KEY_PWR pressed\n");
 }
 #endif

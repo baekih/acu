@@ -6,27 +6,23 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "common.h"
-#include "sys.h"
-#include "app.h"
-#include "nmea2k.h"
-#include "images.h"
+#include "eco.h"
 
 void runEcoTaskMain(void *argument)
 {
     uint32_t timer_sec_1 = 0;
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
     uint8_t  timer_pwroff = 0;
 #endif
     int32_t tick = osKernelGetTickCount();
 
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
     printf("FI-DIN 1.0 start...\n");
 #else
     printf("FI-DIN 1.5 start...\n");
 #endif
 
-#ifndef FI_DIN_1_0
+#ifndef FEATURE_LCD4
     initTS();
 #endif
     {
@@ -49,7 +45,7 @@ void runEcoTaskMain(void *argument)
         printf("Init app_dat[%d:%d:%d:%d]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.chksum);
     }
 
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
     memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
 #else
     memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
@@ -63,7 +59,7 @@ void runEcoTaskMain(void *argument)
 
         if(tick%10 == 0)
         {
-#ifndef FI_DIN_1_0
+#ifndef FEATURE_LCD4
             if(0!=g_ts_testmode_idx)
             {
                 getTS();
@@ -119,10 +115,10 @@ void runEcoTaskMain(void *argument)
 
         if(tick%1000 == 0)
         {
-#ifdef FI_DIN_1_0
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
+#ifdef FEATURE_LCD4
+            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
             {
-                printf("Push PWR_SW %d sec\n", timer_pwroff++);
+                printf("Push KEY_PWR %d sec\n", timer_pwroff++);
                 if(3 < timer_pwroff) NVIC_SystemReset();
             }
             else timer_pwroff = 0;

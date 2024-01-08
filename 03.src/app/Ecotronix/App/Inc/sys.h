@@ -8,7 +8,7 @@
 #ifndef APP_INC_SYS_H_
 #define APP_INC_SYS_H_
 
-#include "common.h"
+#include "features.h"
 
 /*  STM32L431RB flash 1bank * 64 block-total * 2048byte per block */
 #define FLASH_START_ADRESS        0x08000000
@@ -107,7 +107,7 @@
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_DEF         6
 
-#ifndef FI_DIN_1_0
+#ifndef FEATURE_LCD4
 
 #define TS_I2C_ADR          0x5D
 
@@ -164,13 +164,13 @@ enum{
 
 typedef struct _app_dat
 {
-    uint8_t lcd_bl;
-    uint8_t bzr_vol;
-    uint8_t rsv;
-    uint8_t chksum;
-} app_dat  __attribute__((aligned(1)));
+    uint32_t lcd_bl;
+    uint32_t bzr_vol;
+    uint32_t rsv;
+    uint32_t chksum;
+} app_dat  __attribute__((aligned(4)));
 
-#ifndef FI_DIN_1_0
+#ifndef FEATURE_LCD4
 typedef struct __ts_position
 {
     uint16_t x;
@@ -192,7 +192,7 @@ extern app_dat g_app_dat_org;
 uint32_t doFlashErase(void);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
-#ifndef FI_DIN_1_0
+#ifndef FEATURE_LCD4
 void initTS(void);
 void getTS(void);
 #endif
