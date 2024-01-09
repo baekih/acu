@@ -12,7 +12,7 @@
     <IocFile>fi-din.ioc</IocFile>
     <Project>
       <ProjectName>fi-din</ProjectName>
-      <ProjectNature>Cpp</ProjectNature>
+      <ProjectNature>CPP</ProjectNature>
       <Secure />
       <filestoremove />
       <sourceEntriesToRemove>
@@ -51,9 +51,6 @@
           <Ldefines />
           <Cincludes>
             <include>Core\Inc</include>
-            <include>TouchGFX\App</include>
-            <include>TouchGFX\target\generated</include>
-            <include>TouchGFX\target</include>
             <include>Drivers\STM32F7xx_HAL_Driver\Inc</include>
             <include>Drivers\STM32F7xx_HAL_Driver\Inc\Legacy</include>
             <include>Middlewares\Third_Party\FreeRTOS\Source\include</include>
@@ -82,9 +79,6 @@
       <sourceEntries>
         <sourceEntry>
           <name>Core</name>
-        </sourceEntry>
-        <sourceEntry>
-          <name>TouchGFX</name>
         </sourceEntry>
         <sourceEntry>
           <name>Drivers</name>

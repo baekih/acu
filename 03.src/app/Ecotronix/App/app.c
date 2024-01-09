@@ -6,51 +6,31 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "common.h"
-#include "sys.h"
-#include "app.h"
-#include "nmea2k.h"
-#include "images.h"
+#include "eco.h"
 
 #if 0
 void runEcoTaskMain(void *argument)
 {
     uint32_t timer_sec_1 = 0;
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
     uint8_t  timer_pwroff = 0;
 #endif
     int32_t tick = osKernelGetTickCount();
 
-#ifdef FI_DIN_1_0
+    initFlashData();
+
+#ifdef FEATURE_LCD4
     printf("FI-DIN 1.0 start...\n");
 #else
     printf("FI-DIN 1.5 start...\n");
 #endif
+    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
 
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
     initTS();
 #endif
-    {
-        app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
 
-        printf("Init app_dat.\n");
-
-        if(papp_dat->chksum == 0xFF
-         &&papp_dat->lcd_bl == 0xFF
-         &&papp_dat->bzr_vol == 0xFF
-         &&papp_dat->rsv == 0xFF)
-        {
-            g_app_dat = g_app_dat_org;
-        }
-        else
-        {
-            memcpy(&g_app_dat, papp_dat, sizeof(app_dat));
-        }
-
-        printf("Init app_dat[%d:%d:%d:%d]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.chksum);
-    }
-
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
     memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
 #else
     memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
@@ -64,18 +44,17 @@ void runEcoTaskMain(void *argument)
 
         if(tick%10 == 0)
         {
-#ifndef FI_DIN_1_0
-            if(0!=g_ts_testmode_idx)
-            {
-                getTS();
-            }
-#endif
+            //ToDo
         }
 
         if(tick%100 == 0)
         {
+
+#ifdef FEATURE_LCD5
+            uint16_t x, y;
+            getTS(&x, &y);
+#endif
             setLCDBL(g_app_dat.lcd_bl);
-            setFlashDAT(g_app_dat);
 
             if(g_switch_bank[0] != 0) setBuzzer(g_app_dat.bzr_vol);
             else                      setBuzzer(0);
@@ -100,30 +79,14 @@ void runEcoTaskMain(void *argument)
                     break;
                 }
             }
-
-            if(g_ts_testmode_idx != g_switch_bank[2])
-            {
-                g_ts_testmode_idx = g_switch_bank[2];
-                switch(g_ts_testmode_idx)
-                {
-                case 0:
-                    printf("touchscreen testmode exit...\n\n");
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                    printf("\n\ntouchscreen testmode enter...\n\n");
-                    break;
-                }
-            }
         }
 
         if(tick%1000 == 0)
         {
-#ifdef FI_DIN_1_0
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
+#ifdef FEATURE_LCD4
+            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
             {
-                printf("Push PWR_SW %d sec\n", timer_pwroff++);
+                printf("Push KEY_PWR %d sec\n", timer_pwroff++);
                 if(3 < timer_pwroff) NVIC_SystemReset();
             }
             else timer_pwroff = 0;
@@ -133,10 +96,8 @@ void runEcoTaskMain(void *argument)
         if(tick%3000 == 0)
         {
             timer_sec_1 += 3;
-            if(0==g_ts_testmode_idx)
-            {
-                printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
-            }
+
+            printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
             Pgn126993HeartBeat();
         }
 
@@ -164,6 +125,18 @@ void runEcoTaskUART(void *argument)
 
             while(huart1.TxXferCount != 0) osDelay(1);
         }
+    }
+}
+
+void runEcoTaskFlash(void *argument)
+{
+    /* Infinite loop */
+    osDelay(1000);
+
+    for(;;)
+    {
+        updateFlashData();
+        osDelay(1);
     }
 }
 

@@ -23,9 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "common.h"
-#include "sys.h"
-#include "images.h"
+#include "eco.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,10 +34,6 @@ typedef StaticQueue_t osStaticMessageQDef_t;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define TS2_I2C_ADR          0x55
-
-#define TS2_RES_REG          0x4
-#define TS2_RES_LEN          3
 
 /* USER CODE END PD */
 
@@ -99,6 +93,13 @@ const osThreadAttr_t EcoTaskNMEA2KTx_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for EcoTaskFlash */
+osThreadId_t EcoTaskFlashHandle;
+const osThreadAttr_t EcoTaskFlash_attributes = {
+  .name = "EcoTaskFlash",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for EcoTaskTouchGFX */
 osThreadId_t EcoTaskTouchGFXHandle;
 const osThreadAttr_t EcoTaskTouchGFX_attributes = {
@@ -106,6 +107,7 @@ const osThreadAttr_t EcoTaskTouchGFX_attributes = {
   .stack_size = 4096 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+
 /* Definitions for EcoQueueUART1 */
 osMessageQueueId_t EcoQueueUART1Handle;
 uint8_t EcoQueueUART1Buffer[ 256 * sizeof( uint8_t ) ];
@@ -130,7 +132,7 @@ const osMessageQueueAttr_t EcoQueueNMEA2KRX1_attributes = {
 };
 /* Definitions for EcoQueueNMEA2KTX1 */
 osMessageQueueId_t EcoQueueNMEA2KTX1Handle;
-uint8_t EcoQueueNMEA2KTX1Buffer[ 256 * sizeof( uint8_t ) ];
+uint8_t EcoQueueNMEA2KTX1Buffer[ 384 * sizeof( uint8_t ) ];
 osStaticMessageQDef_t EcoQueueNMEA2KTX1CtrlBlock;
 const osMessageQueueAttr_t EcoQueueNMEA2KTX1_attributes = {
   .name = "EcoQueueNMEA2KTX1",
@@ -164,6 +166,7 @@ void runEcoTaskMain(void *argument);
 extern void runEcoTaskUART(void *argument);
 extern void runEcoTaskNMEA2KRx(void *argument);
 extern void runEcoTaskNMEA2KTx(void *argument);
+extern void runEcoTaskFlash(void *argument);
 extern void TouchGFX_Task(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -198,28 +201,26 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
   SystemClock_pwrsav_Config();
 
-  if(0)
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  GPIO_InitStruct.Pin = KEY_PWR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
   {
-      GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-      __HAL_RCC_GPIOC_CLK_ENABLE();
-      GPIO_InitStruct.Pin = MCU_PWR_SW_Pin;
-      GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-      GPIO_InitStruct.Pull = GPIO_NOPULL;
-      HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-      while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
-      {
-          HAL_Delay(100);
-      }
-
-      while(GPIO_PIN_SET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
-      {
-          HAL_Delay(100);
-      }
+      HAL_Delay(100);
   }
+
+  while(GPIO_PIN_SET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+  {
+      HAL_Delay(100);
+  }
+
 #endif
   /* USER CODE END Init */
 
@@ -275,7 +276,7 @@ int main(void)
   EcoQueueNMEA2KRX1Handle = osMessageQueueNew (32, sizeof(uint8_t), &EcoQueueNMEA2KRX1_attributes);
 
   /* creation of EcoQueueNMEA2KTX1 */
-  EcoQueueNMEA2KTX1Handle = osMessageQueueNew (256, sizeof(uint8_t), &EcoQueueNMEA2KTX1_attributes);
+  EcoQueueNMEA2KTX1Handle = osMessageQueueNew (384, sizeof(uint8_t), &EcoQueueNMEA2KTX1_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -294,8 +295,12 @@ int main(void)
   /* creation of EcoTaskNMEA2KTx */
   EcoTaskNMEA2KTxHandle = osThreadNew(runEcoTaskNMEA2KTx, NULL, &EcoTaskNMEA2KTx_attributes);
 
+  /* creation of EcoTaskFlash */
+  EcoTaskFlashHandle = osThreadNew(runEcoTaskFlash, NULL, &EcoTaskFlash_attributes);
+
   /* creation of EcoTaskTouchGFX */
   EcoTaskTouchGFXHandle = osThreadNew(TouchGFX_Task, NULL, &EcoTaskTouchGFX_attributes);
+
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -451,7 +456,7 @@ static void MX_CRC_Init(void)
   hcrc.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
   hcrc.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
   hcrc.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
-  hcrc.InputDataFormat = CRC_INPUTDATA_FORMAT_BYTES;
+  hcrc.InputDataFormat = CRC_INPUTDATA_FORMAT_WORDS;
   if (HAL_CRC_Init(&hcrc) != HAL_OK)
   {
     Error_Handler();
@@ -510,8 +515,6 @@ static void MX_I2C1_Init(void)
 {
 
   /* USER CODE BEGIN I2C1_Init 0 */
-    uint8_t res[TS_RES_LEN] = {0};
-    uint16_t x_res = 0, y_res = 0;
 
   /* USER CODE END I2C1_Init 0 */
 
@@ -546,16 +549,6 @@ static void MX_I2C1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C1_Init 2 */
-    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
-    HAL_Delay(50);
-    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_SET);
-    HAL_Delay(50);
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS2_I2C_ADR)<<1, TS2_RES_REG, 1, &res[0], TS2_RES_LEN, 1000)) printk("%d error\r\n",__LINE__);
-
-    x_res = ((((uint16_t)res[0])&0x70)<<4) + res[1];
-    y_res = ((((uint16_t)res[0])&0x07)<<8) + res[2];
-
-    printk("xres[%d] yres[%d]\r\n", x_res, y_res);
 
   /* USER CODE END I2C1_Init 2 */
 
@@ -579,7 +572,7 @@ static void MX_LTDC_Init(void)
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_RESET);
   HAL_Delay(10);
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
   HAL_Delay(5);
   HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
 #endif
@@ -1073,7 +1066,6 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOJ_CLK_ENABLE();
@@ -1081,13 +1073,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOK_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOI_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|MCU_CAN_STB_Pin|LCD_STBY_Pin|TS_RSTn_Pin
+  HAL_GPIO_WritePin(GPIOA, WDI_Pin|CAN1_STBY_Pin|LCD_STBY_Pin|TS_RSTn_Pin
                           |LCD_RSTn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -1110,17 +1103,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_ON_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : MCU_KEY4_Pin MCU_KEY3_Pin MCU_KEY2_Pin MCU_PWR_SW_Pin
-                           MCU_KEY1_Pin */
-  GPIO_InitStruct.Pin = MCU_KEY4_Pin|MCU_KEY3_Pin|MCU_KEY2_Pin|MCU_PWR_SW_Pin
-                          |MCU_KEY1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : WDI_Pin MCU_CAN_STB_Pin LCD_LR_Pin LCD_UD_Pin
+  /*Configure GPIO pins : WDI_Pin CAN1_STBY_Pin LCD_LR_Pin LCD_UD_Pin
                            LCD_STBY_Pin TS_RSTn_Pin LCD_RSTn_Pin */
-  GPIO_InitStruct.Pin = WDI_Pin|MCU_CAN_STB_Pin|LCD_LR_Pin|LCD_UD_Pin
+  GPIO_InitStruct.Pin = WDI_Pin|CAN1_STBY_Pin|LCD_LR_Pin|LCD_UD_Pin
                           |LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -1139,13 +1124,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(TS_INT_GPIO_Port, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

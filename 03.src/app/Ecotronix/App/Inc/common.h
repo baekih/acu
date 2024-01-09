@@ -8,21 +8,7 @@
 #ifndef APPLICATION_USER_ECOTRONIX_INC_COMMON_H_
 #define APPLICATION_USER_ECOTRONIX_INC_COMMON_H_
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "cmsis_os.h"
-#include "main.h"
-#include "sys.h"
-#include "printf.h"
-
-#include "stm32f767_fi-din_lcd.h"
-#include "stm32f767_fi-din_sdram.h"
-
-//#define FI_DIN_1_0
+#include "eco.h"
 
 #pragma pack(push,1)
 typedef struct __RxProtocol
