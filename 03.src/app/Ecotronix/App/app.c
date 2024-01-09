@@ -16,19 +16,18 @@ void runEcoTaskMain(void *argument)
 #endif
     int32_t tick = osKernelGetTickCount();
 
+    initFlashData();
+
 #ifdef FEATURE_LCD4
     printf("FI-DIN 1.0 start...\n");
 #else
     printf("FI-DIN 1.5 start...\n");
 #endif
+    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
 
 #ifndef FEATURE_LCD4
     initTS();
 #endif
-    {
-        initFlashData();
-        printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
-    }
 
 #ifdef FEATURE_LCD4
     memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
@@ -50,7 +49,6 @@ void runEcoTaskMain(void *argument)
                 getTS();
             }
 #endif
-            updateFlashData();
         }
 
         if(tick%100 == 0)
@@ -143,6 +141,18 @@ void runEcoTaskUART(void *argument)
 
             while(huart1.TxXferCount != 0) osDelay(1);
         }
+    }
+}
+
+void runEcoTaskFlash(void *argument)
+{
+    /* Infinite loop */
+    osDelay(1000);
+
+    for(;;)
+    {
+        updateFlashData();
+        osDelay(1);
     }
 }
 
