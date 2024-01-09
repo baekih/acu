@@ -123,7 +123,7 @@ const osMessageQueueAttr_t EcoQueueNMEA2KRX1_attributes = {
 };
 /* Definitions for EcoQueueNMEA2KTX1 */
 osMessageQueueId_t EcoQueueNMEA2KTX1Handle;
-uint8_t EcoQueueNMEA2KTX1Buffer[ 256 * sizeof( uint8_t ) ];
+uint8_t EcoQueueNMEA2KTX1Buffer[ 384 * sizeof( uint8_t ) ];
 osStaticMessageQDef_t EcoQueueNMEA2KTX1CtrlBlock;
 const osMessageQueueAttr_t EcoQueueNMEA2KTX1_attributes = {
   .name = "EcoQueueNMEA2KTX1",
@@ -262,7 +262,7 @@ int main(void)
   EcoQueueNMEA2KRX1Handle = osMessageQueueNew (32, sizeof(uint8_t), &EcoQueueNMEA2KRX1_attributes);
 
   /* creation of EcoQueueNMEA2KTX1 */
-  EcoQueueNMEA2KTX1Handle = osMessageQueueNew (256, sizeof(uint8_t), &EcoQueueNMEA2KTX1_attributes);
+  EcoQueueNMEA2KTX1Handle = osMessageQueueNew (384, sizeof(uint8_t), &EcoQueueNMEA2KTX1_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
