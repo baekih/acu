@@ -8,9 +8,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "eco.h"
 
-#if 0
 void runEcoTaskMain(void *argument)
 {
+#if 0
     uint32_t timer_sec_1 = 0;
 #ifdef FEATURE_LCD4
     uint8_t  timer_pwroff = 0;
@@ -103,8 +103,10 @@ void runEcoTaskMain(void *argument)
 
         osDelayUntil(tick);
     }
-}
+#else
+    osDelay(1);
 #endif
+}
 
 void runEcoTaskUART(void *argument)
 {

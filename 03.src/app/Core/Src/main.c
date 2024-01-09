@@ -107,7 +107,6 @@ const osThreadAttr_t EcoTaskTouchGFX_attributes = {
   .stack_size = 4096 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-
 /* Definitions for EcoQueueUART1 */
 osMessageQueueId_t EcoQueueUART1Handle;
 uint8_t EcoQueueUART1Buffer[ 256 * sizeof( uint8_t ) ];
@@ -300,7 +299,6 @@ int main(void)
 
   /* creation of EcoTaskTouchGFX */
   EcoTaskTouchGFXHandle = osThreadNew(TouchGFX_Task, NULL, &EcoTaskTouchGFX_attributes);
-
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
