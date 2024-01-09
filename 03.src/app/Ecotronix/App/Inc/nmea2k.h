@@ -332,6 +332,5 @@ int32_t Pgn126993HeartBeat(void);
 
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
-extern uint8_t g_ts_testmode_idx;
 
 #endif /* APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_ */

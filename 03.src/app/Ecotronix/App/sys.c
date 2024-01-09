@@ -14,7 +14,7 @@
 
 const app_dat g_app_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0x00, .crc32 = 0xc193313d};
 app_dat g_app_dat;
-#ifndef FEATURE_LCD4
+#ifdef FEATURE_LCD5
 ts_position pos_curr[5] ={0}, pos_prev[5]={0};
 #endif
 
@@ -31,7 +31,7 @@ void printk(const char* pstr, ...)
 
 }
 
-#ifndef FEATURE_LCD4
+#ifdef FEATURE_LCD5
 void initTS(void)
 {
     uint8_t reg[4] = {0};
@@ -479,7 +479,7 @@ void setLCDTestImage(uint8_t img_sel)
                         *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
                     }
                 }
-#ifndef FEATURE_LCD4
+#ifdef FEATURE_LCD5
                 else if(480<=x && x<640)
                 {
                     if(0<=y && y<160)

@@ -13,7 +13,6 @@ version_dat g_version_dat;
 
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx = 0;
-uint8_t g_ts_testmode_idx = 0;
 
 pgn060928_dat g_pgn60928_dat =
 {

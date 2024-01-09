@@ -103,7 +103,7 @@
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_DEF         6
 
-#ifndef FEATURE_LCD4
+#ifdef FEATURE_LCD5
 
 #define TS_I2C_ADR          0x5D
 
@@ -141,7 +141,7 @@
 #define TS_PTR1_REG         TS_X1_REG
 #define TS_PTR1_LEN         (TS_X1_LEN + TS_Y1_LEN)
 
-#endif // FI_DIN_1_0
+#endif
 
 enum
 {
@@ -166,7 +166,7 @@ typedef struct _app_dat
     uint32_t crc32;
 } app_dat  __attribute__((aligned(4)));
 
-#ifndef FEATURE_LCD4
+#ifdef FEATURE_LCD5
 typedef struct __ts_position
 {
     uint16_t x;
@@ -188,7 +188,7 @@ extern const app_dat g_app_dat_def;
 uint32_t doFlashErase(uint32_t);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
-#ifndef FEATURE_LCD4
+#ifdef FEATURE_LCD5
 void initTS(void);
 void getTS(void);
 #endif

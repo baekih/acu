@@ -12,6 +12,8 @@
 
 #if !defined(TS_RSTn_Pin)
 #define FEATURE_LCD4
+#else
+#define FEATURE_LCD5
 #endif
 
 #endif /* APP_INC_FEATURES_H_ */
