@@ -139,14 +139,6 @@ typedef struct _app_dat
     uint32_t crc32;
 } app_dat  __attribute__((aligned(4)));
 
-#ifdef FEATURE_LCD5
-typedef struct __ts_position
-{
-    uint16_t x;
-    uint16_t y;
-} ts_position;
-#endif // FI_DIN_1_0
-
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
 extern QSPI_HandleTypeDef hqspi;
@@ -163,7 +155,7 @@ uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
 #ifdef FEATURE_LCD5
 void initTS(void);
-bool getTS(void);
+bool getTS(uint16_t*, uint16_t*);
 #endif
 void InitQSPI(void);
 void setBuzzer(uint8_t);

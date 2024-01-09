@@ -50,7 +50,8 @@ void runEcoTaskMain(void *argument)
         {
 
 #ifdef FEATURE_LCD5
-            getTS();
+            uint16_t x, y;
+            getTS(&x, &y);
 #endif
             setLCDBL(g_app_dat.lcd_bl);
 

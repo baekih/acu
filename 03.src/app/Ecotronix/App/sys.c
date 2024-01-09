@@ -14,9 +14,6 @@
 
 const app_dat g_app_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0x00, .crc32 = 0xc193313d};
 app_dat g_app_dat;
-#ifdef FEATURE_LCD5
-ts_position pos_curr[5] ={0}, pos_prev[5]={0};
-#endif
 
 void printk(const char* pstr, ...)
 {
@@ -49,30 +46,29 @@ void initTS(void)
     printf("xres[%d] yres[%d]\n", x_res, y_res);
 }
 
-bool getTS(void)
+bool getTS(uint16_t* x, uint16_t* y)
 {
-    uint8_t xy1[TS_XY1_LEN] = {0};
+    uint8_t xy[TS_XY1_LEN] = {0};
     uint16_t x_cur, y_cur;
     static uint16_t x_prv = 0, y_prv = 0;
 
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_XY1_REG, 1, &xy1[0], TS_XY1_LEN, 1000))
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_XY1_REG, 1, &xy[0], TS_XY1_LEN, 1000))
     {
         printf("%d i2c read xy1 error\n",__LINE__);
         return false;
     }
 
-    x_cur = ((((uint16_t)xy1[0])&0x70)<<4) + xy1[1];
-    y_cur = ((((uint16_t)xy1[0])&0x07)<<8) + xy1[2];
+    *x = x_cur = ((((uint16_t)xy[0])&0x70)<<4) + xy[1];
+    *y = y_cur = ((((uint16_t)xy[0])&0x07)<<8) + xy[2];
 
-    if((x_prv == x_cur)&&(y_prv == y_cur))
+    if((x_prv != x_cur)||(y_prv != y_cur))
     {
-        return false;
+        printf("x[%d] y[%d]\n", x_cur, y_cur);
     }
 
     x_prv = x_cur;
     y_prv = y_cur;
 
-    printf("xy1[%d:%d]\n", x_cur, y_cur);
 
     return true;
 }
