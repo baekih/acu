@@ -105,41 +105,14 @@
 
 #ifdef FEATURE_LCD5
 
-#define TS_I2C_ADR          0x5D
+#define TS_I2C_ADR          0x55
 
-#define TS_RES_W_REG        0x8048
-#define TS_RES_W_LEN        4
-
-#define TS_PID_REG          0x8140
-#define TS_PID_LEN          4
-#define TS_RES_REG          0x8146
-#define TS_RES_LEN          4
-#define TS_STAT_REG         0x814E
-#define TS_STAT_LEN         1
-#define TS_STAT_BUF_EN_MSK  0x80
-#define TS_STAT_NUM_MSK     0x0F
-#define TS_X1_REG           0x8150
-#define TS_X1_LEN           2
-#define TS_Y1_REG           0x8152
-#define TS_Y1_LEN           2
-#define TS_X2_REG           0x8158
-#define TS_X2_LEN           2
-#define TS_Y2_REG           0x815A
-#define TS_Y2_LEN           2
-#define TS_X3_REG           0x8160
-#define TS_X3_LEN           2
-#define TS_Y3_REG           0x8162
-#define TS_Y3_LEN           2
-#define TS_X4_REG           0x8168
-#define TS_X4_LEN           2
-#define TS_Y4_REG           0x816A
-#define TS_Y4_LEN           2
-#define TS_X5_REG           0x8170
-#define TS_X5_LEN           2
-#define TS_Y5_REG           0x8172
-#define TS_Y5_LEN           2
-#define TS_PTR1_REG         TS_X1_REG
-#define TS_PTR1_LEN         (TS_X1_LEN + TS_Y1_LEN)
+#define TS_RES_REG          0x4
+#define TS_RES_LEN          3
+#define TS_CNT_REG          0x08
+#define TS_CNT_LEN          1
+#define TS_XY1_REG          0x12
+#define TS_XY1_LEN          3
 
 #endif
 
@@ -190,7 +163,7 @@ uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
 #ifdef FEATURE_LCD5
 void initTS(void);
-void getTS(void);
+bool getTS(void);
 #endif
 void InitQSPI(void);
 void setBuzzer(uint8_t);

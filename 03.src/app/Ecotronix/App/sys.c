@@ -34,55 +34,47 @@ void printk(const char* pstr, ...)
 #ifdef FEATURE_LCD5
 void initTS(void)
 {
-    uint8_t reg[4] = {0};
+    uint8_t res[TS_RES_LEN] = {0};
+    uint16_t x_res = 0, y_res = 0;
 
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-
+    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
+    HAL_Delay(50);
     HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_SET);
-    HAL_Delay(60);
+    HAL_Delay(50);
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_RES_REG, 1, &res[0], TS_RES_LEN, 1000)) printk("%d error\r\n",__LINE__);
 
-    GPIO_InitStruct.Pin = TS_INT_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(TS_INT_GPIO_Port, &GPIO_InitStruct);
+    x_res = ((((uint16_t)res[0])&0x70)<<4) + res[1];
+    y_res = ((((uint16_t)res[0])&0x07)<<8) + res[2];
 
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PID_REG, 2, &reg[0], TS_PID_LEN, 1000)) printf("%d error\n",__LINE__);
-    else printf("PID[0x%02x%02x%02x%02x]\n", reg[3], reg[2],reg[1], reg[0]);
-
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_RES_REG, 2, &reg[0], TS_RES_LEN, 1000)) printf("%d error\n",__LINE__);
-    else printf("RES[%d:%d]\n", (reg[1]<<8) + reg[0], (reg[3]<<8) + reg[2]);
+    printf("xres[%d] yres[%d]\n", x_res, y_res);
 }
 
-void getTS(void)
+bool getTS(void)
 {
-    uint8_t reg[4] = {0};
-    uint8_t stat = 0;
+    uint8_t xy1[TS_XY1_LEN] = {0};
+    uint16_t x_cur, y_cur;
+    static uint16_t x_prv = 0, y_prv = 0;
 
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
-//    printf("[%06ld] status[0x%02x]\n", cnt, dat[0]);
-
-    if(stat&TS_STAT_BUF_EN_MSK)
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_XY1_REG, 1, &xy1[0], TS_XY1_LEN, 1000))
     {
-        memset(&pos_curr[0], 0x00, sizeof(ts_position)*5);
-
-        for(uint32_t i=0; i<(stat&TS_STAT_NUM_MSK); i++)
-        {
-            if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PTR1_REG+(i*8), 2, &reg[0], TS_PTR1_LEN, 1000)) printf("%d error\n",__LINE__);
-            pos_curr[i].x = (reg[1]<<8) + reg[0];
-            pos_curr[i].y = (reg[3]<<8) + reg[2];
-        }
-
-        if(memcmp(&pos_prev[0], &pos_curr[0], sizeof(ts_position)*5))
-        {
-            printf("TS STAT[0x%02x] XY1[%03d:%03d] XY2[%03d:%03d] XY3[%03d:%03d] XY4[%03d:%03d] XY5[%03d:%03d]\r", stat,
-                   pos_curr[0].x, pos_curr[0].y, pos_curr[1].x, pos_curr[1].y, pos_curr[2].x, pos_curr[2].y,
-                   pos_curr[3].x, pos_curr[3].y, pos_curr[4].x, pos_curr[4].y);
-            memcpy(&pos_prev[0], &pos_curr[0], sizeof(ts_position)*5);
-        }
-
-        stat = 0;
-        if(HAL_OK != HAL_I2C_Mem_Write(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
+        printf("%d i2c read xy1 error\n",__LINE__);
+        return false;
     }
+
+    x_cur = ((((uint16_t)xy1[0])&0x70)<<4) + xy1[1];
+    y_cur = ((((uint16_t)xy1[0])&0x07)<<8) + xy1[2];
+
+    if((x_prv == x_cur)&&(y_prv == y_cur))
+    {
+        return false;
+    }
+
+    x_prv = x_cur;
+    y_prv = y_cur;
+
+    printf("xy1[%d:%d]\n", x_cur, y_cur);
+
+    return true;
 }
 #endif
 
