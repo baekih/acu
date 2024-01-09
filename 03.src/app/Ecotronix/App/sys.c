@@ -12,7 +12,7 @@
 #define  SYS_LCD_WIDTH   (800)
 #endif
 
-app_dat g_app_dat_org = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0, .chksum = 0};
+const app_dat g_app_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0x00, .crc32 = 0xc193313d};
 app_dat g_app_dat;
 #ifndef FEATURE_LCD4
 ts_position pos_curr[5] ={0}, pos_prev[5]={0};
@@ -73,13 +73,13 @@ void getTS(void)
 }
 #endif
 
-uint32_t doFlashErase(void)
+uint32_t doFlashErase(uint32_t sector)
 {
     uint32_t SectorError;
     FLASH_EraseInitTypeDef pEraseInit =
     {
         .TypeErase = TYPEERASE_SECTORS,
-        .Sector = FLASH_SECTOR_3,
+        .Sector = sector,
         .NbSectors = 1,
         .VoltageRange = VOLTAGE_RANGE_3
     };
@@ -375,15 +375,36 @@ void setLCDBL(uint8_t lcd_bl)
     return;
 }
 
-void setFlashDAT(app_dat app_dat_local)
+void initFlashData(void)
 {
-//    uint32_t *pval = (uint32_t*)APPLICATION_ADDRESS;
-    app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
-    if(memcmp(&app_dat_local, papp_dat, sizeof(app_dat)))
+    app_dat *papp_dat = (app_dat*)USER_DAT_ADDRESS;
+    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)papp_dat, sizeof(app_dat)/sizeof(uint32_t) - 1);
+
+    if(papp_dat->crc32 != crc32_val)
     {
-        printf("Flash write run lcd_bl[%d] bzr_vol[%d]\n", app_dat_local.lcd_bl, app_dat_local.bzr_vol);
-        doFlashErase();
-        doFlashWrite(APPLICATION_ADDRESS, (uint32_t*)&g_app_dat, 1);
+        printf("%s() Flash init with def val. lcd_bl[%d] bzr_vol[%d]\n",__func__, g_app_dat.lcd_bl, g_app_dat.bzr_vol);
+        g_app_dat = g_app_dat_def;
+        doFlashErase(FLASH_SECTOR_7);
+        doFlashWrite(USER_DAT_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
+    }
+    else
+    {
+        g_app_dat = *papp_dat;
+    }
+
+    return;
+}
+
+void updateFlashData(void)
+{
+    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t) - 1);
+
+    if(g_app_dat.crc32 != crc32_val)
+    {
+        printf("%s() Flash update lcd_bl[%d] bzr_vol[%d]\n", __func__, g_app_dat.lcd_bl, g_app_dat.bzr_vol);
+        g_app_dat.crc32 = crc32_val;
+        doFlashErase(FLASH_SECTOR_7);
+        doFlashWrite(USER_DAT_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
     }
 
     return;

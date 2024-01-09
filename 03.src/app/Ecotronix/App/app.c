@@ -26,23 +26,8 @@ void runEcoTaskMain(void *argument)
     initTS();
 #endif
     {
-        app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
-
-        printf("Init app_dat.\n");
-
-        if(papp_dat->chksum == 0xFF
-         &&papp_dat->lcd_bl == 0xFF
-         &&papp_dat->bzr_vol == 0xFF
-         &&papp_dat->rsv == 0xFF)
-        {
-            g_app_dat = g_app_dat_org;
-        }
-        else
-        {
-            memcpy(&g_app_dat, papp_dat, sizeof(app_dat));
-        }
-
-        printf("Init app_dat[%d:%d:%d:%d]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.chksum);
+        initFlashData();
+        printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
     }
 
 #ifdef FEATURE_LCD4
@@ -65,12 +50,12 @@ void runEcoTaskMain(void *argument)
                 getTS();
             }
 #endif
+            updateFlashData();
         }
 
         if(tick%100 == 0)
         {
             setLCDBL(g_app_dat.lcd_bl);
-            setFlashDAT(g_app_dat);
 
             if(g_switch_bank[0] != 0) setBuzzer(g_app_dat.bzr_vol);
             else                      setBuzzer(0);

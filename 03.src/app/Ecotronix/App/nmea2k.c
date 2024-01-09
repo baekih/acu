@@ -11,8 +11,6 @@ fastpacket g_fastpacket[FASTPACKET_ARRAY_MAX];
 multipacket g_multipacket;
 version_dat g_version_dat;
 
-uint8_t g_lcd_bl = 100;
-uint8_t g_bzr_vol = 0;
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx = 0;
 uint8_t g_ts_testmode_idx = 0;
@@ -443,8 +441,6 @@ static int32_t opSwitchBankControl(uint8_t *prxdat)
 static int32_t opLCDBrightness(uint8_t *prxdat)
 {
     g_app_dat.lcd_bl = *(prxdat+4);
-
-    printf("lcd_bl[%02d]\n", g_lcd_bl);
 
     return 0;
 }

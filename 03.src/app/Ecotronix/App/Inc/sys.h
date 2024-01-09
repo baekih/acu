@@ -28,19 +28,15 @@
 #define ADDR_FLASH_SECTOR_5     ((uint32_t)0x08040000) /* Base @ of Sector 5, 256 Kbyte */
 #define ADDR_FLASH_SECTOR_6     ((uint32_t)0x08080000) /* Base @ of Sector 6, 256 Kbyte */
 #define ADDR_FLASH_SECTOR_7     ((uint32_t)0x080C0000) /* Base @ of Sector 7, 256 Kbyte */
-#define ADDR_FLASH_SECTOR_8     ((uint32_t)0x08100000) /* Base @ of Sector 8, 256 Kbyte */
-#define ADDR_FLASH_SECTOR_9     ((uint32_t)0x08140000) /* Base @ of Sector 9, 256 Kbyte */
-#define ADDR_FLASH_SECTOR_10    ((uint32_t)0x08180000) /* Base @ of Sector 10, 256 Kbyte */
-#define ADDR_FLASH_SECTOR_11    ((uint32_t)0x081C0000) /* Base @ of Sector 11, 256 Kbyte */
 
 /* End of the Flash address */
-#define USER_FLASH_END_ADDRESS      (uint32_t)0x08020000
+#define USER_FLASH_END_ADDRESS      (uint32_t)(0x08100000 - 1)
 /* Define the user application size */
 #define USER_FLASH_SIZE   (USER_FLASH_END_ADDRESS - APPLICATION_ADDRESS + 1)
 
-/* Define the address from where user application will be loaded.
- Note: the 1st sector 0x08000000-0x08003FFF is reserved for the IAP code */
-#define APPLICATION_ADDRESS        (uint32_t)0x08018000
+/* Define the address from where user application will be loaded.*/
+#define USER_DAT_ADDRESS    ADDR_FLASH_SECTOR_7
+#define USER_DAT_SECTOR     FLASH_SECTOR_7
 
 /* Define bitmap representing user flash area that could be write protected (check restricted to pages 8-39). */
 #define FLASH_SECTOR_TO_BE_PROTECTED (OB_WRP_SECTOR_0 | OB_WRP_SECTOR_1 | OB_WRP_SECTOR_2 | OB_WRP_SECTOR_3 |\
@@ -167,7 +163,7 @@ typedef struct _app_dat
     uint32_t lcd_bl;
     uint32_t bzr_vol;
     uint32_t rsv;
-    uint32_t chksum;
+    uint32_t crc32;
 } app_dat  __attribute__((aligned(4)));
 
 #ifndef FEATURE_LCD4
@@ -184,12 +180,12 @@ extern QSPI_HandleTypeDef hqspi;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
 extern I2C_HandleTypeDef hi2c1;
+extern CRC_HandleTypeDef hcrc;
 
-extern uint32_t g_val;
 extern app_dat g_app_dat;
-extern app_dat g_app_dat_org;
+extern const app_dat g_app_dat_def;
 
-uint32_t doFlashErase(void);
+uint32_t doFlashErase(uint32_t);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
 #ifndef FEATURE_LCD4
@@ -199,7 +195,8 @@ void getTS(void);
 void InitQSPI(void);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
-void setFlashDAT(app_dat);
+void initFlashData(void);
+void updateFlashData(void);
 void setLCDTestImage(uint8_t);
 
 #endif /* APP_INC_SYS_H_ */
