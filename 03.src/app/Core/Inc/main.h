@@ -77,8 +77,6 @@ void Error_Handler(void);
 #define LCD_LR_GPIO_Port GPIOA
 #define LCD_UD_Pin GPIO_PIN_8
 #define LCD_UD_GPIO_Port GPIOA
-#define PWR_HOLD_Pin GPIO_PIN_6
-#define PWR_HOLD_GPIO_Port GPIOC
 #define TS_INT_Pin GPIO_PIN_4
 #define TS_INT_GPIO_Port GPIOA
 #define LCD_STBY_Pin GPIO_PIN_2

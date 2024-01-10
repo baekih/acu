@@ -8,25 +8,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "eco.h"
 
-void runEcoTaskMain(void *argument)
+void test_proc(void)
 {
-    initFlashData();
-    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
-#if 0
     uint32_t timer_sec_1 = 0;
+    int32_t tick = osKernelGetTickCount() - osKernelGetTickCount()%10;
+
 #ifdef FEATURE_LCD4
     uint8_t  timer_pwroff = 0;
-#endif
-    int32_t tick = osKernelGetTickCount();
-
-#ifdef FEATURE_LCD4
-    printf("FI-DIN 1.0 start...\n");
-#else
-    printf("FI-DIN 1.5 start...\n");
-#endif
-
-#ifdef FEATURE_LCD5
-    initTS();
 #endif
 
 #ifdef FEATURE_LCD4
@@ -35,6 +23,7 @@ void runEcoTaskMain(void *argument)
     memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 #endif
 
+    printf("test start\n");
     /* Infinite loop */
     for(;;)
     {
@@ -50,8 +39,17 @@ void runEcoTaskMain(void *argument)
         {
 
 #ifdef FEATURE_LCD5
-            uint16_t x, y;
-            getTS(&x, &y);
+            {
+                uint16_t x = 0, y = 0;
+                static uint16_t x_prv = 0, y_prv = 0;
+                getTS(&x, &y);
+                if((x_prv!=x)||(y_prv!=y))
+                {
+                    printf("x[%03d] y[%03d]\n", x, y);
+                    x_prv = x;
+                    y_prv = y;
+                }
+            }
 #endif
             setLCDBL(g_app_dat.lcd_bl);
 
@@ -78,22 +76,6 @@ void runEcoTaskMain(void *argument)
                     break;
                 }
             }
-
-            if(g_ts_testmode_idx != g_switch_bank[2])
-            {
-                g_ts_testmode_idx = g_switch_bank[2];
-                switch(g_ts_testmode_idx)
-                {
-                case 0:
-                    printf("touchscreen testmode exit...\n\n");
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                    printf("\n\ntouchscreen testmode enter...\n\n");
-                    break;
-                }
-            }
         }
 
         if(tick%1000 == 0)
@@ -111,17 +93,34 @@ void runEcoTaskMain(void *argument)
         if(tick%3000 == 0)
         {
             timer_sec_1 += 3;
-            if(0==g_ts_testmode_idx)
-            {
-                printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
-            }
+
+            printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
             Pgn126993HeartBeat();
         }
 
         osDelayUntil(tick);
     }
+}
+
+void runEcoTaskMain(void *argument)
+{
+#ifdef FEATURE_LCD4
+    printf("FI-DIN 1.0 start...\n");
 #else
-    /* Infinite loop */
+    printf("FI-DIN 1.5 start...\n");
+#endif
+
+    initFlashData();
+    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
+
+#ifdef FEATURE_LCD5
+    initTS();
+#endif
+
+
+#ifdef FEATURE_TEST
+    test_proc();
+#else
     for(;;)
     {
         osDelay(1);

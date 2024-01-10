@@ -10,10 +10,12 @@
 
 #include <main.h>
 
-#if !defined(TS_RSTn_Pin)
-#define FEATURE_LCD4
-#else
+#define FEATURE_TEST
+
+#if defined(TS_RSTn_Pin)
 #define FEATURE_LCD5
+#else
+#define FEATURE_LCD4
 #endif
 
 #endif /* APP_INC_FEATURES_H_ */
