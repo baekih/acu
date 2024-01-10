@@ -4,85 +4,76 @@
  *  Created on: Nov 15, 2023
  *      Author: ihbaek
  */
-#include "sys.h"
-#include "nmea2k.h"
-#include "images.h"
-#include "printf.h"
+#include "eco.h"
 
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
 #define  SYS_LCD_WIDTH   (480)
 #else
 #define  SYS_LCD_WIDTH   (800)
 #endif
 
-app_dat g_app_dat_org = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0, .chksum = 0};
+const app_dat g_app_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0x00, .crc32 = 0xc193313d};
 app_dat g_app_dat;
-#ifndef FI_DIN_1_0
-ts_position pos_curr[5] ={0}, pos_prev[5]={0};
+#ifdef FEATURE_LCD4
+bool g_key_pressed[KEY_MAX_IDX] = {false};
 #endif
 
-#ifndef FI_DIN_1_0
+void printk(const char* pstr, ...)
+{
+    char buf[128] = {0};
+    va_list args;
+
+    va_start(args, pstr);
+    vsprintf(&buf[0], (const char *)pstr, args);
+    va_end(args);
+
+    while(HAL_BUSY == HAL_UART_Transmit(&huart1, (uint8_t*)&buf[0], strlen(buf), 1000)) osDelay(1);
+
+}
+
+#ifdef FEATURE_LCD5
 void initTS(void)
 {
-    uint8_t reg[4] = {0};
+    uint8_t res[TS_RES_LEN] = {0};
+    uint16_t x_res = 0, y_res = 0;
 
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-
+    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
+    HAL_Delay(50);
     HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_SET);
-    HAL_Delay(60);
+    HAL_Delay(50);
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_RES_REG, 1, &res[0], TS_RES_LEN, 1000)) printk("%d error\r\n",__LINE__);
 
-    GPIO_InitStruct.Pin = TS_INT_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(TS_INT_GPIO_Port, &GPIO_InitStruct);
+    x_res = ((((uint16_t)res[0])&0x70)<<4) + res[1];
+    y_res = ((((uint16_t)res[0])&0x07)<<8) + res[2];
 
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PID_REG, 2, &reg[0], TS_PID_LEN, 1000)) printf("%d error\n",__LINE__);
-    else printf("PID[0x%02x%02x%02x%02x]\n", reg[3], reg[2],reg[1], reg[0]);
-
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_RES_REG, 2, &reg[0], TS_RES_LEN, 1000)) printf("%d error\n",__LINE__);
-    else printf("RES[%d:%d]\n", (reg[1]<<8) + reg[0], (reg[3]<<8) + reg[2]);
+    printf("xres[%d] yres[%d]\n", x_res, y_res);
 }
 
-void getTS(void)
+bool getTS(uint16_t* x, uint16_t* y)
 {
-    uint8_t reg[4] = {0};
-    uint8_t stat = 0;
+    uint8_t xy[TS_XY1_LEN] = {0};
+    uint16_t x_cur, y_cur;
 
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
-//    printf("[%06ld] status[0x%02x]\n", cnt, dat[0]);
-
-    if(stat&TS_STAT_BUF_EN_MSK)
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_XY1_REG, 1, &xy[0], TS_XY1_LEN, 1000))
     {
-        memset(&pos_curr[0], 0x00, sizeof(ts_position)*5);
-
-        for(uint32_t i=0; i<(stat&TS_STAT_NUM_MSK); i++)
-        {
-            if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_PTR1_REG+(i*8), 2, &reg[0], TS_PTR1_LEN, 1000)) printf("%d error\n",__LINE__);
-            pos_curr[i].x = (reg[1]<<8) + reg[0];
-            pos_curr[i].y = (reg[3]<<8) + reg[2];
-        }
-
-        if(memcmp(&pos_prev[0], &pos_curr[0], sizeof(ts_position)*5))
-        {
-            printf("TS STAT[0x%02x] XY1[%03d:%03d] XY2[%03d:%03d] XY3[%03d:%03d] XY4[%03d:%03d] XY5[%03d:%03d]\r", stat,
-                   pos_curr[0].x, pos_curr[0].y, pos_curr[1].x, pos_curr[1].y, pos_curr[2].x, pos_curr[2].y,
-                   pos_curr[3].x, pos_curr[3].y, pos_curr[4].x, pos_curr[4].y);
-            memcpy(&pos_prev[0], &pos_curr[0], sizeof(ts_position)*5);
-        }
-
-        stat = 0;
-        if(HAL_OK != HAL_I2C_Mem_Write(&hi2c1, (TS_I2C_ADR)<<1, TS_STAT_REG, 2, &stat, TS_STAT_LEN, 1000)) printf("%d error\n",__LINE__);
+        printf("%d i2c read xy1 error\n",__LINE__);
+        return false;
     }
+
+    *x = x_cur = ((((uint16_t)xy[0])&0x70)<<4) + xy[1];
+    *y = y_cur = ((((uint16_t)xy[0])&0x07)<<8) + xy[2];
+
+    return true;
 }
 #endif
 
-uint32_t doFlashErase(void)
+uint32_t doFlashErase(uint32_t sector)
 {
     uint32_t SectorError;
     FLASH_EraseInitTypeDef pEraseInit =
     {
         .TypeErase = TYPEERASE_SECTORS,
-        .Sector = FLASH_SECTOR_3,
+        .Sector = sector,
         .NbSectors = 1,
         .VoltageRange = VOLTAGE_RANGE_3
     };
@@ -132,37 +123,6 @@ uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
     return (FLASHIF_OK);
 }
 
-#if 0
-static uint8_t QSPI_AutoPollingMemReady(uint32_t Timeout)
-{
-    QSPI_CommandTypeDef scmd;
-    QSPI_AutoPollingTypeDef scfg;
-
-    /* Configure automatic polling mode to wait for memory ready ------ */
-    scmd.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
-    scmd.Instruction       = QSPI_CMD_STAT1_REG_RD;
-    scmd.AddressMode       = QSPI_ADDRESS_NONE;
-    scmd.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
-    scmd.DataMode          = QSPI_DATA_1_LINE;
-    scmd.NbData            = 1;
-    scmd.DummyCycles       = 0;
-    scmd.DdrMode           = QSPI_DDR_MODE_DISABLE;
-    scmd.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
-    scmd.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
-
-
-    scfg.Match           = QSPI_STAT1_REG_WIP_CLR;
-    scfg.Mask            = QSPI_STAT1_REG_WIP;
-    scfg.MatchMode       = QSPI_MATCH_MODE_AND;
-    scfg.StatusBytesSize = 1;
-    scfg.Interval        = 0x10;
-    scfg.AutomaticStop   = QSPI_AUTOMATIC_STOP_ENABLE;
-
-    if(HAL_QSPI_AutoPolling(&hqspi, &scmd, &scfg, Timeout) != HAL_OK) return QSPI_ERROR;
-
-    return QSPI_OK;
-}
-#endif
 static uint8_t QSPI_WriteEnable(void)
 {
     QSPI_CommandTypeDef scmd;
@@ -340,6 +300,17 @@ void InitQSPI(void)
     QSPI_EnableMemoryMappedMode();
 }
 
+#ifdef FEATURE_LCD4
+bool getKeyPressed(uint8_t idx)
+{
+    bool ret = g_key_pressed[idx];
+
+    g_key_pressed[idx] = false;
+
+    return ret;
+}
+#endif
+
 void setBuzzer(uint8_t bzr_vol)
 {
     static uint8_t bzr_vol_prev = 0;
@@ -378,15 +349,36 @@ void setLCDBL(uint8_t lcd_bl)
     return;
 }
 
-void setFlashDAT(app_dat app_dat_local)
+void initFlashData(void)
 {
-//    uint32_t *pval = (uint32_t*)APPLICATION_ADDRESS;
-    app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
-    if(memcmp(&app_dat_local, papp_dat, sizeof(app_dat)))
+    app_dat *papp_dat = (app_dat*)USER_DAT_ADDRESS;
+    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)papp_dat, sizeof(app_dat)/sizeof(uint32_t) - 1);
+
+    if(papp_dat->crc32 != crc32_val)
     {
-        printf("Flash write run lcd_bl[%d] bzr_vol[%d]\n", app_dat_local.lcd_bl, app_dat_local.bzr_vol);
-        doFlashErase();
-        doFlashWrite(APPLICATION_ADDRESS, (uint32_t*)&g_app_dat, 1);
+        g_app_dat = g_app_dat_def;
+        printf("%s() Flash re-init with def val. lcd_bl[%d] bzr_vol[%d]\n",__func__, g_app_dat.lcd_bl, g_app_dat.bzr_vol);
+        doFlashErase(FLASH_SECTOR_7);
+        doFlashWrite(USER_DAT_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
+    }
+    else
+    {
+        g_app_dat = *papp_dat;
+    }
+
+    return;
+}
+
+void updateFlashData(void)
+{
+    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t) - 1);
+
+    if(g_app_dat.crc32 != crc32_val)
+    {
+        printf("%s() Flash update lcd_bl[%d] bzr_vol[%d]\n", __func__, g_app_dat.lcd_bl, g_app_dat.bzr_vol);
+        g_app_dat.crc32 = crc32_val;
+        doFlashErase(FLASH_SECTOR_7);
+        doFlashWrite(USER_DAT_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
     }
 
     return;
@@ -448,7 +440,7 @@ void setLCDTestImage(uint8_t img_sel)
                         *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
                     }
                 }
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
                 else if(480<=x && x<640)
                 {
                     if(0<=y && y<160)
@@ -524,7 +516,7 @@ void setLCDTestImage(uint8_t img_sel)
         break;
     }
     case LCD_TST_IMG_DEF:
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
         memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
         printf("compass\n");
 #else
@@ -553,24 +545,39 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     }
 }
 
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    static uint8_t image_sel = 0;
 //    printf("%s() Enter...\n",__FUNCTION__);
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY1_GPIO_Port, MCU_KEY1_Pin))
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
     {
-        if(g_switch_bank[0] == 0) g_switch_bank[0] = 1;
-        else                      g_switch_bank[0] = 0;
+        g_key_pressed[KEY_PWR_IDX] = true;
+        printf("KEY_PWR pressed\n");
     }
 
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY2_GPIO_Port, MCU_KEY2_Pin))
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
     {
-        setLCDTestImage(image_sel++);
-        if(LCD_TST_IMG_DEF < image_sel) image_sel = LCD_TST_IMG_CHESS;
+        g_key_pressed[KEY_PREV_IDX] = true;
+        printf("KEY_PREV pressed\n");
     }
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY3_GPIO_Port, MCU_KEY3_Pin)) printf("MCU_KEY3 pressed\n");
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_KEY4_GPIO_Port, MCU_KEY4_Pin)) printf("MCU_KEY4 pressed\n");
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin)) printf("MCU_PWR pressed\n");
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
+    {
+        g_key_pressed[KEY_SEL_IDX] = true;
+        printf("KEY_SEL pressed\n");
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
+    {
+        g_key_pressed[KEY_UP_IDX] = true;
+        printf("KEY_UP pressed\n");
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
+    {
+        g_key_pressed[KEY_DN_IDX] = true;
+        printf("KEY_DN pressed\n");
+    }
 }
 #endif

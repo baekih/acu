@@ -8,7 +8,11 @@
 #ifndef APP_INC_SYS_H_
 #define APP_INC_SYS_H_
 
-#include "common.h"
+#include "features.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*  STM32L431RB flash 1bank * 64 block-total * 2048byte per block */
 #define FLASH_START_ADRESS        0x08000000
@@ -28,19 +32,15 @@
 #define ADDR_FLASH_SECTOR_5     ((uint32_t)0x08040000) /* Base @ of Sector 5, 256 Kbyte */
 #define ADDR_FLASH_SECTOR_6     ((uint32_t)0x08080000) /* Base @ of Sector 6, 256 Kbyte */
 #define ADDR_FLASH_SECTOR_7     ((uint32_t)0x080C0000) /* Base @ of Sector 7, 256 Kbyte */
-#define ADDR_FLASH_SECTOR_8     ((uint32_t)0x08100000) /* Base @ of Sector 8, 256 Kbyte */
-#define ADDR_FLASH_SECTOR_9     ((uint32_t)0x08140000) /* Base @ of Sector 9, 256 Kbyte */
-#define ADDR_FLASH_SECTOR_10    ((uint32_t)0x08180000) /* Base @ of Sector 10, 256 Kbyte */
-#define ADDR_FLASH_SECTOR_11    ((uint32_t)0x081C0000) /* Base @ of Sector 11, 256 Kbyte */
 
 /* End of the Flash address */
-#define USER_FLASH_END_ADDRESS      (uint32_t)0x08020000
+#define USER_FLASH_END_ADDRESS      (uint32_t)(0x08100000 - 1)
 /* Define the user application size */
 #define USER_FLASH_SIZE   (USER_FLASH_END_ADDRESS - APPLICATION_ADDRESS + 1)
 
-/* Define the address from where user application will be loaded.
- Note: the 1st sector 0x08000000-0x08003FFF is reserved for the IAP code */
-#define APPLICATION_ADDRESS        (uint32_t)0x08018000
+/* Define the address from where user application will be loaded.*/
+#define USER_DAT_ADDRESS    ADDR_FLASH_SECTOR_7
+#define USER_DAT_SECTOR     FLASH_SECTOR_7
 
 /* Define bitmap representing user flash area that could be write protected (check restricted to pages 8-39). */
 #define FLASH_SECTOR_TO_BE_PROTECTED (OB_WRP_SECTOR_0 | OB_WRP_SECTOR_1 | OB_WRP_SECTOR_2 | OB_WRP_SECTOR_3 |\
@@ -107,45 +107,30 @@
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_DEF         6
 
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
 
-#define TS_I2C_ADR          0x5D
+#define TS_I2C_ADR          0x55
 
-#define TS_RES_W_REG        0x8048
-#define TS_RES_W_LEN        4
+#define TS_RES_REG          0x4
+#define TS_RES_LEN          3
+#define TS_CNT_REG          0x08
+#define TS_CNT_LEN          1
+#define TS_XY1_REG          0x12
+#define TS_XY1_LEN          3
 
-#define TS_PID_REG          0x8140
-#define TS_PID_LEN          4
-#define TS_RES_REG          0x8146
-#define TS_RES_LEN          4
-#define TS_STAT_REG         0x814E
-#define TS_STAT_LEN         1
-#define TS_STAT_BUF_EN_MSK  0x80
-#define TS_STAT_NUM_MSK     0x0F
-#define TS_X1_REG           0x8150
-#define TS_X1_LEN           2
-#define TS_Y1_REG           0x8152
-#define TS_Y1_LEN           2
-#define TS_X2_REG           0x8158
-#define TS_X2_LEN           2
-#define TS_Y2_REG           0x815A
-#define TS_Y2_LEN           2
-#define TS_X3_REG           0x8160
-#define TS_X3_LEN           2
-#define TS_Y3_REG           0x8162
-#define TS_Y3_LEN           2
-#define TS_X4_REG           0x8168
-#define TS_X4_LEN           2
-#define TS_Y4_REG           0x816A
-#define TS_Y4_LEN           2
-#define TS_X5_REG           0x8170
-#define TS_X5_LEN           2
-#define TS_Y5_REG           0x8172
-#define TS_Y5_LEN           2
-#define TS_PTR1_REG         TS_X1_REG
-#define TS_PTR1_LEN         (TS_X1_LEN + TS_Y1_LEN)
+#endif
 
-#endif // FI_DIN_1_0
+#ifdef FEATURE_LCD4
+enum
+{
+    KEY_PWR_IDX  = 0,
+    KEY_PREV_IDX = 1,
+    KEY_SEL_IDX  = 2,
+    KEY_UP_IDX   = 3,
+    KEY_DN_IDX   = 4,
+    KEY_MAX_IDX  = 5
+};
+#endif
 
 enum
 {
@@ -164,19 +149,11 @@ enum{
 
 typedef struct _app_dat
 {
-    uint8_t lcd_bl;
-    uint8_t bzr_vol;
-    uint8_t rsv;
-    uint8_t chksum;
-} app_dat  __attribute__((aligned(1)));
-
-#ifndef FI_DIN_1_0
-typedef struct __ts_position
-{
-    uint16_t x;
-    uint16_t y;
-} ts_position;
-#endif // FI_DIN_1_0
+    uint32_t lcd_bl;
+    uint32_t bzr_vol;
+    uint32_t rsv;
+    uint32_t crc32;
+} app_dat  __attribute__((aligned(4)));
 
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
@@ -184,22 +161,28 @@ extern QSPI_HandleTypeDef hqspi;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
 extern I2C_HandleTypeDef hi2c1;
+extern CRC_HandleTypeDef hcrc;
 
-extern uint32_t g_val;
 extern app_dat g_app_dat;
-extern app_dat g_app_dat_org;
+extern const app_dat g_app_dat_def;
 
-uint32_t doFlashErase(void);
+void printk(const char* pstr, ...);
+uint32_t doFlashErase(uint32_t);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
 void initTS(void);
-void getTS(void);
+bool getTS(uint16_t*, uint16_t*);
 #endif
 void InitQSPI(void);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
-void setFlashDAT(app_dat);
+void initFlashData(void);
+void updateFlashData(void);
 void setLCDTestImage(uint8_t);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* APP_INC_SYS_H_ */
