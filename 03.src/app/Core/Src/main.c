@@ -104,6 +104,13 @@ const osThreadAttr_t EcoTaskTouchGFX_attributes = {
   .stack_size = 4096 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for EcoTaskFlash */
+osThreadId_t EcoTaskFlashHandle;
+const osThreadAttr_t EcoTaskFlash_attributes = {
+  .name = "EcoTaskFlash",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for EcoQueueUART1 */
 osMessageQueueId_t EcoQueueUART1Handle;
 uint8_t EcoQueueUART1Buffer[ 256 * sizeof( uint8_t ) ];
@@ -128,7 +135,7 @@ const osMessageQueueAttr_t EcoQueueNMEA2KRX1_attributes = {
 };
 /* Definitions for EcoQueueNMEA2KTX1 */
 osMessageQueueId_t EcoQueueNMEA2KTX1Handle;
-uint8_t EcoQueueNMEA2KTX1Buffer[ 256 * sizeof( uint8_t ) ];
+uint8_t EcoQueueNMEA2KTX1Buffer[ 384 * sizeof( uint8_t ) ];
 osStaticMessageQDef_t EcoQueueNMEA2KTX1CtrlBlock;
 const osMessageQueueAttr_t EcoQueueNMEA2KTX1_attributes = {
   .name = "EcoQueueNMEA2KTX1",
@@ -163,6 +170,7 @@ extern void runEcoTaskUART(void *argument);
 extern void runEcoTaskNMEA2KRx(void *argument);
 extern void runEcoTaskNMEA2KTx(void *argument);
 extern void TouchGFX_Task(void *argument);
+extern void runEcoTaskFlash(void *argument);
 
 /* USER CODE BEGIN PFP */
 void SystemClock_pwrsav_Config(void);
@@ -271,7 +279,7 @@ int main(void)
   EcoQueueNMEA2KRX1Handle = osMessageQueueNew (32, sizeof(uint8_t), &EcoQueueNMEA2KRX1_attributes);
 
   /* creation of EcoQueueNMEA2KTX1 */
-  EcoQueueNMEA2KTX1Handle = osMessageQueueNew (256, sizeof(uint8_t), &EcoQueueNMEA2KTX1_attributes);
+  EcoQueueNMEA2KTX1Handle = osMessageQueueNew (384, sizeof(uint8_t), &EcoQueueNMEA2KTX1_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -292,6 +300,9 @@ int main(void)
 
   /* creation of EcoTaskTouchGFX */
   EcoTaskTouchGFXHandle = osThreadNew(TouchGFX_Task, NULL, &EcoTaskTouchGFX_attributes);
+
+  /* creation of EcoTaskFlash */
+  EcoTaskFlashHandle = osThreadNew(runEcoTaskFlash, NULL, &EcoTaskFlash_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

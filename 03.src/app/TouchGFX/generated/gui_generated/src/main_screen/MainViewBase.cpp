@@ -15,7 +15,7 @@ MainViewBase::MainViewBase() :
     add(__background);
 
     backgroundImage.setXY(0, 0);
-    backgroundImage.setBitmap(touchgfx::Bitmap(BITMAP_AUTOPILOT_800X480_ID));
+    backgroundImage.setBitmap(touchgfx::Bitmap(BITMAP_ALTERNATE_THEME_IMAGES_BACKGROUNDS_800X480_PUZZLE_ID));
     add(backgroundImage);
 
     radioButtonGroup.setRadioButtonSelectedHandler(radioButtonSelectedCallback);

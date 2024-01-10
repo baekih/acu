@@ -163,6 +163,18 @@ void runEcoTaskUART(void *argument)
     }
 }
 
+void runEcoTaskFlash(void *argument)
+{
+    /* Infinite loop */
+    osDelay(1000);
+
+    for(;;)
+    {
+//        updateFlashData();
+        osDelay(1);
+    }
+}
+
 void runEcoTaskNMEA2KRx(void *argument)
 {
     RxProtocol RxPacket;

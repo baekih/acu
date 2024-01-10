@@ -6,7 +6,7 @@
 #include <touchgfx/hal/Types.hpp>
 #include <touchgfx/Bitmap.hpp>
 
-const uint16_t BITMAP_AUTOPILOT_800X480_ID = 0;
+const uint16_t BITMAP_ALTERNATE_THEME_IMAGES_BACKGROUNDS_800X480_PUZZLE_ID = 0;
 const uint16_t BITMAP_BG_ID = 1;
 const uint16_t BITMAP_RADIO_BUTTON_SELECTED_ID = 2;
 const uint16_t BITMAP_RADIO_BUTTON_SELECTED_PRESSED_ID = 3;

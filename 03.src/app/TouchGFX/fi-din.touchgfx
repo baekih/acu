@@ -9,7 +9,7 @@
             "Name": "backgroundImage",
             "Width": 800,
             "Height": 480,
-            "RelativeFilename": "autopilot_800x480.png"
+            "RelativeFilename": "__generated\\alternate_theme_images_backgrounds_800x480_puzzle.png"
           },
           {
             "Type": "RadioButton",
