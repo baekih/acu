@@ -93,18 +93,18 @@ const osThreadAttr_t EcoTaskNMEA2KTx_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for EcoTaskFlash */
-osThreadId_t EcoTaskFlashHandle;
-const osThreadAttr_t EcoTaskFlash_attributes = {
-  .name = "EcoTaskFlash",
-  .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
 /* Definitions for EcoTaskTouchGFX */
 osThreadId_t EcoTaskTouchGFXHandle;
 const osThreadAttr_t EcoTaskTouchGFX_attributes = {
   .name = "EcoTaskTouchGFX",
   .stack_size = 4096 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for EcoTaskFlash */
+osThreadId_t EcoTaskFlashHandle;
+const osThreadAttr_t EcoTaskFlash_attributes = {
+  .name = "EcoTaskFlash",
+  .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for EcoQueueUART1 */
@@ -141,7 +141,6 @@ const osMessageQueueAttr_t EcoQueueNMEA2KTX1_attributes = {
   .mq_size = sizeof(EcoQueueNMEA2KTX1Buffer)
 };
 /* USER CODE BEGIN PV */
-void printk(const char* pstr, ...);
 
 /* USER CODE END PV */
 
@@ -165,8 +164,8 @@ void runEcoTaskMain(void *argument);
 extern void runEcoTaskUART(void *argument);
 extern void runEcoTaskNMEA2KRx(void *argument);
 extern void runEcoTaskNMEA2KTx(void *argument);
-extern void runEcoTaskFlash(void *argument);
 extern void TouchGFX_Task(void *argument);
+extern void runEcoTaskFlash(void *argument);
 
 /* USER CODE BEGIN PFP */
 void SystemClock_pwrsav_Config(void);
@@ -294,11 +293,11 @@ int main(void)
   /* creation of EcoTaskNMEA2KTx */
   EcoTaskNMEA2KTxHandle = osThreadNew(runEcoTaskNMEA2KTx, NULL, &EcoTaskNMEA2KTx_attributes);
 
-  /* creation of EcoTaskFlash */
-  EcoTaskFlashHandle = osThreadNew(runEcoTaskFlash, NULL, &EcoTaskFlash_attributes);
-
   /* creation of EcoTaskTouchGFX */
   EcoTaskTouchGFXHandle = osThreadNew(TouchGFX_Task, NULL, &EcoTaskTouchGFX_attributes);
+
+  /* creation of EcoTaskFlash */
+  EcoTaskFlashHandle = osThreadNew(runEcoTaskFlash, NULL, &EcoTaskFlash_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -513,6 +512,8 @@ static void MX_I2C1_Init(void)
 {
 
   /* USER CODE BEGIN I2C1_Init 0 */
+    uint8_t res[TS_RES_LEN] = {0};
+    uint16_t x_res = 0, y_res = 0;
 
   /* USER CODE END I2C1_Init 0 */
 
@@ -547,6 +548,16 @@ static void MX_I2C1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C1_Init 2 */
+    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
+    HAL_Delay(50);
+    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_SET);
+    HAL_Delay(50);
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_RES_REG, 1, &res[0], TS_RES_LEN, 1000)) printk("%d error\r\n",__LINE__);
+
+    x_res = ((((uint16_t)res[0])&0x70)<<4) + res[1];
+    y_res = ((((uint16_t)res[0])&0x07)<<8) + res[2];
+
+    printk("xres[%d] yres[%d]\r\n", x_res, y_res);
 
   /* USER CODE END I2C1_Init 2 */
 

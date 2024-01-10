@@ -1,6 +1,6 @@
 #include <images.h>
 
-const unsigned char image_autopilot_800x480_app[] __attribute__((section("ExtFlashSection"))) __attribute__((aligned(4))) = { // 800x480 RGB565 pixels.
+const unsigned char image_autopilot_800x480[] __attribute__((section("ExtFlashSection"))) __attribute__((aligned(4))) = { // 800x480 RGB565 pixels.
 //const unsigned char image_autopilot_800x480[] __attribute__((aligned(4))) = { // 800x480 RGB565 pixels.
     0xec, 0x5a, 0xec, 0x5a, 0x0c, 0x5b, 0xec, 0x5a, 0xec, 0x5a, 0x0c, 0x5b,
     0xec, 0x5a, 0xec, 0x5a, 0x0c, 0x5b, 0xec, 0x5a, 0xec, 0x5a, 0x0c, 0x5b,

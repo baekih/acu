@@ -14,6 +14,7 @@
 
 const app_dat g_app_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0x00, .crc32 = 0xc193313d};
 app_dat g_app_dat;
+
 void printk(const char* pstr, ...)
 {
     char buf[128] = {0};
@@ -49,7 +50,6 @@ bool getTS(uint16_t* x, uint16_t* y)
 {
     uint8_t xy[TS_XY1_LEN] = {0};
     uint16_t x_cur, y_cur;
-    static uint16_t x_prv = 0, y_prv = 0;
 
     if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_XY1_REG, 1, &xy[0], TS_XY1_LEN, 1000))
     {
@@ -59,15 +59,6 @@ bool getTS(uint16_t* x, uint16_t* y)
 
     *x = x_cur = ((((uint16_t)xy[0])&0x70)<<4) + xy[1];
     *y = y_cur = ((((uint16_t)xy[0])&0x07)<<8) + xy[2];
-
-    if((x_prv != x_cur)||(y_prv != y_cur))
-    {
-        printf("x[%d] y[%d]\n", x_cur, y_cur);
-    }
-
-    x_prv = x_cur;
-    y_prv = y_cur;
-
 
     return true;
 }
