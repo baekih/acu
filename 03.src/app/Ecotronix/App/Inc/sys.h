@@ -160,11 +160,11 @@ enum{
 
 typedef struct _app_dat
 {
-    uint8_t lcd_bl;
-    uint8_t bzr_vol;
-    uint8_t rsv;
-    uint8_t chksum;
-} app_dat  __attribute__((aligned(1)));
+    uint32_t lcd_bl;
+    uint32_t bzr_vol;
+    uint32_t rsv;
+    uint32_t crc32;
+} app_dat  __attribute__((aligned(4)));
 
 #ifdef FEATURE_LCD5
 typedef struct __ts_position
@@ -180,12 +180,13 @@ extern QSPI_HandleTypeDef hqspi;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
 extern I2C_HandleTypeDef hi2c1;
+extern CRC_HandleTypeDef hcrc;
 
 extern uint32_t g_val;
 extern app_dat g_app_dat;
-extern app_dat g_app_dat_org;
+extern const app_dat g_app_dat_def;
 
-uint32_t doFlashErase(void);
+uint32_t doFlashErase(uint32_t);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
 #ifdef FEATURE_LCD5
@@ -195,7 +196,8 @@ void getTS(void);
 void InitQSPI(void);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
-void setFlashDAT(app_dat);
+void initFlashData(void);
+void updateFlashData(void);
 void setLCDTestImage(uint8_t);
 
 #endif /* APP_INC_SYS_H_ */

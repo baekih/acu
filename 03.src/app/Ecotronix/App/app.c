@@ -8,9 +8,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "eco.h"
 
-#if 0
 void runEcoTaskMain(void *argument)
 {
+    initFlashData();
+
+#if 0
     uint32_t timer_sec_1 = 0;
 #ifdef FEATURE_LCD4
     uint8_t  timer_pwroff = 0;
@@ -26,25 +28,6 @@ void runEcoTaskMain(void *argument)
 #ifdef FEATURE_LCD5
     initTS();
 #endif
-    {
-        app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
-
-        printf("Init app_dat.\n");
-
-        if(papp_dat->chksum == 0xFF
-         &&papp_dat->lcd_bl == 0xFF
-         &&papp_dat->bzr_vol == 0xFF
-         &&papp_dat->rsv == 0xFF)
-        {
-            g_app_dat = g_app_dat_org;
-        }
-        else
-        {
-            memcpy(&g_app_dat, papp_dat, sizeof(app_dat));
-        }
-
-        printf("Init app_dat[%d:%d:%d:%d]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.chksum);
-    }
 
 #ifdef FEATURE_LCD4
     memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
@@ -71,7 +54,6 @@ void runEcoTaskMain(void *argument)
         if(tick%100 == 0)
         {
             setLCDBL(g_app_dat.lcd_bl);
-            setFlashDAT(g_app_dat);
 
             if(g_switch_bank[0] != 0) setBuzzer(g_app_dat.bzr_vol);
             else                      setBuzzer(0);
@@ -138,8 +120,14 @@ void runEcoTaskMain(void *argument)
 
         osDelayUntil(tick);
     }
-}
+#else
+    /* Infinite loop */
+    for(;;)
+    {
+        osDelay(1);
+    }
 #endif
+}
 
 void runEcoTaskUART(void *argument)
 {
@@ -170,7 +158,7 @@ void runEcoTaskFlash(void *argument)
 
     for(;;)
     {
-//        updateFlashData();
+        updateFlashData();
         osDelay(1);
     }
 }
