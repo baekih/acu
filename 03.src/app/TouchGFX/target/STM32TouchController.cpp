@@ -22,36 +22,23 @@
 
 /* USER CODE BEGIN STM32TouchController */
 
-#include "main.h"
-#include "cmsis_os2.h"                  // ::CMSIS:RTOS2
+#include "eco.h"
 #include <STM32TouchController.hpp>
-#include <printf.h>
-
-#define TS2_I2C_ADR          0x55
-
-#define TS2_CNT_REG          0x08
-#define TS2_CNT_LEN          1
-
-#define TS2_XY1_REG          0x12
-#define TS2_XY1_LEN          3
-
-extern "C" void printk(const char* pstr, ...);
-extern I2C_HandleTypeDef hi2c1;
 
 void STM32TouchController::init()
 {
-    printk("%s\r\n",__PRETTY_FUNCTION__);
+
 }
 
 bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
 {
-    uint8_t xy1[TS2_XY1_LEN] = {0};
+    uint8_t xy1[TS_XY1_LEN] = {0};
     uint16_t x_cur = 0, y_cur = 0;
     static uint16_t x_prv = 0, y_prv = 0;
 
 //    printf("%s\n",__PRETTY_FUNCTION__);
 
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS2_I2C_ADR)<<1, TS2_XY1_REG, 1, &xy1[0], TS2_XY1_LEN, 1000))
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_XY1_REG, 1, &xy1[0], TS_XY1_LEN, 1000))
     {
         printf("%d i2c read xy1 error\n",__LINE__);
         return false;

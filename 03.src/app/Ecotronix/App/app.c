@@ -11,7 +11,7 @@
 void runEcoTaskMain(void *argument)
 {
     initFlashData();
-
+    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
 #if 0
     uint32_t timer_sec_1 = 0;
 #ifdef FEATURE_LCD4
@@ -43,16 +43,16 @@ void runEcoTaskMain(void *argument)
 
         if(tick%10 == 0)
         {
-#ifdef FEATURE_LCD5
-            if(0!=g_ts_testmode_idx)
-            {
-                getTS();
-            }
-#endif
+            //ToDo
         }
 
         if(tick%100 == 0)
         {
+
+#ifdef FEATURE_LCD5
+            uint16_t x, y;
+            getTS(&x, &y);
+#endif
             setLCDBL(g_app_dat.lcd_bl);
 
             if(g_switch_bank[0] != 0) setBuzzer(g_app_dat.bzr_vol);
@@ -99,9 +99,9 @@ void runEcoTaskMain(void *argument)
         if(tick%1000 == 0)
         {
 #ifdef FEATURE_LCD4
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
+            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
             {
-                printf("Push PWR_SW %d sec\n", timer_pwroff++);
+                printf("Push KEY_PWR %d sec\n", timer_pwroff++);
                 if(3 < timer_pwroff) NVIC_SystemReset();
             }
             else timer_pwroff = 0;
