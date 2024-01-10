@@ -36,19 +36,6 @@ void EcoQueueWait(osMessageQueueId_t handle, uint8_t* pbuf, uint8_t len)
     }
 }
 
-uint32_t chkCRC32(app_dat* papp_dat)
-{
-     if(papp_dat->crc32 == HAL_CRC_Calculate(&hcrc, (uint32_t *)papp_dat, sizeof(app_dat)/sizeof(uint32_t) - 1))
-     {
-         return true;
-     }
-     else
-     {
-         return false;
-     }
-
-}
-
 portBASE_TYPE IdleTaskHook(void* p)
 {
     if ((int)p) //idle task sched out

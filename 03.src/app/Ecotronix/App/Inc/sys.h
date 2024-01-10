@@ -120,6 +120,18 @@ extern "C" {
 
 #endif
 
+#ifdef FEATURE_LCD4
+enum
+{
+    KEY_PWR_IDX  = 0,
+    KEY_PREV_IDX = 1,
+    KEY_SEL_IDX  = 2,
+    KEY_UP_IDX   = 3,
+    KEY_DN_IDX   = 4,
+    KEY_MAX_IDX  = 5
+};
+#endif
+
 enum
 {
     FLASHIF_OK = 0,

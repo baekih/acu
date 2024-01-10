@@ -14,6 +14,9 @@
 
 const app_dat g_app_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0x00, .crc32 = 0xc193313d};
 app_dat g_app_dat;
+#ifdef FEATURE_LCD4
+bool g_key_pressed[KEY_MAX_IDX] = {false};
+#endif
 
 void printk(const char* pstr, ...)
 {
@@ -120,37 +123,6 @@ uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
     return (FLASHIF_OK);
 }
 
-#if 0
-static uint8_t QSPI_AutoPollingMemReady(uint32_t Timeout)
-{
-    QSPI_CommandTypeDef scmd;
-    QSPI_AutoPollingTypeDef scfg;
-
-    /* Configure automatic polling mode to wait for memory ready ------ */
-    scmd.InstructionMode   = QSPI_INSTRUCTION_1_LINE;
-    scmd.Instruction       = QSPI_CMD_STAT1_REG_RD;
-    scmd.AddressMode       = QSPI_ADDRESS_NONE;
-    scmd.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
-    scmd.DataMode          = QSPI_DATA_1_LINE;
-    scmd.NbData            = 1;
-    scmd.DummyCycles       = 0;
-    scmd.DdrMode           = QSPI_DDR_MODE_DISABLE;
-    scmd.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
-    scmd.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
-
-
-    scfg.Match           = QSPI_STAT1_REG_WIP_CLR;
-    scfg.Mask            = QSPI_STAT1_REG_WIP;
-    scfg.MatchMode       = QSPI_MATCH_MODE_AND;
-    scfg.StatusBytesSize = 1;
-    scfg.Interval        = 0x10;
-    scfg.AutomaticStop   = QSPI_AUTOMATIC_STOP_ENABLE;
-
-    if(HAL_QSPI_AutoPolling(&hqspi, &scmd, &scfg, Timeout) != HAL_OK) return QSPI_ERROR;
-
-    return QSPI_OK;
-}
-#endif
 static uint8_t QSPI_WriteEnable(void)
 {
     QSPI_CommandTypeDef scmd;
@@ -327,6 +299,17 @@ void InitQSPI(void)
 
     QSPI_EnableMemoryMappedMode();
 }
+
+#ifdef FEATURE_LCD4
+bool getKeyPressed(uint8_t idx)
+{
+    bool ret = g_key_pressed[idx];
+
+    g_key_pressed[idx] = false;
+
+    return ret;
+}
+#endif
 
 void setBuzzer(uint8_t bzr_vol)
 {
@@ -565,21 +548,36 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 #ifdef FEATURE_LCD4
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    static uint8_t image_sel = 0;
 //    printf("%s() Enter...\n",__FUNCTION__);
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+    {
+        g_key_pressed[KEY_PWR_IDX] = true;
+        printf("KEY_PWR pressed\n");
+    }
+
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
     {
-        if(g_switch_bank[0] == 0) g_switch_bank[0] = 1;
-        else                      g_switch_bank[0] = 0;
+        g_key_pressed[KEY_PREV_IDX] = true;
+        printf("KEY_PREV pressed\n");
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
+    {
+        g_key_pressed[KEY_SEL_IDX] = true;
+        printf("KEY_SEL pressed\n");
     }
 
     if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
     {
-        setLCDTestImage(image_sel++);
-        if(LCD_TST_IMG_DEF < image_sel) image_sel = LCD_TST_IMG_CHESS;
+        g_key_pressed[KEY_UP_IDX] = true;
+        printf("KEY_UP pressed\n");
     }
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin)) printf("KEY_SEL pressed\n");
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin)) printf("KEY_DN pressed\n");
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin)) printf("KEY_PWR pressed\n");
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
+    {
+        g_key_pressed[KEY_DN_IDX] = true;
+        printf("KEY_DN pressed\n");
+    }
 }
 #endif
