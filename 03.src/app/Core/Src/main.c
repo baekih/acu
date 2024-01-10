@@ -23,9 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "common.h"
-#include "sys.h"
-#include "images.h"
+#include "eco.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -198,12 +196,10 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
   SystemClock_pwrsav_Config();
 
-  if(0)
-  {
-      GPIO_InitTypeDef GPIO_InitStruct = {0};
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
       __HAL_RCC_GPIOC_CLK_ENABLE();
       GPIO_InitStruct.Pin = MCU_PWR_SW_Pin;
@@ -219,7 +215,7 @@ int main(void)
       {
           HAL_Delay(100);
       }
-  }
+
 #endif
   /* USER CODE END Init */
 
@@ -579,7 +575,7 @@ static void MX_LTDC_Init(void)
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_RESET);
   HAL_Delay(10);
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
   HAL_Delay(5);
   HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
 #endif

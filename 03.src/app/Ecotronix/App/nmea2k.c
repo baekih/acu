@@ -5,9 +5,7 @@
  *      Author: ihbaek
  */
 
-#include "common.h"
-#include "sys.h"
-#include "nmea2k.h"
+#include "eco.h"
 
 fastpacket g_fastpacket[FASTPACKET_ARRAY_MAX];
 multipacket g_multipacket;

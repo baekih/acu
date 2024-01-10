@@ -4,12 +4,9 @@
  *  Created on: Nov 15, 2023
  *      Author: ihbaek
  */
-#include "sys.h"
-#include "nmea2k.h"
-#include "images.h"
-#include "printf.h"
+#include "eco.h"
 
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
 #define  SYS_LCD_WIDTH   (480)
 #else
 #define  SYS_LCD_WIDTH   (800)
@@ -17,7 +14,7 @@
 
 app_dat g_app_dat_org = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0, .chksum = 0};
 app_dat g_app_dat;
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
 ts_position pos_curr[5] ={0}, pos_prev[5]={0};
 #endif
 
@@ -34,7 +31,7 @@ void printk(const char* pstr, ...)
 
 }
 
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
 void initTS(void)
 {
     uint8_t reg[4] = {0};
@@ -393,13 +390,13 @@ void setLCDBL(uint8_t lcd_bl)
 
 void setFlashDAT(app_dat app_dat_local)
 {
-//    uint32_t *pval = (uint32_t*)APPLICATION_ADDRESS;
-    app_dat *papp_dat = (app_dat*)APPLICATION_ADDRESS;
+//    uint32_t *pval = (uint32_t*)USER_DAT_ADDRESS;
+    app_dat *papp_dat = (app_dat*)USER_DAT_ADDRESS;
     if(memcmp(&app_dat_local, papp_dat, sizeof(app_dat)))
     {
         printf("Flash write run lcd_bl[%d] bzr_vol[%d]\n", app_dat_local.lcd_bl, app_dat_local.bzr_vol);
         doFlashErase();
-        doFlashWrite(APPLICATION_ADDRESS, (uint32_t*)&g_app_dat, 1);
+        doFlashWrite(USER_DAT_ADDRESS, (uint32_t*)&g_app_dat, 1);
     }
 
     return;
@@ -461,7 +458,7 @@ void setLCDTestImage(uint8_t img_sel)
                         *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
                     }
                 }
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
                 else if(480<=x && x<640)
                 {
                     if(0<=y && y<160)
@@ -537,7 +534,7 @@ void setLCDTestImage(uint8_t img_sel)
         break;
     }
     case LCD_TST_IMG_DEF:
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
         memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
         printf("compass\n");
 #else
@@ -566,7 +563,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     }
 }
 
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     static uint8_t image_sel = 0;

@@ -8,9 +8,9 @@
 #ifndef INC_IMAGES_H_
 #define INC_IMAGES_H_
 
-#include "common.h"
+#include "features.h"
 
-#ifdef FI_DIN_1_0
+#ifdef FEATURE_LCD4
 extern const unsigned char image_kitten_480x480[];
 extern const unsigned char image_compass_480x480[];
 #else

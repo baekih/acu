@@ -8,8 +8,9 @@
 #ifndef APP_INC_SYS_H_
 #define APP_INC_SYS_H_
 
-#include "common.h"
+#include "features.h"
 
+/*  STM32L431RB flash 1bank * 64 block-total * 2048byte per block */
 #define FLASH_START_ADRESS        0x08000000
 
 #define FILE_NAME_LENGTH          ((uint32_t)64)
@@ -29,13 +30,13 @@
 #define ADDR_FLASH_SECTOR_7     ((uint32_t)0x080C0000) /* Base @ of Sector 7, 256 Kbyte */
 
 /* End of the Flash address */
-#define USER_FLASH_END_ADDRESS      ((uint32_t)0x08100000)
+#define USER_FLASH_END_ADDRESS      (uint32_t)(0x08100000 - 1)
 /* Define the user application size */
 #define USER_FLASH_SIZE   (USER_FLASH_END_ADDRESS - APPLICATION_ADDRESS + 1)
 
-/* Define the address from where user application will be loaded.
- Note: the 1st sector 0x08000000-0x08003FFF is reserved for the IAP code */
-#define APPLICATION_ADDRESS        ADDR_FLASH_SECTOR_7
+/* Define the address from where user application will be loaded.*/
+#define USER_DAT_ADDRESS    ADDR_FLASH_SECTOR_7
+#define USER_DAT_SECTOR     FLASH_SECTOR_7
 
 /* Define bitmap representing user flash area that could be write protected (check restricted to pages 8-39). */
 #define FLASH_SECTOR_TO_BE_PROTECTED (OB_WRP_SECTOR_0 | OB_WRP_SECTOR_1 | OB_WRP_SECTOR_2 | OB_WRP_SECTOR_3 |\
@@ -102,7 +103,7 @@
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_DEF         6
 
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
 
 #define TS_I2C_ADR          0x5D
 
@@ -165,13 +166,13 @@ typedef struct _app_dat
     uint8_t chksum;
 } app_dat  __attribute__((aligned(1)));
 
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
 typedef struct __ts_position
 {
     uint16_t x;
     uint16_t y;
 } ts_position;
-#endif // FI_DIN_1_0
+#endif // FEATURE_LCD5
 
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
@@ -187,7 +188,7 @@ extern app_dat g_app_dat_org;
 uint32_t doFlashErase(void);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
-#ifndef FI_DIN_1_0
+#ifdef FEATURE_LCD5
 void initTS(void);
 void getTS(void);
 #endif
