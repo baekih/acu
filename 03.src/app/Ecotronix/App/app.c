@@ -8,25 +8,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "eco.h"
 
-void runEcoTaskMain(void *argument)
+void test_proc(void)
 {
     uint32_t timer_sec_1 = 0;
+    int32_t tick = osKernelGetTickCount() - osKernelGetTickCount()%10;
+
 #ifdef FEATURE_LCD4
     uint8_t  timer_pwroff = 0;
-#endif
-    int32_t tick = osKernelGetTickCount();
-
-    initFlashData();
-
-#ifdef FEATURE_LCD4
-    printf("FI-DIN 1.0 start...\n");
-#else
-    printf("FI-DIN 1.5 start...\n");
-#endif
-    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
-
-#ifdef FEATURE_LCD5
-    initTS();
 #endif
 
 #ifdef FEATURE_LCD4
@@ -35,6 +23,7 @@ void runEcoTaskMain(void *argument)
     memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 #endif
 
+    printf("test start\n");
     /* Infinite loop */
     for(;;)
     {
@@ -111,6 +100,32 @@ void runEcoTaskMain(void *argument)
 
         osDelayUntil(tick);
     }
+}
+
+void runEcoTaskMain(void *argument)
+{
+#ifdef FEATURE_LCD4
+    printf("FI-DIN 1.0 start...\n");
+#else
+    printf("FI-DIN 1.5 start...\n");
+#endif
+
+    initFlashData();
+    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
+
+#ifdef FEATURE_LCD5
+    initTS();
+#endif
+
+
+#ifdef FEATURE_TEST
+    test_proc();
+#else
+    for(;;)
+    {
+        osDelay(1);
+    }
+#endif
 }
 
 void runEcoTaskUART(void *argument)

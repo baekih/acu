@@ -48,6 +48,8 @@ CRC_HandleTypeDef hcrc;
 
 DMA2D_HandleTypeDef hdma2d;
 
+I2C_HandleTypeDef hi2c1;
+
 LTDC_HandleTypeDef hltdc;
 
 QSPI_HandleTypeDef hqspi;
@@ -139,8 +141,10 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_CAN1_Init(void);
+static void MX_I2C1_Init(void);
 static void MX_QUADSPI_Init(void);
 static void MX_CRC_Init(void);
+static void MX_DMA2D_Init(void);
 static void MX_FMC_Init(void);
 static void MX_LTDC_Init(void);
 static void MX_TIM3_Init(void);
@@ -148,7 +152,6 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_TIM14_Init(void);
-static void MX_DMA2D_Init(void);
 void runEcoTaskMain(void *argument);
 extern void runEcoTaskUART(void *argument);
 extern void runEcoTaskNMEA2KRx(void *argument);
@@ -221,8 +224,10 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_CAN1_Init();
+  MX_I2C1_Init();
   MX_QUADSPI_Init();
   MX_CRC_Init();
+  MX_DMA2D_Init();
   MX_FMC_Init();
   MX_LTDC_Init();
   MX_TIM3_Init();
@@ -230,7 +235,6 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM7_Init();
   MX_TIM14_Init();
-  MX_DMA2D_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -485,6 +489,54 @@ static void MX_DMA2D_Init(void)
 }
 
 /**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.Timing = 0x6000030D;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Analogue filter
+  */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Digital filter
+  */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
   * @brief LTDC Initialization Function
   * @param None
   * @retval None
@@ -509,17 +561,17 @@ static void MX_LTDC_Init(void)
 
   /* USER CODE END LTDC_Init 1 */
   hltdc.Instance = LTDC;
-  hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;
-  hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AL;
+  hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AH;
+  hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AH;
   hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
   hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;
-  hltdc.Init.HorizontalSync = 6;
+  hltdc.Init.HorizontalSync = 13;
   hltdc.Init.VerticalSync = 6;
-  hltdc.Init.AccumulatedHBP = 13;
+  hltdc.Init.AccumulatedHBP = 23;
   hltdc.Init.AccumulatedVBP = 13;
-  hltdc.Init.AccumulatedActiveW = 493;
+  hltdc.Init.AccumulatedActiveW = 823;
   hltdc.Init.AccumulatedActiveH = 493;
-  hltdc.Init.TotalWidth = 500;
+  hltdc.Init.TotalWidth = 833;
   hltdc.Init.TotalHeigh = 500;
   hltdc.Init.Backcolor.Blue = 0;
   hltdc.Init.Backcolor.Green = 0;
@@ -529,7 +581,7 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   pLayerCfg.WindowX0 = 0;
-  pLayerCfg.WindowX1 = 480;
+  pLayerCfg.WindowX1 = 800;
   pLayerCfg.WindowY0 = 0;
   pLayerCfg.WindowY1 = 480;
   pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_RGB565;
@@ -538,7 +590,7 @@ static void MX_LTDC_Init(void)
   pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
   pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
   pLayerCfg.FBStartAdress = 0xC0000000;
-  pLayerCfg.ImageWidth = 480;
+  pLayerCfg.ImageWidth = 800;
   pLayerCfg.ImageHeight = 480;
   pLayerCfg.Backcolor.Blue = 0;
   pLayerCfg.Backcolor.Green = 0;
@@ -996,7 +1048,6 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOJ_CLK_ENABLE();
@@ -1004,13 +1055,18 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOK_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOI_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|CAN1_STBY_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, WDI_Pin|CAN1_STBY_Pin|LCD_STBY_Pin|TS_RSTn_Pin
+                          |LCD_RSTn_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_UD_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : BUZZER_ON_Pin */
   GPIO_InitStruct.Pin = BUZZER_ON_Pin;
@@ -1026,27 +1082,20 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_ON_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : KEY_DN_Pin KEY_SEL_Pin KEY_UP_Pin KEY_PWR_Pin
-                           KEY_PREV_Pin */
-  GPIO_InitStruct.Pin = KEY_DN_Pin|KEY_SEL_Pin|KEY_UP_Pin|KEY_PWR_Pin
-                          |KEY_PREV_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : WDI_Pin CAN1_STBY_Pin LCD_RSTn_Pin */
-  GPIO_InitStruct.Pin = WDI_Pin|CAN1_STBY_Pin|LCD_RSTn_Pin;
+  /*Configure GPIO pins : WDI_Pin CAN1_STBY_Pin LCD_LR_Pin LCD_UD_Pin
+                           LCD_STBY_Pin TS_RSTn_Pin LCD_RSTn_Pin */
+  GPIO_InitStruct.Pin = WDI_Pin|CAN1_STBY_Pin|LCD_LR_Pin|LCD_UD_Pin
+                          |LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+  /*Configure GPIO pin : TS_INT_Pin */
+  GPIO_InitStruct.Pin = TS_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(TS_INT_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
