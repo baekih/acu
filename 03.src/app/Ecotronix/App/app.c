@@ -50,8 +50,17 @@ void runEcoTaskMain(void *argument)
         {
 
 #ifdef FEATURE_LCD5
-            uint16_t x, y;
-            getTS(&x, &y);
+            {
+                uint16_t x = 0, y = 0;
+                static uint16_t x_prv = 0, y_prv = 0;
+                getTS(&x, &y);
+                if((x_prv!=x)||(y_prv!=y))
+                {
+                    printf("x[%03d] y[%03d]\n", x, y);
+                    x_prv = x;
+                    y_prv = y;
+                }
+            }
 #endif
             setLCDBL(g_app_dat.lcd_bl);
 
