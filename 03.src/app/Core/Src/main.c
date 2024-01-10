@@ -145,7 +145,6 @@ const osMessageQueueAttr_t EcoQueueNMEA2KTX1_attributes = {
   .mq_size = sizeof(EcoQueueNMEA2KTX1Buffer)
 };
 /* USER CODE BEGIN PV */
-void printk(const char* pstr, ...);
 
 /* USER CODE END PV */
 
@@ -209,20 +208,20 @@ int main(void)
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-      __HAL_RCC_GPIOC_CLK_ENABLE();
-      GPIO_InitStruct.Pin = MCU_PWR_SW_Pin;
-      GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-      GPIO_InitStruct.Pull = GPIO_NOPULL;
-      HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-      while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
-      {
-          HAL_Delay(100);
-      }
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  GPIO_InitStruct.Pin = KEY_PWR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+  {
+      HAL_Delay(100);
+  }
 
-      while(GPIO_PIN_SET == HAL_GPIO_ReadPin(MCU_PWR_SW_GPIO_Port, MCU_PWR_SW_Pin))
-      {
-          HAL_Delay(100);
-      }
+  while(GPIO_PIN_SET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+  {
+      HAL_Delay(100);
+  }
 
 #endif
   /* USER CODE END Init */
