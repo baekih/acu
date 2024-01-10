@@ -34,10 +34,6 @@ typedef StaticQueue_t osStaticMessageQDef_t;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define TS2_I2C_ADR          0x55
-
-#define TS2_RES_REG          0x4
-#define TS2_RES_LEN          3
 
 /* USER CODE END PD */
 
@@ -556,7 +552,7 @@ static void MX_I2C1_Init(void)
     HAL_Delay(50);
     HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_SET);
     HAL_Delay(50);
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS2_I2C_ADR)<<1, TS2_RES_REG, 1, &res[0], TS2_RES_LEN, 1000)) printk("%d error\r\n",__LINE__);
+    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_RES_REG, 1, &res[0], TS_RES_LEN, 1000)) printk("%d error\r\n",__LINE__);
 
     x_res = ((((uint16_t)res[0])&0x70)<<4) + res[1];
     y_res = ((((uint16_t)res[0])&0x07)<<8) + res[2];

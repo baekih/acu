@@ -147,7 +147,6 @@ extern TIM_HandleTypeDef htim14;
 extern I2C_HandleTypeDef hi2c1;
 extern CRC_HandleTypeDef hcrc;
 
-extern uint32_t g_val;
 extern app_dat g_app_dat;
 extern const app_dat g_app_dat_def;
 
