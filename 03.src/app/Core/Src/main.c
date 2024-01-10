@@ -512,8 +512,6 @@ static void MX_I2C1_Init(void)
 {
 
   /* USER CODE BEGIN I2C1_Init 0 */
-    uint8_t res[TS_RES_LEN] = {0};
-    uint16_t x_res = 0, y_res = 0;
 
   /* USER CODE END I2C1_Init 0 */
 
@@ -548,16 +546,6 @@ static void MX_I2C1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C1_Init 2 */
-    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
-    HAL_Delay(50);
-    HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_SET);
-    HAL_Delay(50);
-    if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (TS_I2C_ADR)<<1, TS_RES_REG, 1, &res[0], TS_RES_LEN, 1000)) printk("%d error\r\n",__LINE__);
-
-    x_res = ((((uint16_t)res[0])&0x70)<<4) + res[1];
-    y_res = ((((uint16_t)res[0])&0x07)<<8) + res[2];
-
-    printk("xres[%d] yres[%d]\r\n", x_res, y_res);
 
   /* USER CODE END I2C1_Init 2 */
 
