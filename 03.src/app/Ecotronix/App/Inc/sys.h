@@ -10,6 +10,10 @@
 
 #include "features.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*  STM32L431RB flash 1bank * 64 block-total * 2048byte per block */
 #define FLASH_START_ADRESS        0x08000000
 
@@ -164,5 +168,9 @@ void setLCDBL(uint8_t);
 void initFlashData(void);
 void updateFlashData(void);
 void setLCDTestImage(uint8_t);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* APP_INC_SYS_H_ */
