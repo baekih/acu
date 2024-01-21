@@ -113,11 +113,6 @@ void runEcoTaskMain(void *argument)
     initFlashData();
     printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
 
-#ifdef FEATURE_LCD5
-    initTS();
-#endif
-
-
 #ifdef FEATURE_TEST
     test_proc();
 #else
