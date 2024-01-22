@@ -10,7 +10,7 @@
 
 #include <main.h>
 
-#define FEATURE_TEST
+//#define FEATURE_TEST
 
 #if defined(TS_RSTn_Pin)
 #define FEATURE_LCD5

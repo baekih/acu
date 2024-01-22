@@ -1,0 +1,57 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * File Name          : STM32TouchController.cpp
+  ******************************************************************************
+  * This file was created by TouchGFX Generator 4.23.0. This file is only
+  * generated once! Delete this file from your project and re-generate code
+  * using STM32CubeMX or change this file manually to update it.
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2024 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+
+/* USER CODE BEGIN STM32TouchController */
+
+#include "eco.h"
+#include <STM32TouchController.hpp>
+
+void STM32TouchController::init()
+{
+
+}
+
+bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
+{
+    uint16_t x_cur = 0, y_cur = 0;
+    static uint16_t x_prv = 0, y_prv = 0;
+
+//    printf("%s\n",__PRETTY_FUNCTION__);
+
+    if(!getTS(&x_cur, &y_cur)) return false;
+
+    if((x_prv == x_cur) && (y_prv == y_cur)) return false;
+
+    x_prv = x_cur;
+    y_prv = y_cur;
+
+    x = (int32_t)x_cur;
+    y = (int32_t)y_cur;
+
+    printf("ts x[%d] y[%d]\n", x_cur, y_cur);
+
+    return true;
+}
+
+/* USER CODE END STM32TouchController */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

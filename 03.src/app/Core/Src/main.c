@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "app_touchgfx.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -92,6 +93,13 @@ const osThreadAttr_t EcoTaskNMEA2KTx_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for EcoTaskTouchGFX */
+osThreadId_t EcoTaskTouchGFXHandle;
+const osThreadAttr_t EcoTaskTouchGFX_attributes = {
+  .name = "EcoTaskTouchGFX",
+  .stack_size = 4096 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for EcoTaskFlash */
 osThreadId_t EcoTaskFlashHandle;
 const osThreadAttr_t EcoTaskFlash_attributes = {
@@ -156,6 +164,7 @@ void runEcoTaskMain(void *argument);
 extern void runEcoTaskUART(void *argument);
 extern void runEcoTaskNMEA2KRx(void *argument);
 extern void runEcoTaskNMEA2KTx(void *argument);
+extern void TouchGFX_Task(void *argument);
 extern void runEcoTaskFlash(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -235,6 +244,9 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM7_Init();
   MX_TIM14_Init();
+  MX_TouchGFX_Init();
+  /* Call PreOsInit function */
+  MX_TouchGFX_PreOSInit();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -280,6 +292,9 @@ int main(void)
 
   /* creation of EcoTaskNMEA2KTx */
   EcoTaskNMEA2KTxHandle = osThreadNew(runEcoTaskNMEA2KTx, NULL, &EcoTaskNMEA2KTx_attributes);
+
+  /* creation of EcoTaskTouchGFX */
+  EcoTaskTouchGFXHandle = osThreadNew(TouchGFX_Task, NULL, &EcoTaskTouchGFX_attributes);
 
   /* creation of EcoTaskFlash */
   EcoTaskFlashHandle = osThreadNew(runEcoTaskFlash, NULL, &EcoTaskFlash_attributes);
@@ -1068,6 +1083,9 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_UD_Pin, GPIO_PIN_SET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(PWR_HOLD_GPIO_Port, PWR_HOLD_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pin : BUZZER_ON_Pin */
   GPIO_InitStruct.Pin = BUZZER_ON_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -1090,6 +1108,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PWR_HOLD_Pin */
+  GPIO_InitStruct.Pin = PWR_HOLD_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(PWR_HOLD_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : TS_INT_Pin */
   GPIO_InitStruct.Pin = TS_INT_Pin;
