@@ -40,6 +40,7 @@ void initTS(void)
     uint16_t x_res = 0, y_res = 0;
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
+
     GPIO_InitStruct.Pin = WDI_Pin|CAN1_STBY_Pin|LCD_LR_Pin|LCD_UD_Pin
                          |TS_INT_Pin|LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -84,6 +85,7 @@ void initTS(void)
 bool getTS(uint16_t* x, uint16_t* y)
 {
     uint8_t xy[4] = {0};
+    uint8_t stat = 0;
 
     switch(g_ts_i2c_adr)
     {
@@ -99,16 +101,33 @@ bool getTS(uint16_t* x, uint16_t* y)
 
         break;
     case TS_GT911_I2C_ADR:
-        if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (g_ts_i2c_adr)<<1, TS_GT911_PTR1_REG, 2, &xy[0], TS_GT911_PTR1_LEN, 1000))
+        if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (g_ts_i2c_adr)<<1, TS_GT911_STAT_REG, 2, &stat, TS_GT911_STAT_LEN, 1000))
         {
-            printf("%s():%d GT911 i2c read xy1 error\n",__FUNCTION__, __LINE__);
+            printf("%s():%d GT911 i2c read stat error\n",__FUNCTION__, __LINE__);
+            return false;
+        }
+
+        if(!(stat&TS_GT911_STAT_BUF_EN_MSK))
+        {
+            return false;
+        }
+
+        if(HAL_OK != HAL_I2C_Mem_Read(&hi2c1, (g_ts_i2c_adr)<<1, TS_GT911_XY1_REG, 2, &xy[0], TS_GT911_XY1_LEN, 1000))
+        {
+            printf("%s():%d GT911 i2c read xy error\n",__FUNCTION__, __LINE__);
             return false;
         }
 
         *x = (xy[1]<<8) + xy[0];
         *y = (xy[3]<<8) + xy[2];
+        stat = 0;
 
-        printf("%s():%d GT911 xy1[%03d:%03d] OK\n",__FUNCTION__, __LINE__, *x, *y);
+        if(HAL_OK != HAL_I2C_Mem_Write(&hi2c1, (g_ts_i2c_adr)<<1, TS_GT911_STAT_REG, 2, &stat, TS_GT911_STAT_LEN, 1000))
+        {
+            printf("%s():%d GT911 i2c write stat error\n",__FUNCTION__, __LINE__);
+            return false;
+        }
+//        printf("%s():%d GT911 xy[%03d:%03d] OK\n",__FUNCTION__, __LINE__, *x, *y);
 
         break;
     default:

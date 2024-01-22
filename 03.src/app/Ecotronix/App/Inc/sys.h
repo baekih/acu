@@ -142,8 +142,8 @@ extern "C" {
 #define TS_GT911_X5_LEN             2
 #define TS_GT911_Y5_REG             0x8172
 #define TS_GT911_Y5_LEN             2
-#define TS_GT911_PTR1_REG           TS_GT911_X1_REG
-#define TS_GT911_PTR1_LEN           (TS_GT911_X1_LEN + TS_GT911_Y1_LEN)
+#define TS_GT911_XY1_REG           TS_GT911_X1_REG
+#define TS_GT911_XY1_LEN           (TS_GT911_X1_LEN + TS_GT911_Y1_LEN)
 
 #define TS_ST1633_I2C_ADR           0x55
 #define TS_ST1633_RES_REG           0x4
