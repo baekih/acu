@@ -210,10 +210,8 @@ void printk(const char* pstr, ...);
 uint32_t doFlashErase(uint32_t);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
-#ifdef FEATURE_LCD5
 void initTS(void);
 bool getTS(uint16_t*, uint16_t*);
-#endif
 void InitQSPI(void);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);

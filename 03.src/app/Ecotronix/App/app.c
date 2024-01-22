@@ -108,9 +108,6 @@ void test_proc(void)
 
 void runEcoTaskMain(void *argument)
 {
-    if     (g_board_id==BOARD_ID_DIN10)  printf("ECO-DIN10 start...\n");
-    else if(g_board_id==BOARD_ID_DIN15)  printf("ECO-DIN15 start...\n");
-
     initFlashData();
     printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
 
@@ -119,7 +116,8 @@ void runEcoTaskMain(void *argument)
 #else
     for(;;)
     {
-        osDelay(1);
+        printf("%s():%d\n",__func__,__LINE__);
+        osDelay(1000);
     }
 #endif
 }

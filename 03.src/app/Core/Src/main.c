@@ -199,27 +199,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-#ifdef FEATURE_LCD4
-  SystemClock_pwrsav_Config();
 
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  GPIO_InitStruct.Pin = KEY_PWR_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-  while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
-  {
-      HAL_Delay(100);
-  }
-
-  while(GPIO_PIN_SET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
-  {
-      HAL_Delay(100);
-  }
-
-#endif
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -546,7 +526,36 @@ static void MX_I2C1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C1_Init 2 */
+
   initTS();
+
+  if(g_board_id == BOARD_ID_DIN10)
+  {
+      SystemClock_pwrsav_Config();
+
+      GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+      __HAL_RCC_GPIOC_CLK_ENABLE();
+      GPIO_InitStruct.Pin = KEY_PWR_Pin;
+      GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+      while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+      {
+          HAL_Delay(100);
+      }
+
+      while(GPIO_PIN_SET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+      {
+          HAL_Delay(100);
+      }
+
+      SystemClock_Config();
+  }
+
+  if     (g_board_id==BOARD_ID_DIN10)  printk("ECO-DIN10 start...\r\n");
+  else if(g_board_id==BOARD_ID_DIN15)  printk("ECO-DIN15 start...\r\n");
+
   /* USER CODE END I2C1_Init 2 */
 
 }

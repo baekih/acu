@@ -34,7 +34,6 @@ void printk(const char* pstr, ...)
 
 }
 
-#ifdef FEATURE_LCD5
 void initTS(void)
 {
     uint8_t res[4] = {0};
@@ -53,14 +52,14 @@ void initTS(void)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(TS_INT_GPIO_Port, &GPIO_InitStruct);
 
-    if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_ST1633_I2C_ADR)<<1, TS_ST1633_RES_REG, 1, &res[0], TS_ST1633_RES_LEN, 1000))
+    if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_ST1633_I2C_ADR)<<1, TS_ST1633_RES_REG, 1, &res[0], TS_ST1633_RES_LEN, 10))
     {
         g_ts_i2c_adr = TS_ST1633_I2C_ADR;
         g_board_id = BOARD_ID_DIN15;
         x_res = ((((uint16_t)res[0])&0x70)<<4) + res[1];
         y_res = ((((uint16_t)res[0])&0x07)<<8) + res[2];
     }
-    else if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_GT911_I2C_ADR)<<1, TS_GT911_RES_REG, 2, &res[0], TS_GT911_RES_LEN, 1000))
+    else if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_GT911_I2C_ADR)<<1, TS_GT911_RES_REG, 2, &res[0], TS_GT911_RES_LEN, 10))
     {
         g_ts_i2c_adr = TS_GT911_I2C_ADR;
         g_board_id = BOARD_ID_DIN15;
@@ -134,7 +133,6 @@ bool getTS(uint16_t* x, uint16_t* y)
 
     return true;
 }
-#endif
 
 uint32_t doFlashErase(uint32_t sector)
 {
