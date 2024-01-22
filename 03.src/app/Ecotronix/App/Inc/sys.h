@@ -111,8 +111,6 @@ extern "C" {
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_DEF         6
 
-#ifdef FEATURE_LCD5
-
 #define TS_INVAL_I2C_ADR            0xFF
 
 #define TS_GT911_I2C_ADR            0x5D
@@ -157,9 +155,6 @@ extern "C" {
 #define TS_ST1633_XY1_REG           0x12
 #define TS_ST1633_XY1_LEN           3
 
-#endif
-
-#ifdef FEATURE_LCD4
 enum
 {
     KEY_PWR_IDX  = 0,
@@ -169,7 +164,6 @@ enum
     KEY_DN_IDX   = 4,
     KEY_MAX_IDX  = 5
 };
-#endif
 
 enum
 {
@@ -201,6 +195,7 @@ extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
 extern I2C_HandleTypeDef hi2c1;
 extern CRC_HandleTypeDef hcrc;
+extern LTDC_HandleTypeDef hltdc;
 
 extern app_dat g_app_dat;
 extern const app_dat g_app_dat_def;

@@ -578,10 +578,11 @@ static void MX_LTDC_Init(void)
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_RESET);
   HAL_Delay(10);
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
-#ifdef FEATURE_LCD5
-  HAL_Delay(5);
-  HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
-#endif
+  if(g_board_id == BOARD_ID_DIN15)
+  {
+      HAL_Delay(5);
+      HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
+  }
 
   /* USER CODE END LTDC_Init 1 */
   hltdc.Instance = LTDC;
@@ -1109,10 +1110,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_ON_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : KEY_DOWN_Pin KEY_SEL_Pin KEY_UP_Pin KEY_PWR_Pin
-                           KEY_PREV_Pin */
-  GPIO_InitStruct.Pin = KEY_DOWN_Pin|KEY_SEL_Pin|KEY_UP_Pin|KEY_PWR_Pin
-                          |KEY_PREV_Pin;
+  /*Configure GPIO pins : KEY_DN_Pin KEY_SEL_Pin KEY_UP_Pin KEY_PREV_Pin */
+  GPIO_InitStruct.Pin = KEY_DN_Pin|KEY_SEL_Pin|KEY_UP_Pin|KEY_PREV_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -1125,6 +1124,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : KEY_PWR_Pin */
+  GPIO_InitStruct.Pin = KEY_PWR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(KEY_PWR_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PWR_HOLD_Pin */
   GPIO_InitStruct.Pin = PWR_HOLD_Pin;

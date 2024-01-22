@@ -6,18 +6,10 @@
  */
 #include "eco.h"
 
-#ifdef FEATURE_LCD4
-#define  SYS_LCD_WIDTH   (480)
-#else
-#define  SYS_LCD_WIDTH   (800)
-#endif
-
 const app_dat g_app_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0x00, .crc32 = 0xc193313d};
 app_dat g_app_dat;
-#ifdef FEATURE_LCD4
 bool g_key_pressed[KEY_MAX_IDX] = {false};
-#endif
-
+uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
 uint8_t g_board_id = BOARD_ID_INVAL;
 
@@ -367,7 +359,6 @@ void InitQSPI(void)
     QSPI_EnableMemoryMappedMode();
 }
 
-#ifdef FEATURE_LCD4
 bool getKeyPressed(uint8_t idx)
 {
     bool ret = g_key_pressed[idx];
@@ -376,7 +367,6 @@ bool getKeyPressed(uint8_t idx)
 
     return ret;
 }
-#endif
 
 void setBuzzer(uint8_t bzr_vol)
 {
@@ -455,118 +445,122 @@ void setLCDTestImage(uint8_t img_sel)
 {
     uint16_t *pbuf = (uint16_t*)0xC0000000;
 
+    sys_lcd_width = hltdc.Init.AccumulatedActiveW - hltdc.Init.AccumulatedHBP;
+
     switch(img_sel)
     {
     case LCD_TST_IMG_CHESS:
         for(uint32_t y=0; y<480; y++)
         {
-            for(uint32_t x=0; x<SYS_LCD_WIDTH; x++)
+            for(uint32_t x=0; x<sys_lcd_width; x++)
             {
                 if(0<=x && x<160)
                 {
                     if(0<=y && y<160)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
+                        *(pbuf+x+y*sys_lcd_width) = 0xFFFF;
                     }
                     else if(160<=y && y<320)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0x0000;
+                        *(pbuf+x+y*sys_lcd_width) = 0x0000;
                     }
                     else if(320<=y && y<480)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
+                        *(pbuf+x+y*sys_lcd_width) = 0xFFFF;
                     }
                 }
                 else if(160<=x && x<320)
                 {
                     if(0<=y && y<160)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0x0000;
+                        *(pbuf+x+y*sys_lcd_width) = 0x0000;
                     }
                     else if(160<=y && y<320)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
+                        *(pbuf+x+y*sys_lcd_width) = 0xFFFF;
                     }
                     else if(320<=y && y<480)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0x0000;
+                        *(pbuf+x+y*sys_lcd_width) = 0x0000;
                     }
                 }
                 else if(320<=x && x<480)
                 {
                     if(0<=y && y<160)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
+                        *(pbuf+x+y*sys_lcd_width) = 0xFFFF;
                     }
                     else if(160<=y && y<320)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0x0000;
+                        *(pbuf+x+y*sys_lcd_width) = 0x0000;
                     }
                     else if(320<=y && y<480)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
+                        *(pbuf+x+y*sys_lcd_width) = 0xFFFF;
                     }
                 }
-#ifdef FEATURE_LCD5
-                else if(480<=x && x<640)
+
+                if(sys_lcd_width == 800)
                 {
-                    if(0<=y && y<160)
+                    if(480<=x && x<640)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0x0000;
+                        if(0<=y && y<160)
+                        {
+                            *(pbuf+x+y*sys_lcd_width) = 0x0000;
+                        }
+                        else if(160<=y && y<320)
+                        {
+                            *(pbuf+x+y*sys_lcd_width) = 0xFFFF;
+                        }
+                        else if(320<=y && y<480)
+                        {
+                            *(pbuf+x+y*sys_lcd_width) = 0x0000;
+                        }
                     }
-                    else if(160<=y && y<320)
+                    else if(640<=x && x<sys_lcd_width)
                     {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
-                    }
-                    else if(320<=y && y<480)
-                    {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0x0000;
+                        if(0<=y && y<160)
+                        {
+                            *(pbuf+x+y*sys_lcd_width) = 0xFFFF;
+                        }
+                        else if(160<=y && y<320)
+                        {
+                            *(pbuf+x+y*sys_lcd_width) = 0x0000;
+                        }
+                        else if(320<=y && y<480)
+                        {
+                            *(pbuf+x+y*sys_lcd_width) = 0xFFFF;
+                        }
                     }
                 }
-                else if(640<=x && x<SYS_LCD_WIDTH)
-                {
-                    if(0<=y && y<160)
-                    {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
-                    }
-                    else if(160<=y && y<320)
-                    {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0x0000;
-                    }
-                    else if(320<=y && y<480)
-                    {
-                        *(pbuf+x+y*SYS_LCD_WIDTH) = 0xFFFF;
-                    }
-                }
-#endif
             }
         }
         printf("chess\n");
         break;
     case LCD_TST_IMG_WHITE:
-        for(uint32_t i=0; i<(SYS_LCD_WIDTH*480); i++) *(pbuf+i) = 0xFFFF;
+        for(uint32_t i=0; i<(sys_lcd_width*480); i++) *(pbuf+i) = 0xFFFF;
         printf("white\n");
         break;
     case LCD_TST_IMG_RED:
-        for(uint32_t i=0; i<(SYS_LCD_WIDTH*480); i++) *(pbuf+i) = 0x00F8;
+        for(uint32_t i=0; i<(sys_lcd_width*480); i++) *(pbuf+i) = 0x00F8;
         printf("red\n");
         break;
     case LCD_TST_IMG_GREEN:
-        for(uint32_t i=0; i<(SYS_LCD_WIDTH*480); i++) *(pbuf+i) = 0xE007;
+        for(uint32_t i=0; i<(sys_lcd_width*480); i++) *(pbuf+i) = 0xE007;
         printf("green\n");
         break;
     case LCD_TST_IMG_BLUE:
-        for(uint32_t i=0; i<(SYS_LCD_WIDTH*480); i++) *(pbuf+i) = 0x1F00;
+        for(uint32_t i=0; i<(sys_lcd_width*480); i++) *(pbuf+i) = 0x1F00;
         printf("blue\n");
         break;
     case LCD_TST_IMG_GRAY:
     {
         uint32_t x, y;
 
-        for(uint32_t i=0; i<(SYS_LCD_WIDTH*480); i++)
+        for(uint32_t i=0; i<(sys_lcd_width*480); i++)
         {
-            x = i/SYS_LCD_WIDTH;
-            y = i%SYS_LCD_WIDTH;
+            x = i/sys_lcd_width;
+            y = i%sys_lcd_width;
 
             if((x&0x00000001)==0)
             {
@@ -583,13 +577,18 @@ void setLCDTestImage(uint8_t img_sel)
         break;
     }
     case LCD_TST_IMG_DEF:
-#ifdef FEATURE_LCD4
-        memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
-        printf("compass\n");
-#else
-        memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
-        printf("autopilot\n");
-#endif
+        if(g_board_id == BOARD_ID_DIN15)
+        {
+            memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+            printf("autopilot\n");
+        }
+        else
+        {
+            memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
+            printf("compass\n");
+
+        }
+
         break;
     }
 }
@@ -612,7 +611,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     }
 }
 
-#ifdef FEATURE_LCD4
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 //    printf("%s() Enter...\n",__FUNCTION__);
@@ -647,4 +645,3 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         printf("KEY_DN pressed\n");
     }
 }
-#endif

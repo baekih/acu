@@ -13,19 +13,8 @@ void test_proc(void)
     uint32_t timer_sec_1 = 0;
     int32_t tick = osKernelGetTickCount() - osKernelGetTickCount()%10;
 
-#ifdef FEATURE_LCD4
-    uint8_t  timer_pwroff = 0;
-#endif
-
-#ifdef FEATURE_LCD4
-    memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
-#else
-    memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
-#endif
-
-#ifdef FEATURE_LCD5
-    initTS();
-#endif
+    if(g_board_id == BOARD_ID_DIN10)    memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
+    else                                memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 
     printf("test start\n");
     /* Infinite loop */
@@ -41,20 +30,6 @@ void test_proc(void)
 
         if(tick%100 == 0)
         {
-
-#ifdef FEATURE_LCD5
-            {
-                uint16_t x = 0, y = 0;
-                static uint16_t x_prv = 0, y_prv = 0;
-                getTS(&x, &y);
-                if((x_prv!=x)||(y_prv!=y))
-                {
-                    printf("x[%03d] y[%03d]\n", x, y);
-                    x_prv = x;
-                    y_prv = y;
-                }
-            }
-#endif
             setLCDBL(g_app_dat.lcd_bl);
 
             if(g_switch_bank[0] != 0) setBuzzer(g_app_dat.bzr_vol);
@@ -84,14 +59,6 @@ void test_proc(void)
 
         if(tick%1000 == 0)
         {
-#ifdef FEATURE_LCD4
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
-            {
-                printf("Push KEY_PWR %d sec\n", timer_pwroff++);
-                if(3 < timer_pwroff) NVIC_SystemReset();
-            }
-            else timer_pwroff = 0;
-#endif
         }
 
         if(tick%3000 == 0)
@@ -108,6 +75,8 @@ void test_proc(void)
 
 void runEcoTaskMain(void *argument)
 {
+    uint8_t  timer_pwroff = 0;
+
     initFlashData();
     printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
 
@@ -117,6 +86,14 @@ void runEcoTaskMain(void *argument)
     for(;;)
     {
         printf("%s():%d\n",__func__,__LINE__);
+
+        if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+        {
+            printf("Push KEY_PWR %d sec\n", timer_pwroff++);
+            if(3 < timer_pwroff) NVIC_SystemReset();
+        }
+        else timer_pwroff = 0;
+
         osDelay(1000);
     }
 #endif
