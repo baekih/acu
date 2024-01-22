@@ -108,17 +108,11 @@ void test_proc(void)
 
 void runEcoTaskMain(void *argument)
 {
-#ifdef FEATURE_LCD4
-    printf("FI-DIN 1.0 start...\n");
-#else
-    printf("FI-DIN 1.5 start...\n");
-#endif
+    if     (g_board_id==BOARD_ID_DIN10)  printf("ECO-DIN10 start...\n");
+    else if(g_board_id==BOARD_ID_DIN15)  printf("ECO-DIN15 start...\n");
 
     initFlashData();
     printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
-
-
-    initTS();
 
 #ifdef FEATURE_TEST
     test_proc();

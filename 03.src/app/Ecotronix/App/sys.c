@@ -19,6 +19,7 @@ bool g_key_pressed[KEY_MAX_IDX] = {false};
 #endif
 
 uint8_t g_ts_i2c_adr = 0xFF;
+uint8_t g_board_id = BOARD_ID_INVAL;
 
 void printk(const char* pstr, ...)
 {
@@ -40,14 +41,6 @@ void initTS(void)
     uint16_t x_res = 0, y_res = 0;
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-
-    GPIO_InitStruct.Pin = WDI_Pin|CAN1_STBY_Pin|LCD_LR_Pin|LCD_UD_Pin
-                         |TS_INT_Pin|LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
     HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
     HAL_Delay(50);
     HAL_GPIO_WritePin(TS_INT_GPIO_Port, TS_INT_Pin, GPIO_PIN_RESET);
@@ -63,23 +56,26 @@ void initTS(void)
     if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_ST1633_I2C_ADR)<<1, TS_ST1633_RES_REG, 1, &res[0], TS_ST1633_RES_LEN, 1000))
     {
         g_ts_i2c_adr = TS_ST1633_I2C_ADR;
+        g_board_id = BOARD_ID_DIN15;
         x_res = ((((uint16_t)res[0])&0x70)<<4) + res[1];
         y_res = ((((uint16_t)res[0])&0x07)<<8) + res[2];
     }
     else if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_GT911_I2C_ADR)<<1, TS_GT911_RES_REG, 2, &res[0], TS_GT911_RES_LEN, 1000))
     {
         g_ts_i2c_adr = TS_GT911_I2C_ADR;
+        g_board_id = BOARD_ID_DIN15;
         x_res = (res[1]<<8) + res[0];
         y_res = (res[3]<<8) + res[2];
     }
     else
     {
         g_ts_i2c_adr = TS_INVAL_I2C_ADR;
-        printf("no TS detected.\n");
+        g_board_id = BOARD_ID_DIN10;
+        printk("no TS detected.\r\n");
         return;
     }
 
-    printf("xres[%d] yres[%d]\n", x_res, y_res);
+    printk("xres[%d] yres[%d]\r\n", x_res, y_res);
 }
 
 bool getTS(uint16_t* x, uint16_t* y)

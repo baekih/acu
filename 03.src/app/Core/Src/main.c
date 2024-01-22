@@ -148,8 +148,8 @@ const osMessageQueueAttr_t EcoQueueNMEA2KTX1_attributes = {
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_CAN1_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_CAN1_Init(void);
 static void MX_QUADSPI_Init(void);
 static void MX_CRC_Init(void);
 static void MX_DMA2D_Init(void);
@@ -232,8 +232,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
-  MX_CAN1_Init();
   MX_I2C1_Init();
+  MX_CAN1_Init();
   MX_QUADSPI_Init();
   MX_CRC_Init();
   MX_DMA2D_Init();
@@ -546,7 +546,7 @@ static void MX_I2C1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN I2C1_Init 2 */
-
+  initTS();
   /* USER CODE END I2C1_Init 2 */
 
 }
@@ -1063,6 +1063,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOJ_CLK_ENABLE();
@@ -1070,15 +1071,14 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOK_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOI_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|CAN1_STBY_Pin|LCD_STBY_Pin|TS_RSTn_Pin
-                          |LCD_RSTn_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, WDI_Pin|CAN1_STBY_Pin|TS_INT_Pin|LCD_STBY_Pin
+                          |TS_RSTn_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_UD_Pin, GPIO_PIN_SET);
@@ -1100,10 +1100,18 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_ON_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : KEY_DOWN_Pin KEY_SEL_Pin KEY_UP_Pin KEY_PWR_Pin
+                           KEY_PREV_Pin */
+  GPIO_InitStruct.Pin = KEY_DOWN_Pin|KEY_SEL_Pin|KEY_UP_Pin|KEY_PWR_Pin
+                          |KEY_PREV_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
   /*Configure GPIO pins : WDI_Pin CAN1_STBY_Pin LCD_LR_Pin LCD_UD_Pin
-                           LCD_STBY_Pin TS_RSTn_Pin LCD_RSTn_Pin */
+                           TS_INT_Pin LCD_STBY_Pin TS_RSTn_Pin LCD_RSTn_Pin */
   GPIO_InitStruct.Pin = WDI_Pin|CAN1_STBY_Pin|LCD_LR_Pin|LCD_UD_Pin
-                          |LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
+                          |TS_INT_Pin|LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1115,12 +1123,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(PWR_HOLD_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : TS_INT_Pin */
-  GPIO_InitStruct.Pin = TS_INT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(TS_INT_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

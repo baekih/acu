@@ -14,6 +14,10 @@
 extern "C" {
 #endif
 
+#define BOARD_ID_DIN15           1
+#define BOARD_ID_DIN10           2
+#define BOARD_ID_INVAL           0xFF
+
 /*  STM32L431RB flash 1bank * 64 block-total * 2048byte per block */
 #define FLASH_START_ADRESS        0x08000000
 
@@ -200,6 +204,7 @@ extern CRC_HandleTypeDef hcrc;
 
 extern app_dat g_app_dat;
 extern const app_dat g_app_dat_def;
+extern uint8_t g_board_id;
 
 void printk(const char* pstr, ...);
 uint32_t doFlashErase(uint32_t);
