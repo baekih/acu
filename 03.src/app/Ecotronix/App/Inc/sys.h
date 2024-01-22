@@ -14,6 +14,10 @@
 extern "C" {
 #endif
 
+#define BOARD_ID_DIN15           1
+#define BOARD_ID_DIN10           2
+#define BOARD_ID_INVAL           0xFF
+
 /*  STM32L431RB flash 1bank * 64 block-total * 2048byte per block */
 #define FLASH_START_ADRESS        0x08000000
 
@@ -99,15 +103,13 @@ extern "C" {
 #define QSPI_NOT_SUPPORTED ((uint8_t)0x04)
 #define QSPI_SUSPENDED     ((uint8_t)0x08)
 
-#define LCD_TST_IMG_CHESS       0
+#define LCD_TST_IMG_DEF         0
 #define LCD_TST_IMG_WHITE       1
 #define LCD_TST_IMG_RED         2
 #define LCD_TST_IMG_GREEN       3
 #define LCD_TST_IMG_BLUE        4
 #define LCD_TST_IMG_GRAY        5
-#define LCD_TST_IMG_DEF         6
-
-#ifdef FEATURE_LCD5
+#define LCD_TST_IMG_CHESS       6
 
 #define TS_INVAL_I2C_ADR            0xFF
 
@@ -153,9 +155,6 @@ extern "C" {
 #define TS_ST1633_XY1_REG           0x12
 #define TS_ST1633_XY1_LEN           3
 
-#endif
-
-#ifdef FEATURE_LCD4
 enum
 {
     KEY_PWR_IDX  = 0,
@@ -165,7 +164,6 @@ enum
     KEY_DN_IDX   = 4,
     KEY_MAX_IDX  = 5
 };
-#endif
 
 enum
 {
@@ -190,6 +188,12 @@ typedef struct _app_dat
     uint32_t crc32;
 } app_dat  __attribute__((aligned(4)));
 
+typedef struct _key_stat
+{
+    bool prv;
+    bool pnd;
+} key_stat  __attribute__((aligned(1)));
+
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
 extern QSPI_HandleTypeDef hqspi;
@@ -197,18 +201,20 @@ extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
 extern I2C_HandleTypeDef hi2c1;
 extern CRC_HandleTypeDef hcrc;
+extern LTDC_HandleTypeDef hltdc;
 
-extern app_dat g_app_dat;
 extern const app_dat g_app_dat_def;
+extern app_dat g_app_dat;
+extern uint8_t g_board_id;
+extern key_stat g_key_stat[KEY_MAX_IDX];
 
 void printk(const char* pstr, ...);
 uint32_t doFlashErase(uint32_t);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
-#ifdef FEATURE_LCD5
+bool getKeyPending(uint8_t idx);
 void initTS(void);
 bool getTS(uint16_t*, uint16_t*);
-#endif
 void InitQSPI(void);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);

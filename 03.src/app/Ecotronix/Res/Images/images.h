@@ -10,14 +10,10 @@
 
 #include "features.h"
 
-#ifdef FEATURE_LCD4
 extern const unsigned char image_kitten_480x480[];
 extern const unsigned char image_compass_480x480[];
-#else
 extern const unsigned char image_kitten_800x480[];
 extern const unsigned char image_autopilot_800x480[];
 //extern const unsigned char image_chess_800x480[];
-#endif
-
 
 #endif /* INC_IMAGES_H_ */

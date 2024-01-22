@@ -13,21 +13,13 @@ void test_proc(void)
     uint32_t timer_sec_1 = 0;
     int32_t tick = osKernelGetTickCount() - osKernelGetTickCount()%10;
 
-#ifdef FEATURE_LCD4
-    uint8_t  timer_pwroff = 0;
-#endif
+    printf("%s() start\n",__func__);
 
-#ifdef FEATURE_LCD4
-    memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
-#else
-    memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
-#endif
+    if(g_board_id == BOARD_ID_DIN10)    memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
+    else                                memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 
-#ifdef FEATURE_LCD5
-    initTS();
-#endif
+    memset(&g_key_stat[0], 0x00, sizeof(key_stat)*KEY_MAX_IDX);
 
-    printf("test start\n");
     /* Infinite loop */
     for(;;)
     {
@@ -36,62 +28,132 @@ void test_proc(void)
 
         if(tick%10 == 0)
         {
-            //ToDo
+            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+            {
+                if(g_key_stat[KEY_PWR_IDX].prv == false)
+                {
+                    g_key_stat[KEY_PWR_IDX].pnd = true;
+                    printf("KEY_PWR pressed\n");
+                }
+
+                g_key_stat[KEY_PWR_IDX].prv = true;
+            }
+            else
+            {
+                g_key_stat[KEY_PWR_IDX].prv = false;
+            }
+
+            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
+            {
+                if(g_key_stat[KEY_PREV_IDX].prv == false)
+                {
+                    g_key_stat[KEY_PREV_IDX].pnd = true;
+                    printf("KEY_PREV pressed\n");
+                }
+
+                g_key_stat[KEY_PREV_IDX].prv = true;
+            }
+            else
+            {
+                g_key_stat[KEY_PREV_IDX].prv = false;
+            }
+
+            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
+            {
+                if(g_key_stat[KEY_SEL_IDX].prv == false)
+                {
+                    g_key_stat[KEY_SEL_IDX].pnd = true;
+                    printf("KEY_SEL pressed\n");
+                }
+
+                g_key_stat[KEY_SEL_IDX].prv = true;
+            }
+            else
+            {
+                g_key_stat[KEY_SEL_IDX].prv = false;
+            }
+
+            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
+            {
+                if(g_key_stat[KEY_UP_IDX].prv == false)
+                {
+                    g_key_stat[KEY_UP_IDX].pnd = true;
+                    printf("KEY_UP pressed\n");
+                }
+
+                g_key_stat[KEY_UP_IDX].prv = true;
+            }
+            else
+            {
+                g_key_stat[KEY_UP_IDX].prv = false;
+            }
+
+            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
+            {
+                if(g_key_stat[KEY_DN_IDX].prv == false)
+                {
+                    g_key_stat[KEY_DN_IDX].pnd = true;
+                    printf("KEY_DN pressed\n");
+                }
+
+                g_key_stat[KEY_DN_IDX].prv = true;
+            }
+            else
+            {
+                g_key_stat[KEY_DN_IDX].prv = false;
+            }
         }
 
         if(tick%100 == 0)
         {
-
-#ifdef FEATURE_LCD5
             {
-                uint16_t x = 0, y = 0;
-                static uint16_t x_prv = 0, y_prv = 0;
-                getTS(&x, &y);
-                if((x_prv!=x)||(y_prv!=y))
+                static uint32_t lcd_bl_prv = 0;
+
+                if(getKeyPending(KEY_SEL_IDX))
                 {
-                    printf("x[%03d] y[%03d]\n", x, y);
-                    x_prv = x;
-                    y_prv = y;
+                    if(100 <= g_app_dat.lcd_bl) g_app_dat.lcd_bl = 0;
+                    else                        g_app_dat.lcd_bl += 10;
+                }
+
+                if(g_app_dat.lcd_bl != lcd_bl_prv)
+                {
+                    lcd_bl_prv = g_app_dat.lcd_bl;
+                    setLCDBL(g_app_dat.lcd_bl);
                 }
             }
-#endif
-            setLCDBL(g_app_dat.lcd_bl);
 
-            if(g_switch_bank[0] != 0) setBuzzer(g_app_dat.bzr_vol);
-            else                      setBuzzer(0);
-
-            if(g_lcd_img_idx != g_switch_bank[1])
             {
-                g_lcd_img_idx = g_switch_bank[1];
+                static uint32_t bzr_vol_prv = 0;
 
-                switch(g_lcd_img_idx)
+                if(getKeyPending(KEY_PREV_IDX))
                 {
-                case 0:
-                    setLCDTestImage(LCD_TST_IMG_DEF);
-                    break;
-                case 1:
-                    setLCDTestImage(LCD_TST_IMG_WHITE);
-                    break;
-                case 2:
-                    setLCDTestImage(LCD_TST_IMG_GRAY);
-                    break;
-                case 3:
-                    setLCDTestImage(LCD_TST_IMG_CHESS);
-                    break;
+                    if(g_app_dat.bzr_vol != 0) g_app_dat.bzr_vol = 0;
+                    else                       g_app_dat.bzr_vol = 100;
+                }
+
+                if(g_app_dat.bzr_vol != bzr_vol_prv)
+                {
+                    bzr_vol_prv = g_app_dat.bzr_vol;
+                    setBuzzer(g_app_dat.bzr_vol);
+                }
+            }
+
+            {
+                static uint8_t lcd_img_idx_prv = 0;
+
+                if(getKeyPending(KEY_UP_IDX)){g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;}
+                if(getKeyPending(KEY_DN_IDX)){g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;}
+
+                if(g_lcd_img_idx != lcd_img_idx_prv)
+                {
+                    lcd_img_idx_prv = g_lcd_img_idx;
+                    setLCDTestImage(g_lcd_img_idx);
                 }
             }
         }
 
         if(tick%1000 == 0)
         {
-#ifdef FEATURE_LCD4
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
-            {
-                printf("Push KEY_PWR %d sec\n", timer_pwroff++);
-                if(3 < timer_pwroff) NVIC_SystemReset();
-            }
-            else timer_pwroff = 0;
-#endif
         }
 
         if(tick%3000 == 0)
@@ -108,27 +170,43 @@ void test_proc(void)
 
 void runEcoTaskMain(void *argument)
 {
-#ifdef FEATURE_LCD4
-    printf("FI-DIN 1.0 start...\n");
-#else
-    printf("FI-DIN 1.5 start...\n");
-#endif
-
     initFlashData();
-    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
 
+    if(g_board_id==BOARD_ID_DIN15)
+    {
+        touchgfx_taskEntry();
+    }
+    else
+    {
+        test_proc();
+    }
 
-    initTS();
-
-#ifdef FEATURE_TEST
-    test_proc();
-#else
     for(;;)
     {
-        osDelay(1);
+        osDelay(1000);
     }
-#endif
 }
+
+void runEcoTaskKey(void *argument)
+{
+    uint8_t  timer_pwroff = 0;
+
+    for(;;)
+    {
+//        printf("%s():%d\n",__func__,__LINE__);
+
+        if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+        {
+            printf("Push KEY_PWR %d sec\n", timer_pwroff++);
+            if(3 < timer_pwroff) NVIC_SystemReset();
+        }
+        else timer_pwroff = 0;
+
+        osDelay(1000);
+    }
+}
+
+
 
 void runEcoTaskUART(void *argument)
 {
@@ -154,9 +232,8 @@ void runEcoTaskUART(void *argument)
 
 void runEcoTaskFlash(void *argument)
 {
-    /* Infinite loop */
     osDelay(1000);
-
+    /* Infinite loop */
     for(;;)
     {
         updateFlashData();
