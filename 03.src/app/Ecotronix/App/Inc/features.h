@@ -10,6 +10,4 @@
 
 #include <main.h>
 
-//#define FEATURE_TEST
-
 #endif /* APP_INC_FEATURES_H_ */

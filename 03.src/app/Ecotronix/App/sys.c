@@ -8,7 +8,7 @@
 
 const app_dat g_app_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0x00, .crc32 = 0xc193313d};
 app_dat g_app_dat;
-bool g_key_pressed[KEY_MAX_IDX] = {false};
+key_stat g_key_stat[KEY_MAX_IDX];
 uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
 uint8_t g_board_id = BOARD_ID_INVAL;
@@ -62,7 +62,7 @@ void initTS(void)
     {
         g_ts_i2c_adr = TS_INVAL_I2C_ADR;
         g_board_id = BOARD_ID_DIN10;
-        printk("no TS detected.\r\n");
+//        printk("no TS detected.\r\n");
         return;
     }
 
@@ -359,11 +359,11 @@ void InitQSPI(void)
     QSPI_EnableMemoryMappedMode();
 }
 
-bool getKeyPressed(uint8_t idx)
+bool getKeyPending(uint8_t idx)
 {
-    bool ret = g_key_pressed[idx];
+    bool ret = g_key_stat[idx].pnd;
 
-    g_key_pressed[idx] = false;
+    g_key_stat[idx].pnd = false;
 
     return ret;
 }
@@ -422,6 +422,8 @@ void initFlashData(void)
     {
         g_app_dat = *papp_dat;
     }
+
+    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
 
     return;
 }
@@ -608,40 +610,5 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     for(uint8_t i=0; i < sizeof(RxProtocol); i++)
     {
         if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
-    }
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-//    printf("%s() Enter...\n",__FUNCTION__);
-
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
-    {
-        g_key_pressed[KEY_PWR_IDX] = true;
-        printf("KEY_PWR pressed\n");
-    }
-
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
-    {
-        g_key_pressed[KEY_PREV_IDX] = true;
-        printf("KEY_PREV pressed\n");
-    }
-
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
-    {
-        g_key_pressed[KEY_SEL_IDX] = true;
-        printf("KEY_SEL pressed\n");
-    }
-
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
-    {
-        g_key_pressed[KEY_UP_IDX] = true;
-        printf("KEY_UP pressed\n");
-    }
-
-    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
-    {
-        g_key_pressed[KEY_DN_IDX] = true;
-        printf("KEY_DN pressed\n");
     }
 }

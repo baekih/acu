@@ -69,7 +69,7 @@ SDRAM_HandleTypeDef hsdram1;
 osThreadId_t EcoTaskMainHandle;
 const osThreadAttr_t EcoTaskMain_attributes = {
   .name = "EcoTaskMain",
-  .stack_size = 1024 * 4,
+  .stack_size = 4096 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for EcoTaskUART */
@@ -93,17 +93,17 @@ const osThreadAttr_t EcoTaskNMEA2KTx_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for EcoTaskTouchGFX */
-osThreadId_t EcoTaskTouchGFXHandle;
-const osThreadAttr_t EcoTaskTouchGFX_attributes = {
-  .name = "EcoTaskTouchGFX",
-  .stack_size = 4096 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
 /* Definitions for EcoTaskFlash */
 osThreadId_t EcoTaskFlashHandle;
 const osThreadAttr_t EcoTaskFlash_attributes = {
   .name = "EcoTaskFlash",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for EcoTaskKey */
+osThreadId_t EcoTaskKeyHandle;
+const osThreadAttr_t EcoTaskKey_attributes = {
+  .name = "EcoTaskKey",
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -164,8 +164,8 @@ void runEcoTaskMain(void *argument);
 extern void runEcoTaskUART(void *argument);
 extern void runEcoTaskNMEA2KRx(void *argument);
 extern void runEcoTaskNMEA2KTx(void *argument);
-extern void TouchGFX_Task(void *argument);
 extern void runEcoTaskFlash(void *argument);
+extern void runEcoTaskKey(void *argument);
 
 /* USER CODE BEGIN PFP */
 void SystemClock_pwrsav_Config(void);
@@ -273,11 +273,11 @@ int main(void)
   /* creation of EcoTaskNMEA2KTx */
   EcoTaskNMEA2KTxHandle = osThreadNew(runEcoTaskNMEA2KTx, NULL, &EcoTaskNMEA2KTx_attributes);
 
-  /* creation of EcoTaskTouchGFX */
-  EcoTaskTouchGFXHandle = osThreadNew(TouchGFX_Task, NULL, &EcoTaskTouchGFX_attributes);
-
   /* creation of EcoTaskFlash */
   EcoTaskFlashHandle = osThreadNew(runEcoTaskFlash, NULL, &EcoTaskFlash_attributes);
+
+  /* creation of EcoTaskKey */
+  EcoTaskKeyHandle = osThreadNew(runEcoTaskKey, NULL, &EcoTaskKey_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -625,6 +625,49 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
+  if(g_board_id == BOARD_ID_DIN10)
+  {
+      hltdc.Instance = LTDC;
+      hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;
+      hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AL;
+      hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
+      hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;
+      hltdc.Init.HorizontalSync = 6;
+      hltdc.Init.VerticalSync = 6;
+      hltdc.Init.AccumulatedHBP = 13;
+      hltdc.Init.AccumulatedVBP = 13;
+      hltdc.Init.AccumulatedActiveW = 493;
+      hltdc.Init.AccumulatedActiveH = 493;
+      hltdc.Init.TotalWidth = 500;
+      hltdc.Init.TotalHeigh = 500;
+      hltdc.Init.Backcolor.Blue = 0;
+      hltdc.Init.Backcolor.Green = 0;
+      hltdc.Init.Backcolor.Red = 0;
+      if (HAL_LTDC_Init(&hltdc) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      pLayerCfg.WindowX0 = 0;
+      pLayerCfg.WindowX1 = 480;
+      pLayerCfg.WindowY0 = 0;
+      pLayerCfg.WindowY1 = 480;
+      pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_RGB565;
+      pLayerCfg.Alpha = 255;
+      pLayerCfg.Alpha0 = 0;
+      pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
+      pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
+      pLayerCfg.FBStartAdress = 0xC0000000;
+      pLayerCfg.ImageWidth = 480;
+      pLayerCfg.ImageHeight = 480;
+      pLayerCfg.Backcolor.Blue = 0;
+      pLayerCfg.Backcolor.Green = 0;
+      pLayerCfg.Backcolor.Red = 0;
+      if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK)
+      {
+        Error_Handler();
+      }
+  }
+
 //  pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)image_kitten_480x480);
 //  HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
   /* USER CODE END LTDC_Init 2 */

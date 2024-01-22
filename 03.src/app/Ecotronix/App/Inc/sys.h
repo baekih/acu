@@ -103,13 +103,13 @@ extern "C" {
 #define QSPI_NOT_SUPPORTED ((uint8_t)0x04)
 #define QSPI_SUSPENDED     ((uint8_t)0x08)
 
-#define LCD_TST_IMG_CHESS       0
+#define LCD_TST_IMG_DEF         0
 #define LCD_TST_IMG_WHITE       1
 #define LCD_TST_IMG_RED         2
 #define LCD_TST_IMG_GREEN       3
 #define LCD_TST_IMG_BLUE        4
 #define LCD_TST_IMG_GRAY        5
-#define LCD_TST_IMG_DEF         6
+#define LCD_TST_IMG_CHESS       6
 
 #define TS_INVAL_I2C_ADR            0xFF
 
@@ -188,6 +188,12 @@ typedef struct _app_dat
     uint32_t crc32;
 } app_dat  __attribute__((aligned(4)));
 
+typedef struct _key_stat
+{
+    bool prv;
+    bool pnd;
+} key_stat  __attribute__((aligned(1)));
+
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
 extern QSPI_HandleTypeDef hqspi;
@@ -197,14 +203,16 @@ extern I2C_HandleTypeDef hi2c1;
 extern CRC_HandleTypeDef hcrc;
 extern LTDC_HandleTypeDef hltdc;
 
-extern app_dat g_app_dat;
 extern const app_dat g_app_dat_def;
+extern app_dat g_app_dat;
 extern uint8_t g_board_id;
+extern key_stat g_key_stat[KEY_MAX_IDX];
 
 void printk(const char* pstr, ...);
 uint32_t doFlashErase(uint32_t);
 uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
 
+bool getKeyPending(uint8_t idx);
 void initTS(void);
 bool getTS(uint16_t*, uint16_t*);
 void InitQSPI(void);
