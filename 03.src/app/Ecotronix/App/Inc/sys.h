@@ -43,8 +43,8 @@ extern "C" {
 #define USER_FLASH_SIZE   (USER_FLASH_END_ADDRESS - APPLICATION_ADDRESS + 1)
 
 /* Define the address from where user application will be loaded.*/
-#define USER_DAT_ADDRESS    ADDR_FLASH_SECTOR_7
-#define USER_DAT_SECTOR     FLASH_SECTOR_7
+#define USER_DAT_ADDRESS    ADDR_FLASH_SECTOR_3
+#define USER_DAT_SECTOR     FLASH_SECTOR_3
 
 /* Define bitmap representing user flash area that could be write protected (check restricted to pages 8-39). */
 #define FLASH_SECTOR_TO_BE_PROTECTED (OB_WRP_SECTOR_0 | OB_WRP_SECTOR_1 | OB_WRP_SECTOR_2 | OB_WRP_SECTOR_3 |\
