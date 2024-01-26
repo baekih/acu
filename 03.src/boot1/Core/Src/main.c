@@ -104,11 +104,11 @@ int main(void)
   }
 
   /* Reinitialize the Stack pointer and jump to application address */
-  uint32_t JumpAddress = *(__IO uint32_t *) (APP_START_ADDR + 4);
+  uint32_t JumpAddress = *(__IO uint32_t *) (BOOT2_START_ADDR + 4);
   pFunction JumpToApplication = (pFunction) JumpAddress;
 
   /* Initialize user application's Stack Pointer */
-  __set_MSP(*(__IO uint32_t*) APP_START_ADDR);
+  __set_MSP(*(__IO uint32_t*) BOOT2_START_ADDR);
 
   JumpToApplication();
 
