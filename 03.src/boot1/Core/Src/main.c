@@ -34,8 +34,8 @@ typedef void (*pFunction)(void);
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define BOOT1_START_ADDR          (uint32_t)0x08000000
-#define BOOT2_START_ADDR          (uint32_t)0x08008000
-#define APP_START_ADDR            (uint32_t)0x08020000
+#define BOOT2_START_ADDR          (uint32_t)0x08020000
+#define APP_START_ADDR            (uint32_t)0x08040000
 
 /* USER CODE END PD */
 
@@ -105,10 +105,12 @@ int main(void)
 
   /* Reinitialize the Stack pointer and jump to application address */
   uint32_t JumpAddress = *(__IO uint32_t *) (BOOT2_START_ADDR + 4);
+//  uint32_t JumpAddress = *(__IO uint32_t *) (APP_START_ADDR + 4);
   pFunction JumpToApplication = (pFunction) JumpAddress;
 
   /* Initialize user application's Stack Pointer */
   __set_MSP(*(__IO uint32_t*) BOOT2_START_ADDR);
+//  __set_MSP(*(__IO uint32_t*) APP_START_ADDR);
 
   JumpToApplication();
 
