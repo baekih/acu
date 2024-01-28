@@ -23,7 +23,7 @@
 #include "common.h"
 #include "app.h"
 #include "nmea2k.h"
-//#include "images.h"
+#include "images.h"
 
 //#include "stm32f767_fi-din_lcd.h"
 //#include "stm32f767_fi-din_sdram.h"
