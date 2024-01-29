@@ -167,7 +167,7 @@ extern void runEcoTaskFlash(void *argument);
 extern void runEcoTaskKey(void *argument);
 
 /* USER CODE BEGIN PFP */
-
+void SystemClock_pwrsav_Config(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -360,6 +360,7 @@ static void MX_CAN1_Init(void)
 {
 
   /* USER CODE BEGIN CAN1_Init 0 */
+  CAN_FilterTypeDef  sFilterConfig;
 
   /* USER CODE END CAN1_Init 0 */
 
@@ -383,6 +384,26 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
+  /* Configure the CAN Filter */
+  sFilterConfig.FilterBank = 0;
+  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+  sFilterConfig.FilterIdHigh = 0x0000;
+  sFilterConfig.FilterIdLow = 0x0000;
+  sFilterConfig.FilterMaskIdHigh = 0x0000;
+  sFilterConfig.FilterMaskIdLow = 0x0000;
+  sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+  sFilterConfig.FilterActivation = ENABLE;
+  sFilterConfig.SlaveStartFilterBank = 14;
+
+  /* Filter configuration Error */
+  if(HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK) Error_Handler();
+
+  /* Start the CAN peripheral */
+  if(HAL_CAN_Start(&hcan1) != HAL_OK) Error_Handler();
+
+  /* Activate CAN RX notification */
+  if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) Error_Handler();
 
   /* USER CODE END CAN1_Init 2 */
 
@@ -502,6 +523,35 @@ static void MX_I2C1_Init(void)
   }
   /* USER CODE BEGIN I2C1_Init 2 */
 
+  initTS();
+
+  if(g_board_id == BOARD_ID_DIN10)
+  {
+      SystemClock_pwrsav_Config();
+
+      GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+      __HAL_RCC_GPIOC_CLK_ENABLE();
+      GPIO_InitStruct.Pin = KEY_PWR_Pin;
+      GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+      GPIO_InitStruct.Pull = GPIO_NOPULL;
+      HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+      while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+      {
+          HAL_Delay(100);
+      }
+
+      while(GPIO_PIN_SET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+      {
+          HAL_Delay(100);
+      }
+
+      SystemClock_Config();
+  }
+
+  if     (g_board_id==BOARD_ID_DIN10)  printk("ECO-DIN10 boot2...\r\n");
+  else if(g_board_id==BOARD_ID_DIN15)  printk("ECO-DIN15 boot2...\r\n");
+
   /* USER CODE END I2C1_Init 2 */
 
 }
@@ -521,6 +571,14 @@ static void MX_LTDC_Init(void)
   LTDC_LayerCfgTypeDef pLayerCfg = {0};
 
   /* USER CODE BEGIN LTDC_Init 1 */
+  HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_RESET);
+  HAL_Delay(10);
+  HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
+  if(g_board_id == BOARD_ID_DIN15)
+  {
+      HAL_Delay(5);
+      HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
+  }
 
   /* USER CODE END LTDC_Init 1 */
   hltdc.Instance = LTDC;
@@ -563,7 +621,51 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
+  if(g_board_id == BOARD_ID_DIN10)
+  {
+      hltdc.Instance = LTDC;
+      hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;
+      hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AL;
+      hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
+      hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;
+      hltdc.Init.HorizontalSync = 6;
+      hltdc.Init.VerticalSync = 6;
+      hltdc.Init.AccumulatedHBP = 13;
+      hltdc.Init.AccumulatedVBP = 13;
+      hltdc.Init.AccumulatedActiveW = 493;
+      hltdc.Init.AccumulatedActiveH = 493;
+      hltdc.Init.TotalWidth = 500;
+      hltdc.Init.TotalHeigh = 500;
+      hltdc.Init.Backcolor.Blue = 0;
+      hltdc.Init.Backcolor.Green = 0;
+      hltdc.Init.Backcolor.Red = 0;
+      if (HAL_LTDC_Init(&hltdc) != HAL_OK)
+      {
+        Error_Handler();
+      }
+      pLayerCfg.WindowX0 = 0;
+      pLayerCfg.WindowX1 = 480;
+      pLayerCfg.WindowY0 = 0;
+      pLayerCfg.WindowY1 = 480;
+      pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_RGB565;
+      pLayerCfg.Alpha = 255;
+      pLayerCfg.Alpha0 = 0;
+      pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
+      pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
+      pLayerCfg.FBStartAdress = 0xC0000000;
+      pLayerCfg.ImageWidth = 480;
+      pLayerCfg.ImageHeight = 480;
+      pLayerCfg.Backcolor.Blue = 0;
+      pLayerCfg.Backcolor.Green = 0;
+      pLayerCfg.Backcolor.Red = 0;
+      if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK)
+      {
+        Error_Handler();
+      }
+  }
 
+//  pLayerCfg.FBStartAdress = (uint32_t)((uint32_t*)image_kitten_480x480);
+//  HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0);
   /* USER CODE END LTDC_Init 2 */
 
 }
@@ -598,7 +700,7 @@ static void MX_QUADSPI_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN QUADSPI_Init 2 */
-
+  InitQSPI();
   /* USER CODE END QUADSPI_Init 2 */
 
 }
@@ -656,7 +758,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM3_Init 2 */
-
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
   /* USER CODE END TIM3_Init 2 */
   HAL_TIM_MspPostInit(&htim3);
 
@@ -715,7 +817,7 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM4_Init 2 */
-
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
   /* USER CODE END TIM4_Init 2 */
   HAL_TIM_MspPostInit(&htim4);
 
@@ -754,7 +856,7 @@ static void MX_TIM7_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM7_Init 2 */
-
+  HAL_TIM_Base_Start_IT(&htim7);
   /* USER CODE END TIM7_Init 2 */
 
 }
@@ -799,7 +901,7 @@ static void MX_TIM14_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM14_Init 2 */
-
+  HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
   /* USER CODE END TIM14_Init 2 */
   HAL_TIM_MspPostInit(&htim14);
 
@@ -880,6 +982,8 @@ static void MX_FMC_Init(void)
 {
 
   /* USER CODE BEGIN FMC_Init 0 */
+  FMC_SDRAM_CommandTypeDef Command;
+  DMA_HandleTypeDef dma_handle;
 
   /* USER CODE END FMC_Init 0 */
 
@@ -918,6 +1022,77 @@ static void MX_FMC_Init(void)
   }
 
   /* USER CODE BEGIN FMC_Init 2 */
+  /* Step 1: Configure a clock configuration enable command */
+  Command.CommandMode            = FMC_SDRAM_CMD_CLK_ENABLE;
+  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
+  Command.AutoRefreshNumber      = 1;
+  Command.ModeRegisterDefinition = 0;
+  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
+
+  /* Step 2: Insert 100 us minimum delay */
+  /* Inserted delay is equal to 1 ms due to systick time base unit (ms) */
+  HAL_Delay(1);
+
+  /* Step 3: Configure a PALL (precharge all) command */
+  Command.CommandMode            = FMC_SDRAM_CMD_PALL;
+  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
+  Command.AutoRefreshNumber      = 1;
+  Command.ModeRegisterDefinition = 0;
+  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
+
+  /* Step 4: Configure an Auto Refresh command */
+  Command.CommandMode            = FMC_SDRAM_CMD_AUTOREFRESH_MODE;
+  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
+  Command.AutoRefreshNumber      = 8;
+  Command.ModeRegisterDefinition = 0;
+  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
+
+  /* Step 5: Program the external memory mode register */
+  __IO uint32_t tmpmrd = (uint32_t)SDRAM_MODEREG_BURST_LENGTH_1          |\
+                                   SDRAM_MODEREG_BURST_TYPE_SEQUENTIAL   |\
+                                   SDRAM_MODEREG_CAS_LATENCY_3           |\
+                                   SDRAM_MODEREG_OPERATING_MODE_STANDARD |\
+                                   SDRAM_MODEREG_WRITEBURST_MODE_SINGLE;
+
+  Command.CommandMode            = FMC_SDRAM_CMD_LOAD_MODE;
+  Command.CommandTarget          = FMC_SDRAM_CMD_TARGET_BANK1;
+  Command.AutoRefreshNumber      = 1;
+  Command.ModeRegisterDefinition = tmpmrd;
+  HAL_SDRAM_SendCommand(&hsdram1, &Command, SDRAM_TIMEOUT);
+
+  /* Step 6: Set the refresh rate counter */
+  /* Set the device refresh rate */
+  HAL_SDRAM_ProgramRefreshRate(&hsdram1, REFRESH_COUNT);
+
+  /* Configure common DMA parameters */
+  dma_handle.Init.Channel             = SDRAM_DMAx_CHANNEL;
+  dma_handle.Init.Direction           = DMA_MEMORY_TO_MEMORY;
+  dma_handle.Init.PeriphInc           = DMA_PINC_ENABLE;
+  dma_handle.Init.MemInc              = DMA_MINC_ENABLE;
+  dma_handle.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+  dma_handle.Init.MemDataAlignment    = DMA_MDATAALIGN_WORD;
+  dma_handle.Init.Mode                = DMA_NORMAL;
+  dma_handle.Init.Priority            = DMA_PRIORITY_HIGH;
+  dma_handle.Init.FIFOMode            = DMA_FIFOMODE_DISABLE;
+  dma_handle.Init.FIFOThreshold       = DMA_FIFO_THRESHOLD_FULL;
+  dma_handle.Init.MemBurst            = DMA_MBURST_SINGLE;
+  dma_handle.Init.PeriphBurst         = DMA_PBURST_SINGLE;
+
+  dma_handle.Instance = SDRAM_DMAx_STREAM;
+
+   /* Associate the DMA handle */
+  __HAL_LINKDMA(&hsdram1, hdma, dma_handle);
+
+  /* Deinitialize the stream for new transfer */
+  HAL_DMA_DeInit(&dma_handle);
+
+  /* Configure the DMA stream */
+  HAL_DMA_Init(&dma_handle);
+
+  /* NVIC configuration for DMA transfer complete interrupt */
+  HAL_NVIC_SetPriority(SDRAM_DMAx_IRQn, 0x0F, 0);
+  HAL_NVIC_EnableIRQ(SDRAM_DMAx_IRQn);
+
 
   /* USER CODE END FMC_Init 2 */
 }
@@ -931,6 +1106,7 @@ static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
+
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
@@ -1002,7 +1178,42 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void SystemClock_pwrsav_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_runEcoTaskMain */
@@ -1015,12 +1226,10 @@ static void MX_GPIO_Init(void)
 __weak void runEcoTaskMain(void *argument)
 {
   /* USER CODE BEGIN 5 */
-  static uint32_t cnt = 0;
   /* Infinite loop */
   for(;;)
   {
-    printf("boot2[%ld]\r\n", cnt++);
-    osDelay(1000);
+    osDelay(1);
   }
   /* USER CODE END 5 */
 }
@@ -1042,6 +1251,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+  if (htim->Instance == TIM7)
+  {
+//    printf("TIM7\n");
+  }
 
   /* USER CODE END Callback 1 */
 }
