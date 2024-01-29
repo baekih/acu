@@ -54,27 +54,27 @@
 		<link>
 			<name>Eco/boot2.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/boot2.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/boot2.c</location>
 		</link>
 		<link>
 			<name>Eco/common.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/common.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/common.c</location>
 		</link>
 		<link>
 			<name>Eco/nmea2k.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/nmea2k.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/nmea2k.c</location>
 		</link>
 		<link>
 			<name>Eco/printf.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/printf.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/printf.c</location>
 		</link>
 		<link>
 			<name>Eco/sys.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/sys.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/sys.c</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components</name>
@@ -89,42 +89,47 @@
 		<link>
 			<name>Eco/Inc/app.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/app.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Inc/app.h</location>
+		</link>
+		<link>
+			<name>Eco/Inc/boot2.h</name>
+			<type>1</type>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Inc/boot2.h</location>
 		</link>
 		<link>
 			<name>Eco/Inc/common.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/common.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Inc/common.h</location>
 		</link>
 		<link>
 			<name>Eco/Inc/eco.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/eco.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Inc/eco.h</location>
 		</link>
 		<link>
 			<name>Eco/Inc/features.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/features.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Inc/features.h</location>
 		</link>
 		<link>
 			<name>Eco/Inc/images.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/images.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Inc/images.h</location>
 		</link>
 		<link>
 			<name>Eco/Inc/nmea2k.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/nmea2k.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Inc/nmea2k.h</location>
 		</link>
 		<link>
 			<name>Eco/Inc/printf.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/printf.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Inc/printf.h</location>
 		</link>
 		<link>
 			<name>Eco/Inc/sys.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/sys.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Inc/sys.h</location>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts</name>
@@ -149,162 +154,162 @@
 		<link>
 			<name>Eco/BSP/fi-din/stm32f767_fi-din_lcd.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/fi-din/stm32f767_fi-din_lcd.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/fi-din/stm32f767_fi-din_lcd.c</location>
 		</link>
 		<link>
 			<name>Eco/BSP/fi-din/stm32f767_fi-din_lcd.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/fi-din/stm32f767_fi-din_lcd.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/fi-din/stm32f767_fi-din_lcd.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/fi-din/stm32f767_fi-din_sdram.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/fi-din/stm32f767_fi-din_sdram.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/fi-din/stm32f767_fi-din_sdram.h</location>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts/Release_Notes.html</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Fonts/Release_Notes.html</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Fonts/Release_Notes.html</location>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts/font12.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Fonts/font12.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Fonts/font12.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts/font16.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Fonts/font16.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Fonts/font16.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts/font20.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Fonts/font20.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Fonts/font20.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts/font24.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Fonts/font24.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Fonts/font24.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts/font8.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Fonts/font8.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Fonts/font8.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts/fonts.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Fonts/fonts.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Fonts/fonts.h</location>
 		</link>
 		<link>
 			<name>Eco/Res/Images/autopilot_800x480.png</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Images/autopilot_800x480.png</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Images/autopilot_800x480.png</location>
 		</link>
 		<link>
 			<name>Eco/Res/Images/compass_480x480.png</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Images/compass_480x480.png</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Images/compass_480x480.png</location>
 		</link>
 		<link>
 			<name>Eco/Res/Images/image_autopilot_800x480.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Images/image_autopilot_800x480.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Images/image_autopilot_800x480.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Images/image_chess_800x480.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Images/image_chess_800x480.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Images/image_chess_800x480.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Images/image_compass_480x480.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Images/image_compass_480x480.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Images/image_compass_480x480.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Images/image_kitten_480x480.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Images/image_kitten_480x480.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Images/image_kitten_480x480.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Images/image_kitten_800x480.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Images/image_kitten_800x480.c</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Images/image_kitten_800x480.c</location>
 		</link>
 		<link>
 			<name>Eco/Res/Images/kitten_480x272.png</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Images/kitten_480x272.png</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Images/kitten_480x272.png</location>
 		</link>
 		<link>
 			<name>Eco/Res/Images/kitten_480x480.png</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/Images/kitten_480x480.png</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/Images/kitten_480x480.png</location>
 		</link>
 		<link>
 			<name>Eco/Res/stldr/EN25QH256A-STM32F767G-FIDIN.stldr</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Res/stldr/EN25QH256A-STM32F767G-FIDIN.stldr</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/Res/stldr/EN25QH256A-STM32F767G-FIDIN.stldr</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/Release_Notes.html</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/Release_Notes.html</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/Release_Notes.html</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/accelero.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/accelero.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/accelero.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/audio.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/audio.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/audio.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/camera.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/camera.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/camera.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/epd.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/epd.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/epd.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/gyro.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/gyro.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/gyro.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/idd.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/idd.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/idd.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/io.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/io.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/io.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/lcd.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/lcd.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/lcd.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/magneto.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/magneto.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/magneto.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/ts.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/ts.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/ts.h</location>
 		</link>
 		<link>
 			<name>Eco/BSP/Components/Common/tsensor.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/tsensor.h</locationURI>
+			<location>C:/dev/work/st/fi-din/03.src/Eco/BSP/Components/Common/tsensor.h</location>
 		</link>
 	</linkedResources>
 </projectDescription>
