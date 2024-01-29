@@ -408,15 +408,15 @@ void setLCDBL(uint8_t lcd_bl)
 
 void initFlashData(void)
 {
-    app_dat *papp_dat = (app_dat*)USER_DAT_ADDRESS;
+    app_dat *papp_dat = (app_dat*)FLASH_DATA_ADDRESS;
     uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)papp_dat, sizeof(app_dat)/sizeof(uint32_t) - 1);
 
     if(papp_dat->crc32 != crc32_val)
     {
         g_app_dat = g_app_dat_def;
         printf("%s() Flash re-init with def val. lcd_bl[%d] bzr_vol[%d]\n",__func__, g_app_dat.lcd_bl, g_app_dat.bzr_vol);
-        doFlashErase(USER_DAT_SECTOR);
-        doFlashWrite(USER_DAT_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
+        doFlashErase(FLASH_DATA_ADDRESS);
+        doFlashWrite(FLASH_DATA_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
     }
     else
     {
@@ -436,8 +436,8 @@ void updateFlashData(void)
     {
         printf("%s() Flash update lcd_bl[%d] bzr_vol[%d]\n", __func__, g_app_dat.lcd_bl, g_app_dat.bzr_vol);
         g_app_dat.crc32 = crc32_val;
-        doFlashErase(USER_DAT_SECTOR);
-        doFlashWrite(USER_DAT_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
+        doFlashErase(FLASH_DATA_ADDRESS);
+        doFlashWrite(FLASH_DATA_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
     }
 
     return;
