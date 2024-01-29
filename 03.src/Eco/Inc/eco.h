@@ -21,11 +21,15 @@
 #include "sys.h"
 #include "printf.h"
 #include "common.h"
+#if defined (ECO_APP)
 #include "app.h"
+#elif defined(ECO_BOOT2)
+#include "boot2.h"
+#endif
 #include "nmea2k.h"
 #include "images.h"
 
 //#include "stm32f767_fi-din_lcd.h"
-//#include "stm32f767_fi-din_sdram.h"
+#include "stm32f767_fi-din_sdram.h"
 
 #endif /* APP_INC_ECO_H_ */

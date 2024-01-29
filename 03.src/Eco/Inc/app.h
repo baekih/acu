@@ -1,7 +1,7 @@
 /*
- * boot.h
+ * app.h
  *
- *  Created on: Mar 23, 2023
+ *  Created on: Jan 29, 2024
  *      Author: ihbaek
  */
 
@@ -12,6 +12,6 @@ void runEcoTaskDefault(void *argument);
 void runEcoTaskUART(void *argument);
 void runEcoTaskNMEA2KRx(void *argument);
 void runEcoTaskNMEA2KTx(void *argument);
-//void touchgfx_taskEntry(void);
+void touchgfx_taskEntry(void);
 
 #endif /* APPLICATION_USER_ECOTRONIX_INC_APP_H_ */

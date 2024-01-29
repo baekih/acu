@@ -6,6 +6,8 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+#ifdef ECO_BOOT2
+
 #include "eco.h"
 
 void test_proc(void)
@@ -309,3 +311,5 @@ void runEcoTaskNMEA2KTx(void *argument)
         }
     }
 }
+
+#endif // ECO_BOOT2

@@ -1,11 +1,13 @@
 /*
- * boot2.cpp
+ * app.cpp
  *
- *  Created on: Jan 29, 2024
+ *  Created on: Mar 23, 2023
  *      Author: ihbaek
  */
 
 /* Includes ------------------------------------------------------------------*/
+#ifdef ECO_APP
+
 #include "eco.h"
 
 void test_proc(void)
@@ -15,8 +17,8 @@ void test_proc(void)
 
     printf("%s() start\n",__func__);
 
-//    if(g_board_id == BOARD_ID_DIN10)    memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
-//    else                                memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+    if(g_board_id == BOARD_ID_DIN10)    memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
+    else                                memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 
     memset(&g_key_stat[0], 0x00, sizeof(key_stat)*KEY_MAX_IDX);
 
@@ -170,13 +172,11 @@ void test_proc(void)
 
 void runEcoTaskMain(void *argument)
 {
-    printf("ECO-DIN15 boot2 pass...\r\n");
-
     initFlashData();
 
     if(g_board_id==BOARD_ID_DIN15)
     {
-//        touchgfx_taskEntry();
+        touchgfx_taskEntry();
     }
     else
     {
@@ -207,6 +207,7 @@ void runEcoTaskKey(void *argument)
         osDelay(1000);
     }
 }
+
 
 
 void runEcoTaskUART(void *argument)
@@ -309,3 +310,5 @@ void runEcoTaskNMEA2KTx(void *argument)
         }
     }
 }
+
+#endif // ECO_APP

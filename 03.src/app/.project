@@ -30,4 +30,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Eco</name>
+			<type>2</type>
+			<location>C:/dev/work/st/fi-din/03.src/Eco</location>
+		</link>
+	</linkedResources>
 </projectDescription>
