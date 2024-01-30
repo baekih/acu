@@ -63,8 +63,6 @@ typedef struct _common_dat
 
 /* Private variables ---------------------------------------------------------*/
 
-CRC_HandleTypeDef hcrc;
-
 /* USER CODE BEGIN PV */
 const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .crc32 = 0x3f1b1b2b};
 common_dat g_common_dat;
@@ -74,7 +72,6 @@ common_dat g_common_dat;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
-static void MX_CRC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -93,18 +90,13 @@ void printk(char* pch)
 void initFlashData(void)
 {
     common_dat *pcommon_dat = (common_dat*)FLASH_DATA_ADDR;
-    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)pcommon_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
 
-    if(pcommon_dat->crc32 == crc32_val
-    &&(pcommon_dat->jmp_adr == BOOT2_START_ADDR || pcommon_dat->jmp_adr == APP_START_ADDR))
+    if(pcommon_dat->jmp_adr != BOOT2_START_ADDR && pcommon_dat->jmp_adr != APP_START_ADDR)
     {
-        g_common_dat = *pcommon_dat;
+        pcommon_dat->jmp_adr = BOOT2_START_ADDR;
     }
-    else
-    {
-        printk("FATAL:jmp_adr is empty\r\n");
-        Error_Handler();
-    }
+
+    g_common_dat = *pcommon_dat;
 
     return;
 }
@@ -124,7 +116,14 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
+
+  /* System interrupt init*/
+  NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+
+  /* SysTick_IRQn interrupt configuration */
+  NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),15, 0));
 
   /* USER CODE BEGIN Init */
 
@@ -137,7 +136,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
-  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
   printk("ECO-DIN15 boot1 start...\r\n");
 
@@ -198,44 +196,8 @@ void SystemClock_Config(void)
   {
 
   }
+  LL_Init1msTick(16000000);
   LL_SetSystemCoreClock(16000000);
-
-   /* Update the time base */
-  if (HAL_InitTick (TICK_INT_PRIORITY) != HAL_OK)
-  {
-    Error_Handler();
-  }
-}
-
-/**
-  * @brief CRC Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_CRC_Init(void)
-{
-
-  /* USER CODE BEGIN CRC_Init 0 */
-
-  /* USER CODE END CRC_Init 0 */
-
-  /* USER CODE BEGIN CRC_Init 1 */
-
-  /* USER CODE END CRC_Init 1 */
-  hcrc.Instance = CRC;
-  hcrc.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
-  hcrc.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
-  hcrc.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
-  hcrc.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
-  hcrc.InputDataFormat = CRC_INPUTDATA_FORMAT_WORDS;
-  if (HAL_CRC_Init(&hcrc) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN CRC_Init 2 */
-
-  /* USER CODE END CRC_Init 2 */
-
 }
 
 /**
