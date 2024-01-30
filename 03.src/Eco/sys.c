@@ -6,8 +6,8 @@
  */
 #include "eco.h"
 
-const app_dat g_app_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .rsv = 0x00, .crc32 = 0xc193313d};
-app_dat g_app_dat;
+const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .crc32 = 0x3f1b1b2b};
+common_dat g_common_dat;
 key_stat g_key_stat[KEY_MAX_IDX];
 uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
@@ -29,7 +29,6 @@ void printk(const char* pstr, ...)
 void initTS(void)
 {
     uint8_t res[4] = {0};
-    uint16_t x_res = 0, y_res = 0;
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     HAL_GPIO_WritePin(TS_RSTn_GPIO_Port, TS_RSTn_Pin, GPIO_PIN_RESET);
@@ -48,25 +47,19 @@ void initTS(void)
     {
         g_ts_i2c_adr = TS_ST1633_I2C_ADR;
         g_board_id = BOARD_ID_DIN15;
-        x_res = ((((uint16_t)res[0])&0x70)<<4) + res[1];
-        y_res = ((((uint16_t)res[0])&0x07)<<8) + res[2];
     }
     else if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_GT911_I2C_ADR)<<1, TS_GT911_RES_REG, 2, &res[0], TS_GT911_RES_LEN, 10))
     {
         g_ts_i2c_adr = TS_GT911_I2C_ADR;
         g_board_id = BOARD_ID_DIN15;
-        x_res = (res[1]<<8) + res[0];
-        y_res = (res[3]<<8) + res[2];
     }
     else
     {
         g_ts_i2c_adr = TS_INVAL_I2C_ADR;
         g_board_id = BOARD_ID_DIN10;
-//        printk("no TS detected.\r\n");
+        printk("no TS detected.\r\n");
         return;
     }
-
-    printk("xres[%d] yres[%d]\r\n", x_res, y_res);
 }
 
 bool getTS(uint16_t* x, uint16_t* y)
@@ -408,36 +401,36 @@ void setLCDBL(uint8_t lcd_bl)
 
 void initFlashData(void)
 {
-    app_dat *papp_dat = (app_dat*)FLASH_DATA_ADDRESS;
-    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)papp_dat, sizeof(app_dat)/sizeof(uint32_t) - 1);
+    common_dat *pcommon_dat = (common_dat*)FLASH_DATA_ADDR;
+    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)pcommon_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
 
-    if(papp_dat->crc32 != crc32_val)
+    if(pcommon_dat->crc32 != crc32_val)
     {
-        g_app_dat = g_app_dat_def;
-        printf("%s() Flash re-init with def val. lcd_bl[%d] bzr_vol[%d]\n",__func__, g_app_dat.lcd_bl, g_app_dat.bzr_vol);
-        doFlashErase(FLASH_DATA_ADDRESS);
-        doFlashWrite(FLASH_DATA_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
+        g_common_dat = g_common_dat_def;
+        printf("%s() Flash re-init with def val. lcd_bl[%d] bzr_vol[%d]\n",__func__, g_common_dat.lcd_bl, g_common_dat.bzr_vol);
+        doFlashErase(FLASH_DATA_ADDR);
+        doFlashWrite(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
     }
     else
     {
-        g_app_dat = *papp_dat;
+        g_common_dat = *pcommon_dat;
     }
 
-    printf("Init app_dat[%d:%d:%d:0x%08x]\n", g_app_dat.bzr_vol, g_app_dat.lcd_bl, g_app_dat.rsv, g_app_dat.crc32);
+    printf("Init common_dat[%d:%d:0x%08x:0x%08x]\n", g_common_dat.bzr_vol, g_common_dat.lcd_bl, g_common_dat.jmp_adr, g_common_dat.crc32);
 
     return;
 }
 
 void updateFlashData(void)
 {
-    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t) - 1);
+    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
 
-    if(g_app_dat.crc32 != crc32_val)
+    if(g_common_dat.crc32 != crc32_val)
     {
-        printf("%s() Flash update lcd_bl[%d] bzr_vol[%d]\n", __func__, g_app_dat.lcd_bl, g_app_dat.bzr_vol);
-        g_app_dat.crc32 = crc32_val;
-        doFlashErase(FLASH_DATA_ADDRESS);
-        doFlashWrite(FLASH_DATA_ADDRESS, (uint32_t*)&g_app_dat, sizeof(app_dat)/sizeof(uint32_t));
+        printf("%s() Flash update lcd_bl[%d] bzr_vol[%d]\n", __func__, g_common_dat.lcd_bl, g_common_dat.bzr_vol);
+        g_common_dat.crc32 = crc32_val;
+        doFlashErase(FLASH_DATA_ADDR);
+        doFlashWrite(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
     }
 
     return;

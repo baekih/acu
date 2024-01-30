@@ -28,14 +28,31 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 typedef void (*pFunction)(void);
+typedef struct _common_dat
+{
+    uint32_t lcd_bl;
+    uint32_t bzr_vol;
+    uint32_t jmp_adr;
+    uint32_t crc32;
+} common_dat  __attribute__((aligned(4)));
 
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define BOOT1_START_ADDR          (uint32_t)0x08000000
-#define BOOT2_START_ADDR          (uint32_t)0x08020000
-#define APP_START_ADDR            (uint32_t)0x08040000
+#define ADDR_FLASH_SECTOR_0     ((uint32_t)0x08000000) /* Base @ of Sector 0, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_1     ((uint32_t)0x08008000) /* Base @ of Sector 1, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_2     ((uint32_t)0x08010000) /* Base @ of Sector 2, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_3     ((uint32_t)0x08018000) /* Base @ of Sector 3, 32 Kbyte */
+#define ADDR_FLASH_SECTOR_4     ((uint32_t)0x08020000) /* Base @ of Sector 4, 128 Kbyte */
+#define ADDR_FLASH_SECTOR_5     ((uint32_t)0x08040000) /* Base @ of Sector 5, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_6     ((uint32_t)0x08080000) /* Base @ of Sector 6, 256 Kbyte */
+#define ADDR_FLASH_SECTOR_7     ((uint32_t)0x080C0000) /* Base @ of Sector 7, 256 Kbyte */
+
+#define BOOT1_START_ADDR          ADDR_FLASH_SECTOR_0
+#define FLASH_DATA_ADDR           ADDR_FLASH_SECTOR_3
+#define BOOT2_START_ADDR          ADDR_FLASH_SECTOR_4
+#define APP_START_ADDR            ADDR_FLASH_SECTOR_5
 
 /* USER CODE END PD */
 
@@ -46,20 +63,51 @@ typedef void (*pFunction)(void);
 
 /* Private variables ---------------------------------------------------------*/
 
+CRC_HandleTypeDef hcrc;
+
 /* USER CODE BEGIN PV */
-uint8_t init_msg[] = "ECO-DIN15 boot1 pass...\r\n";
+const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .crc32 = 0x3f1b1b2b};
+common_dat g_common_dat;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_CRC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void printk(char* pch)
+{
+    for(uint8_t i=0; i<strlen((char*)pch); i++)
+    {
+        LL_USART_TransmitData8(USART1, *(pch+i));
+        while(!LL_USART_IsActiveFlag_TC(USART1));
+    }
+}
+
+void initFlashData(void)
+{
+    common_dat *pcommon_dat = (common_dat*)FLASH_DATA_ADDR;
+    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)pcommon_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
+
+    if(pcommon_dat->crc32 == crc32_val
+    &&(pcommon_dat->jmp_adr == BOOT2_START_ADDR || pcommon_dat->jmp_adr == APP_START_ADDR))
+    {
+        g_common_dat = *pcommon_dat;
+    }
+    else
+    {
+        printk("FATAL:jmp_adr is empty\r\n");
+        Error_Handler();
+    }
+
+    return;
+}
 
 /* USER CODE END 0 */
 
@@ -76,14 +124,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SYSCFG);
-
-  /* System interrupt init*/
-  NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-
-  /* SysTick_IRQn interrupt configuration */
-  NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),15, 0));
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -96,21 +137,21 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
-  for(uint8_t i=0; i<strlen((char*)init_msg); i++)
-  {
-      LL_USART_TransmitData8(USART1, init_msg[i]);
-      while(!LL_USART_IsActiveFlag_TC(USART1));
-  }
+  printk("ECO-DIN15 boot1 start...\r\n");
 
+  initFlashData();
+
+//  uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)(&g_common_dat_def), sizeof(common_dat)/sizeof(uint32_t) - 1);
+
+  uint32_t jmp_adr = g_common_dat.jmp_adr;
   /* Reinitialize the Stack pointer and jump to application address */
-  uint32_t JumpAddress = *(__IO uint32_t *) (BOOT2_START_ADDR + 4);
-//  uint32_t JumpAddress = *(__IO uint32_t *) (APP_START_ADDR + 4);
+  uint32_t JumpAddress = *(__IO uint32_t *) (jmp_adr + 4);
   pFunction JumpToApplication = (pFunction) JumpAddress;
 
   /* Initialize user application's Stack Pointer */
-  __set_MSP(*(__IO uint32_t*) BOOT2_START_ADDR);
-//  __set_MSP(*(__IO uint32_t*) APP_START_ADDR);
+  __set_MSP(*(__IO uint32_t*) jmp_adr);
 
   JumpToApplication();
 
@@ -157,8 +198,44 @@ void SystemClock_Config(void)
   {
 
   }
-  LL_Init1msTick(16000000);
   LL_SetSystemCoreClock(16000000);
+
+   /* Update the time base */
+  if (HAL_InitTick (TICK_INT_PRIORITY) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+/**
+  * @brief CRC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_CRC_Init(void)
+{
+
+  /* USER CODE BEGIN CRC_Init 0 */
+
+  /* USER CODE END CRC_Init 0 */
+
+  /* USER CODE BEGIN CRC_Init 1 */
+
+  /* USER CODE END CRC_Init 1 */
+  hcrc.Instance = CRC;
+  hcrc.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
+  hcrc.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
+  hcrc.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
+  hcrc.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
+  hcrc.InputDataFormat = CRC_INPUTDATA_FORMAT_WORDS;
+  if (HAL_CRC_Init(&hcrc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN CRC_Init 2 */
+
+  /* USER CODE END CRC_Init 2 */
+
 }
 
 /**

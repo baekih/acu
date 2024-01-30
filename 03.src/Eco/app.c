@@ -113,14 +113,14 @@ void test_proc(void)
 
                 if(getKeyPending(KEY_SEL_IDX))
                 {
-                    if(100 <= g_app_dat.lcd_bl) g_app_dat.lcd_bl = 0;
-                    else                        g_app_dat.lcd_bl += 10;
+                    if(100 <= g_common_dat.lcd_bl) g_common_dat.lcd_bl = 0;
+                    else                        g_common_dat.lcd_bl += 10;
                 }
 
-                if(g_app_dat.lcd_bl != lcd_bl_prv)
+                if(g_common_dat.lcd_bl != lcd_bl_prv)
                 {
-                    lcd_bl_prv = g_app_dat.lcd_bl;
-                    setLCDBL(g_app_dat.lcd_bl);
+                    lcd_bl_prv = g_common_dat.lcd_bl;
+                    setLCDBL(g_common_dat.lcd_bl);
                 }
             }
 
@@ -129,14 +129,14 @@ void test_proc(void)
 
                 if(getKeyPending(KEY_PREV_IDX))
                 {
-                    if(g_app_dat.bzr_vol != 0) g_app_dat.bzr_vol = 0;
-                    else                       g_app_dat.bzr_vol = 100;
+                    if(g_common_dat.bzr_vol != 0) g_common_dat.bzr_vol = 0;
+                    else                       g_common_dat.bzr_vol = 100;
                 }
 
-                if(g_app_dat.bzr_vol != bzr_vol_prv)
+                if(g_common_dat.bzr_vol != bzr_vol_prv)
                 {
-                    bzr_vol_prv = g_app_dat.bzr_vol;
-                    setBuzzer(g_app_dat.bzr_vol);
+                    bzr_vol_prv = g_common_dat.bzr_vol;
+                    setBuzzer(g_common_dat.bzr_vol);
                 }
             }
 

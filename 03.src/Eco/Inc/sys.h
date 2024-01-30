@@ -43,13 +43,16 @@ extern "C" {
 #define USER_FLASH_SIZE   (USER_FLASH_END_ADDRESS - APPLICATION_ADDRESS + 1)
 
 /* Define the address from where user application will be loaded.*/
-#define FLASH_DATA_ADDRESS      ADDR_FLASH_SECTOR_3
-#define FLASH_DATA_SECTOR       FLASH_SECTOR_3
+//#define FLASH_DATA_SECTOR       FLASH_SECTOR_3
 
 /* Define bitmap representing user flash area that could be write protected (check restricted to pages 8-39). */
 #define FLASH_SECTOR_TO_BE_PROTECTED (OB_WRP_SECTOR_0 | OB_WRP_SECTOR_1 | OB_WRP_SECTOR_2 | OB_WRP_SECTOR_3 |\
                                       OB_WRP_SECTOR_4 | OB_WRP_SECTOR_5 | OB_WRP_SECTOR_6 | OB_WRP_SECTOR_7 |\
                                       OB_WRP_SECTOR_8 | OB_WRP_SECTOR_9 | OB_WRP_SECTOR_10 | OB_WRP_SECTOR_11)
+#define BOOT1_START_ADDR          ADDR_FLASH_SECTOR_0
+#define FLASH_DATA_ADDR           ADDR_FLASH_SECTOR_3
+#define BOOT2_START_ADDR          ADDR_FLASH_SECTOR_4
+#define APP_START_ADDR            ADDR_FLASH_SECTOR_5
 
 #define QSPI_MMAP_LEN_MAX                    (0x0FFFFFFF) //256MB
 #define QSPI_PAGE_SIZE                       256
@@ -180,13 +183,13 @@ enum{
     FLASHIF_PROTECTION_RDPENABLED   = 0x4,
 };
 
-typedef struct _app_dat
+typedef struct _common_dat
 {
     uint32_t lcd_bl;
     uint32_t bzr_vol;
-    uint32_t rsv;
+    uint32_t jmp_adr;
     uint32_t crc32;
-} app_dat  __attribute__((aligned(4)));
+} common_dat  __attribute__((aligned(4)));
 
 typedef struct _key_stat
 {
@@ -203,8 +206,8 @@ extern I2C_HandleTypeDef hi2c1;
 extern CRC_HandleTypeDef hcrc;
 extern LTDC_HandleTypeDef hltdc;
 
-extern const app_dat g_app_dat_def;
-extern app_dat g_app_dat;
+extern const common_dat g_common_dat_def;
+extern common_dat g_common_dat;
 extern uint8_t g_board_id;
 extern key_stat g_key_stat[KEY_MAX_IDX];
 

@@ -423,7 +423,7 @@ static int32_t opChkMultiPktRunning(RxProtocol *prxpkt)
 
 static int32_t opSwitchBankControl(uint8_t *prxdat)
 {
-    g_app_dat.bzr_vol = *prxdat;
+    g_common_dat.bzr_vol = *prxdat;
     g_switch_bank[0] = (*(prxdat+1)>>0) & 0x03;
     g_switch_bank[1] = (*(prxdat+1)>>2) & 0x03;
     g_switch_bank[2] = (*(prxdat+1)>>4) & 0x03;
@@ -431,7 +431,7 @@ static int32_t opSwitchBankControl(uint8_t *prxdat)
     g_switch_bank[4] = (*(prxdat+2)>>0) & 0x03;
     g_switch_bank[5] = (*(prxdat+2)>>2) & 0x03;
 
-    printf("bzr_vol[%02d] SwitchBank[%d:%d:%d:%d:%d:%d]\n", g_app_dat.bzr_vol,
+    printf("bzr_vol[%02d] SwitchBank[%d:%d:%d:%d:%d:%d]\n", g_common_dat.bzr_vol,
            g_switch_bank[0],g_switch_bank[1],g_switch_bank[2],g_switch_bank[3],g_switch_bank[4],g_switch_bank[5]);
 
     return 0;
@@ -439,7 +439,7 @@ static int32_t opSwitchBankControl(uint8_t *prxdat)
 
 static int32_t opLCDBrightness(uint8_t *prxdat)
 {
-    g_app_dat.lcd_bl = *(prxdat+4);
+    g_common_dat.lcd_bl = *(prxdat+4);
 
     return 0;
 }

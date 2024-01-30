@@ -553,8 +553,8 @@ static void MX_I2C1_Init(void)
       SystemClock_Config();
   }
 
-  if     (g_board_id==BOARD_ID_DIN10)  printk("ECO-DIN10 start...\r\n");
-  else if(g_board_id==BOARD_ID_DIN15)  printk("ECO-DIN15 start...\r\n");
+  if     (g_board_id==BOARD_ID_DIN10)  printk("ECO-DIN10 app start...\r\n");
+  else if(g_board_id==BOARD_ID_DIN15)  printk("ECO-DIN15 app start...\r\n");
 
   /* USER CODE END I2C1_Init 2 */
 
