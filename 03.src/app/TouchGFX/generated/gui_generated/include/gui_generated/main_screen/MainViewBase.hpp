@@ -12,6 +12,7 @@
 #include <touchgfx/widgets/RadioButton.hpp>
 #include <touchgfx/widgets/RadioButtonGroup.hpp>
 #include <touchgfx/widgets/TextAreaWithWildcard.hpp>
+#include <touchgfx/containers/SlideMenu.hpp>
 
 class MainViewBase : public touchgfx::View<MainPresenter>
 {
@@ -37,6 +38,7 @@ protected:
     touchgfx::RadioButton radioButton4;
     touchgfx::TextAreaWithOneWildcard selectedText;
     touchgfx::TextAreaWithOneWildcard deselectedText;
+    touchgfx::SlideMenu slideMenu1;
 
     /*
      * Wildcard Buffers

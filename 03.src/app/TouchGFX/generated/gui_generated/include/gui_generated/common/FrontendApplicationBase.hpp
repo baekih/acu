@@ -17,19 +17,19 @@ public:
 
     virtual void changeToStartScreen()
     {
-        gotoMainScreenNoTransition();
+        gotoCompassScreenNoTransition();
     }
 
-    // Main
-    void gotoMainScreenNoTransition();
+    // Compass
+    void gotoCompassScreenNoTransition();
 
 protected:
     touchgfx::Callback<FrontendApplicationBase> transitionCallback;
     FrontendHeap& frontendHeap;
     Model& model;
 
-    // Main
-    void gotoMainScreenNoTransitionImpl();
+    // Compass
+    void gotoCompassScreenNoTransitionImpl();
 };
 
 #endif // FRONTENDAPPLICATIONBASE_HPP

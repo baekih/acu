@@ -24,6 +24,9 @@
     <ClCompile Include="..\..\generated\gui_generated\src\main_screen\MainViewBase.cpp"/>
     <ClCompile Include="..\..\gui\src\model\Model.cpp"/>
     <ClCompile Include="..\..\generated\simulator\src\video\SoftwareMJPEGDecoder.cpp"/>
+    <ClCompile Include="..\..\gui\src\compass_screen\CompassPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\compass_screen\CompassView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\compass_screen\CompassViewBase.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(ApplicationRoot)\assets\texts\texts.xml"/>
@@ -177,6 +180,9 @@
     <ClInclude Include="..\..\gui\include\gui\model\ModelListener.hpp"/>
     <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\common\SimConstants.hpp"/>
     <ClInclude Include="..\..\generated\simulator\include\simulator\video\SoftwareMJPEGDecoder.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\compass_screen\CompassPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\compass_screen\CompassView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\compass_screen\CompassViewBase.hpp"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(ApplicationRoot)\generated\simulator\touchgfx.rc"/>

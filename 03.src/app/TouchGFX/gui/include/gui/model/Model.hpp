@@ -21,6 +21,9 @@ class ModelListener;
  */
 class Model
 {
+	static int curHDG;
+	static int prevHDG;
+
 public:
     Model();
 
@@ -39,6 +42,10 @@ public:
      * the ModelListener interface.
      */
     void tick();
+
+    static void setCurrentHDGValue(int value){ curHDG = value; }
+    static int getCurrentHDGValue(){ return curHDG; }
+
 protected:
     /**
      * Pointer to the currently active presenter.

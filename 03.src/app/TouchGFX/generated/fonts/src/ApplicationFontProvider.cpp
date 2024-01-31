@@ -10,8 +10,17 @@ touchgfx::Font* ApplicationFontProvider::getFont(touchgfx::FontId typography)
     switch (typography)
     {
     case Typography::DEFAULT:
-        // Asap_Regular_20_4bpp
+        // arialbd_50_4bpp
         return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[0]);
+    case Typography::TYPEPO_HDG_VALUE:
+        // arialbd_160_1bpp
+        return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[1]);
+    case Typography::DEGREE_UNIT:
+        // arialbd_150_4bpp
+        return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[2]);
+    case Typography::DEGREE_NO:
+        // arialbd_80_4bpp
+        return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[3]);
     default:
         return 0;
     }

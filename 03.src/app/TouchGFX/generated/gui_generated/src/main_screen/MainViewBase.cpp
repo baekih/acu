@@ -67,6 +67,15 @@ MainViewBase::MainViewBase() :
     deselectedText.resizeToCurrentText();
     deselectedText.setTypedText(touchgfx::TypedText(T_TEXTID2));
     add(deselectedText);
+
+    slideMenu1.setXY(0, 377);
+    slideMenu1.setState(touchgfx::SlideMenu::EXPANDED);
+    slideMenu1.setVisiblePixelsWhenCollapsed(0);
+    slideMenu1.setHiddenPixelsWhenExpanded(0);
+    slideMenu1.setAnimationEasingEquation(touchgfx::EasingEquations::cubicEaseInOut);
+    slideMenu1.setAnimationDuration(18);
+    slideMenu1.setExpandedStateTimeout(180);
+    add(slideMenu1);
 }
 
 MainViewBase::~MainViewBase()

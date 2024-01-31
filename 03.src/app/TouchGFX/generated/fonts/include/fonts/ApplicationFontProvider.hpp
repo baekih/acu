@@ -14,12 +14,18 @@ class FlashDataReader;
 struct Typography
 {
     static const touchgfx::FontId DEFAULT = 0;
+    static const touchgfx::FontId TYPEPO_HDG_VALUE = 1;
+    static const touchgfx::FontId DEGREE_UNIT = 2;
+    static const touchgfx::FontId DEGREE_NO = 3;
 };
 
 struct TypographyFontIndex
 {
-    static const touchgfx::FontId DEFAULT = 0; // Asap_Regular_20_4bpp
-    static const uint16_t NUMBER_OF_FONTS = 1;
+    static const touchgfx::FontId DEFAULT = 0;          // arialbd_50_4bpp
+    static const touchgfx::FontId TYPEPO_HDG_VALUE = 1; // arialbd_160_1bpp
+    static const touchgfx::FontId DEGREE_UNIT = 2;      // arialbd_150_4bpp
+    static const touchgfx::FontId DEGREE_NO = 3;        // arialbd_80_4bpp
+    static const uint16_t NUMBER_OF_FONTS = 4;
 };
 
 class ApplicationFontProvider : public touchgfx::FontProvider

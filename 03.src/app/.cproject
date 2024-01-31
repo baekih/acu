@@ -44,6 +44,8 @@
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
 									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
 									<listOptionValue builtIn="false" value="../../Eco/Res/Fonts"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Eco/Libs/NMEA2000/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Eco/Libs/NMEA2000/Inc/pgn}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1205684893" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -78,6 +80,8 @@
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
 									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
 									<listOptionValue builtIn="false" value="../../Eco/Res/Fonts"/>
+									<listOptionValue builtIn="false" value="../../Eco/Libs/NMEA2000/Inc"/>
+									<listOptionValue builtIn="false" value="../../Eco/Libs/NMEA2000/Inc/pgn"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1949395438" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -112,6 +116,8 @@
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
 									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
 									<listOptionValue builtIn="false" value="../../Eco/Res/Fonts"/>
+									<listOptionValue builtIn="false" value="../../Eco/Libs/NMEA2000/Inc"/>
+									<listOptionValue builtIn="false" value="../../Eco/Libs/NMEA2000/Inc/pgn"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.otherflags.3404542343" name="Other flags" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.otherflags" useByScannerDiscovery="true" valueType="stringList">
 									<listOptionValue builtIn="false" value="-femit-class-debug-always"/>
@@ -194,6 +200,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/TouchGFX/App}&quot;"/>
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
 									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Eco/Libs/NMEA2000/Inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Eco/Libs/NMEA2000/Inc/pgn}&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.option.definedsymbols.535890750" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.option.definedsymbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="ECO_APP"/>
@@ -230,6 +238,8 @@
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
 									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
 									<listOptionValue builtIn="false" value="../../Eco/Res/Fonts"/>
+									<listOptionValue builtIn="false" value="../../Eco/Libs/NMEA2000/Inc"/>
+									<listOptionValue builtIn="false" value="../../Eco/Libs/NMEA2000/Inc/pgn"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.885433161" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -263,6 +273,8 @@
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
 									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
 									<listOptionValue builtIn="false" value="../../Eco/Res/Fonts"/>
+									<listOptionValue builtIn="false" value="../../Eco/Libs/NMEA2000/Inc"/>
+									<listOptionValue builtIn="false" value="../../Eco/Libs/NMEA2000/Inc/pgn"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.otherflags.7261675299" name="Other flags" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.otherflags" useByScannerDiscovery="true" valueType="stringList">
 									<listOptionValue builtIn="false" value="-femit-class-debug-always"/>

@@ -184,6 +184,18 @@
     <Filter Include="Header Files\generated\simulator\include\simulator\video">
       <UniqueIdentifier>82E84259-5011-51BF-50AE-C94FF5BB299A</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\gui\compass_screen">
+      <UniqueIdentifier>C5D87CDA-6D1E-9BA8-A8A9-C3F5A6198D16</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gui\compass_screen">
+      <UniqueIdentifier>8769F40E-91CC-76B6-E3ED-CD4BFC60B0A6</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\generated\gui_generated\compass_screen">
+      <UniqueIdentifier>67FB2A67-2220-84DC-728E-58170698ABBD</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\gui_generated\compass_screen">
+      <UniqueIdentifier>4EDF88C1-136D-6DF4-9133-08C53B53CFC3</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(TouchGFXReleasePath)\framework\source\platform\driver\touch\SDL2TouchController.cpp">
@@ -224,6 +236,15 @@
     </ClCompile>
     <ClCompile Include="..\..\generated\simulator\src\video\SoftwareMJPEGDecoder.cpp">
       <Filter>Source Files\generated\simulator\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\compass_screen\CompassPresenter.cpp">
+      <Filter>Source Files\gui\compass_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\compass_screen\CompassView.cpp">
+      <Filter>Source Files\gui\compass_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\generated\gui_generated\src\compass_screen\CompassViewBase.cpp">
+      <Filter>Source Files\generated\gui_generated\compass_screen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -675,6 +696,15 @@
     </ClInclude>
     <ClInclude Include="..\..\generated\simulator\include\simulator\video\SoftwareMJPEGDecoder.hpp">
       <Filter>Header Files\generated\simulator\include\simulator\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\compass_screen\CompassPresenter.hpp">
+      <Filter>Header Files\gui\compass_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\compass_screen\CompassView.hpp">
+      <Filter>Header Files\gui\compass_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\compass_screen\CompassViewBase.hpp">
+      <Filter>Header Files\generated\gui_generated\compass_screen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

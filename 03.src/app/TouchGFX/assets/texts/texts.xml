@@ -6,14 +6,67 @@
   <Texts>
     <TextGroup Id="Group1">
       <Text Id="TextId1" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">Last selected element: &lt;value&gt;</Translation>
+        <Translation Language="GB">Last selected element 111 : &lt;value&gt;</Translation>
       </Text>
       <Text Id="TextId2" Alignment="Left" TypographyId="Default">
         <Translation Language="GB">Last deselected element: &lt;value&gt;</Translation>
       </Text>
     </TextGroup>
+    <TextGroup Id="Compass">
+      <Text Id="TEXT_COMPASS_0" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">N</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_30" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">30</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_60" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">60</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_90" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">W</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_120" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">120</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_150" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">150</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_180" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">S</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_210" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">210</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_240" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">240</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_270" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">E</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_300" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">300</Translation>
+      </Text>
+      <Text Id="TEXT_COMPASS_330" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">330</Translation>
+      </Text>
+      <Text Id="__SingleUse_O7PX" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">M</Translation>
+      </Text>
+      <Text Id="heading_text" Alignment="Right" TypographyId="TYPEPO_HDG_VALUE">
+        <Translation Language="GB" Alignment="Right">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_2AZB" Alignment="Left" TypographyId="DEGREE_UNIT">
+        <Translation Language="GB">˚</Translation>
+      </Text>
+      <Text Id="__SingleUse_9XEG" Alignment="Left" TypographyId="Default">
+        <Translation Language="GB">HDG</Translation>
+      </Text>
+    </TextGroup>
   </Texts>
   <Typographies>
-    <Typography Id="Default" Font="Asap-Regular.ttf" Size="20" Bpp="4" IsVector="no" Direction="LTR" WildcardCharacterRanges="0-9" />
+    <Typography Id="Default" Font="arialbd.ttf" Size="50" Bpp="4" IsVector="no" Direction="LTR" WildcardCharacterRanges="0-9" />
+    <Typography Id="TYPEPO_HDG_VALUE" Font="arialbd.ttf" Size="160" Bpp="1" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9" />
+    <Typography Id="DEGREE_UNIT" Font="arialbd.ttf" Size="150" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="DEGREE_No" Font="arialbd.ttf" Size="80" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
   </Typographies>
 </TextDatabase>

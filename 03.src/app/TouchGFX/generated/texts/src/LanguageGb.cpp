@@ -10,6 +10,22 @@ KEEP extern const uint32_t indicesGb[] TEXT_LOCATION_FLASH_ATTRIBUTE;
 // Remap all strings
 TEXT_LOCATION_FLASH_PRAGMA
 KEEP extern const uint32_t indicesGb[] TEXT_LOCATION_FLASH_ATTRIBUTE = {
-    27, // T_TEXTID1: "Last selected element: <>"
-    0   // T_TEXTID2: "Last deselected element: <>"
+    0,  // T_TEXTID1: "Last selected element 111 : <>"
+    30, // T_TEXTID2: "Last deselected element: <>"
+    92, // T_TEXT_COMPASS_0: "N"
+    78, // T_TEXT_COMPASS_30: "30"
+    85, // T_TEXT_COMPASS_60: "60"
+    96, // T_TEXT_COMPASS_90: "W"
+    57, // T_TEXT_COMPASS_120: "120"
+    61, // T_TEXT_COMPASS_150: "150"
+    94, // T_TEXT_COMPASS_180: "S"
+    65, // T_TEXT_COMPASS_210: "210"
+    69, // T_TEXT_COMPASS_240: "240"
+    88, // T_TEXT_COMPASS_270: "E"
+    73, // T_TEXT_COMPASS_300: "300"
+    77, // T_TEXT_COMPASS_330: "330"
+    90, // T___SINGLEUSE_O7PX: "M"
+    28, // T_HEADING_TEXT: "<>"
+    98, // T___SINGLEUSE_2AZB: "?"
+    81  // T___SINGLEUSE_9XEG: "HDG"
 };

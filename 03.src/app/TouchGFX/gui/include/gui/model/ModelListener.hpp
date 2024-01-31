@@ -14,6 +14,7 @@
  */
 class ModelListener
 {
+
 public:
     ModelListener() : model(0) {}
 
@@ -27,6 +28,9 @@ public:
     {
         model = m;
     }
+
+    virtual void notifyHDGValue(int hdgValue){}
+
 protected:
     Model* model;
 };

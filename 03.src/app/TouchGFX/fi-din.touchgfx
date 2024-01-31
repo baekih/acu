@@ -69,8 +69,8 @@
             "Name": "selectedText",
             "X": 114,
             "Y": 137,
-            "Width": 204,
-            "Height": 23,
+            "Width": 629,
+            "Height": 58,
             "TextId": "TextId1",
             "TextRotation": "0",
             "Color": {
@@ -89,8 +89,8 @@
             "Name": "deselectedText",
             "X": 114,
             "Y": 189,
-            "Width": 226,
-            "Height": 23,
+            "Width": 573,
+            "Height": 58,
             "TextId": "TextId2",
             "TextRotation": "0",
             "Color": {
@@ -103,6 +103,22 @@
               "UseBuffer": true,
               "BufferSize": 3
             }
+          },
+          {
+            "Type": "SlideMenu",
+            "Name": "slideMenu1",
+            "Y": 377,
+            "Width": 250,
+            "Height": 250,
+            "FileNameButtonPressed": "",
+            "FileNameButtonReleased": "",
+            "State": "Expanded",
+            "ExpandDirection": "South",
+            "Easing": "Cubic",
+            "EasingOption": "InOut",
+            "AnimationDuration": 300,
+            "ExpandedStateTimeout": 3000,
+            "Components": []
           }
         ],
         "Interactions": [
@@ -195,6 +211,176 @@
             }
           }
         ]
+      },
+      {
+        "Name": "Compass",
+        "CanvasBufferSize": 12000,
+        "Components": [
+          {
+            "Type": "Image",
+            "Name": "BACK_IMAGE",
+            "Width": 800,
+            "Height": 480,
+            "RelativeFilename": "compass_background.png"
+          },
+          {
+            "Type": "Circle",
+            "Name": "CIRCLE_BACKGROUND",
+            "Width": 800,
+            "Height": 600,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "CenterX": 400.0,
+            "CenterY": 440.0,
+            "Radius": 430.0,
+            "LineWidth": 4.0,
+            "StartAngle": -270.0,
+            "EndAngle": 90.0,
+            "CapPrecision": "Butt"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_UNIT",
+            "X": 543,
+            "Y": 318,
+            "Width": 50,
+            "Height": 150,
+            "TextId": "__SingleUse_2AZB",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_TYPE",
+            "X": 215,
+            "Y": 398,
+            "Width": 42,
+            "Height": 51,
+            "TextId": "__SingleUse_O7PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_TITLE",
+            "X": 345,
+            "Y": 249,
+            "Width": 111,
+            "Height": 51,
+            "TextId": "__SingleUse_9XEG",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_VALUE1",
+            "X": 265,
+            "Y": 288,
+            "Width": 90,
+            "Height": 215,
+            "TextId": "heading_text",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "UseBuffer": true,
+              "BufferSize": 2
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_VALUE2",
+            "X": 355,
+            "Y": 288,
+            "Width": 90,
+            "Height": 215,
+            "TextId": "heading_text",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "UseBuffer": true,
+              "BufferSize": 2
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_VALUE3",
+            "X": 445,
+            "Y": 288,
+            "Width": 90,
+            "Height": 215,
+            "TextId": "heading_text",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "UseBuffer": true,
+              "BufferSize": 2
+            }
+          },
+          {
+            "Type": "Line",
+            "Name": "TEXT_LINE",
+            "X": 210,
+            "Y": 449,
+            "Width": 380,
+            "Height": 18,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "StartY": 9.0,
+            "EndX": 380.0,
+            "EndY": 9.0,
+            "LineWidth": 4.0,
+            "LineEndingStyle": "Round"
+          },
+          {
+            "Type": "ScalableImage",
+            "Name": "NORTH_MARK",
+            "X": 341,
+            "Y": 6,
+            "Width": 118,
+            "Height": 154,
+            "Filename": "north_compass.png",
+            "ScalingAlgorithm": "Nearest-neighbor"
+          }
+        ],
+        "Interactions": [],
+        "CustomActions": [
+          {
+            "Name": "action1"
+          }
+        ]
       }
     ],
     "CustomContainerDefinitions": [],
@@ -204,7 +390,7 @@
       "Height": 480
     },
     "SelectedColorDepth": 16,
-    "StartupScreenName": "Main",
+    "StartupScreenName": "Compass",
     "SelectedStartupLanguage": "GB",
     "TouchGfxPath": "../Middlewares/ST/touchgfx",
     "UIPath": ".",
