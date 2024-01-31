@@ -157,15 +157,12 @@ int main(void)
 
   initFlashData();
 
-//  uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)(&g_common_dat_def), sizeof(common_dat)/sizeof(uint32_t) - 1);
-
-  uint32_t jmp_adr = g_common_dat.jmp_adr;
   /* Reinitialize the Stack pointer and jump to application address */
-  uint32_t JumpAddress = *(__IO uint32_t *) (jmp_adr + 4);
+  uint32_t JumpAddress = *(__IO uint32_t *) (g_common_dat.jmp_adr + 4);
   pFunction JumpToApplication = (pFunction) JumpAddress;
 
   /* Initialize user application's Stack Pointer */
-  __set_MSP(*(__IO uint32_t*) jmp_adr);
+  __set_MSP(*(__IO uint32_t*) g_common_dat.jmp_adr);
 
   JumpToApplication();
 
