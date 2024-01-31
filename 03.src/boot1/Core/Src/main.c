@@ -157,6 +157,7 @@ int main(void)
 
   initFlashData();
 
+//  g_common_dat.jmp_adr = BOOT2_START_ADDR;
   /* Reinitialize the Stack pointer and jump to application address */
   uint32_t JumpAddress = *(__IO uint32_t *) (g_common_dat.jmp_adr + 4);
   pFunction JumpToApplication = (pFunction) JumpAddress;
