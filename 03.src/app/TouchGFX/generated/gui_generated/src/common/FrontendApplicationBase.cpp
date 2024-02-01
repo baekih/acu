@@ -9,8 +9,8 @@
 #include <touchgfx/Texts.hpp>
 #include <touchgfx/hal/HAL.hpp>
 #include <platform/driver/lcd/LCD16bpp.hpp>
-#include <gui/main_screen/MainView.hpp>
-#include <gui/main_screen/MainPresenter.hpp>
+#include <gui/speed_screen/SpeedView.hpp>
+#include <gui/speed_screen/SpeedPresenter.hpp>
 #include <gui/compass_screen/CompassView.hpp>
 #include <gui/compass_screen/CompassPresenter.hpp>
 
@@ -32,15 +32,15 @@ FrontendApplicationBase::FrontendApplicationBase(Model& m, FrontendHeap& heap)
  * Screen Transition Declarations
  */
 
-// Compass
+// Speed
 
-void FrontendApplicationBase::gotoCompassScreenNoTransition()
+void FrontendApplicationBase::gotoSpeedScreenNoTransition()
 {
-    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplicationBase::gotoCompassScreenNoTransitionImpl);
+    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplicationBase::gotoSpeedScreenNoTransitionImpl);
     pendingScreenTransitionCallback = &transitionCallback;
 }
 
-void FrontendApplicationBase::gotoCompassScreenNoTransitionImpl()
+void FrontendApplicationBase::gotoSpeedScreenNoTransitionImpl()
 {
-    touchgfx::makeTransition<CompassView, CompassPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
+    touchgfx::makeTransition<SpeedView, SpeedPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }

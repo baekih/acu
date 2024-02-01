@@ -47,7 +47,7 @@ bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
     x = (int32_t)x_cur;
     y = (int32_t)y_cur;
 
-    printf("ts x[%d] y[%d]\n", x_cur, y_cur);
+//    printf("ts x[%d] y[%d]\n", x_cur, y_cur);
 
     return true;
 }

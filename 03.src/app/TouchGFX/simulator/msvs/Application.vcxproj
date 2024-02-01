@@ -19,14 +19,16 @@
     <ClCompile Include="$(ApplicationRoot)\generated\simulator\src\mainBase.cpp"/>
     <ClCompile Include="..\..\gui\src\common\FrontendApplication.cpp"/>
     <ClCompile Include="..\..\generated\gui_generated\src\common\FrontendApplicationBase.cpp"/>
-    <ClCompile Include="..\..\gui\src\main_screen\MainPresenter.cpp"/>
-    <ClCompile Include="..\..\gui\src\main_screen\MainView.cpp"/>
-    <ClCompile Include="..\..\generated\gui_generated\src\main_screen\MainViewBase.cpp"/>
     <ClCompile Include="..\..\gui\src\model\Model.cpp"/>
     <ClCompile Include="..\..\generated\simulator\src\video\SoftwareMJPEGDecoder.cpp"/>
     <ClCompile Include="..\..\gui\src\compass_screen\CompassPresenter.cpp"/>
     <ClCompile Include="..\..\gui\src\compass_screen\CompassView.cpp"/>
     <ClCompile Include="..\..\generated\gui_generated\src\compass_screen\CompassViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\speed_screen\SpeedPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\speed_screen\SpeedView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\speed_screen\SpeedViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\common\CalcPixel.cpp"/>
+    <ClCompile Include="..\..\gui\src\common\DataBase.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(ApplicationRoot)\assets\texts\texts.xml"/>
@@ -172,9 +174,6 @@
     <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\common\FrontendApplicationBase.hpp"/>
     <ClInclude Include="..\..\gui\include\gui\common\FrontendHeap.hpp"/>
     <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\common\FrontendHeapBase.hpp"/>
-    <ClInclude Include="..\..\gui\include\gui\main_screen\MainPresenter.hpp"/>
-    <ClInclude Include="..\..\gui\include\gui\main_screen\MainView.hpp"/>
-    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\main_screen\MainViewBase.hpp"/>
     <ClInclude Include="..\..\generated\simulator\include\simulator\video\MJPEGDecoder.hpp"/>
     <ClInclude Include="..\..\gui\include\gui\model\Model.hpp"/>
     <ClInclude Include="..\..\gui\include\gui\model\ModelListener.hpp"/>
@@ -183,6 +182,11 @@
     <ClInclude Include="..\..\gui\include\gui\compass_screen\CompassPresenter.hpp"/>
     <ClInclude Include="..\..\gui\include\gui\compass_screen\CompassView.hpp"/>
     <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\compass_screen\CompassViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\speed_screen\SpeedPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\speed_screen\SpeedView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\speed_screen\SpeedViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\common\CalcPixel.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\common\DataBase.hpp"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(ApplicationRoot)\generated\simulator\touchgfx.rc"/>

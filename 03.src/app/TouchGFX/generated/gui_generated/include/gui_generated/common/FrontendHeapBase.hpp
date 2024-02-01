@@ -12,8 +12,8 @@
 #include <gui/common/FrontendApplication.hpp>
 #include <gui/model/Model.hpp>
 
-#include <gui/main_screen/MainView.hpp>
-#include <gui/main_screen/MainPresenter.hpp>
+#include <gui/speed_screen/SpeedView.hpp>
+#include <gui/speed_screen/SpeedPresenter.hpp>
 #include <gui/compass_screen/CompassView.hpp>
 #include <gui/compass_screen/CompassPresenter.hpp>
 
@@ -38,7 +38,7 @@ public:
      * A list of all view types. Must end with meta::Nil.
      * @note All view types used in the application MUST be added to this list!
      */
-    typedef touchgfx::meta::TypeList< MainView,
+    typedef touchgfx::meta::TypeList< SpeedView,
             touchgfx::meta::TypeList< CompassView,
             touchgfx::meta::Nil >
             > GeneratedViewTypes;
@@ -52,7 +52,7 @@ public:
      * A list of all presenter types. Must end with meta::Nil.
      * @note All presenter types used in the application MUST be added to this list!
      */
-    typedef touchgfx::meta::TypeList< MainPresenter,
+    typedef touchgfx::meta::TypeList< SpeedPresenter,
             touchgfx::meta::TypeList< CompassPresenter,
             touchgfx::meta::Nil >
             > GeneratedPresenterTypes;
@@ -77,7 +77,7 @@ public:
 
     virtual void gotoStartScreen(FrontendApplication& app)
     {
-        app.gotoCompassScreenNoTransition();
+        app.gotoSpeedScreenNoTransition();
     }
 protected:
     FrontendHeapBase(touchgfx::AbstractPartition& presenters, touchgfx::AbstractPartition& views, touchgfx::AbstractPartition& transitions, FrontendApplication& app)

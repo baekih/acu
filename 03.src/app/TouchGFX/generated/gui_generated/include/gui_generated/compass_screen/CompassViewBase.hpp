@@ -47,9 +47,7 @@ protected:
     touchgfx::TextArea HDG_UNIT;
     touchgfx::TextArea HDG_TYPE;
     touchgfx::TextArea HDG_TITLE;
-    touchgfx::TextAreaWithOneWildcard HDG_VALUE1;
-    touchgfx::TextAreaWithOneWildcard HDG_VALUE2;
-    touchgfx::TextAreaWithOneWildcard HDG_VALUE3;
+    touchgfx::TextAreaWithOneWildcard HDG_VALUE;
     touchgfx::Line TEXT_LINE;
     touchgfx::PainterRGB565 TEXT_LINEPainter;
     touchgfx::ScalableImage NORTH_MARK;
@@ -57,12 +55,8 @@ protected:
     /*
      * Wildcard Buffers
      */
-    static const uint16_t HDG_VALUE1_SIZE = 2;
-    touchgfx::Unicode::UnicodeChar HDG_VALUE1Buffer[HDG_VALUE1_SIZE];
-    static const uint16_t HDG_VALUE2_SIZE = 2;
-    touchgfx::Unicode::UnicodeChar HDG_VALUE2Buffer[HDG_VALUE2_SIZE];
-    static const uint16_t HDG_VALUE3_SIZE = 2;
-    touchgfx::Unicode::UnicodeChar HDG_VALUE3Buffer[HDG_VALUE3_SIZE];
+    static const uint16_t HDG_VALUE_SIZE = 4;
+    touchgfx::Unicode::UnicodeChar HDG_VALUEBuffer[HDG_VALUE_SIZE];
 
 private:
 

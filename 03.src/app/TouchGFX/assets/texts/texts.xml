@@ -4,69 +4,134 @@
     <Language Id="GB" />
   </Languages>
   <Texts>
-    <TextGroup Id="Group1">
-      <Text Id="TextId1" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">Last selected element 111 : &lt;value&gt;</Translation>
-      </Text>
-      <Text Id="TextId2" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">Last deselected element: &lt;value&gt;</Translation>
-      </Text>
-    </TextGroup>
     <TextGroup Id="Compass">
-      <Text Id="TEXT_COMPASS_0" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_0" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">N</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_30" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_30" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">30</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_60" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_60" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">60</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_90" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_90" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">W</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_120" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_120" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">120</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_150" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_150" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">150</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_180" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_180" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">S</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_210" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_210" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">210</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_240" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_240" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">240</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_270" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_270" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">E</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_300" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_300" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">300</Translation>
       </Text>
-      <Text Id="TEXT_COMPASS_330" Alignment="Left" TypographyId="Default">
+      <Text Id="TEXT_COMPASS_330" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">330</Translation>
       </Text>
-      <Text Id="__SingleUse_O7PX" Alignment="Left" TypographyId="Default">
+      <Text Id="__SingleUse_O7PX" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">M</Translation>
       </Text>
-      <Text Id="heading_text" Alignment="Right" TypographyId="TYPEPO_HDG_VALUE">
-        <Translation Language="GB" Alignment="Right">&lt;value&gt;</Translation>
-      </Text>
-      <Text Id="__SingleUse_2AZB" Alignment="Left" TypographyId="DEGREE_UNIT">
+      <Text Id="__SingleUse_2AZB" Alignment="Left" TypographyId="TYPEPO_150PX">
         <Translation Language="GB">˚</Translation>
       </Text>
-      <Text Id="__SingleUse_9XEG" Alignment="Left" TypographyId="Default">
+      <Text Id="__SingleUse_9XEG" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">HDG</Translation>
+      </Text>
+    </TextGroup>
+    <TextGroup Id="Speed">
+      <Text Id="TEXT_SPEED_0" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB" Alignment="Center">0</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_5" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">5</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_10" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">10</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_15" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">15</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_20" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">20</Translation>
+      </Text>
+      <Text Id="__SingleUse_IOE7" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">&lt;*&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_A4E5" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">kn</Translation>
+      </Text>
+    </TextGroup>
+    <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_KBPR" Alignment="Left" TypographyId="TYPEPO_150PX">
+        <Translation Language="GB">000</Translation>
+      </Text>
+      <Text Id="__SingleUse_4MKK" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">STW</Translation>
+      </Text>
+      <Text Id="__SingleUse_82LB" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">00.0</Translation>
+      </Text>
+      <Text Id="__SingleUse_5D19" Alignment="Left" TypographyId="TYPEPO_100PX">
+        <Translation Language="GB">0000</Translation>
+      </Text>
+      <Text Id="__SingleUse_AUKH" Alignment="Left" TypographyId="TYPEPO_65PX">
+        <Translation Language="GB">100.00</Translation>
+      </Text>
+      <Text Id="NUMERIC_WILD" Alignment="Right" TypographyId="TYPEPO_150PX">
+        <Translation Language="GB" Alignment="Right">&lt;*&gt;</Translation>
+      </Text>
+      <Text Id="APABERIC_WILD" Alignment="Right" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB"></Translation>
+      </Text>
+      <Text Id="__SingleUse_A6IN" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">˚</Translation>
+      </Text>
+      <Text Id="__SingleUse_R9JF" Alignment="Right" TypographyId="TYPEPO_65PX">
+        <Translation Language="GB">&lt;*&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_ERTP" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">( C)</Translation>
+      </Text>
+      <Text Id="__SingleUse_TOHO" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">W Temp</Translation>
+      </Text>
+      <Text Id="__SingleUse_XDWV" Alignment="Right" TypographyId="TYPEPO_100PX">
+        <Translation Language="GB">&lt;*&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_WU69" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">(m)</Translation>
+      </Text>
+      <Text Id="__SingleUse_P8X0" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">Depth</Translation>
+      </Text>
+      <Text Id="__SingleUse_X4C0" Alignment="Right" TypographyId="TYPEPO_120PX">
+        <Translation Language="GB" Alignment="Right">&lt;*&gt;</Translation>
       </Text>
     </TextGroup>
   </Texts>
   <Typographies>
-    <Typography Id="Default" Font="arialbd.ttf" Size="50" Bpp="4" IsVector="no" Direction="LTR" WildcardCharacterRanges="0-9" />
-    <Typography Id="TYPEPO_HDG_VALUE" Font="arialbd.ttf" Size="160" Bpp="1" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9" />
-    <Typography Id="DEGREE_UNIT" Font="arialbd.ttf" Size="150" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
-    <Typography Id="DEGREE_No" Font="arialbd.ttf" Size="80" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="TYPEPO_30PX" Font="Roboto-Bold.ttf" Size="30" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_40PX" Font="Roboto-Bold.ttf" Size="40" Bpp="4" IsVector="no" Direction="LTR" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_65PX" Font="Roboto-Bold.ttf" Size="65" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_70PX" Font="Roboto-Bold.ttf" Size="70" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_80PX" Font="Roboto-Bold.ttf" Size="80" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_90PX" Font="Roboto-Bold.ttf" Size="90" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_100PX" Font="Roboto-Bold.ttf" Size="100" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_120PX" Font="Roboto-Bold.ttf" Size="120" Bpp="1" IsVector="no" Direction="LTR" FallbackCharacter="." WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_150PX" Font="Roboto-Bold.ttf" Size="150" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_160PX" Font="Roboto-Bold.ttf" Size="160" Bpp="1" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
   </Typographies>
 </TextDatabase>

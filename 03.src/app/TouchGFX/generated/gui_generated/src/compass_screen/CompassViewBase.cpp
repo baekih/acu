@@ -47,29 +47,13 @@ CompassViewBase::CompassViewBase()
     HDG_TITLE.setTypedText(touchgfx::TypedText(T___SINGLEUSE_9XEG));
     add(HDG_TITLE);
 
-    HDG_VALUE1.setPosition(265, 288, 90, 215);
-    HDG_VALUE1.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
-    HDG_VALUE1.setLinespacing(0);
-    HDG_VALUE1Buffer[0] = 0;
-    HDG_VALUE1.setWildcard(HDG_VALUE1Buffer);
-    HDG_VALUE1.setTypedText(touchgfx::TypedText(T_HEADING_TEXT));
-    add(HDG_VALUE1);
-
-    HDG_VALUE2.setPosition(355, 288, 90, 215);
-    HDG_VALUE2.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
-    HDG_VALUE2.setLinespacing(0);
-    HDG_VALUE2Buffer[0] = 0;
-    HDG_VALUE2.setWildcard(HDG_VALUE2Buffer);
-    HDG_VALUE2.setTypedText(touchgfx::TypedText(T_HEADING_TEXT));
-    add(HDG_VALUE2);
-
-    HDG_VALUE3.setPosition(445, 288, 90, 215);
-    HDG_VALUE3.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
-    HDG_VALUE3.setLinespacing(0);
-    HDG_VALUE3Buffer[0] = 0;
-    HDG_VALUE3.setWildcard(HDG_VALUE3Buffer);
-    HDG_VALUE3.setTypedText(touchgfx::TypedText(T_HEADING_TEXT));
-    add(HDG_VALUE3);
+    HDG_VALUE.setPosition(265, 288, 270, 155);
+    HDG_VALUE.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    HDG_VALUE.setLinespacing(0);
+    Unicode::snprintf(HDG_VALUEBuffer, HDG_VALUE_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_KBPR).getText());
+    HDG_VALUE.setWildcard(HDG_VALUEBuffer);
+    HDG_VALUE.setTypedText(touchgfx::TypedText(T_NUMERIC_WILD));
+    add(HDG_VALUE);
 
     TEXT_LINE.setPosition(210, 449, 380, 18);
     TEXT_LINEPainter.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));

@@ -227,6 +227,8 @@
 #define BROADCAST_DEST_ADDR                     (255U)
 #define NMEA2K_THIS_ADDR                        (110U)
 
+#define M_PI                                3.1415926535
+
 #pragma pack(push,1)
 typedef struct __fastpacket
 {

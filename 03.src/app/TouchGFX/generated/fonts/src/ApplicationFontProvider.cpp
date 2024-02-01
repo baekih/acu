@@ -9,18 +9,36 @@ touchgfx::Font* ApplicationFontProvider::getFont(touchgfx::FontId typography)
 {
     switch (typography)
     {
-    case Typography::DEFAULT:
-        // arialbd_50_4bpp
+    case Typography::TYPEPO_30PX:
+        // Roboto_Bold_30_4bpp
         return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[0]);
-    case Typography::TYPEPO_HDG_VALUE:
-        // arialbd_160_1bpp
+    case Typography::TYPEPO_40PX:
+        // Roboto_Bold_40_4bpp
         return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[1]);
-    case Typography::DEGREE_UNIT:
-        // arialbd_150_4bpp
+    case Typography::TYPEPO_65PX:
+        // Roboto_Bold_65_4bpp
         return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[2]);
-    case Typography::DEGREE_NO:
-        // arialbd_80_4bpp
+    case Typography::TYPEPO_70PX:
+        // Roboto_Bold_70_4bpp
         return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[3]);
+    case Typography::TYPEPO_80PX:
+        // Roboto_Bold_80_4bpp
+        return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[4]);
+    case Typography::TYPEPO_90PX:
+        // Roboto_Bold_90_4bpp
+        return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[5]);
+    case Typography::TYPEPO_100PX:
+        // Roboto_Bold_100_4bpp
+        return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[6]);
+    case Typography::TYPEPO_120PX:
+        // Roboto_Bold_120_1bpp
+        return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[7]);
+    case Typography::TYPEPO_150PX:
+        // Roboto_Bold_150_4bpp
+        return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[8]);
+    case Typography::TYPEPO_160PX:
+        // Roboto_Bold_160_1bpp
+        return const_cast<touchgfx::Font*>(TypedTextDatabase::getFonts()[9]);
     default:
         return 0;
     }

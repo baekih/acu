@@ -17,7 +17,7 @@ void CompassPresenter::deactivate()
 
 }
 
-void CompassPresenter::notifyHDGValue(int hdgValue) {
+void CompassPresenter::notifyHDGValue(float hdgValue) {
 
 	view.updateHDG(hdgValue);
 }

@@ -14,31 +14,38 @@
 #include <gui_generated/compass_screen/CompassViewBase.hpp>
 #include <gui/compass_screen/CompassPresenter.hpp>
 
+#include <gui/common/CalcPixel.hpp>
+
 class CompassView : public CompassViewBase
 {
+    touchgfx::Shape<4> shapeCompassLine[72];
+    touchgfx::PainterRGB565 shapeCompassPainter[72];
+
+    touchgfx::TextArea textComassDegree[12];
+
+    CalcPixel calcPixel = CalcPixel(400, 440, 800);
+
 public:
     CompassView();
     virtual ~CompassView() {}
     virtual void setupScreen();
     virtual void tearDownScreen();
 
-    void updateHDG(int hdgValue);
+    void updateHDG(float hdgValue);
 
-    Point getPointByDistanceXYBearing(double distance, double baseX, double baseY, double heading);
-    Point getPointByDistanceBearing(double distance, double heading);
-    Point getPointByCross(double centerX, double centerY, Point solution[], double originX, double originY, double endX, double endY);
-    Point getCrossPointInCircle(double circleX, double circleY, double radius, double startX, double startY, double endX, double endY);
-
-    void drawBearingLine(double degree, int offset, touchgfx::Shape<4>& line);
-    void drawBearingText(double degree, int offset, touchgfx::TextArea& text);
-    void updateBearingLine(double degree);
+    void drawBearingLine(float degree, int offset, touchgfx::Shape<4>& line);
+    void drawBearingText(float degree, int offset, touchgfx::TextArea& text);
+    void updateBearingLine(float degree);
 
     void handleTickEvent();
-protected:
-    touchgfx::Shape<4> shapeCompassLine[36];
-    touchgfx::PainterRGB565 shapeCompassPainter[36];
 
-    touchgfx::TextArea textComassDegree[12];
+    virtual void handleClickEvent(const ClickEvent& evt);
+    virtual void handleDragEvent(const DragEvent& evt);
+protected:
+
+    int pressedX;
+    int pressedY;
+
 };
 
 #endif // COMPASSVIEW_HPP

@@ -2,76 +2,100 @@
   "Application": {
     "Screens": [
       {
-        "Name": "Main",
+        "Name": "Speed",
+        "CanvasBufferSize": 12000,
         "Components": [
           {
             "Type": "Image",
-            "Name": "backgroundImage",
+            "Name": "BACK_IMAGE",
             "Width": 800,
             "Height": 480,
-            "RelativeFilename": "__generated\\alternate_theme_images_backgrounds_800x480_puzzle.png"
+            "RelativeFilename": "speed_background.png"
           },
           {
-            "Type": "RadioButton",
-            "Name": "radioButton1",
-            "X": 56,
-            "Y": 25,
-            "Width": 42,
-            "Height": 42,
-            "Selected": true,
-            "FileNameSelected": "radio_button_selected.png",
-            "FileNameSelectedPressed": "radio_button_selected_pressed.png",
-            "FileNameUnselected": "radio_button_unselected.png",
-            "FileNameUnselectedPressed": "radio_button_unselected_pressed.png",
-            "RadioButtonGroup": "radioButtonGroup"
+            "Type": "Circle",
+            "Name": "CIRCLE_BACKGROUND",
+            "Width": 580,
+            "Height": 576,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "CenterX": 290.0,
+            "CenterY": 288.0,
+            "Radius": 272.0,
+            "LineWidth": 4.0,
+            "StartAngle": -120.3,
+            "EndAngle": 120.4,
+            "CapPrecision": "Butt"
           },
           {
-            "Type": "RadioButton",
-            "Name": "radioButton2",
-            "X": 56,
-            "Y": 78,
-            "Width": 42,
-            "Height": 42,
-            "FileNameSelected": "radio_button_selected.png",
-            "FileNameSelectedPressed": "radio_button_selected_pressed.png",
-            "FileNameUnselected": "radio_button_unselected.png",
-            "FileNameUnselectedPressed": "radio_button_unselected_pressed.png",
-            "RadioButtonGroup": "radioButtonGroup"
+            "Type": "Shape",
+            "Name": "SPEED_INDICATOR",
+            "X": 219,
+            "Y": 14,
+            "Width": 144,
+            "Height": 144,
+            "Color": {
+              "Red": 239,
+              "Green": 67,
+              "Blue": 68
+            },
+            "Points": [
+              {
+                "Y": -72.0
+              },
+              {
+                "X": 10.0,
+                "Y": 72.0
+              },
+              {
+                "X": -10.0,
+                "Y": 72.0
+              }
+            ],
+            "XScale": 1.0,
+            "YScale": 1.0,
+            "XOrigin": 72.0,
+            "YOrigin": 72.0
           },
           {
-            "Type": "RadioButton",
-            "Name": "radioButton3",
-            "X": 56,
-            "Y": 129,
-            "Width": 42,
-            "Height": 42,
-            "FileNameSelected": "radio_button_selected.png",
-            "FileNameSelectedPressed": "radio_button_selected_pressed.png",
-            "FileNameUnselected": "radio_button_unselected.png",
-            "FileNameUnselectedPressed": "radio_button_unselected_pressed.png",
-            "RadioButtonGroup": "radioButtonGroup"
+            "Type": "ScalableImage",
+            "Name": "INDICATOR_GUIDE",
+            "X": 159,
+            "Y": 158,
+            "Width": 264,
+            "Height": 264,
+            "Filename": "indicator_guide.png",
+            "ScalingAlgorithm": "Nearest-neighbor"
           },
           {
-            "Type": "RadioButton",
-            "Name": "radioButton4",
-            "X": 56,
-            "Y": 181,
-            "Width": 42,
-            "Height": 42,
-            "FileNameSelected": "radio_button_selected.png",
-            "FileNameSelectedPressed": "radio_button_selected_pressed.png",
-            "FileNameUnselected": "radio_button_unselected.png",
-            "FileNameUnselectedPressed": "radio_button_unselected_pressed.png",
-            "RadioButtonGroup": "radioButtonGroup"
+            "Type": "Line",
+            "Name": "TEXT_LINE",
+            "X": 233,
+            "Y": 344,
+            "Width": 109,
+            "Height": 15,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "StartY": 9.0,
+            "EndX": 380.0,
+            "EndY": 9.0,
+            "LineWidth": 4.0,
+            "LineEndingStyle": "Round"
           },
           {
             "Type": "TextArea",
-            "Name": "selectedText",
-            "X": 114,
-            "Y": 137,
-            "Width": 629,
-            "Height": 58,
-            "TextId": "TextId1",
+            "Name": "SPEED_TITLE",
+            "X": 244,
+            "Y": 359,
+            "Width": 85,
+            "Height": 47,
+            "TextId": "__SingleUse_IOE7",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -80,135 +104,191 @@
             },
             "AutoSize": true,
             "Wildcard1": {
+              "TextId": "__SingleUse_4MKK",
               "UseBuffer": true,
-              "BufferSize": 3
+              "BufferSize": 4
             }
           },
           {
             "Type": "TextArea",
-            "Name": "deselectedText",
-            "X": 114,
-            "Y": 189,
-            "Width": 573,
-            "Height": 58,
-            "TextId": "TextId2",
+            "Name": "SPEED_UNIT",
+            "X": 420,
+            "Y": 425,
+            "Width": 33,
+            "Height": 35,
+            "TextId": "__SingleUse_A4E5",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
               "Green": 255,
               "Blue": 255
             },
-            "AutoSize": true,
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "SPEED_VALUE",
+            "X": 162,
+            "Y": 206,
+            "Width": 252,
+            "Height": 132,
+            "TextId": "__SingleUse_X4C0",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
             "Wildcard1": {
+              "TextId": "__SingleUse_82LB",
               "UseBuffer": true,
-              "BufferSize": 3
+              "BufferSize": 6
             }
           },
           {
-            "Type": "SlideMenu",
-            "Name": "slideMenu1",
-            "Y": 377,
-            "Width": 250,
-            "Height": 250,
-            "FileNameButtonPressed": "",
-            "FileNameButtonReleased": "",
-            "State": "Expanded",
-            "ExpandDirection": "South",
-            "Easing": "Cubic",
-            "EasingOption": "InOut",
-            "AnimationDuration": 300,
-            "ExpandedStateTimeout": 3000,
-            "Components": []
+            "Type": "Line",
+            "Name": "TEXT_LINE_CENTER",
+            "X": 582,
+            "Y": 220,
+            "Width": 213,
+            "Height": 43,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "StartX": 5.0,
+            "StartY": 20.0,
+            "EndX": 210.0,
+            "EndY": 20.0,
+            "LineWidth": 4.0,
+            "LineEndingStyle": "Round"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEPTH_VALUE",
+            "X": 568,
+            "Y": 72,
+            "Width": 227,
+            "Height": 105,
+            "TextId": "__SingleUse_XDWV",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_5D19",
+              "UseBuffer": true,
+              "BufferSize": 5
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEPTH_UNIT",
+            "X": 744,
+            "Y": 22,
+            "Width": 48,
+            "Height": 35,
+            "TextId": "__SingleUse_WU69",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEPTH_TITLE",
+            "X": 602,
+            "Y": 22,
+            "Width": 80,
+            "Height": 35,
+            "TextId": "__SingleUse_P8X0",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_VALUE",
+            "X": 588,
+            "Y": 345,
+            "Width": 207,
+            "Height": 72,
+            "TextId": "__SingleUse_R9JF",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_AUKH",
+              "UseBuffer": true,
+              "BufferSize": 8
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEGREE_UNIT",
+            "X": 753,
+            "Y": 256,
+            "Width": 10,
+            "Height": 35,
+            "TextId": "__SingleUse_A6IN",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_UNIT",
+            "X": 743,
+            "Y": 253,
+            "Width": 49,
+            "Height": 35,
+            "TextId": "__SingleUse_ERTP",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_TITLE",
+            "X": 601,
+            "Y": 253,
+            "Width": 109,
+            "Height": 35,
+            "TextId": "__SingleUse_TOHO",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
           }
         ],
-        "Interactions": [
+        "Interactions": [],
+        "CustomActions": [
           {
-            "InteractionName": "RadioButton1Selected",
-            "Trigger": {
-              "Type": "TriggerRadioButtonSelected",
-              "TriggerComponent": "radioButton1"
-            },
-            "Action": {
-              "Type": "ActionExecuteCode",
-              "Code": "Unicode::snprintf(selectedTextBuffer, 4, \"%d\", 1);\r\nselectedText.resizeToCurrentText();\r\nselectedText.invalidate();"
-            }
-          },
-          {
-            "InteractionName": "RadioButton2Selected",
-            "Trigger": {
-              "Type": "TriggerRadioButtonSelected",
-              "TriggerComponent": "radioButton2"
-            },
-            "Action": {
-              "Type": "ActionExecuteCode",
-              "Code": "Unicode::snprintf(selectedTextBuffer, 4, \"%d\", 2);\r\nselectedText.resizeToCurrentText();\r\nselectedText.invalidate();"
-            }
-          },
-          {
-            "InteractionName": "RadioButton3Selected",
-            "Trigger": {
-              "Type": "TriggerRadioButtonSelected",
-              "TriggerComponent": "radioButton3"
-            },
-            "Action": {
-              "Type": "ActionExecuteCode",
-              "Code": "Unicode::snprintf(selectedTextBuffer, 4, \"%d\", 3);\r\nselectedText.resizeToCurrentText();\r\nselectedText.invalidate();"
-            }
-          },
-          {
-            "InteractionName": "RadioButton4Selected",
-            "Trigger": {
-              "Type": "TriggerRadioButtonSelected",
-              "TriggerComponent": "radioButton4"
-            },
-            "Action": {
-              "Type": "ActionExecuteCode",
-              "Code": "Unicode::snprintf(selectedTextBuffer, 4, \"%d\", 4);\r\nselectedText.resizeToCurrentText();\r\nselectedText.invalidate();"
-            }
-          },
-          {
-            "InteractionName": "RadioButton1Deselected",
-            "Trigger": {
-              "Type": "TriggerRadioButtonDeselected",
-              "TriggerComponent": "radioButton1"
-            },
-            "Action": {
-              "Type": "ActionExecuteCode",
-              "Code": "Unicode::snprintf(deselectedTextBuffer, 4, \"%d\", 1);\r\ndeselectedText.resizeToCurrentText();\r\ndeselectedText.invalidate();"
-            }
-          },
-          {
-            "InteractionName": "RadioButton2Deselected",
-            "Trigger": {
-              "Type": "TriggerRadioButtonDeselected",
-              "TriggerComponent": "radioButton2"
-            },
-            "Action": {
-              "Type": "ActionExecuteCode",
-              "Code": "Unicode::snprintf(deselectedTextBuffer, 4, \"%d\", 2);\r\ndeselectedText.resizeToCurrentText();\r\ndeselectedText.invalidate();"
-            }
-          },
-          {
-            "InteractionName": "RadioButton3Deselected",
-            "Trigger": {
-              "Type": "TriggerRadioButtonDeselected",
-              "TriggerComponent": "radioButton3"
-            },
-            "Action": {
-              "Type": "ActionExecuteCode",
-              "Code": "Unicode::snprintf(deselectedTextBuffer, 4, \"%d\", 3);\r\ndeselectedText.resizeToCurrentText();\r\ndeselectedText.invalidate();"
-            }
-          },
-          {
-            "InteractionName": "RadioButton4Deselected",
-            "Trigger": {
-              "Type": "TriggerRadioButtonDeselected",
-              "TriggerComponent": "radioButton4"
-            },
-            "Action": {
-              "Type": "ActionExecuteCode",
-              "Code": "Unicode::snprintf(deselectedTextBuffer, 4, \"%d\", 4);\r\ndeselectedText.resizeToCurrentText();\r\ndeselectedText.invalidate();"
-            }
+            "Name": "action1"
           }
         ]
       },
@@ -247,7 +327,7 @@
             "X": 543,
             "Y": 318,
             "Width": 50,
-            "Height": 150,
+            "Height": 169,
             "TextId": "__SingleUse_2AZB",
             "TextRotation": "0",
             "Color": {
@@ -262,8 +342,8 @@
             "Name": "HDG_TYPE",
             "X": 215,
             "Y": 398,
-            "Width": 42,
-            "Height": 51,
+            "Width": 35,
+            "Height": 45,
             "TextId": "__SingleUse_O7PX",
             "TextRotation": "0",
             "Color": {
@@ -278,8 +358,8 @@
             "Name": "HDG_TITLE",
             "X": 345,
             "Y": 249,
-            "Width": 111,
-            "Height": 51,
+            "Width": 81,
+            "Height": 45,
             "TextId": "__SingleUse_9XEG",
             "TextRotation": "0",
             "Color": {
@@ -291,12 +371,12 @@
           },
           {
             "Type": "TextArea",
-            "Name": "HDG_VALUE1",
+            "Name": "HDG_VALUE",
             "X": 265,
             "Y": 288,
-            "Width": 90,
-            "Height": 215,
-            "TextId": "heading_text",
+            "Width": 270,
+            "Height": 155,
+            "TextId": "NUMERIC_WILD",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -304,46 +384,9 @@
               "Blue": 255
             },
             "Wildcard1": {
+              "TextId": "__SingleUse_KBPR",
               "UseBuffer": true,
-              "BufferSize": 2
-            }
-          },
-          {
-            "Type": "TextArea",
-            "Name": "HDG_VALUE2",
-            "X": 355,
-            "Y": 288,
-            "Width": 90,
-            "Height": 215,
-            "TextId": "heading_text",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "Wildcard1": {
-              "UseBuffer": true,
-              "BufferSize": 2
-            }
-          },
-          {
-            "Type": "TextArea",
-            "Name": "HDG_VALUE3",
-            "X": 445,
-            "Y": 288,
-            "Width": 90,
-            "Height": 215,
-            "TextId": "heading_text",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "Wildcard1": {
-              "UseBuffer": true,
-              "BufferSize": 2
+              "BufferSize": 4
             }
           },
           {
@@ -390,7 +433,7 @@
       "Height": 480
     },
     "SelectedColorDepth": 16,
-    "StartupScreenName": "Compass",
+    "StartupScreenName": "Speed",
     "SelectedStartupLanguage": "GB",
     "TouchGfxPath": "../Middlewares/ST/touchgfx",
     "UIPath": ".",
