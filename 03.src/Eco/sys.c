@@ -352,6 +352,42 @@ void InitQSPI(void)
     QSPI_EnableMemoryMappedMode();
 }
 
+void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
+{
+    uint16_t count = 100;
+
+    while(HAL_CAN_IsTxMessagePending(&hcan1, g_TxCan[txCanBufferCount].TxMailbox) == 1)
+     {
+       HAL_Delay(1);
+
+       if(count-- <= 0)
+       {
+         printf("HAL_CAN_IsTxMessagePending over 100ms !!\r\n");
+         break;
+       }
+     }
+
+#if 0
+    for (uint8_t i = 0; i < 8; i++){
+      printf("%02X ", buf[i]);
+    }
+    printf("\n");
+#endif
+
+    g_TxCan[txCanBufferCount].TxHeader.ExtId = rawCanId;
+    g_TxCan[txCanBufferCount].TxHeader.IDE = CAN_ID_EXT;
+    g_TxCan[txCanBufferCount].TxHeader.DLC = len;
+
+    memcpy(g_TxCan[txCanBufferCount].TxData, buf, len);
+
+    if(HAL_CAN_AddTxMessage(&hcan1, &g_TxCan[txCanBufferCount].TxHeader,
+            g_TxCan[txCanBufferCount].TxData, &g_TxCan[txCanBufferCount].TxMailbox) != HAL_OK)
+    {
+        printf(" Error HAL_CAN_AddTxMessage hcan1 !!\r\n");
+        osDelay(1);
+    }
+}
+
 bool getKeyPending(uint8_t idx)
 {
     bool ret = g_key_stat[idx].pnd;
@@ -588,6 +624,7 @@ void setLCDTestImage(uint8_t img_sel)
     }
 }
 
+#if 0
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
 //    printf("%s() called...\r\n",__FUNCTION__);
@@ -605,3 +642,35 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
     }
 }
+#else
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
+{
+//    printf("%s() called...\r\n",__FUNCTION__);
+    CAN_RxHeaderTypeDef RxHeader;
+    RxProtocol RxPacket;
+
+    /* Get CAN1 RX message */
+    if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxPacket.dat) != HAL_OK) Error_Handler();
+
+/*    RxPacket.canid = RxHeader.ExtId;
+    RxPacket.len = RxHeader.DLC;
+
+    for(uint8_t i=0; i < sizeof(RxProtocol); i++)
+    {
+        if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
+    }*/
+
+    g_RxCan[rxCanLastIndex].canid = RxHeader.ExtId;
+    g_RxCan[rxCanLastIndex].len = RxHeader.DLC;
+    memcpy(g_RxCan[rxCanLastIndex].dat, RxPacket.dat, sizeof(RxPacket.dat));
+
+    rxCanLastIndex++;
+    rxCanLastIndex %= CAN_RX_BUF_MAX;
+
+    if(rxCanLastIndex == rxCanFirstIndex)
+    {
+        rxCanFirstIndex++;
+        rxCanFirstIndex %= CAN_RX_BUF_MAX;
+    }
+}
+#endif

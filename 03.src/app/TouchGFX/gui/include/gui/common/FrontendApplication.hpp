@@ -19,6 +19,16 @@ public:
         FrontendApplicationBase::handleTickEvent();
     }
 private:
+
+public :
+    // Speed
+	void gotoCompassScreenNoTransition();
+
+protected:
+    touchgfx::Callback<FrontendApplication> transitionCallback;
+
+    // Compass
+    void gotoCompassScreenNoTransitionImpl();
 };
 
 #endif // FRONTENDAPPLICATION_HPP

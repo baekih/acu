@@ -136,17 +136,11 @@
     <Filter Include="Source Files\gui">
       <UniqueIdentifier>7D72165E-16F4-01A2-4AF4-A9E18F2B84BC</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\gui\main_screen">
-      <UniqueIdentifier>FC00D62E-B899-52E6-1776-B8E849A43361</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\generated\gui_generated">
       <UniqueIdentifier>586096C4-985C-6D72-0670-37756D8F4F52</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\generated\gui_generated">
       <UniqueIdentifier>765ADCAF-E13F-8648-EC25-606004970DF8</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\gui\main_screen">
-      <UniqueIdentifier>8F009A03-C027-9306-728E-4DCD41FB01C3</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\gui\common">
       <UniqueIdentifier>0C339C27-EF1E-723F-2D44-97C9EC00603E</UniqueIdentifier>
@@ -166,12 +160,6 @@
     <Filter Include="Header Files\generated\simulator\include">
       <UniqueIdentifier>D8FD4BB6-D825-3FA2-197C-D1D29AF36465</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\generated\gui_generated\main_screen">
-      <UniqueIdentifier>FBD30374-15D7-7C66-EE38-DB92070D67C4</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\generated\gui_generated\main_screen">
-      <UniqueIdentifier>6299E8C2-6C58-2596-A316-7CC1EA6D0B16</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\generated\gui_generated\common">
       <UniqueIdentifier>DEA0F0FE-5324-47C0-8393-D05846258507</UniqueIdentifier>
     </Filter>
@@ -183,6 +171,30 @@
     </Filter>
     <Filter Include="Header Files\generated\simulator\include\simulator\video">
       <UniqueIdentifier>82E84259-5011-51BF-50AE-C94FF5BB299A</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gui\compass_screen">
+      <UniqueIdentifier>C5D87CDA-6D1E-9BA8-A8A9-C3F5A6198D16</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gui\compass_screen">
+      <UniqueIdentifier>8769F40E-91CC-76B6-E3ED-CD4BFC60B0A6</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\generated\gui_generated\compass_screen">
+      <UniqueIdentifier>67FB2A67-2220-84DC-728E-58170698ABBD</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\gui_generated\compass_screen">
+      <UniqueIdentifier>4EDF88C1-136D-6DF4-9133-08C53B53CFC3</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gui\speed_screen">
+      <UniqueIdentifier>E312246A-C804-5128-D733-32197CC773C9</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gui\speed_screen">
+      <UniqueIdentifier>9C81D8D9-3602-9F55-680E-7CBA99668CC4</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\generated\gui_generated\speed_screen">
+      <UniqueIdentifier>E826D05A-9BA4-E8CB-2050-90AF9774E25A</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\gui_generated\speed_screen">
+      <UniqueIdentifier>F0CA4C14-C64B-9286-4297-0175C6B66BDD</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -210,20 +222,35 @@
     <ClCompile Include="..\..\generated\gui_generated\src\common\FrontendApplicationBase.cpp">
       <Filter>Source Files\generated\gui_generated\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gui\src\main_screen\MainPresenter.cpp">
-      <Filter>Source Files\gui\main_screen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\gui\src\main_screen\MainView.cpp">
-      <Filter>Source Files\gui\main_screen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\generated\gui_generated\src\main_screen\MainViewBase.cpp">
-      <Filter>Source Files\generated\gui_generated\main_screen</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\gui\src\model\Model.cpp">
       <Filter>Source Files\gui\model</Filter>
     </ClCompile>
     <ClCompile Include="..\..\generated\simulator\src\video\SoftwareMJPEGDecoder.cpp">
       <Filter>Source Files\generated\simulator\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\compass_screen\CompassPresenter.cpp">
+      <Filter>Source Files\gui\compass_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\compass_screen\CompassView.cpp">
+      <Filter>Source Files\gui\compass_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\generated\gui_generated\src\compass_screen\CompassViewBase.cpp">
+      <Filter>Source Files\generated\gui_generated\compass_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\speed_screen\SpeedPresenter.cpp">
+      <Filter>Source Files\gui\speed_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\speed_screen\SpeedView.cpp">
+      <Filter>Source Files\gui\speed_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\generated\gui_generated\src\speed_screen\SpeedViewBase.cpp">
+      <Filter>Source Files\generated\gui_generated\speed_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\common\CalcPixel.cpp">
+      <Filter>Source Files\gui\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\common\DataBase.cpp">
+      <Filter>Source Files\gui\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -652,15 +679,6 @@
     <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\common\FrontendHeapBase.hpp">
       <Filter>Header Files\generated\gui_generated\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gui\include\gui\main_screen\MainPresenter.hpp">
-      <Filter>Header Files\gui\main_screen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gui\include\gui\main_screen\MainView.hpp">
-      <Filter>Header Files\gui\main_screen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\main_screen\MainViewBase.hpp">
-      <Filter>Header Files\generated\gui_generated\main_screen</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\generated\simulator\include\simulator\video\MJPEGDecoder.hpp">
       <Filter>Header Files\generated\simulator\include\simulator\video</Filter>
     </ClInclude>
@@ -675,6 +693,30 @@
     </ClInclude>
     <ClInclude Include="..\..\generated\simulator\include\simulator\video\SoftwareMJPEGDecoder.hpp">
       <Filter>Header Files\generated\simulator\include\simulator\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\compass_screen\CompassPresenter.hpp">
+      <Filter>Header Files\gui\compass_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\compass_screen\CompassView.hpp">
+      <Filter>Header Files\gui\compass_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\compass_screen\CompassViewBase.hpp">
+      <Filter>Header Files\generated\gui_generated\compass_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\speed_screen\SpeedPresenter.hpp">
+      <Filter>Header Files\gui\speed_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\speed_screen\SpeedView.hpp">
+      <Filter>Header Files\gui\speed_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\speed_screen\SpeedViewBase.hpp">
+      <Filter>Header Files\generated\gui_generated\speed_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\common\CalcPixel.hpp">
+      <Filter>Header Files\gui\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\common\DataBase.hpp">
+      <Filter>Header Files\gui\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

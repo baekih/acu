@@ -219,6 +219,7 @@ bool getKeyPending(uint8_t idx);
 void initTS(void);
 bool getTS(uint16_t*, uint16_t*);
 void InitQSPI(void);
+void CAN1_SendFrame(uint32_t, uint8_t*, uint8_t);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);
 void initFlashData(void);

@@ -10,183 +10,11 @@
 
 #include "eco.h"
 
-void test_proc(void)
-{
-    uint32_t timer_sec_1 = 0;
-    int32_t tick = osKernelGetTickCount() - osKernelGetTickCount()%10;
-
-    printf("%s() start\n",__func__);
-
-    if(g_board_id == BOARD_ID_DIN10)    memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
-    else                                memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
-
-    memset(&g_key_stat[0], 0x00, sizeof(key_stat)*KEY_MAX_IDX);
-
-    /* Infinite loop */
-    for(;;)
-    {
-        tick += 10;
-        HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
-
-        if(tick%10 == 0)
-        {
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
-            {
-                if(g_key_stat[KEY_PWR_IDX].prv == false)
-                {
-                    g_key_stat[KEY_PWR_IDX].pnd = true;
-                    printf("KEY_PWR pressed\n");
-                }
-
-                g_key_stat[KEY_PWR_IDX].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_PWR_IDX].prv = false;
-            }
-
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
-            {
-                if(g_key_stat[KEY_PREV_IDX].prv == false)
-                {
-                    g_key_stat[KEY_PREV_IDX].pnd = true;
-                    printf("KEY_PREV pressed\n");
-                }
-
-                g_key_stat[KEY_PREV_IDX].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_PREV_IDX].prv = false;
-            }
-
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
-            {
-                if(g_key_stat[KEY_SEL_IDX].prv == false)
-                {
-                    g_key_stat[KEY_SEL_IDX].pnd = true;
-                    printf("KEY_SEL pressed\n");
-                }
-
-                g_key_stat[KEY_SEL_IDX].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_SEL_IDX].prv = false;
-            }
-
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
-            {
-                if(g_key_stat[KEY_UP_IDX].prv == false)
-                {
-                    g_key_stat[KEY_UP_IDX].pnd = true;
-                    printf("KEY_UP pressed\n");
-                }
-
-                g_key_stat[KEY_UP_IDX].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_UP_IDX].prv = false;
-            }
-
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
-            {
-                if(g_key_stat[KEY_DN_IDX].prv == false)
-                {
-                    g_key_stat[KEY_DN_IDX].pnd = true;
-                    printf("KEY_DN pressed\n");
-                }
-
-                g_key_stat[KEY_DN_IDX].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_DN_IDX].prv = false;
-            }
-        }
-
-        if(tick%100 == 0)
-        {
-            {
-                static uint32_t lcd_bl_prv = 0;
-
-                if(getKeyPending(KEY_SEL_IDX))
-                {
-                    if(100 <= g_common_dat.lcd_bl) g_common_dat.lcd_bl = 0;
-                    else                        g_common_dat.lcd_bl += 10;
-                }
-
-                if(g_common_dat.lcd_bl != lcd_bl_prv)
-                {
-                    lcd_bl_prv = g_common_dat.lcd_bl;
-                    setLCDBL(g_common_dat.lcd_bl);
-                }
-            }
-
-            {
-                static uint32_t bzr_vol_prv = 0;
-
-                if(getKeyPending(KEY_PREV_IDX))
-                {
-                    if(g_common_dat.bzr_vol != 0) g_common_dat.bzr_vol = 0;
-                    else                       g_common_dat.bzr_vol = 100;
-                }
-
-                if(g_common_dat.bzr_vol != bzr_vol_prv)
-                {
-                    bzr_vol_prv = g_common_dat.bzr_vol;
-                    setBuzzer(g_common_dat.bzr_vol);
-                }
-            }
-
-            {
-                static uint8_t lcd_img_idx_prv = 0;
-
-                if(getKeyPending(KEY_UP_IDX)){g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;}
-                if(getKeyPending(KEY_DN_IDX)){g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;}
-
-                if(g_lcd_img_idx != lcd_img_idx_prv)
-                {
-                    lcd_img_idx_prv = g_lcd_img_idx;
-                    setLCDTestImage(g_lcd_img_idx);
-                }
-            }
-        }
-
-        if(tick%1000 == 0)
-        {
-        }
-
-        if(tick%3000 == 0)
-        {
-            timer_sec_1 += 3;
-
-            printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
-            Pgn126993HeartBeat();
-        }
-
-        osDelayUntil(tick);
-    }
-}
-
 void runEcoTaskMain(void *argument)
 {
     initFlashData();
 
-    if(g_board_id==BOARD_ID_DIN15)
-    {
-        touchgfx_taskEntry();
-    }
-    else
-    {
-        test_proc();
-    }
-
-    for(;;)
-    {
-        osDelay(1000);
-    }
+    touchgfx_taskEntry();
 }
 
 void runEcoTaskKey(void *argument)
@@ -245,6 +73,7 @@ void runEcoTaskFlash(void *argument)
 
 void runEcoTaskNMEA2KRx(void *argument)
 {
+#if 0
     RxProtocol RxPacket;
     uint32_t RxPGN;
     uint8_t  RxPF;
@@ -283,10 +112,36 @@ void runEcoTaskNMEA2KRx(void *argument)
             NMEA2KProc(RxPacket);
         }
     }
+#else
+    int remain = 0;
+
+    for(;;)
+    {
+
+        if(rxCanLastIndex >= rxCanFirstIndex)
+        {
+            remain =  rxCanLastIndex - rxCanFirstIndex;
+        }
+        else
+        {
+            remain = (CAN_RX_BUF_MAX - rxCanFirstIndex);
+            remain += rxCanLastIndex;
+        }
+
+        if(remain != 0){
+            NMEA2000_ReceiveParseMessages(g_RxCan[rxCanFirstIndex].canid, g_RxCan[rxCanFirstIndex].dat, g_RxCan[rxCanFirstIndex].len);
+
+            rxCanFirstIndex++;
+            rxCanFirstIndex %= CAN_RX_BUF_MAX;
+        }
+    }
+
+#endif
 }
 
 void runEcoTaskNMEA2KTx(void *argument)
 {
+#if 0
     TxProtocol TxPacket;
     CAN_TxHeaderTypeDef txhdr = {0, 0, CAN_ID_EXT, 0, DISABLE};
     uint8_t txdat[8];
@@ -309,6 +164,13 @@ void runEcoTaskNMEA2KTx(void *argument)
             osDelay(1);
         }
     }
+#else
+    for(;;)
+    {
+        osDelay(1);
+    }
+
+#endif
 }
 
 #endif // ECO_APP

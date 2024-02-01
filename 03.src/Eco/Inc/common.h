@@ -10,6 +10,7 @@
 
 #include "eco.h"
 
+#if 0
 #pragma pack(push,1)
 typedef struct __RxProtocol
 {
@@ -25,6 +26,7 @@ typedef struct __TxProtocol
     uint8_t  len;
 } TxProtocol ;
 #pragma pack(pop)
+#endif
 
 extern osMessageQueueId_t EcoQueueUART1Handle;
 extern osMessageQueueId_t EcoQueueNMEA2KRX1Handle;

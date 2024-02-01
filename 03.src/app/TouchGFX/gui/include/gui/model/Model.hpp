@@ -21,6 +21,8 @@ class ModelListener;
  */
 class Model
 {
+	uint32_t tickTm;
+
 public:
     Model();
 
@@ -39,6 +41,7 @@ public:
      * the ModelListener interface.
      */
     void tick();
+
 protected:
     /**
      * Pointer to the currently active presenter.
