@@ -107,6 +107,13 @@ const osThreadAttr_t EcoTaskKey_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for EcoTaskTest */
+osThreadId_t EcoTaskTestHandle;
+const osThreadAttr_t EcoTaskTest_attributes = {
+  .name = "EcoTaskTest",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for EcoQueueUART1 */
 osMessageQueueId_t EcoQueueUART1Handle;
 uint8_t EcoQueueUART1Buffer[ 256 * sizeof( uint8_t ) ];
@@ -166,6 +173,7 @@ extern void runEcoTaskNMEA2KRx(void *argument);
 extern void runEcoTaskNMEA2KTx(void *argument);
 extern void runEcoTaskFlash(void *argument);
 extern void runEcoTaskKey(void *argument);
+extern void runEcoTaskTest(void *argument);
 
 /* USER CODE BEGIN PFP */
 void SystemClock_pwrsav_Config(void);
@@ -278,6 +286,9 @@ int main(void)
 
   /* creation of EcoTaskKey */
   EcoTaskKeyHandle = osThreadNew(runEcoTaskKey, NULL, &EcoTaskKey_attributes);
+
+  /* creation of EcoTaskTest */
+  EcoTaskTestHandle = osThreadNew(runEcoTaskTest, NULL, &EcoTaskTest_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

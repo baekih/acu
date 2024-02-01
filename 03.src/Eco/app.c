@@ -173,4 +173,14 @@ void runEcoTaskNMEA2KTx(void *argument)
 #endif
 }
 
+void runEcoTaskTest(void *argument)
+{
+    for(;;)
+    {
+        NMEA2000_126993_heartbeat();
+        printf("NMEA2000_126993_heartbeat\n");
+        osDelay(3000);
+    }
+}
+
 #endif // ECO_APP

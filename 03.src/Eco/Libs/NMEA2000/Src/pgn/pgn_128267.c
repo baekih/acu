@@ -31,9 +31,9 @@ void PGN128267_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 	Offset     			=  GetBuf_2ByteUInt(len, 5, buf); 				// 16 bit
 	MaximumDepthRange  	=  GetBuf_1ByteUInt(len, 7, buf); 				// 8  bit
 
-	printf("Receive Water Depth - %d:%f:%2.3f:%d\n",
-		(double)((long)(WaterDepth & 0xFFFFFFFFL))/100.0, (double)((short)Offset)/1000.0,
-		MaximumDepthRange * 10);
+//	printf("Receive Water Depth - %lf:%2.3lf:%d\n",
+//		(double)((long)(WaterDepth & 0xFFFFFFFFL))/100.0, (double)((short)Offset)/1000.0,
+//		MaximumDepthRange * 10);
 
 	long depth = (long) (WaterDepth & 0xFFFFFFFFL);
 

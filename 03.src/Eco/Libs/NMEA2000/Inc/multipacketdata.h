@@ -10,7 +10,7 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
+#include "eco.h"
 
 typedef struct __MultiPacket__ {
 	uint32_t mTotalMessageByteSize;
