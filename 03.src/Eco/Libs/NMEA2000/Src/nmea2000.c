@@ -139,10 +139,12 @@ uint32_t FastPacketSequenceCounter(uint32_t pgnNumber)
 void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint8_t isFastPacket)
 {
 	if ((mAddress_Claiming == true) && (pgnId->mPGN != 60928)){
+	    printf("%s():%d Error\n", __func__, __LINE__);
 		return;
 	}
 
 	if(mIsNoAddress == true){
+        printf("%s():%d Error\n", __func__, __LINE__);
 		return;
 	}
 
@@ -192,7 +194,7 @@ void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint
 
 				memcpy(otherFastPacket + 1, buf + 6 + (packetIndex * 7), (remainCopySize >= 7) ? 7 : remainCopySize);
 
-				HAL_Delay(SEND_DELAY_TIME);
+				osDelay(SEND_DELAY_TIME);
 
 				CAN1_SendFrame(pgnId->mCanNumericID, otherFastPacket, 8);
 			}
@@ -241,7 +243,7 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
 				}
 			}
 
-			HAL_Delay(SEND_DELAY_TIME);
+			osDelay(SEND_DELAY_TIME);
 
 			PGN060160_SetFieldValue(packetIndex + 1, &Multipacket[0]);
 			PGN060160_SendNameField(BROADCAST_DESTINATION_ADDR, localSourceAddr);

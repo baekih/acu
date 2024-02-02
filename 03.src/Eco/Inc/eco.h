@@ -29,6 +29,7 @@
 #endif
 //#include "nmea2k.h"
 #include "nmea2000.h"
+#include "nmea2000_deviceinfo.h"
 #include "images.h"
 
 //#include "stm32f767_fi-din_lcd.h"

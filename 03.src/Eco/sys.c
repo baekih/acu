@@ -358,7 +358,7 @@ void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
 
     while(HAL_CAN_IsTxMessagePending(&hcan1, g_TxCan[txCanBufferCount].TxMailbox) == 1)
      {
-       HAL_Delay(1);
+        osDelay(1);
 
        if(count-- <= 0)
        {

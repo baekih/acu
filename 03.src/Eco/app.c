@@ -12,8 +12,34 @@
 
 void runEcoTaskMain(void *argument)
 {
-    initFlashData();
+    int32_t tick;
 
+    initFlashData();
+    NMEA2000_Open();
+
+    tick = osKernelGetTickCount() - osKernelGetTickCount()%10;
+
+    for(;;)
+    {
+        tick += 10;
+
+        if ((osKernelGetTickCount() - mLast_Send_Address_Claim_Time) > 250)
+        {
+            mAddress_Claiming = false;
+        }
+
+        if(tick%3000 == 0)
+        {
+            NMEA2000_126993_heartbeat();
+            printf("NMEA2000_126993_heartbeat\n");
+        }
+
+        osDelayUntil(tick);
+    }
+}
+
+void runEcoTaskTGFX(void *argument)
+{
     touchgfx_taskEntry();
 }
 
@@ -35,8 +61,6 @@ void runEcoTaskKey(void *argument)
         osDelay(1000);
     }
 }
-
-
 
 void runEcoTaskUART(void *argument)
 {
@@ -171,16 +195,6 @@ void runEcoTaskNMEA2KTx(void *argument)
     }
 
 #endif
-}
-
-void runEcoTaskTest(void *argument)
-{
-    for(;;)
-    {
-        NMEA2000_126993_heartbeat();
-        printf("NMEA2000_126993_heartbeat\n");
-        osDelay(3000);
-    }
 }
 
 #endif // ECO_APP
