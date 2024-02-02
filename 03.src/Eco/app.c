@@ -31,7 +31,7 @@ void runEcoTaskMain(void *argument)
         if(tick%3000 == 0)
         {
             NMEA2000_126993_heartbeat();
-            printf("NMEA2000_126993_heartbeat\n");
+            printf("[%08ld]NMEA2000_126993_heartbeat() called \n", tick);
         }
 
         osDelayUntil(tick);

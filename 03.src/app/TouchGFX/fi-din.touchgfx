@@ -94,7 +94,7 @@
             "X": 244,
             "Y": 359,
             "Width": 85,
-            "Height": 45,
+            "Height": 47,
             "TextId": "__SingleUse_IOE7",
             "TextRotation": "0",
             "Color": {
@@ -115,7 +115,7 @@
             "X": 420,
             "Y": 425,
             "Width": 33,
-            "Height": 37,
+            "Height": 35,
             "TextId": "__SingleUse_A4E5",
             "TextRotation": "0",
             "Color": {
@@ -190,7 +190,7 @@
             "X": 744,
             "Y": 22,
             "Width": 48,
-            "Height": 37,
+            "Height": 35,
             "TextId": "__SingleUse_WU69",
             "TextRotation": "0",
             "Color": {
@@ -206,7 +206,7 @@
             "X": 602,
             "Y": 22,
             "Width": 80,
-            "Height": 37,
+            "Height": 35,
             "TextId": "__SingleUse_P8X0",
             "TextRotation": "0",
             "Color": {
@@ -242,7 +242,7 @@
             "X": 753,
             "Y": 256,
             "Width": 10,
-            "Height": 37,
+            "Height": 35,
             "TextId": "__SingleUse_A6IN",
             "TextRotation": "0",
             "Color": {
@@ -258,7 +258,7 @@
             "X": 743,
             "Y": 253,
             "Width": 49,
-            "Height": 37,
+            "Height": 35,
             "TextId": "__SingleUse_ERTP",
             "TextRotation": "0",
             "Color": {
@@ -274,7 +274,7 @@
             "X": 601,
             "Y": 253,
             "Width": 109,
-            "Height": 37,
+            "Height": 35,
             "TextId": "__SingleUse_TOHO",
             "TextRotation": "0",
             "Color": {
