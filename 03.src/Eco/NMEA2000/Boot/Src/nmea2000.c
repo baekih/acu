@@ -33,7 +33,6 @@ PGNCounter g_PGNCount[255];	// Rx array
 
 uint32_t RxCanReceiveCount = 0;
 
-uint32_t BROADCAST_DESTINATION_ADDR	= 255;
 uint32_t MAX_HIGH_SOURCE_ADDR = 252;
 uint32_t ADDRESS_CLAIM_FAIL_ADDR = 254;
 uint32_t localSourceAddr = 0;
@@ -45,6 +44,20 @@ uint32_t mDataLastReceivedTime = 0;
 
 uint32_t MaxPGNSequenceCounters = 0;
 uint32_t *PGNSequenceCounters = 0;
+
+uint8_t g_hwver_str[7];
+uint8_t g_bootver_str[7];
+uint8_t g_appver_str[7];
+
+uint8_t uniquenum[3];
+
+uint8_t nmea2000_addr = 100;
+
+uint8_t DevInstance = 0;
+uint8_t SysInstance = 0;
+
+uint8_t g_switch_bank[6];
+uint8_t g_lcd_img_idx;
 
 /* Private functions ---------------------------------------------------------*/
 void NMEA2000_Open()
@@ -114,7 +127,7 @@ void NMEA2000_SendParseMessages(uint32_t canid, uint32_t len, uint8_t *buf, uint
 	}
 
 	if (isFastPacket == 0) {
-		CAN1_SendFrame(canid, len, buf);
+		CAN1_SendFrame(canid, buf, len);
 	} else if (isFastPacket == 1) {
 //		printf(" [get PGN = %ld] !!\r\n", CanID_NmeaPGN(canid));
 
@@ -149,7 +162,7 @@ void NMEA2000_SendParseMessages(uint32_t canid, uint32_t len, uint8_t *buf, uint
 			}
 
 			osDelay(1);
-			CAN1_SendFrame(canid, 8, FastPacket);
+			CAN1_SendFrame(canid, FastPacket, 8);
 		}
 	}
 
@@ -170,17 +183,17 @@ void ProcessNMEA2000MultiPacket(uint32_t proc_pgn_number, uint32_t pgnid, uint8_
 {
 //  printf("%s:%d Enter...\r\n",__FUNCTION__,__LINE__);
 
-  switch(proc_pgn_number)
-	{
-  case 126208:
-    PGN126208_GetFieldValue(pgnid, buf, messagetype);
-    PGN126208_ProcessNameField(pgnid, buf, messagetype);
-    break;
-  case 126720:
-    PGN126720_GetFieldValue(pgnid, buf, messagetype);
-    PGN126720_ProcessNameField(pgnid, buf, messagetype);
-    break;
-	}
+    switch(proc_pgn_number)
+    {
+    case 126208:
+        PGN126208_GetFieldValue(pgnid, buf, messagetype);
+        PGN126208_ProcessNameField(pgnid, buf, messagetype);
+        break;
+    case 126720:
+        PGN126720_GetFieldValue(pgnid, buf, messagetype);
+        PGN126720_ProcessNameField(pgnid, buf, messagetype);
+        break;
+    }
 }
 
 void ProcessNMEA2000SinglePacket(uint32_t pgnid, uint8_t len, uint8_t *buf)
@@ -527,7 +540,7 @@ uint32_t CheckKnownMessage(uint32_t PGN, uint8_t SystemMessage, uint8_t FastPack
 }
 /* ************************************************************************** */
 
-void NMEA2000_ReceiveParseMessages(uint32_t canid, uint8_t len, uint8_t *buf)
+void NMEA2000_ReceiveParseMessages(uint32_t canid, uint8_t *buf, uint8_t len)
 {
 	uint32_t ReceiveParsePGN = 0;
 	uint8_t FastPacket = false;

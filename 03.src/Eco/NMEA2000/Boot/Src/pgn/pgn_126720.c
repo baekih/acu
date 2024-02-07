@@ -138,7 +138,6 @@ void PGN126720_SetNameField(uint32_t _ProprietaryID, uint32_t messagetype)
 
 void PGN126720_ProcessNameField(uint32_t pgnid, uint8_t *buf, uint32_t messagetype)
 {
-  uint32_t ret;
 //  printf("%s:%d Enter... MsgType[%ld]\r\n",__FUNCTION__,__LINE__, messagetype);
   InitializeSendNameBitPosition();
   InitializeSendNameField();

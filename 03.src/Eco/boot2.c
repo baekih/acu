@@ -10,6 +10,12 @@
 
 #include "eco.h"
 
+uint32_t g_access_level;
+uint32_t g_access_seed;
+uint32_t boot_delay_time = DEFAULT_BOOT_DELAY_MS;
+uint8_t g_flash_source_addr = 255;
+bool    g_nvic_reset = false;
+
 void test_proc(void)
 {
     uint32_t timer_sec_1 = 0;
@@ -162,7 +168,7 @@ void test_proc(void)
             timer_sec_1 += 3;
 
             printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
-            Pgn126993HeartBeat();
+//            NMEA2000_126993_heartbeat();
         }
 
         osDelayUntil(tick);
@@ -236,6 +242,7 @@ void runEcoTaskFlash(void *argument)
 
 void runEcoTaskNMEA2KRx(void *argument)
 {
+#if 0
     RxProtocol RxPacket;
     uint32_t RxPGN;
     uint8_t  RxPF;
@@ -274,10 +281,36 @@ void runEcoTaskNMEA2KRx(void *argument)
             NMEA2KProc(RxPacket);
         }
     }
+#else
+    int remain = 0;
+
+    for(;;)
+    {
+
+        if(rxCanLastIndex >= rxCanFirstIndex)
+        {
+            remain =  rxCanLastIndex - rxCanFirstIndex;
+        }
+        else
+        {
+            remain = (CAN_RX_BUF_MAX - rxCanFirstIndex);
+            remain += rxCanLastIndex;
+        }
+
+        if(remain != 0){
+            NMEA2000_ReceiveParseMessages(g_RxCan[rxCanFirstIndex].canid, g_RxCan[rxCanFirstIndex].dat, g_RxCan[rxCanFirstIndex].len);
+
+            rxCanFirstIndex++;
+            rxCanFirstIndex %= CAN_RX_BUF_MAX;
+        }
+    }
+
+#endif
 }
 
 void runEcoTaskNMEA2KTx(void *argument)
 {
+#if 0
     TxProtocol TxPacket;
     CAN_TxHeaderTypeDef txhdr = {0, 0, CAN_ID_EXT, 0, DISABLE};
     uint8_t txdat[8];
@@ -300,6 +333,13 @@ void runEcoTaskNMEA2KTx(void *argument)
             osDelay(1);
         }
     }
+#else
+    for(;;)
+    {
+        osDelay(1);
+    }
+
+#endif
 }
 
 #endif // ECO_BOOT2

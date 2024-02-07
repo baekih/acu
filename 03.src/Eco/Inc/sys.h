@@ -183,13 +183,32 @@ enum{
     FLASHIF_PROTECTION_RDPENABLED   = 0x4,
 };
 
+typedef struct _IOSAddrClame
+{
+    uint8_t DevInstance;
+    uint8_t SysInstance;
+} ISOAdrClame  __attribute__((aligned(1)));
+
 typedef struct _common_dat
 {
-    uint32_t lcd_bl;
-    uint32_t bzr_vol;
     uint32_t jmp_adr;
+
+    uint16_t bootver;
+    uint16_t appver;
+
+    uint8_t  uniquenum[3];
+    uint8_t  rsv1;
+
+    ISOAdrClame adrclame;
+    uint8_t  rsv2[2];
+
+    uint8_t  lcd_bl;
+    uint8_t  bzr_vol;
+    uint8_t  nmea2k_adr;
+    uint8_t  isUpdateFlashIdle;
+
     uint32_t crc32;
-} common_dat  __attribute__((aligned(4)));
+} common_dat __attribute__((aligned(1)));
 
 typedef struct _key_stat
 {
