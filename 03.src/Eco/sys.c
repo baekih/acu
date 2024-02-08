@@ -115,13 +115,23 @@ bool getTS(uint16_t* x, uint16_t* y)
         break;
     }
 
-
     return true;
 }
 
-uint32_t doFlashErase(uint32_t sector)
+uint32_t doFlashErase(uint32_t addr)
 {
     uint32_t SectorError;
+    uint32_t sector;
+
+    if     ((addr < ADDR_FLASH_SECTOR_1) && (addr >= ADDR_FLASH_SECTOR_0)) sector = FLASH_SECTOR_0;
+    else if((addr < ADDR_FLASH_SECTOR_2) && (addr >= ADDR_FLASH_SECTOR_1)) sector = FLASH_SECTOR_1;
+    else if((addr < ADDR_FLASH_SECTOR_3) && (addr >= ADDR_FLASH_SECTOR_2)) sector = FLASH_SECTOR_2;
+    else if((addr < ADDR_FLASH_SECTOR_4) && (addr >= ADDR_FLASH_SECTOR_3)) sector = FLASH_SECTOR_3;
+    else if((addr < ADDR_FLASH_SECTOR_5) && (addr >= ADDR_FLASH_SECTOR_4)) sector = FLASH_SECTOR_4;
+    else if((addr < ADDR_FLASH_SECTOR_6) && (addr >= ADDR_FLASH_SECTOR_5)) sector = FLASH_SECTOR_5;
+    else if((addr < ADDR_FLASH_SECTOR_7) && (addr >= ADDR_FLASH_SECTOR_6)) sector = FLASH_SECTOR_6;
+    else if(addr >= ADDR_FLASH_SECTOR_7) sector = FLASH_SECTOR_7;
+
     FLASH_EraseInitTypeDef pEraseInit =
     {
         .TypeErase = TYPEERASE_SECTORS,
@@ -150,7 +160,12 @@ uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
 {
     uint32_t i = 0;
 
-    for (i = 0; (i < len) && (addr <= (USER_FLASH_END_ADDRESS-4)); i++)
+    if(!((FLASH_DATA_ADDR <= addr)&&(addr < (FLASH_DATA_ADDR + 32*1024))))
+    {
+        return (FLASHIF_WRITING_ERROR);
+    }
+
+    for (i = 0; i < len; i++)
     {
       /* Device voltage range supposed to be [2.7V to 3.6V], the operation will
          be done by word */

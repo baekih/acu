@@ -28,6 +28,15 @@ extern "C" {
 #define FLASH_SECTOR_NUMBER       ((uint32_t)(ABS_RETURN(APP_START_ADDR,FLASH_START_BANK1))>>12)
 #define FLASH_PROTECTED_SECTORS   (~(uint32_t)((1 << FLASH_SECTOR_NUMBER) - 1))
 
+#define FLASH_SECTOR_0           ((uint32_t)0U) /*!< Sector Number 0   */
+#define FLASH_SECTOR_1           ((uint32_t)1U) /*!< Sector Number 1   */
+#define FLASH_SECTOR_2           ((uint32_t)2U) /*!< Sector Number 2   */
+#define FLASH_SECTOR_3           ((uint32_t)3U) /*!< Sector Number 3   */
+#define FLASH_SECTOR_4           ((uint32_t)4U) /*!< Sector Number 4   */
+#define FLASH_SECTOR_5           ((uint32_t)5U) /*!< Sector Number 5   */
+#define FLASH_SECTOR_6           ((uint32_t)6U) /*!< Sector Number 6   */
+#define FLASH_SECTOR_7           ((uint32_t)7U) /*!< Sector Number 7   */
+
 #define ADDR_FLASH_SECTOR_0     ((uint32_t)0x08000000) /* Base @ of Sector 0, 32 Kbyte */
 #define ADDR_FLASH_SECTOR_1     ((uint32_t)0x08008000) /* Base @ of Sector 1, 32 Kbyte */
 #define ADDR_FLASH_SECTOR_2     ((uint32_t)0x08010000) /* Base @ of Sector 2, 32 Kbyte */
@@ -36,14 +45,6 @@ extern "C" {
 #define ADDR_FLASH_SECTOR_5     ((uint32_t)0x08040000) /* Base @ of Sector 5, 256 Kbyte */
 #define ADDR_FLASH_SECTOR_6     ((uint32_t)0x08080000) /* Base @ of Sector 6, 256 Kbyte */
 #define ADDR_FLASH_SECTOR_7     ((uint32_t)0x080C0000) /* Base @ of Sector 7, 256 Kbyte */
-
-/* End of the Flash address */
-#define USER_FLASH_END_ADDRESS      (uint32_t)(0x08100000 - 1)
-/* Define the user application size */
-#define USER_FLASH_SIZE   (USER_FLASH_END_ADDRESS - APPLICATION_ADDRESS + 1)
-
-/* Define the address from where user application will be loaded.*/
-//#define FLASH_DATA_SECTOR       FLASH_SECTOR_3
 
 /* Define bitmap representing user flash area that could be write protected (check restricted to pages 8-39). */
 #define FLASH_SECTOR_TO_BE_PROTECTED (OB_WRP_SECTOR_0 | OB_WRP_SECTOR_1 | OB_WRP_SECTOR_2 | OB_WRP_SECTOR_3 |\
