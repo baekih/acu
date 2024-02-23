@@ -192,22 +192,23 @@ typedef struct _IOSAddrClame
 
 typedef struct _common_dat
 {
+// 0byte
     uint32_t jmp_adr;
-
+// 4byte
     uint16_t bootver;
     uint16_t appver;
-
+// 8byte
     uint8_t  uniquenum[3];
     uint8_t  rsv1;
-
+// 12byte
     ISOAdrClame adrclame;
     uint8_t  rsv2[2];
-
+// 16byte
     uint8_t  lcd_bl;
     uint8_t  bzr_vol;
     uint8_t  nmea2k_adr;
     uint8_t  isUpdateFlashIdle;
-
+// 20byte
     uint32_t crc32;
 } common_dat __attribute__((aligned(1)));
 
@@ -232,8 +233,8 @@ extern uint8_t g_board_id;
 extern key_stat g_key_stat[KEY_MAX_IDX];
 
 void printk(const char* pstr, ...);
-uint32_t doFlashErase(uint32_t);
-uint32_t doFlashWrite(uint32_t, uint32_t*, uint32_t);
+uint32_t eraseFlash(uint32_t);
+uint32_t writeFlash(uint32_t, uint32_t*, uint32_t);
 
 bool getKeyPending(uint8_t idx);
 void initTS(void);

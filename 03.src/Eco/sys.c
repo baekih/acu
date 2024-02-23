@@ -6,7 +6,7 @@
  */
 #include "eco.h"
 
-const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .crc32 = 0x3f1b1b2b};
+const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .rsv1 = 0, .rsv2 = {0, 0}};
 common_dat g_common_dat;
 key_stat g_key_stat[KEY_MAX_IDX];
 uint32_t sys_lcd_width;
@@ -118,7 +118,7 @@ bool getTS(uint16_t* x, uint16_t* y)
     return true;
 }
 
-uint32_t doFlashErase(uint32_t addr)
+uint32_t eraseFlash(uint32_t addr)
 {
     uint32_t SectorError;
     uint32_t sector;
@@ -156,7 +156,7 @@ uint32_t doFlashErase(uint32_t addr)
     return (FLASHIF_OK);
 }
 
-uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
+uint32_t writeFlash(uint32_t addr, uint32_t* pdata, uint32_t len)
 {
     uint32_t i = 0;
 
@@ -453,35 +453,41 @@ void setLCDBL(uint8_t lcd_bl)
 void initFlashData(void)
 {
     common_dat *pcommon_dat = (common_dat*)FLASH_DATA_ADDR;
-    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)pcommon_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
+    uint32_t crc32 = HAL_CRC_Calculate(&hcrc, (uint32_t *)pcommon_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
 
-    if(pcommon_dat->crc32 != crc32_val)
+    // if no common data exist or invalid value, reset common data to default value.
+    if(pcommon_dat->crc32 != crc32)
     {
         g_common_dat = g_common_dat_def;
+        g_common_dat.crc32 = crc32;
         printf("%s() Flash re-init with def val. lcd_bl[%d] bzr_vol[%d]\n",__func__, g_common_dat.lcd_bl, g_common_dat.bzr_vol);
-        doFlashErase(FLASH_DATA_ADDR);
-        doFlashWrite(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
+        eraseFlash(FLASH_DATA_ADDR);
+        writeFlash(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
     }
     else
     {
         g_common_dat = *pcommon_dat;
     }
 
-    printf("Init common_dat[%d:%d:0x%08x:0x%08x]\n", g_common_dat.bzr_vol, g_common_dat.lcd_bl, g_common_dat.jmp_adr, g_common_dat.crc32);
+    printf("Init common_dat[%d:%d:0x%08x:0x%08x]\n",
+           g_common_dat.bzr_vol,
+           g_common_dat.lcd_bl,
+           g_common_dat.jmp_adr,
+           g_common_dat.crc32);
 
     return;
 }
 
 void updateFlashData(void)
 {
-    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
+    uint32_t crc32 = HAL_CRC_Calculate(&hcrc, (uint32_t *)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
 
-    if(g_common_dat.crc32 != crc32_val)
+    if(g_common_dat.crc32 != crc32)
     {
         printf("%s() Flash update lcd_bl[%d] bzr_vol[%d]\n", __func__, g_common_dat.lcd_bl, g_common_dat.bzr_vol);
-        g_common_dat.crc32 = crc32_val;
-        doFlashErase(FLASH_DATA_ADDR);
-        doFlashWrite(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
+        g_common_dat.crc32 = crc32;
+        eraseFlash(FLASH_DATA_ADDR);
+        writeFlash(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
     }
 
     return;
