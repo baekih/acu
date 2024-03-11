@@ -32,11 +32,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Eco</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>Eco/BSP</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -47,7 +42,7 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Eco/NMEA2000</name>
+			<name>Eco/NMEA2K</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -112,6 +107,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/images.h</locationURI>
 		</link>
 		<link>
+			<name>Eco/Inc/nmea2k.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/nmea2k.h</locationURI>
+		</link>
+		<link>
 			<name>Eco/Inc/printf.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/printf.h</locationURI>
@@ -122,9 +122,14 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/sys.h</locationURI>
 		</link>
 		<link>
-			<name>Eco/NMEA2000/Boot</name>
+			<name>Eco/NMEA2K/Inc</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Eco/NMEA2K/nmea2k.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2K/nmea2k.c</locationURI>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts</name>
@@ -162,14 +167,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/fi-din/stm32f767_fi-din_sdram.h</locationURI>
 		</link>
 		<link>
-			<name>Eco/NMEA2000/Boot/Inc</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
+			<name>Eco/NMEA2K/Inc/nmea2k.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2K/Inc/nmea2k.h</locationURI>
 		</link>
 		<link>
 			<name>Eco/Res/Fonts/Release_Notes.html</name>
@@ -315,196 +315,6 @@
 			<name>Eco/BSP/Components/Common/tsensor.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/tsensor.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/fastpacketdata.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/fastpacketdata.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/nmea2000.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/nmea2000.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/nmea2000_deviceinfo.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/nmea2000_deviceinfo.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/nmea2000_namebase.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/nmea2000_namebase.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/nmea2000_pgnbase.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/nmea2000_pgnbase.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/fastpacketdata.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/fastpacketdata.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/nmea2000.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/nmea2000.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/nmea2000_deviceinfo.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/nmea2000_deviceinfo.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/nmea2000_namebase.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/nmea2000_namebase.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/nmea2000_pgnbase.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/nmea2000_pgnbase.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_059392.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_059392.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_059904.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_059904.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_060928.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_060928.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_065285.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_065285.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_065286.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_065286.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_065287.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_065287.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_126208.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_126208.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_126208_acknowledge.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_126208_acknowledge.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_126208_command.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_126208_command.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_126208_request.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_126208_request.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_126464.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_126464.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_126720.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_126720.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Inc/pgn/pgn_126996.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Inc/pgn/pgn_126996.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_059392.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_059392.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_059904.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_059904.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_060928.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_060928.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_065285.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_065285.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_065286.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_065286.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_065287.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_065287.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_126208.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_126208.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_126208_acknowledge.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_126208_acknowledge.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_126208_command.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_126208_command.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_126208_request.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_126208_request.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_126464.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_126464.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_126720.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_126720.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/Boot/Src/pgn/pgn_126996.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/Boot/Src/pgn/pgn_126996.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

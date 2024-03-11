@@ -8,6 +8,10 @@
 #ifndef APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_
 #define APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MFG_CODE_FURUNO                     (1855UL)
 #define MFG_CODE_AIRMAR                     (135UL)
 
@@ -227,9 +231,21 @@
 #define BROADCAST_DEST_ADDR                     (255U)
 #define NMEA2K_THIS_ADDR                        (110U)
 
-#define M_PI                                3.1415926535
-
 #pragma pack(push,1)
+typedef struct __RxProtocol
+{
+    uint32_t canid;
+    uint8_t  dat[8];
+    uint8_t  len;
+} RxProtocol ;
+
+typedef struct __TxProtocol
+{
+    uint32_t canid;
+    uint8_t  dat[8];
+    uint8_t  len;
+} TxProtocol ;
+
 typedef struct __fastpacket
 {
     uint8_t  status;
@@ -335,4 +351,7 @@ int32_t Pgn126993HeartBeat(void);
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_ */

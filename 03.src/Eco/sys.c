@@ -121,24 +121,22 @@ bool getTS(uint16_t* x, uint16_t* y)
 uint32_t eraseFlash(uint32_t addr)
 {
     uint32_t SectorError;
-    uint32_t sector;
 
-    if     ((addr < ADDR_FLASH_SECTOR_1) && (addr >= ADDR_FLASH_SECTOR_0)) sector = FLASH_SECTOR_0;
-    else if((addr < ADDR_FLASH_SECTOR_2) && (addr >= ADDR_FLASH_SECTOR_1)) sector = FLASH_SECTOR_1;
-    else if((addr < ADDR_FLASH_SECTOR_3) && (addr >= ADDR_FLASH_SECTOR_2)) sector = FLASH_SECTOR_2;
-    else if((addr < ADDR_FLASH_SECTOR_4) && (addr >= ADDR_FLASH_SECTOR_3)) sector = FLASH_SECTOR_3;
-    else if((addr < ADDR_FLASH_SECTOR_5) && (addr >= ADDR_FLASH_SECTOR_4)) sector = FLASH_SECTOR_4;
-    else if((addr < ADDR_FLASH_SECTOR_6) && (addr >= ADDR_FLASH_SECTOR_5)) sector = FLASH_SECTOR_5;
-    else if((addr < ADDR_FLASH_SECTOR_7) && (addr >= ADDR_FLASH_SECTOR_6)) sector = FLASH_SECTOR_6;
-    else if(addr >= ADDR_FLASH_SECTOR_7) sector = FLASH_SECTOR_7;
-
-    FLASH_EraseInitTypeDef pEraseInit =
+    FLASH_EraseInitTypeDef EraseInit =
     {
         .TypeErase = TYPEERASE_SECTORS,
-        .Sector = sector,
         .NbSectors = 1,
         .VoltageRange = VOLTAGE_RANGE_3
     };
+
+    if     ((addr < ADDR_FLASH_SECTOR_1) && (addr >= ADDR_FLASH_SECTOR_0)) EraseInit.Sector = FLASH_SECTOR_0;
+    else if((addr < ADDR_FLASH_SECTOR_2) && (addr >= ADDR_FLASH_SECTOR_1)) EraseInit.Sector = FLASH_SECTOR_1;
+    else if((addr < ADDR_FLASH_SECTOR_3) && (addr >= ADDR_FLASH_SECTOR_2)) EraseInit.Sector = FLASH_SECTOR_2;
+    else if((addr < ADDR_FLASH_SECTOR_4) && (addr >= ADDR_FLASH_SECTOR_3)) EraseInit.Sector = FLASH_SECTOR_3;
+    else if((addr < ADDR_FLASH_SECTOR_5) && (addr >= ADDR_FLASH_SECTOR_4)) EraseInit.Sector = FLASH_SECTOR_4;
+    else if((addr < ADDR_FLASH_SECTOR_6) && (addr >= ADDR_FLASH_SECTOR_5)) EraseInit.Sector = FLASH_SECTOR_5;
+    else if((addr < ADDR_FLASH_SECTOR_7) && (addr >= ADDR_FLASH_SECTOR_6)) EraseInit.Sector = FLASH_SECTOR_6;
+    else if(addr >= ADDR_FLASH_SECTOR_7) EraseInit.Sector = FLASH_SECTOR_7;
 
     /* Unlock the Flash to enable the flash control register access *************/
     HAL_FLASH_Unlock();
@@ -147,7 +145,7 @@ uint32_t eraseFlash(uint32_t addr)
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP    | FLASH_FLAG_OPERR  | FLASH_FLAG_WRPERR |
                            FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_ERSERR);
 
-    if (HAL_FLASHEx_Erase(&pEraseInit, &SectorError) != HAL_OK)
+    if (HAL_FLASHEx_Erase(&EraseInit, &SectorError) != HAL_OK)
     {
        /* Error occurred while page erase */
        return (FLASHIF_ERASE_ERROR);
@@ -365,42 +363,6 @@ void InitQSPI(void)
     if (QSPI_DummyCyclesCfg() != QSPI_OK) Error_Handler();
 
     QSPI_EnableMemoryMappedMode();
-}
-
-void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
-{
-    uint16_t count = 100;
-
-    while(HAL_CAN_IsTxMessagePending(&hcan1, g_TxCan[txCanBufferCount].TxMailbox) == 1)
-     {
-        osDelay(1);
-
-       if(count-- <= 0)
-       {
-         printf("HAL_CAN_IsTxMessagePending over 100ms !!\r\n");
-         break;
-       }
-     }
-
-#if 0
-    for (uint8_t i = 0; i < 8; i++){
-      printf("%02X ", buf[i]);
-    }
-    printf("\n");
-#endif
-
-    g_TxCan[txCanBufferCount].TxHeader.ExtId = rawCanId;
-    g_TxCan[txCanBufferCount].TxHeader.IDE = CAN_ID_EXT;
-    g_TxCan[txCanBufferCount].TxHeader.DLC = len;
-
-    memcpy(g_TxCan[txCanBufferCount].TxData, buf, len);
-
-    if(HAL_CAN_AddTxMessage(&hcan1, &g_TxCan[txCanBufferCount].TxHeader,
-            g_TxCan[txCanBufferCount].TxData, &g_TxCan[txCanBufferCount].TxMailbox) != HAL_OK)
-    {
-        printf(" Error HAL_CAN_AddTxMessage hcan1 !!\r\n");
-        osDelay(1);
-    }
 }
 
 bool getKeyPending(uint8_t idx)
@@ -645,9 +607,9 @@ void setLCDTestImage(uint8_t img_sel)
     }
 }
 
-#if 0
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
+#if defined (ECO_BOOT2)
 //    printf("%s() called...\r\n",__FUNCTION__);
     CAN_RxHeaderTypeDef RxHeader;
     RxProtocol RxPacket;
@@ -662,10 +624,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     {
         if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
     }
-}
 #else
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
-{
 //    printf("%s() called...\r\n",__FUNCTION__);
     CAN_RxHeaderTypeDef RxHeader;
     RxProtocol RxPacket;
@@ -692,6 +651,44 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     {
         rxCanFirstIndex++;
         rxCanFirstIndex %= CAN_RX_BUF_MAX;
+    }
+#endif
+}
+
+#if !defined (ECO_BOOT2)
+void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
+{
+    uint16_t count = 100;
+
+    while(HAL_CAN_IsTxMessagePending(&hcan1, g_TxCan[txCanBufferCount].TxMailbox) == 1)
+     {
+        osDelay(1);
+
+       if(count-- <= 0)
+       {
+         printf("HAL_CAN_IsTxMessagePending over 100ms !!\r\n");
+         break;
+       }
+     }
+
+#if 0
+    for (uint8_t i = 0; i < 8; i++){
+      printf("%02X ", buf[i]);
+    }
+    printf("\n");
+#endif
+
+    g_TxCan[txCanBufferCount].TxHeader.ExtId = rawCanId;
+    g_TxCan[txCanBufferCount].TxHeader.IDE = CAN_ID_EXT;
+    g_TxCan[txCanBufferCount].TxHeader.DLC = len;
+
+    memcpy(g_TxCan[txCanBufferCount].TxData, buf, len);
+
+    if(HAL_CAN_AddTxMessage(&hcan1, &g_TxCan[txCanBufferCount].TxHeader,
+            g_TxCan[txCanBufferCount].TxData, &g_TxCan[txCanBufferCount].TxMailbox) != HAL_OK)
+    {
+        printf(" Error HAL_CAN_AddTxMessage hcan1 !!\r\n");
+        osDelay(1);
     }
 }
 #endif

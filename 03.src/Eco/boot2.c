@@ -168,7 +168,7 @@ void test_proc(void)
             timer_sec_1 += 3;
 
             printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
-//            NMEA2000_126993_heartbeat();
+            Pgn126993HeartBeat();
         }
 
         osDelayUntil(tick);
@@ -242,7 +242,7 @@ void runEcoTaskFlash(void *argument)
 
 void runEcoTaskNMEA2KRx(void *argument)
 {
-#if 0
+#if defined (ECO_BOOT2)
     RxProtocol RxPacket;
     uint32_t RxPGN;
     uint8_t  RxPF;
@@ -310,7 +310,7 @@ void runEcoTaskNMEA2KRx(void *argument)
 
 void runEcoTaskNMEA2KTx(void *argument)
 {
-#if 0
+#if defined (ECO_BOOT2)
     TxProtocol TxPacket;
     CAN_TxHeaderTypeDef txhdr = {0, 0, CAN_ID_EXT, 0, DISABLE};
     uint8_t txdat[8];

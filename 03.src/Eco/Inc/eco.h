@@ -24,12 +24,12 @@
 #include "common.h"
 #if defined (ECO_APP)
 #include "app.h"
-#elif defined(ECO_BOOT2)
-#include "boot2.h"
-#endif
-//#include "nmea2k.h"
 #include "nmea2000.h"
 #include "nmea2000_deviceinfo.h"
+#elif defined(ECO_BOOT2)
+#include "boot2.h"
+#include "nmea2k.h"
+#endif
 #include "images.h"
 
 //#include "stm32f767_fi-din_lcd.h"
