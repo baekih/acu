@@ -231,6 +231,8 @@ extern "C" {
 #define BROADCAST_DEST_ADDR                     (255U)
 #define NMEA2K_THIS_ADDR                        (110U)
 
+#define FASTDAT_LEN_TRUNC(LEN) ((LEN+1)%7 ? ((LEN+1)/7)*7 + 7 : ((LEN+1)/7)*7)
+
 #pragma pack(push,1)
 typedef struct __RxProtocol
 {
@@ -335,13 +337,20 @@ typedef struct _pgn126996_dat
 } pgn126996_dat ;
 #pragma pack(pop)
 
-#define FASTDAT_LEN_TRUNC(LEN) ((LEN+1)%7 ? ((LEN+1)/7)*7 + 7 : ((LEN+1)/7)*7)
+extern fastpacket g_fastpacket[FASTPACKET_ARRAY_MAX];
+extern multipacket g_multipacket;
 
+uint32_t getPGN(uint32_t canid);
 uint8_t  getRxPF(uint32_t canid);
 uint8_t  getRxPS(uint32_t canid);
+uint8_t  getRxDA(uint32_t canid);
 uint8_t  getRxSA(uint32_t canid);
 uint32_t getRxPGN(uint32_t canid);
 bool     IsKnownPGN(uint32_t PGN);
+
+int32_t opFastpktQueuePut(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc);
+int32_t opFastpacketBuildup(RxProtocol *prxpkt);
+int32_t opChkMultiPktRunning(RxProtocol *prxpkt);
 
 void NMEA2KProc(RxProtocol rxpacket);
 void NMEA2KInit(void);
