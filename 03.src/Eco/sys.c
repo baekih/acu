@@ -8,6 +8,10 @@
 
 const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .rsv1 = 0, .rsv2 = {0, 0}};
 common_dat g_common_dat;
+
+uint8_t g_switch_bank[6];
+uint8_t g_lcd_img_idx = 0;
+
 key_stat g_key_stat[KEY_MAX_IDX];
 uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
@@ -605,6 +609,29 @@ void setLCDTestImage(uint8_t img_sel)
 
         break;
     }
+}
+
+int32_t opSwitchBankControl(uint8_t *prxdat)
+{
+    g_common_dat.bzr_vol = *prxdat;
+    g_switch_bank[0] = (*(prxdat+1)>>0) & 0x03;
+    g_switch_bank[1] = (*(prxdat+1)>>2) & 0x03;
+    g_switch_bank[2] = (*(prxdat+1)>>4) & 0x03;
+    g_switch_bank[3] = (*(prxdat+1)>>6) & 0x03;
+    g_switch_bank[4] = (*(prxdat+2)>>0) & 0x03;
+    g_switch_bank[5] = (*(prxdat+2)>>2) & 0x03;
+
+    printf("bzr_vol[%02d] SwitchBank[%d:%d:%d:%d:%d:%d]\n", g_common_dat.bzr_vol,
+           g_switch_bank[0],g_switch_bank[1],g_switch_bank[2],g_switch_bank[3],g_switch_bank[4],g_switch_bank[5]);
+
+    return 0;
+}
+
+int32_t opLCDBrightness(uint8_t *prxdat)
+{
+    g_common_dat.lcd_bl = *(prxdat+4);
+
+    return 0;
 }
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)

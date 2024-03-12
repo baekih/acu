@@ -231,11 +231,15 @@ extern const common_dat g_common_dat_def;
 extern common_dat g_common_dat;
 extern uint8_t g_board_id;
 extern key_stat g_key_stat[KEY_MAX_IDX];
+extern uint8_t g_switch_bank[6];
+extern uint8_t g_lcd_img_idx;
 
 void printk(const char* pstr, ...);
 uint32_t eraseFlash(uint32_t);
 uint32_t writeFlash(uint32_t, uint32_t*, uint32_t);
 
+int32_t opSwitchBankControl(uint8_t *prxdat);
+int32_t opLCDBrightness(uint8_t *prxdat);
 bool getKeyPending(uint8_t idx);
 void initTS(void);
 bool getTS(uint16_t*, uint16_t*);

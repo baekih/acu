@@ -144,3 +144,142 @@ int32_t opChkMultiPktRunning(RxProtocol *prxpkt)
 
     return 0;
 }
+
+int32_t Pgn060416CTSPostProc(void)
+{
+    TxProtocol txpkt =
+    {
+        (PGN060416_CTS_PRI << 26) | ((PGN060416_NUM + g_multipacket.SA) << 8) | (NMEA2K_THIS_ADDR << 0),
+        {PGN060416_CTS_CTRL, 0, 0, 0xFF, 0xFF, 0, 0, 0},
+        sizeof(uint64_t)
+    };
+
+    // TX CTS frame.
+    txpkt.dat[1] = g_multipacket.TotalFrmNum;
+    txpkt.dat[2] = g_multipacket.CurrFrmNum;        // next frame number wish to be sent.
+    memcpy(&txpkt.dat[5], &g_multipacket.pgn, 3);
+
+    EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
+    return 0;
+}
+
+int32_t Pgn060416EOMPostProc(void)
+{
+    TxProtocol txpkt =
+    {
+        (PGN060416_EOM_PRI << 26) | ((PGN060416_NUM + g_multipacket.SA) << 8) | (NMEA2K_THIS_ADDR << 0),
+        {PGN060416_EOM_CTRL, 0, 0, 0xFF, 0xFF, 0, 0, 0},
+        sizeof(uint64_t)
+    };
+
+    // TX CTS frame.
+    txpkt.dat[1] = g_multipacket.TotalByteLen;
+    txpkt.dat[2] = g_multipacket.CurrFrmNum;
+    memcpy(&txpkt.dat[5], &g_multipacket.pgn, 3);
+
+    EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
+
+    return 0;
+}
+
+int32_t Pgn060160MultiPktDataRx(RxProtocol rxpkt)
+{
+//    printf("%s() Enter\n",__FUNCTION__);
+    int32_t ret;
+    if(0 != (ret = opChkMultiPktRunning(&rxpkt))){printf("ret[%ld]\n", ret); return -1;}
+
+    if(g_multipacket.status != MULTIPACKET_BUF_MERGING) return -2;
+
+    memcpy(&g_multipacket.dat[(g_multipacket.CurrFrmNum - 1)*MULTIPACKET_BYTE_PER_FRAME], &rxpkt.dat[1], MULTIPACKET_BYTE_PER_FRAME);
+
+    if(g_multipacket.CurrFrmNum == g_multipacket.TotalFrmNum) // All multipacket received. terminate and exit.
+    {
+        Pgn060416EOMPostProc();
+        g_multipacket.status = MULTIPACKET_BUF_AVAILABLE;
+        return 1;
+    }
+
+    g_multipacket.CurrFrmNum++;
+
+    return 0;
+}
+
+int32_t Pgn060416RTS(RxProtocol rxpkt)
+{
+//    printf("%s() Enter\n",__FUNCTION__);
+    if(g_multipacket.status != MULTIPACKET_BUF_EMPTY) return -1;
+
+    g_multipacket.status        = MULTIPACKET_BUF_MERGING;
+    g_multipacket.TotalByteLen  = (rxpkt.dat[2]<< 8) + rxpkt.dat[1];
+    g_multipacket.TotalFrmNum   = rxpkt.dat[3];
+    g_multipacket.CurrFrmNum    = 1;
+    g_multipacket.pgn           = (rxpkt.dat[7]<<16) + (rxpkt.dat[6]<< 8) + rxpkt.dat[5];
+    g_multipacket.SA            = getRxSA(rxpkt.canid);
+    g_multipacket.DA            = getRxDA(rxpkt.canid);
+    g_multipacket.Time          = osKernelGetSysTimerCount();
+
+#if 0
+    printf("multipkt[%d:%d:%d:%ld:%d:%d:%lu]\n",
+            g_multipacket.TotalByteLen,
+            g_multipacket.TotalFrmNum,
+            g_multipacket.CurrFrmNum,
+            g_multipacket.PGN,
+            g_multipacket.SA,
+            g_multipacket.DA,
+            g_multipacket.Time);
+#endif
+
+    Pgn060416CTSPostProc();
+
+    return 0;
+}
+
+int32_t Pgn060416CTS(RxProtocol rxpkt)
+{
+    return 0;
+}
+
+int32_t Pgn060416EOM(RxProtocol rxpkt)
+{
+    //reserved.
+    return 0;
+}
+
+int32_t Pgn060416ABT(RxProtocol rxpkt)
+{
+    //reserved.
+    return 0;
+}
+
+int32_t Pgn060416BAM(RxProtocol rxpkt)
+{
+    //reserved.
+    return 0;
+}
+
+int32_t Pgn060416MultiPktCtrl(RxProtocol rxpkt)
+{
+    uint8_t ctrl_code = rxpkt.dat[0];
+    switch(ctrl_code)
+    {
+    case PGN060416_RTS_CTRL:
+        Pgn060416RTS(rxpkt);
+        break;
+    case PGN060416_CTS_CTRL:
+        Pgn060416CTS(rxpkt);
+        break;
+    case PGN060416_EOM_CTRL:
+        Pgn060416EOM(rxpkt);
+        break;
+    case PGN060416_ABT_CTRL:
+        Pgn060416ABT(rxpkt);
+        break;
+    case PGN060416_BAM_CTRL:
+        Pgn060416BAM(rxpkt);
+        break;
+    default:
+        return -1;
+        break;
+    }
+    return 0;
+}

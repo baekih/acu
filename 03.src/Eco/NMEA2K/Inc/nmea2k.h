@@ -337,27 +337,34 @@ typedef struct _pgn126996_dat
 } pgn126996_dat ;
 #pragma pack(pop)
 
+// nmea2k multi var
 extern fastpacket g_fastpacket[FASTPACKET_ARRAY_MAX];
 extern multipacket g_multipacket;
 
+// nmea2k ctl func
 uint32_t getPGN(uint32_t canid);
 uint8_t  getRxPF(uint32_t canid);
 uint8_t  getRxPS(uint32_t canid);
 uint8_t  getRxDA(uint32_t canid);
 uint8_t  getRxSA(uint32_t canid);
 uint32_t getRxPGN(uint32_t canid);
-bool     IsKnownPGN(uint32_t PGN);
+uint32_t getStr2Uint(uint8_t *pstr, uint8_t len);
+bool     isKnownPGN(uint32_t PGN);
 
+// nmea2k op func
 int32_t opFastpktQueuePut(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc);
 int32_t opFastpacketBuildup(RxProtocol *prxpkt);
 int32_t opChkMultiPktRunning(RxProtocol *prxpkt);
 
-void NMEA2KProc(RxProtocol rxpacket);
-void NMEA2KInit(void);
+// multi ctrl
+int32_t Pgn060160MultiPktDataRx(RxProtocol rxpkt);
+int32_t Pgn060416MultiPktCtrl(RxProtocol rxpkt);
+
+void procNMEA2K(RxProtocol rxpacket);
+void initNMEA2K(void);
 
 int32_t Pgn126993HeartBeat(void);
 
-extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
 
 #ifdef __cplusplus

@@ -248,7 +248,7 @@ void runEcoTaskNMEA2KRx(void *argument)
     uint8_t  RxPF;
     uint8_t  RxDA;
 
-    NMEA2KInit();
+    initNMEA2K();
 
     for(;;)
     {
@@ -264,7 +264,7 @@ void runEcoTaskNMEA2KRx(void *argument)
         if(RxPF <= 239) RxDA = getRxPS(RxPacket.canid);
         RxPGN = getRxPGN(RxPacket.canid);
 
-        if(!IsKnownPGN(RxPGN))
+        if(!isKnownPGN(RxPGN))
         {
             printf("Unknown RxPGN[%ld] return\n", RxPGN);
             continue;
@@ -273,12 +273,12 @@ void runEcoTaskNMEA2KRx(void *argument)
         if(RxPF < 240 && (RxDA == NMEA2K_THIS_ADDR || RxDA == 255))
         {
             // PDU1 and DestAddr is matched or broadcast(255). do packet proc.
-            NMEA2KProc(RxPacket);
+            procNMEA2K(RxPacket);
         }
         else
         {
             // PDU2. do packet proc.
-            NMEA2KProc(RxPacket);
+            procNMEA2K(RxPacket);
         }
     }
 #else
