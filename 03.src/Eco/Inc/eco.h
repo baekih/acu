@@ -32,7 +32,8 @@
 #endif
 #include "images.h"
 
-//#include "stm32f767_fi-din_lcd.h"
 #include "stm32f767_fi-din_sdram.h"
+
+//#define ECO_DEBUG
 
 #endif /* APP_INC_ECO_H_ */

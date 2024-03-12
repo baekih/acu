@@ -254,7 +254,7 @@ void runEcoTaskNMEA2KRx(void *argument)
     {
         EcoQueueWait(EcoQueueNMEA2KRX1Handle, (uint8_t*)&RxPacket, sizeof(RxProtocol));
 
-#if 0
+#if ECO_DEBUG
         printf("RxPacket canid[%ld] len[%d] dat[", RxPacket.canid, RxPacket.len);
         for(uint8_t i = 0; i<RxPacket.len - 1; i++) printf("%02x:", RxPacket.dat[i]);
         printf("%02x]\n",RxPacket.dat[RxPacket.len - 1]);
@@ -273,12 +273,12 @@ void runEcoTaskNMEA2KRx(void *argument)
         if(RxPF < 240 && (RxDA == NMEA2K_THIS_ADDR || RxDA == 255))
         {
             // PDU1 and DestAddr is matched or broadcast(255). do packet proc.
-            procNMEA2K(RxPacket);
+            opNMEA2K(RxPacket);
         }
         else
         {
             // PDU2. do packet proc.
-            procNMEA2K(RxPacket);
+            opNMEA2K(RxPacket);
         }
     }
 #else

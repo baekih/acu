@@ -18,7 +18,6 @@ extern "C" {
 #define BOARD_ID_DIN10           2
 #define BOARD_ID_INVAL           0xFF
 
-/*  STM32L431RB flash 1bank * 64 block-total * 2048byte per block */
 #define FLASH_START_ADRESS        0x08000000
 
 #define FILE_NAME_LENGTH          ((uint32_t)64)
@@ -241,8 +240,8 @@ uint32_t writeFlash(uint32_t, uint32_t*, uint32_t);
 int32_t opSwitchBankControl(uint8_t *prxdat);
 int32_t opLCDBrightness(uint8_t *prxdat);
 bool getKeyPending(uint8_t idx);
-void initTS(void);
-bool getTS(uint16_t*, uint16_t*);
+void initTouchSensor(void);
+bool getTouchSensor(uint16_t*, uint16_t*);
 void InitQSPI(void);
 void setBuzzer(uint8_t);
 void setLCDBL(uint8_t);

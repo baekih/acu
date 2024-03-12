@@ -600,12 +600,7 @@ int32_t Pgn127502SwitchBankControl(void)
     return 0;
 }
 
-void initNMEA2K(void)
-{
-    g_multipacket.pgn = 0;
-}
-
-void procNMEA2K(RxProtocol rxpacket)
+void opNMEA2K(RxProtocol rxpacket)
 {
     uint32_t rxpgn = getPGN(rxpacket.canid);
     uint8_t  rxdat[8];

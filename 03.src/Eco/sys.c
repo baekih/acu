@@ -30,7 +30,7 @@ void printk(const char* pstr, ...)
 
 }
 
-void initTS(void)
+void initTouchSensor(void)
 {
     uint8_t res[4] = {0};
     GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -66,7 +66,7 @@ void initTS(void)
     }
 }
 
-bool getTS(uint16_t* x, uint16_t* y)
+bool getTouchSensor(uint16_t* x, uint16_t* y)
 {
     uint8_t xy[4] = {0};
     uint8_t stat = 0;

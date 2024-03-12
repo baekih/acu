@@ -242,3 +242,9 @@ uint32_t getStr2Uint(uint8_t *pstr, uint8_t len)
 
     return ret;
 }
+
+void initNMEA2K(void)
+{
+    g_multipacket.pgn = 0;
+}
+
