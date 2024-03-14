@@ -105,30 +105,6 @@ int32_t Pgn065240ISOCmdAddr(void)
     return 0;
 }
 
-int32_t Pgn065285BootStatAck(void)//	Boot State Acknowledgment
-{
-    printf("%s() Called\n",__FUNCTION__);
-    TxProtocol txpkt =
-    {
-        (PGN065285_PRI << 26) | ((PGN065285_NUM) << 8) | (NMEA2K_THIS_ADDR << 0),
-        {
-            PPGN_MFGCODE & 0xFF,
-            (PPGN_MFGCODE>>8) & 0xFF,
-            PGN065285_BOOTSTAT_RUN_BOOTLOADER | 0xF8,
-            0xff,
-            0xff,
-            0xff,
-            0xff,
-            0xff
-        },
-        sizeof(uint64_t)
-    };
-
-    EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
-
-    return 0;
-}
-
 int32_t Pgn065288Brightness(void)//    Brightness
 {
     printf("%s() Called\n",__FUNCTION__);
@@ -643,7 +619,7 @@ void opNMEA2K(RxProtocol rxpacket)
         Pgn060416MultiPktCtrl(rxpacket);
         break;
     case PGN065286_NUM: // Boot State Request
-        Pgn065285BootStatAck();
+        opBootStatChk(rxpacket);
         break;
     case PGN065288_NUM: // Boot State Request
         opLCDBrightness(&rxdat[0]);

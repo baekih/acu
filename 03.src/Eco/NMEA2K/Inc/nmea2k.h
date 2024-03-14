@@ -12,16 +12,33 @@
 extern "C" {
 #endif
 
-#define MFG_CODE_FURUNO                     (1855UL)
-#define MFG_CODE_AIRMAR                     (135UL)
+#define RSV_1BIT                            (0x1ULL)
+#define RSV_2BIT                            (0x3ULL)
+#define RSV_3BIT                            (0x7ULL)
+#define RSV_4BIT                            (0xfULL)
+#define RSV_5BIT                            (0x1fULL)
+#define RSV_6BIT                            (0x3fULL)
+#define RSV_7BIT                            (0x7fULL)
+#define RSV_8BIT                            (0xffULL)
+#define RSV_8BIT_SIZE                       (8ULL)
+#define RSV_16BIT                           (0xffffULL)
+#define RSV_16BIT_SIZE                      (16ULL)
+#define RSV_32BIT                           (0xffffffffULL)
+#define RSV_32BIT_SIZE                      (32ULL)
 
-#ifdef BOOTLOADER
+#define IND_GRP_MARINE                      (4ULL)
+
+#define MFG_CODE_FURUNO                     (1855ULL)
+#define MFG_CODE_AIRMAR                     (135ULL)
+
+#ifdef ECO_BOOT2
 #define MFG_CODE                            MFG_CODE_AIRMAR
 #else
 #define MFG_CODE                            MFG_CODE_FURUNO
 #endif
-#define PPGN_MFGCODE                        ((0x04 << 13) | (0x3 << 11) | (MFG_CODE << 0))  // 0x9F3F
-#define PPGN_MFGCODE_SIZE                   (2U)
+#define PPGN_MFGCODE                        ((IND_GRP_MARINE<<13)|(RSV_2BIT<<11)|(MFG_CODE<<0))
+#define PPGN_MFGCODE_SIZE                   (16ULL)
+#define PPGN_MFGCODE_MASK                   (0xFFFF)
 
 #define NMEA2K_ID                           (688ULL)
 #define DEV_INSTANCE_LO                     (0ULL)
@@ -102,7 +119,6 @@ extern "C" {
 
 #define PGN065285_NUM                       (65285UL)
 #define PGN065285_PRI                       (7UL)
-#define PGN065285_BOOTSTAT_RUN_BOOTLOADER   (1UL)
 
 #define PGN065286_NUM                       (65286UL)
 
@@ -248,6 +264,13 @@ typedef struct __TxProtocol
     uint8_t  len;
 } TxProtocol ;
 
+typedef struct __TxProtocol2
+{
+    uint32_t canid;
+    uint64_t  dat;
+    uint8_t  len;
+} TxProtocol2 ;
+
 typedef struct __fastpacket
 {
     uint8_t  status;
@@ -359,6 +382,7 @@ int32_t Pgn060416MultiPktCtrl(RxProtocol rxpkt);
 int32_t opFastpktQueuePut(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc);
 int32_t opFastpacketBuildup(RxProtocol *prxpkt);
 int32_t opChkMultiPktRunning(RxProtocol *prxpkt);
+void opBootStatChk(RxProtocol rxpkt);
 void opNMEA2K(RxProtocol rxpacket);
 void initNMEA2K(void);
 
