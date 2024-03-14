@@ -264,16 +264,13 @@ typedef struct __RxProtocol
 typedef struct __TxProtocol
 {
     uint32_t canid;
-    uint8_t  dat[8];
+    union
+    {
+        uint8_t  dat[8];
+        uint64_t dat64;
+    };
     uint8_t  len;
 } TxProtocol ;
-
-typedef struct __TxProtocol2
-{
-    uint32_t canid;
-    uint64_t dat;
-    uint8_t  len;
-} TxProtocol2 ;
 
 typedef struct __fastpacket
 {

@@ -32,10 +32,10 @@ int32_t Pgn065285BootStatAck(void)//    Boot State Acknowledgment
         ((boot_state)                       << (PPGN_MFGCODE_SIZE)) | \
         ((PPGN_MFGCODE)                     << 0);
 
-    TxProtocol2 txpkt =
+    TxProtocol txpkt =
     {
         .canid = (PGN065285_PRI<<26)|((PGN065285_NUM)<<8)|(NMEA2K_THIS_ADDR<<0),
-        .dat = g_pgn065285_boot_state_req_raw,
+        .dat64 = g_pgn065285_boot_state_req_raw,
         .len = sizeof(uint64_t)
     };
 
