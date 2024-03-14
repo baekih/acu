@@ -110,7 +110,8 @@ int32_t Pgn065288Brightness(void)//    Brightness
     printf("%s() Called\n",__FUNCTION__);
     TxProtocol txpkt =
     {
-        (PGN065288_PRI << 26) | ((PGN065288_NUM) << 8) | (NMEA2K_THIS_ADDR << 0),
+        .canid = (PGN065288_PRI<<26)|((PGN065288_NUM)<<8)|(NMEA2K_THIS_ADDR<<0),
+        .dat =
         {
             PPGN_MFGCODE & 0xFF,
             (PPGN_MFGCODE>>8) & 0xFF,
@@ -132,13 +133,15 @@ int32_t Pgn065288Brightness(void)//    Brightness
 int32_t Pgn126720BootldrVer(fastpacket* pfastpkt)
 {
     printf("%s() Enter\n",__FUNCTION__);
+    uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(1 + PGN126720_05_LEN);
+
     TxProtocol txpkt =
     {
-        (PGN126720_PRI << 26) | ((PGN126720_NUM + pfastpkt->src_addr) << 8) | (NMEA2K_THIS_ADDR << 0),
-        { },
-        sizeof(uint64_t)
+        .canid = (PGN126720_PRI<<26)|((PGN126720_NUM+pfastpkt->src_addr)<<8)|(NMEA2K_THIS_ADDR<<0),
+        .dat64 = 0,
+        .len = PGN126720_05_LEN
     };
-    uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(1 + PGN126720_05_LEN);
+
     uint8_t *pfastpkt_dat = pvPortMalloc(fastdat_len_trunc);
     memset(pfastpkt_dat, 0xFF, fastdat_len_trunc);
 
@@ -336,19 +339,18 @@ int32_t Pgn126993HeartBeat(void)
     TxProtocol txpkt =
     {
 //        (PGN126993_PRI << 26) | ((PGN126993_NUM + BROADCAST_DEST_ADDR) << 8) | (NMEA2K_THIS_ADDR << 0),
-        (PGN126993_PRI << 26) | (PGN126993_NUM << 8) | (NMEA2K_THIS_ADDR << 0),
-        {},
-        sizeof(uint64_t)
-    };
+        .canid = (PGN126993_PRI << 26) | (PGN126993_NUM << 8) | (NMEA2K_THIS_ADDR << 0),
+        .dat64 =
+            (0xFFFFFFFFULL           << 32) | \
+            (0x3ULL                  << 30) | \
+            (PGN126993_EQUIP_STATUS  << 28) | \
+            (PGN126993_CAN_STATUS_2  << 26) | \
+            (PGN126993_CAN_STATUS_1  << 24) | \
+            (cnt_heartbeat           << 16) | \
+            (PGN126993_UPDATE_RATE   <<  0),
 
-    *((uint64_t*)txpkt.dat) = \
-        (0xFFFFFFFFULL           << 32) | \
-        (0x3ULL                  << 30) | \
-        (PGN126993_EQUIP_STATUS  << 28) | \
-        (PGN126993_CAN_STATUS_2  << 26) | \
-        (PGN126993_CAN_STATUS_1  << 24) | \
-        (cnt_heartbeat           << 16) | \
-        (PGN126993_UPDATE_RATE   <<  0);
+        .len = sizeof(uint64_t)
+    };
 
     if(252 < ++cnt_heartbeat) cnt_heartbeat = 0;
 
@@ -557,7 +559,8 @@ int32_t Pgn127502SwitchBankControl(void)
     printf("%s() Called\n",__FUNCTION__);
     TxProtocol txpkt =
     {
-        (PGN127502_PRI << 26) | ((PGN127502_NUM) << 8) | (NMEA2K_THIS_ADDR << 0),
+        .canid = (PGN127502_PRI<<26)|((PGN127502_NUM)<<8)|(NMEA2K_THIS_ADDR<<0),
+        .dat =
         {
             0,
             0x00,
@@ -568,7 +571,7 @@ int32_t Pgn127502SwitchBankControl(void)
             0xff,
             0xff
         },
-        sizeof(uint64_t)
+        .len = sizeof(uint64_t)
     };
 
     EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
