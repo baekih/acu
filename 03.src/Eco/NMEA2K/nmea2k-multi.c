@@ -182,15 +182,16 @@ int32_t Pgn060416EOMPostProc(void)
     return 0;
 }
 
-int32_t Pgn060160MultiPktDataRx(RxProtocol rxpkt)
+int32_t Pgn060160MultiPktDataRx(RxProtocol* prxpkt)
 {
 //    printf("%s() Enter\n",__FUNCTION__);
     int32_t ret;
-    if(0 != (ret = opChkMultiPktRunning(&rxpkt))){printf("ret[%ld]\n", ret); return -1;}
+
+    if(0 != (ret = opChkMultiPktRunning(prxpkt))){printf("ret[%ld]\n", ret); return -1;}
 
     if(g_multipacket.status != MULTIPACKET_BUF_MERGING) return -2;
 
-    memcpy(&g_multipacket.dat[(g_multipacket.CurrFrmNum - 1)*MULTIPACKET_BYTE_PER_FRAME], &rxpkt.dat[1], MULTIPACKET_BYTE_PER_FRAME);
+    memcpy(&g_multipacket.dat[(g_multipacket.CurrFrmNum - 1)*MULTIPACKET_BYTE_PER_FRAME], &prxpkt->dat[1], MULTIPACKET_BYTE_PER_FRAME);
 
     if(g_multipacket.CurrFrmNum == g_multipacket.TotalFrmNum) // All multipacket received. terminate and exit.
     {
@@ -207,6 +208,7 @@ int32_t Pgn060160MultiPktDataRx(RxProtocol rxpkt)
 int32_t Pgn060416RTS(RxProtocol rxpkt)
 {
 //    printf("%s() Enter\n",__FUNCTION__);
+
     if(g_multipacket.status != MULTIPACKET_BUF_EMPTY) return -1;
 
     g_multipacket.status        = MULTIPACKET_BUF_MERGING;

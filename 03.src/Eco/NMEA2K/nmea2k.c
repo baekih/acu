@@ -579,18 +579,15 @@ int32_t Pgn127502SwitchBankControl(void)
 void opNMEA2K(RxProtocol rxpacket)
 {
     uint32_t rxpgn = getPGN(rxpacket.canid);
-    uint8_t  rxdat[8];
-    uint8_t  rxlen = rxpacket.len;
-    uint32_t txpgn;
+    uint32_t txpgn = 0;
 
-    memcpy(rxdat, rxpacket.dat, rxlen);
     printf("pgn rx:%ld\n", rxpgn);
 
     //Single and Fast/Multi packet build-up.
     switch(rxpgn)
     {
     case PGN059904_NUM: // ISO Request
-        memcpy(&txpgn, rxdat, rxlen);
+        memcpy(&txpgn, (uint8_t*)&rxpacket.dat[0], rxpacket.len);
         printf("pgn tx:%ld\n", txpgn);
 
         switch(txpgn)
@@ -613,7 +610,7 @@ void opNMEA2K(RxProtocol rxpacket)
         }
         break;
     case PGN060160_NUM: // Multipacket data
-        Pgn060160MultiPktDataRx(rxpacket);
+        Pgn060160MultiPktDataRx(&rxpacket);
         break;
     case PGN060416_NUM: // Multipacket control
         Pgn060416MultiPktCtrl(rxpacket);
@@ -622,7 +619,7 @@ void opNMEA2K(RxProtocol rxpacket)
         opBootStatChk(rxpacket);
         break;
     case PGN065288_NUM: // Boot State Request
-        opLCDBrightness(&rxdat[0]);
+        opLCDBrightness(rxpacket.dat[4]);
         break;
         //Fastpacket build-up.
     case PGN126208_NUM: // NMEA2K Group Function
@@ -630,7 +627,7 @@ void opNMEA2K(RxProtocol rxpacket)
         opFastpacketBuildup(&rxpacket);
         break;
     case PGN127502_NUM: // Switch bank control
-        opSwitchBankControl(&rxdat[0]);
+        opSwitchBankControl(&rxpacket.dat[0]);
         break;
     default:
         printf("Single PGNError[%ld]\n", rxpgn);

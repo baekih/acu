@@ -627,9 +627,9 @@ int32_t opSwitchBankControl(uint8_t *prxdat)
     return 0;
 }
 
-int32_t opLCDBrightness(uint8_t *prxdat)
+int32_t opLCDBrightness(uint8_t lcd_bl)
 {
-    g_common_dat.lcd_bl = *(prxdat+4);
+    g_common_dat.lcd_bl = lcd_bl;
 
     return 0;
 }

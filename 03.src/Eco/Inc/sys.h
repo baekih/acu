@@ -238,7 +238,7 @@ uint32_t eraseFlash(uint32_t);
 uint32_t writeFlash(uint32_t, uint32_t*, uint32_t);
 
 int32_t opSwitchBankControl(uint8_t *prxdat);
-int32_t opLCDBrightness(uint8_t *prxdat);
+int32_t opLCDBrightness(uint8_t lcd_bl);
 bool getKeyPending(uint8_t idx);
 void initTouchSensor(void);
 bool getTouchSensor(uint16_t*, uint16_t*);

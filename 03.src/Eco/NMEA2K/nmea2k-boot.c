@@ -34,7 +34,7 @@ int32_t Pgn065285BootStatAck(void)//    Boot State Acknowledgment
 
     TxProtocol2 txpkt =
     {
-        .canid = (PGN065285_PRI << 26) | ((PGN065285_NUM) << 8) | (NMEA2K_THIS_ADDR << 0),
+        .canid = (PGN065285_PRI<<26)|((PGN065285_NUM)<<8)|(NMEA2K_THIS_ADDR<<0),
         .dat = g_pgn065285_boot_state_req_raw,
         .len = sizeof(uint64_t)
     };
@@ -48,7 +48,7 @@ void opBootStatChk(RxProtocol rxpkt)//    Boot State Acknowledgment
 {
     uint16_t ppgn_mfgcode = (uint16_t)PPGN_MFGCODE;
 
-    if(!memcmp(&rxpkt.dat[0], (uint8_t*)(&ppgn_mfgcode), sizeof(ppgn_mfgcode)))
+    if(!memcmp((uint8_t*)&rxpkt.dat64, (uint8_t*)(&ppgn_mfgcode), sizeof(ppgn_mfgcode)))
     {
         Pgn065285BootStatAck();
     }

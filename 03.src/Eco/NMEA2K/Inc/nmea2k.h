@@ -253,7 +253,11 @@ extern "C" {
 typedef struct __RxProtocol
 {
     uint32_t canid;
-    uint8_t  dat[8];
+    union
+    {
+        uint8_t  dat[8];
+        uint64_t dat64;
+    };
     uint8_t  len;
 } RxProtocol ;
 
@@ -267,7 +271,7 @@ typedef struct __TxProtocol
 typedef struct __TxProtocol2
 {
     uint32_t canid;
-    uint64_t  dat;
+    uint64_t dat;
     uint8_t  len;
 } TxProtocol2 ;
 
@@ -375,7 +379,7 @@ uint32_t getStr2Uint(uint8_t *pstr, uint8_t len);
 bool     isKnownPGN(uint32_t PGN);
 
 // multi ctrl
-int32_t Pgn060160MultiPktDataRx(RxProtocol rxpkt);
+int32_t Pgn060160MultiPktDataRx(RxProtocol* prxpkt);
 int32_t Pgn060416MultiPktCtrl(RxProtocol rxpkt);
 
 // nmea2k op func
