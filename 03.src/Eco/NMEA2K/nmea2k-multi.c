@@ -149,9 +149,19 @@ int32_t Pgn060416CTSPostProc(void)
 {
     TxProtocol txpkt =
     {
-        (PGN060416_CTS_PRI << 26) | ((PGN060416_NUM + g_multipacket.SA) << 8) | (NMEA2K_THIS_ADDR << 0),
-        {PGN060416_CTS_CTRL, 0, 0, 0xFF, 0xFF, 0, 0, 0},
-        sizeof(uint64_t)
+        .canid = (PGN060416_CTS_PRI<<26)|((PGN060416_NUM+g_multipacket.SA)<<8)|(NMEA2K_THIS_ADDR<<0),
+        .dat =
+        {
+             PGN060416_CTS_CTRL,
+             0,
+             0,
+             0xFF,
+             0xFF,
+             0,
+             0,
+             0
+        },
+        .len = sizeof(uint64_t)
     };
 
     // TX CTS frame.
@@ -167,9 +177,9 @@ int32_t Pgn060416EOMPostProc(void)
 {
     TxProtocol txpkt =
     {
-        (PGN060416_EOM_PRI << 26) | ((PGN060416_NUM + g_multipacket.SA) << 8) | (NMEA2K_THIS_ADDR << 0),
-        {PGN060416_EOM_CTRL, 0, 0, 0xFF, 0xFF, 0, 0, 0},
-        sizeof(uint64_t)
+        .canid = (PGN060416_EOM_PRI<<26)|((PGN060416_NUM+g_multipacket.SA)<<8)|(NMEA2K_THIS_ADDR<<0),
+        .dat = {PGN060416_EOM_CTRL, 0, 0, 0xFF, 0xFF, 0, 0, 0},
+        .len = sizeof(uint64_t)
     };
 
     // TX CTS frame.

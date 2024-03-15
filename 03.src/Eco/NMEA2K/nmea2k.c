@@ -145,13 +145,16 @@ int32_t Pgn126720BootldrVer(fastpacket* pfastpkt)
     uint8_t *pfastpkt_dat = pvPortMalloc(fastdat_len_trunc);
     memset(pfastpkt_dat, 0xFF, fastdat_len_trunc);
 
-    *(pfastpkt_dat+0)               = PGN126720_05_LEN;
-    *(uint16_t*)(pfastpkt_dat+1)    = PPGN_MFGCODE;
-    *(pfastpkt_dat+3)               = PGN126720_PID_BOOTLDR_VER;
-    *(uint16_t*)(pfastpkt_dat+4)    = PGN126720_05_PRODUCTCODE;
-    *(pfastpkt_dat+6)               = PGN126720_05_PROCESSORCODE_MASTER;
-    *(uint16_t*)(pfastpkt_dat+7)    = PGN126720_05_BOOTVER;
-    *(uint16_t*)(pfastpkt_dat+9)    = PGN126720_05_APPVER;
+    *(uint64_t*)(pfastpkt_dat+8) =
+        ((uint64_t)(PGN126720_05_APPVER)                  << (8));
+
+    *(uint64_t*)(pfastpkt_dat+0) =
+        ((uint64_t)(PGN126720_05_BOOTVER)                 << (8+16+8+16+8))       | \
+        ((uint64_t)(PGN126720_05_PROCESSORCODE_MASTER)    << (8+16+8+16))         | \
+        ((uint64_t)(PGN126720_05_PRODUCTCODE)             << (8+16+8))              | \
+        ((uint64_t)(PGN126720_PID_BOOTLDR_VER)            << (8+16))              | \
+        ((uint64_t)(PPGN_MFGCODE)                         << (8))                 | \
+        ((uint64_t)(PGN126720_05_LEN)                     << (0));
 
     opFastpktQueuePut(&txpkt, pfastpkt_dat, fastdat_len_trunc);
 
