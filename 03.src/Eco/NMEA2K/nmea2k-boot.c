@@ -56,22 +56,20 @@ void Pgn126720BootVer(fastpacket* pfastpkt)
         .len = PGN126720_05_LEN
     };
 
-    uint8_t *pfastpkt_dat = pvPortMalloc(fastdat_len_trunc);
+    uint8_t *pf_dat = pvPortMalloc(fastdat_len_trunc);
+    uint32_t pf_ofst = 0;
 
-    *(uint64_t*)(pfastpkt_dat+8) =
-        ((uint64_t)(PGN126720_05_APPVER)                  << (8));
+    *(uint8_t *)(pf_dat + pf_ofst) = PGN126720_05_LEN;                      pf_ofst+=sizeof(uint8_t );
+    *(uint16_t*)(pf_dat + pf_ofst) = PPGN_MFGCODE;                          pf_ofst+=sizeof(uint16_t);
+    *(uint8_t *)(pf_dat + pf_ofst) = PGN126720_PID_BOOTLDR_VER;             pf_ofst+=sizeof(uint8_t );
+    *(uint16_t*)(pf_dat + pf_ofst) = PGN126720_05_PRODUCTCODE;              pf_ofst+=sizeof(uint16_t);
+    *(uint8_t *)(pf_dat + pf_ofst) = PGN126720_05_PROCESSORCODE_MASTER;     pf_ofst+=sizeof(uint8_t );
+    *(uint16_t*)(pf_dat + pf_ofst) = PGN126720_05_BOOTVER;                  pf_ofst+=sizeof(uint16_t);
+    *(uint16_t*)(pf_dat + pf_ofst) = PGN126720_05_APPVER;                   pf_ofst+=sizeof(uint16_t);
 
-    *(uint64_t*)(pfastpkt_dat+0) =
-        ((uint64_t)(PGN126720_05_BOOTVER)                 << (8+16+8+16+8))       | \
-        ((uint64_t)(PGN126720_05_PROCESSORCODE_MASTER)    << (8+16+8+16))         | \
-        ((uint64_t)(PGN126720_05_PRODUCTCODE)             << (8+16+8))              | \
-        ((uint64_t)(PGN126720_PID_BOOTLDR_VER)            << (8+16))              | \
-        ((uint64_t)(PPGN_MFGCODE)                         << (8))                 | \
-        ((uint64_t)(PGN126720_05_LEN)                     << (0));
+    opFastpktQueuePut(&txpkt, pf_dat, fastdat_len_trunc);
 
-    opFastpktQueuePut(&txpkt, pfastpkt_dat, fastdat_len_trunc);
-
-    vPortFree(pfastpkt_dat);
+    vPortFree(pf_dat);
 }
 
 void opBootStatChk(RxProtocol rxpkt)//    Boot State Acknowledgment

@@ -7,19 +7,7 @@
 
 #include "eco.h"
 
-pgn060928_dat g_pgn60928_dat =
-{
-    NMEA2K_ID,
-    PPGN_MFGCODE,
-    DEV_INSTANCE,
-    DEV_FUNC,
-    DEV_CLASS,
-    SYS_INSTANCE,
-    IND_GRP,
-    ISO_SELF_CFG
-};
-
-uint64_t g_pgn060928_dat_raw =   \
+uint64_t g_pgn060928_dat64 =       \
     (ISO_SELF_CFG       << 63) | \
     (IND_GRP            << 60) | \
     (SYS_INSTANCE       << 56) | \
@@ -73,7 +61,7 @@ int32_t Pgn060928ISOAddrClame(RxProtocol rxpkt)
     TxProtocol txpkt =
     {
         .canid = (PGN060928_PRI<<26)|((PGN060928_NUM+getRxSA(rxpkt.canid))<<8)|(NMEA2K_THIS_ADDR<<0),
-        .dat64 = g_pgn060928_dat_raw,
+        .dat64 = g_pgn060928_dat64,
         .len = sizeof(uint64_t)
     };
 
@@ -87,7 +75,7 @@ int32_t Pgn065240ISOCmdAddr(void)
 //    printf("%s() Enter\n",__FUNCTION__);
 //    dumpMultiPacket(__FUNCTION__, &g_multipacket);
 
-    if(!memcmp(&g_pgn060928_dat_raw, &g_multipacket.dat[0], sizeof(uint64_t)))
+    if(!memcmp(&g_pgn060928_dat64, &g_multipacket.dat[0], sizeof(uint64_t)))
     {
         printf("ISOAddrClameDat matched. new address is %d\n", g_multipacket.dat[8]);
     }
@@ -128,8 +116,7 @@ int32_t Pgn126993HeartBeat(void)
     static uint8_t cnt_heartbeat = 0;
     TxProtocol txpkt =
     {
-//        (PGN126993_PRI << 26) | ((PGN126993_NUM + BROADCAST_DEST_ADDR) << 8) | (NMEA2K_THIS_ADDR << 0),
-        .canid = (PGN126993_PRI << 26) | (PGN126993_NUM << 8) | (NMEA2K_THIS_ADDR << 0),
+        .canid = (PGN126993_PRI<<26)|(PGN126993_NUM<<8)|(NMEA2K_THIS_ADDR<<0),
         .dat64 =
             (0xFFFFFFFFULL           << 32) | \
             (0x3ULL                  << 30) | \
@@ -153,44 +140,43 @@ int32_t Pgn126996ProdInfo(void)
 {
     TxProtocol txpkt =
     {
-        (PGN126996_PRI << 26) | (PGN126996_NUM << 8) | (NMEA2K_THIS_ADDR << 0),
-        {},
-        sizeof(uint64_t)
+        .canid = (PGN126996_PRI<<26)|(PGN126996_NUM<<8)|(NMEA2K_THIS_ADDR<<0),
+        .len = sizeof(uint64_t)
     };
     uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(1 + PGN126996_LEN);
-    uint8_t *pfastpkt_dat = pvPortMalloc(fastdat_len_trunc);
-    memset(pfastpkt_dat, 0xFF, fastdat_len_trunc);
+    uint8_t *pf_dat = pvPortMalloc(fastdat_len_trunc);
+    uint32_t pf_ofst = 0;
 
-    *(pfastpkt_dat+0)            = PGN126996_LEN;
-    *(uint16_t*)(pfastpkt_dat+1) = g_pgn126996_dat.NMEANetMsgDbVer;
-    *(uint16_t*)(pfastpkt_dat+3) = g_pgn126996_dat.NMEAMfgProdCode;
-    memcpy(pfastpkt_dat+5  ,       g_pgn126996_dat.MfgModelId,       32);
-    memcpy(pfastpkt_dat+37 ,       g_pgn126996_dat.MfgSWVerCode,     32);
-    memcpy(pfastpkt_dat+69 ,       g_pgn126996_dat.MfgModelVer,      32);
-    memcpy(pfastpkt_dat+101,       g_pgn126996_dat.MfgModelSerCode,  32);
-    *(pfastpkt_dat+133)          = g_pgn126996_dat.NMEA2KCertLvl;
-    *(pfastpkt_dat+134)          = g_pgn126996_dat.LoadEq;
+    *(uint8_t *)(pf_dat + pf_ofst) = PGN126996_LEN;                     pf_ofst+=sizeof(uint8_t );
+    *(uint16_t*)(pf_dat + pf_ofst) = g_pgn126996_dat.NMEANetMsgDbVer;   pf_ofst+=sizeof(uint16_t);
+    *(uint16_t*)(pf_dat + pf_ofst) = g_pgn126996_dat.NMEAMfgProdCode;   pf_ofst+=sizeof(uint16_t);
+    memcpy(pf_dat+pf_ofst, g_pgn126996_dat.MfgModelId, 32);             pf_ofst+=32;
+    memcpy(pf_dat+pf_ofst, g_pgn126996_dat.MfgSWVerCode, 32);           pf_ofst+=32;
+    memcpy(pf_dat+pf_ofst, g_pgn126996_dat.MfgModelVer, 32);            pf_ofst+=32;
+    memcpy(pf_dat+pf_ofst, g_pgn126996_dat.MfgModelSerCode, 32);        pf_ofst+=32;
+    *(uint8_t *)(pf_dat + pf_ofst) = g_pgn126996_dat.NMEA2KCertLvl;     pf_ofst+=sizeof(uint8_t );
+    *(uint8_t *)(pf_dat + pf_ofst) = g_pgn126996_dat.LoadEq;            pf_ofst+=sizeof(uint8_t );
 
-    opFastpktQueuePut(&txpkt, pfastpkt_dat, fastdat_len_trunc);
+    opFastpktQueuePut(&txpkt, pf_dat, fastdat_len_trunc);
 
-    vPortFree(pfastpkt_dat);
+    vPortFree(pf_dat);
     return 0;
 }
 
 int32_t Pgn126208GrpFuncAck(fastpacket *pfastpkt, pgn126208_ack_dat *pack_dat)
 {
-//    printf("%s() Enter pgn[%lu]\n",__FUNCTION__, pfastpkt->pgn);
+    printf("%s() Enter pgn[%lu]\n",__FUNCTION__, pfastpkt->pgn);
     if(BROADCAST_DEST_ADDR == pfastpkt->des_addr) return 1;
 
+    printf("%s() Run pgn[%lu]\n",__FUNCTION__, pfastpkt->pgn);
     TxProtocol txpkt =
     {
-        (PGN126208_PRI << 26) | ((PGN126208_NUM + pfastpkt->src_addr) << 8) | (NMEA2K_THIS_ADDR << 0),
-        { },
-        sizeof(uint64_t)
+        .canid = (PGN126208_PRI<<26)|((PGN126208_NUM+pfastpkt->src_addr)<<8)|(NMEA2K_THIS_ADDR<<0),
+        .len = sizeof(uint64_t)
     };
     uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(1 + PGN126208_ACK_LEN_BASE + pack_dat->param_len);
     uint8_t *pfastpkt_dat = pvPortMalloc(PGN126208_ACK_LEN_BASE + pack_dat->param_len);
-    memset(pfastpkt_dat, 0xFF, fastdat_len_trunc);
+//    memset(pfastpkt_dat, 0xFF, fastdat_len_trunc);
 
     *(pfastpkt_dat+0) = PGN126208_ACK_LEN_BASE + (pack_dat->param_len/2 + 1);
     *(pfastpkt_dat+1) = PGN126208_ACK_CODE;

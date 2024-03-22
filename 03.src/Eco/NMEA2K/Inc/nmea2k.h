@@ -303,18 +303,6 @@ typedef struct __version_dat
     uint16_t  app_ver;
 } version_dat ;
 
-typedef struct __pgn060928_dat
-{
-    uint32_t NMEA2KNum;                    // 21 bits
-    uint16_t MfgCode;                      // 11 bits
-    uint8_t  DevInstance;                  // 3  bits
-    uint8_t  DevFunc;                      // 8  bits
-    uint8_t  DevClass;                     // 7  bits
-    uint8_t  SysInstance;                  // 4  bits
-    uint8_t  IndustryGrp;                  // 3  bits
-    uint8_t  ISOSelfConfig;                // 1  bits
-} pgn060928_dat;
-
 typedef struct __pgn126208_dat
 {
     uint8_t GrpFuncCode;                // 8  bits
