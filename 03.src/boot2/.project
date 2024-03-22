@@ -107,11 +107,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/images.h</locationURI>
 		</link>
 		<link>
-			<name>Eco/Inc/nmea2k.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/nmea2k.h</locationURI>
-		</link>
-		<link>
 			<name>Eco/Inc/printf.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/printf.h</locationURI>
