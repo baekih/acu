@@ -23,7 +23,7 @@ extern "C" {
 #define RSV_8BIT_SIZE                       (8ULL)
 #define RSV_16BIT                           (0xffffULL)
 #define RSV_16BIT_SIZE                      (16ULL)
-#define RSV_32BIT                           (0xffffffffULL)
+#define RSV_32BIT                           (0xffffffffUL)
 #define RSV_32BIT_SIZE                      (32ULL)
 
 #define IND_GRP_MARINE                      (4ULL)
@@ -61,7 +61,7 @@ extern "C" {
 
 #define NMEA_NET_MSG_DB_VER                 (2100UL)
 #define NMEA_MFG_PROD_CODE                  (6U)
-#define MFG_MODEL_ID                        "FI-DIN"
+#define MFG_MODEL_ID                        "ECO-DIN"
 #define MFG_SW_VER_CODE                     "00.01:00.01"
 #define MFG_MODEL_VER                       "1"
 #define MFG_MODEL_SER_CODE                  "0000"
@@ -378,6 +378,10 @@ bool     isKnownPGN(uint32_t PGN);
 // multi ctrl
 int32_t Pgn060160MultiPktDataRx(RxProtocol* prxpkt);
 int32_t Pgn060416MultiPktCtrl(RxProtocol rxpkt);
+
+// boot ctrl
+void Pgn126720BootVer(fastpacket* pfastpkt);
+void Pgn126720Proc(fastpacket* pfastpkt);
 
 // nmea2k op func
 int32_t opFastpktQueuePut(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc);

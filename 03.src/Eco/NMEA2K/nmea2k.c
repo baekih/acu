@@ -7,8 +7,6 @@
 
 #include "eco.h"
 
-version_dat g_version_dat;
-
 pgn060928_dat g_pgn60928_dat =
 {
     NMEA2K_ID,
@@ -48,23 +46,20 @@ pgn126996_dat g_pgn126996_dat =
 
 int32_t Pgn059392ISOAck(RxProtocol rxpkt)
 {
-    TxProtocol txpkt =
-    {
-        (PGN059392_PRI << 26) | ((PGN059392_NUM + getRxSA(rxpkt.canid)) << 8) | (NMEA2K_THIS_ADDR << 0),
-        {},
-        sizeof(uint64_t)
-    };
     uint32_t txpgn = 0;
 
     memcpy(&txpgn, rxpkt.dat, rxpkt.len);
 
-    *((uint64_t*)txpkt.dat) = \
-        ((uint64_t)(txpgn)       << 40) | \
-        (0xFFFFFFUL              << 16) | \
-        (0xFF                    <<  8) | \
-        (PGN059392_NEGATIVIE_ACK <<  0);
-
-    txpkt.len = sizeof(uint64_t);
+    TxProtocol txpkt =
+    {
+        .canid = (PGN059392_PRI<<26)|((PGN059392_NUM+getRxSA(rxpkt.canid))<<8)|(NMEA2K_THIS_ADDR<<0),
+        .dat64 = \
+            ((uint64_t)(txpgn)       << 40) | \
+            (0xFFFFFFUL              << 16) | \
+            (0xFF                    <<  8) | \
+            (PGN059392_NEGATIVIE_ACK <<  0),
+        .len = sizeof(uint64_t)
+    };
 
     EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
 
@@ -77,12 +72,10 @@ int32_t Pgn060928ISOAddrClame(RxProtocol rxpkt)
 //    printf("%s() Enter\n",__FUNCTION__);
     TxProtocol txpkt =
     {
-        (PGN060928_PRI << 26) | ((PGN060928_NUM + getRxSA(rxpkt.canid)) << 8) | (NMEA2K_THIS_ADDR << 0),
-        {},
-        sizeof(uint64_t)
+        .canid = (PGN060928_PRI<<26)|((PGN060928_NUM+getRxSA(rxpkt.canid))<<8)|(NMEA2K_THIS_ADDR<<0),
+        .dat64 = g_pgn060928_dat_raw,
+        .len = sizeof(uint64_t)
     };
-
-    *((uint64_t*)txpkt.dat) = g_pgn060928_dat_raw;
 
     EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
 
@@ -128,212 +121,6 @@ int32_t Pgn065288Brightness(void)//    Brightness
     EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
 
     return 0;
-}
-
-int32_t Pgn126720BootldrVer(fastpacket* pfastpkt)
-{
-    printf("%s() Enter\n",__FUNCTION__);
-    uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(1 + PGN126720_05_LEN);
-
-    TxProtocol txpkt =
-    {
-        .canid = (PGN126720_PRI<<26)|((PGN126720_NUM+pfastpkt->src_addr)<<8)|(NMEA2K_THIS_ADDR<<0),
-        .dat64 = 0,
-        .len = PGN126720_05_LEN
-    };
-
-    uint8_t *pfastpkt_dat = pvPortMalloc(fastdat_len_trunc);
-    memset(pfastpkt_dat, 0xFF, fastdat_len_trunc);
-
-    *(uint64_t*)(pfastpkt_dat+8) =
-        ((uint64_t)(PGN126720_05_APPVER)                  << (8));
-
-    *(uint64_t*)(pfastpkt_dat+0) =
-        ((uint64_t)(PGN126720_05_BOOTVER)                 << (8+16+8+16+8))       | \
-        ((uint64_t)(PGN126720_05_PROCESSORCODE_MASTER)    << (8+16+8+16))         | \
-        ((uint64_t)(PGN126720_05_PRODUCTCODE)             << (8+16+8))              | \
-        ((uint64_t)(PGN126720_PID_BOOTLDR_VER)            << (8+16))              | \
-        ((uint64_t)(PPGN_MFGCODE)                         << (8))                 | \
-        ((uint64_t)(PGN126720_05_LEN)                     << (0));
-
-    opFastpktQueuePut(&txpkt, pfastpkt_dat, fastdat_len_trunc);
-
-    vPortFree(pfastpkt_dat);
-    return 0;
-}
-
-int32_t Pgn126720Proc(fastpacket* pfastpkt)
-{
-//    printf("%s() Enter\n",__FUNCTION__);
-    int32_t ret = 0;
-    TxProtocol txpkt =
-    {
-        (PGN126720_PRI << 26) | ((PGN126720_NUM + pfastpkt->src_addr) << 8) | (NMEA2K_THIS_ADDR << 0),
-        { },
-        sizeof(uint64_t)
-    };
-    uint8_t pid = pfastpkt->dat[2]; // properity id(command code)
-    uint8_t sid = pfastpkt->dat[3]; // sequence id
-
-    uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(1 + PGN126720_06_LEN);
-    uint8_t *pfastpkt_dat = pvPortMalloc(fastdat_len_trunc);
-    memset(pfastpkt_dat, 0xFF, fastdat_len_trunc);
-
-    *(pfastpkt_dat+0)               = PGN126720_06_LEN;
-    *(uint16_t*)(pfastpkt_dat+1)    = PPGN_MFGCODE;
-    *(pfastpkt_dat+3)               = PGN126720_PID_BOOTLDR_STAT;
-    *(pfastpkt_dat+4)               = sid;
-    *(pfastpkt_dat+5)               = PGN126720_06_PROCESSCODE_MASTER;
-
-//    printf("pid[%d]\n",pid);
-
-    switch(pid)
-    {
-    case PGN126720_PID_BOOTLDR_CMD:
-    {
-        uint8_t cmd = pfastpkt->dat[4];
-
-        *(pfastpkt_dat+6) = (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
-//        printf("cmd[%d]\n",cmd);
-
-        switch(cmd)
-        {
-        case PGN126720_CMD_0LOCK_FLASH:
-            printf("lockFlash\n");
-            HAL_FLASH_Lock();
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
-            break;
-        case PGN126720_CMD_1UNLOCK_FLASH:
-            printf("unlockFlash\n");
-            HAL_FLASH_Unlock();
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
-            break;
-        case PGN126720_CMD_2ERASE_FLASH:
-            printf("eraseFlash\n");
-//            doFlashErase();
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
-            break;
-        case PGN126720_CMD_3READY_FLASH:
-            printf("readyFlash\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
-            break;
-        case PGN126720_CMD_4VERIFY_FLASH:
-            printf("verifyFlash\n");
-            //No need ToDo
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_3UNLOCKVERIFY & 0x07;
-            break;
-        case PGN126720_CMD_5ABORT_FLASH:
-            printf("abortFlash\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
-          break;
-        case PGN126720_CMD_6CHANGE_PROCESSOR:
-            printf("chgProcessor\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
-            break;
-        case PGN126720_CMD_254OUTOFRANGE:
-            printf("errOutofRangeFlash\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
-          break;
-        case PGN126720_CMD_255DONTCHANGE:
-            printf("errDontChgFlash\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
-          break;
-        default:
-            break;
-        }
-    }
-        break;
-    case PGN126720_PID_BOOTLDR_DAT:
-    {
-        uint8_t  *psrec_base = &pfastpkt->dat[6];
-        uint8_t  srec_typ = getStr2Uint(psrec_base + PGN126720_11DAT_TYP_SIZE, PGN126720_11DAT_TYP_SIZE);
-        uint8_t  srec_len;
-        uint8_t  srec_dat_len;
-        uint32_t srec_adr;
-        uint8_t  *psrec_dat = NULL;
-        uint8_t  srec_chksum;
-        uint8_t  srec_chksum_local;
-        uint8_t  srec_bin_dat[PGN126720_11DAT_DAT_MAX];
-
-        *(pfastpkt_dat+6) = PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
-//        printf("srec_typ[%d]\n",srec_typ);
-        switch(srec_typ)
-        {
-        case PGN126720_11DAT_TYP_0START_FLASH:
-            psrec_dat = psrec_base + 8;
-            g_version_dat.boot_ver = getStr2Uint(psrec_dat + 16, 4);
-            g_version_dat.app_ver  = getStr2Uint(psrec_dat + 20, 4);
-            printf("StartFlash boot[%d] app[%d]\n", g_version_dat.boot_ver, g_version_dat.app_ver);
-            *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
-            break;
-        case PGN126720_11DAT_TYP_3WRITE_FLASH:
-            psrec_dat = psrec_base + 12;
-            srec_len = getStr2Uint(psrec_base + 2, PGN126720_11DAT_LEN_SIZE);
-            srec_dat_len = srec_len - 1 - 4;
-            srec_adr = getStr2Uint(psrec_base + 4, PGN126720_11DAT_ADR_SIZE);
-            srec_chksum = getStr2Uint(psrec_base + 2*(1 + srec_len), PGN126720_11DAT_CHKSUM_SIZE);
-            srec_chksum_local = 0;
-            printf("WriteToFlash adr[0x%lx] len[%d] chksum[0x%x]\n", srec_adr, srec_dat_len, srec_chksum);
-
-            if(0 != srec_adr%0x20)
-            {
-                *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_5BUFOVERFLOW<<3) & 0xF8;
-                break;
-            }
-
-            for(uint32_t i=1; i<1+1+4; i++)
-            {
-                srec_chksum_local += getStr2Uint(psrec_base + 2*i, 2);
-            }
-
-            for(uint32_t i=0; i<srec_dat_len; i++)
-            {
-                srec_bin_dat[i] = getStr2Uint(psrec_dat + 2*i, 2);
-                srec_chksum_local += srec_bin_dat[i];
-            }
-            srec_chksum_local = 0xFF - srec_chksum_local;
-
-            if(srec_chksum_local != srec_chksum)
-            {
-                *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_7CHKSUMERR<<3) & 0xF8;
-                printf("chksum err [0x%02x:0x%02x]\n", srec_chksum, srec_chksum_local);
-                break;
-            }
-
-            if(0/*FLASHIF_OK != IAP_Write(srec_adr, (uint64_t*)(&srec_bin_dat[0]), g_PGN126720DATS3NAME.mLEN/8)*/)
-            {
-                *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_2PROGERR<<3) & 0xF8;
-                break;
-            }
-
-            *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
-            break;
-        case PGN126720_11DAT_TYP_5COUNT_FLASH:
-            printf("CountFlash\n");
-            *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
-            break;
-        case PGN126720_11DAT_TYP_7END_FLASH:
-            printf("FinishFlash\n");
-            *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
-            break;
-        }
-    }
-        break;
-    case PGN126720_PID_MASTER_RESET:
-    case PGN126720_PID_APP_LAUNCH:
-        printf("Launch APP... reset device.\r\n");
-        ret = 1;
-        break;
-    default:
-        printf("PGN1276720:?? Invaild prop_id\n");
-        ret = 2;
-        break;
-    }
-
-    if(ret == 0) opFastpktQueuePut(&txpkt, pfastpkt_dat, fastdat_len_trunc);
-
-    vPortFree(pfastpkt_dat);
-    return ret;
 }
 
 int32_t Pgn126993HeartBeat(void)
@@ -522,7 +309,7 @@ int32_t Pgn126208GrpFuncReq(fastpacket *pfastpkt)
         }
 
         osDelay(1);
-        Pgn126720BootldrVer(pfastpkt);
+        Pgn126720BootVer(pfastpkt);
     }
         break;
     case PGN065288_NUM:
