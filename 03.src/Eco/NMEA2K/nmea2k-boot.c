@@ -123,43 +123,43 @@ void Pgn126720Proc(fastpacket* pfastpkt)
         switch(cmd)
         {
         case PGN126720_CMD_0LOCK_FLASH:
-            printf("lockFlash\n");
+            printf("PGN126720_CMD_0LOCK_FLASH\n");
             HAL_FLASH_Lock();
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
             break;
         case PGN126720_CMD_1UNLOCK_FLASH:
-            printf("unlockFlash\n");
+            printf("PGN126720_CMD_1UNLOCK_FLASH\n");
             HAL_FLASH_Unlock();
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
             break;
         case PGN126720_CMD_2ERASE_FLASH:
-            printf("eraseFlash\n");
+            printf("PGN126720_CMD_2ERASE_FLASH\n");
 //            doFlashErase();
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
             break;
         case PGN126720_CMD_3READY_FLASH:
-            printf("readyFlash\n");
+            printf("PGN126720_CMD_3READY_FLASH\n");
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
             break;
         case PGN126720_CMD_4VERIFY_FLASH:
-            printf("verifyFlash\n");
+            printf("PGN126720_CMD_4VERIFY_FLASH\n");
             //No need ToDo
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_3UNLOCKVERIFY & 0x07;
             break;
         case PGN126720_CMD_5ABORT_FLASH:
-            printf("abortFlash\n");
+            printf("PGN126720_CMD_5ABORT_FLASH\n");
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
           break;
         case PGN126720_CMD_6CHANGE_PROCESSOR:
-            printf("chgProcessor\n");
+            printf("PGN126720_CMD_6CHANGE_PROCESSOR\n");
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
             break;
         case PGN126720_CMD_254OUTOFRANGE:
-            printf("errOutofRangeFlash\n");
+            printf("PGN126720_CMD_254OUTOFRANGE\n");
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
           break;
         case PGN126720_CMD_255DONTCHANGE:
-            printf("errDontChgFlash\n");
+            printf("PGN126720_CMD_255DONTCHANGE\n");
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
           break;
         default:

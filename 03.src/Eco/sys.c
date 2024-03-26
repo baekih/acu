@@ -636,7 +636,6 @@ int32_t opLCDBrightness(uint8_t lcd_bl)
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
-#if defined (ECO_BOOT2)
 //    printf("%s() called...\r\n",__FUNCTION__);
     CAN_RxHeaderTypeDef RxHeader;
     RxProtocol RxPacket;
@@ -644,6 +643,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     /* Get CAN1 RX message */
     if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxPacket.dat) != HAL_OK) Error_Handler();
 
+#if defined (ECO_BOOT2)
     RxPacket.canid = RxHeader.ExtId;
     RxPacket.len = RxHeader.DLC;
 
@@ -652,21 +652,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
     }
 #else
-//    printf("%s() called...\r\n",__FUNCTION__);
-    CAN_RxHeaderTypeDef RxHeader;
-    RxProtocol RxPacket;
-
-    /* Get CAN1 RX message */
-    if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxPacket.dat) != HAL_OK) Error_Handler();
-
-/*    RxPacket.canid = RxHeader.ExtId;
-    RxPacket.len = RxHeader.DLC;
-
-    for(uint8_t i=0; i < sizeof(RxProtocol); i++)
-    {
-        if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
-    }*/
-
     g_RxCan[rxCanLastIndex].canid = RxHeader.ExtId;
     g_RxCan[rxCanLastIndex].len = RxHeader.DLC;
     memcpy(g_RxCan[rxCanLastIndex].dat, RxPacket.dat, sizeof(RxPacket.dat));
@@ -699,9 +684,7 @@ void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
      }
 
 #if 0
-    for (uint8_t i = 0; i < 8; i++){
-      printf("%02X ", buf[i]);
-    }
+    for(uint8_t i = 0; i < 8; i++) printf("%02X ", buf[i]);
     printf("\n");
 #endif
 

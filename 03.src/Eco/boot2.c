@@ -268,7 +268,7 @@ void runEcoTaskNMEA2KRx(void *argument)
             continue;
         }
 
-        if(RxPF < 240 && (RxDA == NMEA2K_THIS_ADDR || RxDA == 255))
+        if(RxPF <= 239 && (RxDA == NMEA2K_THIS_ADDR || RxDA == 255))
         {
             // PDU1 and DestAddr is matched or broadcast(255). do packet proc.
 //            printf("%s():%d RxDA[%d]\n",__FUNCTION__,__LINE__, RxDA);
