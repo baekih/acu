@@ -158,15 +158,30 @@ extern "C" {
 #define TS_ST1633_XY1_REG           0x12
 #define TS_ST1633_XY1_LEN           3
 
-enum
-{
-    KEY_PWR_IDX  = 0,
-    KEY_PREV_IDX = 1,
-    KEY_SEL_IDX  = 2,
-    KEY_UP_IDX   = 3,
-    KEY_DN_IDX   = 4,
-    KEY_MAX_IDX  = 5
-};
+#define SW_BZR_CONT_ON              0
+#define SW_BZR_CONT_ONOFF           1
+#define SW_BZR_SHOT_ONE             2
+#define SW_BZR_SHOT_TWO             3
+#define SW_BZR_KEYBEEP_ON           4
+#define SW_KEY_PWR                  5
+#define SW_KEY_PREV                 6
+#define SW_KEY_SEL                  7
+#define SW_KEY_UP                   8
+#define SW_KEY_DN                   9
+#define SW_MAX                      10
+
+#define SW_KEY_PWR_MASK             ((0x0100ULL)<<(SW_KEY_PWR*2))
+#define SW_KEY_PREV_MASK            ((0x0100ULL)<<(SW_KEY_PREV*2))
+#define SW_KEY_SEL_MASK             ((0x0100ULL)<<(SW_KEY_SEL*2))
+#define SW_KEY_UP_MASK              ((0x0100ULL)<<(SW_KEY_UP*2))
+#define SW_KEY_DN_MASK              ((0x0100ULL)<<(SW_KEY_DN*2))
+
+#define KEY_PWR                     0
+#define KEY_PREV                    1
+#define KEY_SEL                     2
+#define KEY_UP                      3
+#define KEY_DN                      4
+#define KEY_MAX                     5
 
 enum
 {
@@ -214,7 +229,7 @@ typedef struct _common_dat
 typedef struct _key_stat
 {
     bool prv;
-    bool pnd;
+    bool cur;
 } key_stat  __attribute__((aligned(1)));
 
 extern UART_HandleTypeDef huart1, huart2;
@@ -229,15 +244,15 @@ extern LTDC_HandleTypeDef hltdc;
 extern const common_dat g_common_dat_def;
 extern common_dat g_common_dat;
 extern uint8_t g_board_id;
-extern key_stat g_key_stat[KEY_MAX_IDX];
-extern uint8_t g_switch_bank[6];
+extern key_stat g_key_stat[KEY_MAX];
+extern uint8_t g_switch_bank[];
 extern uint8_t g_lcd_img_idx;
 
 void printk(const char* pstr, ...);
 uint32_t eraseFlash(uint32_t);
 uint32_t writeFlash(uint32_t, uint32_t*, uint32_t);
 
-int32_t opSwitchBankControl(uint8_t *prxdat);
+int32_t opSwitchBankControl(uint64_t *pdat64);
 int32_t opLCDBrightness(uint8_t lcd_bl);
 bool getKeyPending(uint8_t idx);
 void initTouchSensor(void);

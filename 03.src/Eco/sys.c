@@ -9,10 +9,9 @@
 const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .rsv1 = 0, .rsv2 = {0, 0}};
 common_dat g_common_dat;
 
-uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx = 0;
 
-key_stat g_key_stat[KEY_MAX_IDX];
+key_stat g_key_stat[KEY_MAX];
 uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
 uint8_t g_board_id = BOARD_ID_INVAL;
@@ -371,9 +370,9 @@ void InitQSPI(void)
 
 bool getKeyPending(uint8_t idx)
 {
-    bool ret = g_key_stat[idx].pnd;
+    bool ret = g_key_stat[idx].cur;
 
-    g_key_stat[idx].pnd = false;
+    g_key_stat[idx].cur = false;
 
     return ret;
 }
@@ -597,32 +596,33 @@ void setLCDTestImage(uint8_t img_sel)
     case LCD_TST_IMG_DEF:
         if(g_board_id == BOARD_ID_DIN15)
         {
-//            memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+            memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
             printf("autopilot\n");
         }
         else
         {
 //            memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
             printf("compass\n");
-
         }
 
         break;
     }
 }
 
-int32_t opSwitchBankControl(uint8_t *prxdat)
+int32_t opSwitchBankControl(uint64_t *prxdat64)
 {
-    g_common_dat.bzr_vol = *prxdat;
-    g_switch_bank[0] = (*(prxdat+1)>>0) & 0x03;
-    g_switch_bank[1] = (*(prxdat+1)>>2) & 0x03;
-    g_switch_bank[2] = (*(prxdat+1)>>4) & 0x03;
-    g_switch_bank[3] = (*(prxdat+1)>>6) & 0x03;
-    g_switch_bank[4] = (*(prxdat+2)>>0) & 0x03;
-    g_switch_bank[5] = (*(prxdat+2)>>2) & 0x03;
+    g_common_dat.bzr_vol = (uint8_t)(*prxdat64 & 0xFF);
 
-    printf("bzr_vol[%02d] SwitchBank[%d:%d:%d:%d:%d:%d]\n", g_common_dat.bzr_vol,
-           g_switch_bank[0],g_switch_bank[1],g_switch_bank[2],g_switch_bank[3],g_switch_bank[4],g_switch_bank[5]);
+    if     ((*prxdat64 & SW_KEY_UP_MASK) != 0)
+    {
+        g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;
+        *prxdat64 &= (~(SW_KEY_UP_MASK));
+    }
+    else if((*prxdat64 & SW_KEY_DN_MASK) != 0)
+    {
+        g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;
+        *prxdat64 &= (~(SW_KEY_DN_MASK));
+    }
 
     return 0;
 }

@@ -25,7 +25,7 @@ void test_proc(void)
 
     memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 
-    memset(&g_key_stat[0], 0x00, sizeof(key_stat)*KEY_MAX_IDX);
+    memset(&g_key_stat[0], 0x00, sizeof(key_stat)*KEY_MAX);
 
     /* Infinite loop */
     for(;;)
@@ -37,77 +37,77 @@ void test_proc(void)
         {
             if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
             {
-                if(g_key_stat[KEY_PWR_IDX].prv == false)
+                if(g_key_stat[KEY_PWR].prv == false)
                 {
-                    g_key_stat[KEY_PWR_IDX].pnd = true;
+                    g_key_stat[KEY_PWR].cur = true;
                     printf("KEY_PWR pressed\n");
                 }
 
-                g_key_stat[KEY_PWR_IDX].prv = true;
+                g_key_stat[KEY_PWR].prv = true;
             }
             else
             {
-                g_key_stat[KEY_PWR_IDX].prv = false;
+                g_key_stat[KEY_PWR].prv = false;
             }
 
             if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
             {
-                if(g_key_stat[KEY_PREV_IDX].prv == false)
+                if(g_key_stat[KEY_PREV].prv == false)
                 {
-                    g_key_stat[KEY_PREV_IDX].pnd = true;
+                    g_key_stat[KEY_PREV].cur = true;
                     printf("KEY_PREV pressed\n");
                 }
 
-                g_key_stat[KEY_PREV_IDX].prv = true;
+                g_key_stat[KEY_PREV].prv = true;
             }
             else
             {
-                g_key_stat[KEY_PREV_IDX].prv = false;
+                g_key_stat[KEY_PREV].prv = false;
             }
 
             if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
             {
-                if(g_key_stat[KEY_SEL_IDX].prv == false)
+                if(g_key_stat[KEY_SEL].prv == false)
                 {
-                    g_key_stat[KEY_SEL_IDX].pnd = true;
+                    g_key_stat[KEY_SEL].cur = true;
                     printf("KEY_SEL pressed\n");
                 }
 
-                g_key_stat[KEY_SEL_IDX].prv = true;
+                g_key_stat[KEY_SEL].prv = true;
             }
             else
             {
-                g_key_stat[KEY_SEL_IDX].prv = false;
+                g_key_stat[KEY_SEL].prv = false;
             }
 
             if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
             {
-                if(g_key_stat[KEY_UP_IDX].prv == false)
+                if(g_key_stat[KEY_UP].prv == false)
                 {
-                    g_key_stat[KEY_UP_IDX].pnd = true;
+                    g_key_stat[KEY_UP].cur = true;
                     printf("KEY_UP pressed\n");
                 }
 
-                g_key_stat[KEY_UP_IDX].prv = true;
+                g_key_stat[KEY_UP].prv = true;
             }
             else
             {
-                g_key_stat[KEY_UP_IDX].prv = false;
+                g_key_stat[KEY_UP].prv = false;
             }
 
             if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
             {
-                if(g_key_stat[KEY_DN_IDX].prv == false)
+                if(g_key_stat[KEY_DN].prv == false)
                 {
-                    g_key_stat[KEY_DN_IDX].pnd = true;
+                    g_key_stat[KEY_DN].cur = true;
                     printf("KEY_DN pressed\n");
                 }
 
-                g_key_stat[KEY_DN_IDX].prv = true;
+                g_key_stat[KEY_DN].prv = true;
             }
             else
             {
-                g_key_stat[KEY_DN_IDX].prv = false;
+                g_key_stat[KEY_DN].prv = false;
             }
         }
 
@@ -116,7 +116,7 @@ void test_proc(void)
             {
                 static uint32_t lcd_bl_prv = 0;
 
-                if(getKeyPending(KEY_SEL_IDX))
+                if(getKeyPending(KEY_SEL))
                 {
                     if(100 <= g_common_dat.lcd_bl) g_common_dat.lcd_bl = 0;
                     else                        g_common_dat.lcd_bl += 10;
@@ -132,7 +132,7 @@ void test_proc(void)
             {
                 static uint32_t bzr_vol_prv = 0;
 
-                if(getKeyPending(KEY_PREV_IDX))
+                if(getKeyPending(KEY_PREV))
                 {
                     if(g_common_dat.bzr_vol != 0) g_common_dat.bzr_vol = 0;
                     else                       g_common_dat.bzr_vol = 100;
@@ -148,8 +148,8 @@ void test_proc(void)
             {
                 static uint8_t lcd_img_idx_prv = 0;
 
-                if(getKeyPending(KEY_UP_IDX)){g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;}
-                if(getKeyPending(KEY_DN_IDX)){g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;}
+                if(getKeyPending(KEY_UP)){g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;}
+                if(getKeyPending(KEY_DN)){g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;}
 
                 if(g_lcd_img_idx != lcd_img_idx_prv)
                 {

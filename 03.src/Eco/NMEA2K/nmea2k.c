@@ -31,6 +31,20 @@ pgn126996_dat g_pgn126996_dat =
     LOAD_EQ
 };
 
+pgn127502_dat g_swbnkctl_dat =
+{
+    .dat =
+    {
+        0,
+        0x00,
+        0x00,
+        0xf0,
+        0xff,
+        0xff,
+        0xff,
+        0xff
+    }
+};
 
 int32_t Pgn059392ISOAck(RxProtocol rxpkt)
 {
@@ -92,18 +106,13 @@ int32_t Pgn065288Brightness(void)//    Brightness
     TxProtocol txpkt =
     {
         .canid = (PGN065288_PRI<<26)|((PGN065288_NUM)<<8)|(NMEA2K_THIS_ADDR<<0),
-        .dat =
-        {
-            PPGN_MFGCODE & 0xFF,
-            (PPGN_MFGCODE>>8) & 0xFF,
-            0,          // Instance - fixed to 0
-            0x40,       // Brightness {preset[0:Daytime 1:Dusk 4:Manual] | source[0:LCD 1:Keypad]}
-            50,         // Brightness percent - 0~99
-            0xff,
-            0xff,
-            0xff
-        },
-        sizeof(uint64_t)
+        .dat64 = \
+            ((uint64_t)(PPGN_MFGCODE)       << (0))               |\
+            ((uint64_t)(0)                  << (16))              |\
+            ((uint64_t)(0x40)               << (16+8))            |\
+            ((uint64_t)(50)                 << (16+8+8))          |\
+            ((uint64_t)(RSV_24BIT)          << (16+8+8+8)),
+        .len = sizeof(uint64_t)
     };
 
     EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)(&txpkt), sizeof(TxProtocol));
@@ -118,13 +127,13 @@ int32_t Pgn126993HeartBeat(void)
     {
         .canid = (PGN126993_PRI<<26)|(PGN126993_NUM<<8)|(NMEA2K_THIS_ADDR<<0),
         .dat64 =
-            (0xFFFFFFFFULL           << 32) | \
-            (0x3ULL                  << 30) | \
-            (PGN126993_EQUIP_STATUS  << 28) | \
-            (PGN126993_CAN_STATUS_2  << 26) | \
-            (PGN126993_CAN_STATUS_1  << 24) | \
-            (cnt_heartbeat           << 16) | \
-            (PGN126993_UPDATE_RATE   <<  0),
+            ((uint64_t)RSV_32BIT               << 32) | \
+            ((uint64_t)RSV_2BIT                << 30) | \
+            ((uint64_t)PGN126993_EQUIP_STATUS  << 28) | \
+            ((uint64_t)PGN126993_CAN_STATUS_2  << 26) | \
+            ((uint64_t)PGN126993_CAN_STATUS_1  << 24) | \
+            ((uint64_t)cnt_heartbeat           << 16) | \
+            ((uint64_t)PGN126993_UPDATE_RATE   <<  0),
 
         .len = sizeof(uint64_t)
     };
@@ -330,23 +339,14 @@ int32_t Pgn126208Proc(fastpacket *pfastpkt)
     return 0;
 }
 
-int32_t Pgn127502SwitchBankControl(void)
+int32_t Pgn127502SwitchBankControl(pgn127502_dat swbnkctl)
 {
     printf("%s() Called\n",__FUNCTION__);
+
     TxProtocol txpkt =
     {
         .canid = (PGN127502_PRI<<26)|((PGN127502_NUM)<<8)|(NMEA2K_THIS_ADDR<<0),
-        .dat =
-        {
-            0,
-            0x00,
-            0xfc,
-            0xff,
-            0xff,
-            0xff,
-            0xff,
-            0xff
-        },
+        .dat64 = swbnkctl.dat64,
         .len = sizeof(uint64_t)
     };
 
@@ -381,7 +381,7 @@ void opNMEA2K(RxProtocol rxpacket)
             Pgn126996ProdInfo();
             break;
         case PGN127502_NUM:
-            Pgn127502SwitchBankControl();
+            Pgn127502SwitchBankControl(g_swbnkctl_dat);
             break;
         default:
             if(BROADCAST_DEST_ADDR != getRxPS(rxpacket.canid)) Pgn059392ISOAck(rxpacket);
@@ -406,7 +406,9 @@ void opNMEA2K(RxProtocol rxpacket)
         opFastpacketBuildup(&rxpacket);
         break;
     case PGN127502_NUM: // Switch bank control
-        opSwitchBankControl(&rxpacket.dat[0]);
+        g_swbnkctl_dat.dat64 = rxpacket.dat64;
+        opSwitchBankControl(&g_swbnkctl_dat.dat64);
+        Pgn127502SwitchBankControl(g_swbnkctl_dat);
         break;
     default:
         printf("Single PGNError[%ld]\n", rxpgn);

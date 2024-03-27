@@ -23,6 +23,8 @@ extern "C" {
 #define RSV_8BIT_SIZE                       (8ULL)
 #define RSV_16BIT                           (0xffffULL)
 #define RSV_16BIT_SIZE                      (16ULL)
+#define RSV_24BIT                           (0xffffffUL)
+#define RSV_24BIT_SIZE                      (24ULL)
 #define RSV_32BIT                           (0xffffffffUL)
 #define RSV_32BIT_SIZE                      (32ULL)
 
@@ -347,11 +349,20 @@ typedef struct _pgn126996_dat
     uint8_t  NMEA2KCertLvl;
     uint8_t  LoadEq;
 } pgn126996_dat ;
+
+typedef union _pgn127502_dat
+{
+    uint64_t dat64;
+    uint8_t  dat[8];
+} pgn127502_dat ;
+
 #pragma pack(pop)
 
 // nmea2k multi var
 extern fastpacket g_fastpacket[FASTPACKET_ARRAY_MAX];
 extern multipacket g_multipacket;
+extern pgn127502_dat g_swbnkctl_dat;
+
 
 // nmea2k ctl func
 uint32_t getPGN(uint32_t canid);
