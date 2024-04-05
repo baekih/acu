@@ -6,9 +6,12 @@
  */
 #include "eco.h"
 
-const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .crc32 = 0x3f1b1b2b};
+const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .rsv1 = 0, .rsv2 = {0, 0}};
 common_dat g_common_dat;
-key_stat g_key_stat[KEY_MAX_IDX];
+
+uint8_t g_lcd_img_idx = 0;
+
+key_stat g_key_stat[KEY_MAX];
 uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
 uint8_t g_board_id = BOARD_ID_INVAL;
@@ -23,10 +26,9 @@ void printk(const char* pstr, ...)
     va_end(args);
 
     while(HAL_BUSY == HAL_UART_Transmit(&huart1, (uint8_t*)&buf[0], strlen(buf), 1000)) osDelay(1);
-
 }
 
-void initTS(void)
+void initTouchSensor(void)
 {
     uint8_t res[4] = {0};
     GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -62,7 +64,7 @@ void initTS(void)
     }
 }
 
-bool getTS(uint16_t* x, uint16_t* y)
+bool getTouchSensor(uint16_t* x, uint16_t* y)
 {
     uint8_t xy[4] = {0};
     uint8_t stat = 0;
@@ -118,27 +120,25 @@ bool getTS(uint16_t* x, uint16_t* y)
     return true;
 }
 
-uint32_t doFlashErase(uint32_t addr)
+uint32_t eraseFlash(uint32_t addr)
 {
     uint32_t SectorError;
-    uint32_t sector;
 
-    if     ((addr < ADDR_FLASH_SECTOR_1) && (addr >= ADDR_FLASH_SECTOR_0)) sector = FLASH_SECTOR_0;
-    else if((addr < ADDR_FLASH_SECTOR_2) && (addr >= ADDR_FLASH_SECTOR_1)) sector = FLASH_SECTOR_1;
-    else if((addr < ADDR_FLASH_SECTOR_3) && (addr >= ADDR_FLASH_SECTOR_2)) sector = FLASH_SECTOR_2;
-    else if((addr < ADDR_FLASH_SECTOR_4) && (addr >= ADDR_FLASH_SECTOR_3)) sector = FLASH_SECTOR_3;
-    else if((addr < ADDR_FLASH_SECTOR_5) && (addr >= ADDR_FLASH_SECTOR_4)) sector = FLASH_SECTOR_4;
-    else if((addr < ADDR_FLASH_SECTOR_6) && (addr >= ADDR_FLASH_SECTOR_5)) sector = FLASH_SECTOR_5;
-    else if((addr < ADDR_FLASH_SECTOR_7) && (addr >= ADDR_FLASH_SECTOR_6)) sector = FLASH_SECTOR_6;
-    else if(addr >= ADDR_FLASH_SECTOR_7) sector = FLASH_SECTOR_7;
-
-    FLASH_EraseInitTypeDef pEraseInit =
+    FLASH_EraseInitTypeDef EraseInit =
     {
         .TypeErase = TYPEERASE_SECTORS,
-        .Sector = sector,
         .NbSectors = 1,
         .VoltageRange = VOLTAGE_RANGE_3
     };
+
+    if     ((addr < ADDR_FLASH_SECTOR_1) && (addr >= ADDR_FLASH_SECTOR_0)) EraseInit.Sector = FLASH_SECTOR_0;
+    else if((addr < ADDR_FLASH_SECTOR_2) && (addr >= ADDR_FLASH_SECTOR_1)) EraseInit.Sector = FLASH_SECTOR_1;
+    else if((addr < ADDR_FLASH_SECTOR_3) && (addr >= ADDR_FLASH_SECTOR_2)) EraseInit.Sector = FLASH_SECTOR_2;
+    else if((addr < ADDR_FLASH_SECTOR_4) && (addr >= ADDR_FLASH_SECTOR_3)) EraseInit.Sector = FLASH_SECTOR_3;
+    else if((addr < ADDR_FLASH_SECTOR_5) && (addr >= ADDR_FLASH_SECTOR_4)) EraseInit.Sector = FLASH_SECTOR_4;
+    else if((addr < ADDR_FLASH_SECTOR_6) && (addr >= ADDR_FLASH_SECTOR_5)) EraseInit.Sector = FLASH_SECTOR_5;
+    else if((addr < ADDR_FLASH_SECTOR_7) && (addr >= ADDR_FLASH_SECTOR_6)) EraseInit.Sector = FLASH_SECTOR_6;
+    else if( addr >= ADDR_FLASH_SECTOR_7) EraseInit.Sector = FLASH_SECTOR_7;
 
     /* Unlock the Flash to enable the flash control register access *************/
     HAL_FLASH_Unlock();
@@ -147,7 +147,7 @@ uint32_t doFlashErase(uint32_t addr)
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP    | FLASH_FLAG_OPERR  | FLASH_FLAG_WRPERR |
                            FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_ERSERR);
 
-    if (HAL_FLASHEx_Erase(&pEraseInit, &SectorError) != HAL_OK)
+    if (HAL_FLASHEx_Erase(&EraseInit, &SectorError) != HAL_OK)
     {
        /* Error occurred while page erase */
        return (FLASHIF_ERASE_ERROR);
@@ -156,7 +156,7 @@ uint32_t doFlashErase(uint32_t addr)
     return (FLASHIF_OK);
 }
 
-uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
+uint32_t writeFlash(uint32_t addr, uint32_t* pdata, uint32_t len)
 {
     uint32_t i = 0;
 
@@ -188,6 +188,36 @@ uint32_t doFlashWrite(uint32_t addr, uint32_t* pdata, uint32_t len)
     }
 
     return (FLASHIF_OK);
+}
+
+int32_t eraseFlashApp(void)
+{
+    uint32_t SectorError;
+
+    printf("%s()\n",__FUNCTION__);
+    FLASH_EraseInitTypeDef EraseInit =
+    {
+        .TypeErase = TYPEERASE_SECTORS,
+        .NbSectors = 1,
+        .Sector = FLASH_SECTOR_5,
+        .VoltageRange = VOLTAGE_RANGE_3
+    };
+
+    /* Unlock the Flash to enable the flash control register access *************/
+    HAL_FLASH_Unlock();
+
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP    | FLASH_FLAG_OPERR  | FLASH_FLAG_WRPERR |
+                           FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_ERSERR);
+
+    for(EraseInit.Sector = FLASH_SECTOR_5; EraseInit.Sector <= FLASH_SECTOR_7; EraseInit.Sector++)
+    {
+        if (HAL_FLASHEx_Erase(&EraseInit, &SectorError) != HAL_OK)
+        {
+            return FLASHIF_ERASE_ERROR;
+        }
+    }
+
+    return FLASHIF_OK;
 }
 
 static uint8_t QSPI_WriteEnable(void)
@@ -367,47 +397,11 @@ void InitQSPI(void)
     QSPI_EnableMemoryMappedMode();
 }
 
-void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
-{
-    uint16_t count = 100;
-
-    while(HAL_CAN_IsTxMessagePending(&hcan1, g_TxCan[txCanBufferCount].TxMailbox) == 1)
-     {
-        osDelay(1);
-
-       if(count-- <= 0)
-       {
-         printf("HAL_CAN_IsTxMessagePending over 100ms !!\r\n");
-         break;
-       }
-     }
-
-#if 0
-    for (uint8_t i = 0; i < 8; i++){
-      printf("%02X ", buf[i]);
-    }
-    printf("\n");
-#endif
-
-    g_TxCan[txCanBufferCount].TxHeader.ExtId = rawCanId;
-    g_TxCan[txCanBufferCount].TxHeader.IDE = CAN_ID_EXT;
-    g_TxCan[txCanBufferCount].TxHeader.DLC = len;
-
-    memcpy(g_TxCan[txCanBufferCount].TxData, buf, len);
-
-    if(HAL_CAN_AddTxMessage(&hcan1, &g_TxCan[txCanBufferCount].TxHeader,
-            g_TxCan[txCanBufferCount].TxData, &g_TxCan[txCanBufferCount].TxMailbox) != HAL_OK)
-    {
-        printf(" Error HAL_CAN_AddTxMessage hcan1 !!\r\n");
-        osDelay(1);
-    }
-}
-
 bool getKeyPending(uint8_t idx)
 {
-    bool ret = g_key_stat[idx].pnd;
+    bool ret = g_key_stat[idx].cur;
 
-    g_key_stat[idx].pnd = false;
+    g_key_stat[idx].cur = false;
 
     return ret;
 }
@@ -453,35 +447,41 @@ void setLCDBL(uint8_t lcd_bl)
 void initFlashData(void)
 {
     common_dat *pcommon_dat = (common_dat*)FLASH_DATA_ADDR;
-    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)pcommon_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
+    uint32_t crc32 = HAL_CRC_Calculate(&hcrc, (uint32_t *)pcommon_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
 
-    if(pcommon_dat->crc32 != crc32_val)
+    // if no common data exist or invalid value, reset common data to default value.
+    if(pcommon_dat->crc32 != crc32)
     {
         g_common_dat = g_common_dat_def;
+        g_common_dat.crc32 = crc32;
         printf("%s() Flash re-init with def val. lcd_bl[%d] bzr_vol[%d]\n",__func__, g_common_dat.lcd_bl, g_common_dat.bzr_vol);
-        doFlashErase(FLASH_DATA_ADDR);
-        doFlashWrite(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
+        eraseFlash(FLASH_DATA_ADDR);
+        writeFlash(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
     }
     else
     {
         g_common_dat = *pcommon_dat;
     }
 
-    printf("Init common_dat[%d:%d:0x%08x:0x%08x]\n", g_common_dat.bzr_vol, g_common_dat.lcd_bl, g_common_dat.jmp_adr, g_common_dat.crc32);
+    printf("Init common_dat[%d:%d:0x%08x:0x%08x]\n",
+           g_common_dat.bzr_vol,
+           g_common_dat.lcd_bl,
+           g_common_dat.jmp_adr,
+           g_common_dat.crc32);
 
     return;
 }
 
 void updateFlashData(void)
 {
-    uint32_t crc32_val = HAL_CRC_Calculate(&hcrc, (uint32_t *)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
+    uint32_t crc32 = HAL_CRC_Calculate(&hcrc, (uint32_t *)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t) - 1);
 
-    if(g_common_dat.crc32 != crc32_val)
+    if(g_common_dat.crc32 != crc32)
     {
         printf("%s() Flash update lcd_bl[%d] bzr_vol[%d]\n", __func__, g_common_dat.lcd_bl, g_common_dat.bzr_vol);
-        g_common_dat.crc32 = crc32_val;
-        doFlashErase(FLASH_DATA_ADDR);
-        doFlashWrite(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
+        g_common_dat.crc32 = crc32;
+        eraseFlash(FLASH_DATA_ADDR);
+        writeFlash(FLASH_DATA_ADDR, (uint32_t*)&g_common_dat, sizeof(common_dat)/sizeof(uint32_t));
     }
 
     return;
@@ -625,21 +625,44 @@ void setLCDTestImage(uint8_t img_sel)
     case LCD_TST_IMG_DEF:
         if(g_board_id == BOARD_ID_DIN15)
         {
-//            memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+            memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
             printf("autopilot\n");
         }
         else
         {
 //            memcpy((uint32_t*)0xC0000000, &image_compass_480x480[0], 480*480*2);
             printf("compass\n");
-
         }
 
         break;
     }
 }
 
-#if 0
+int32_t opSwitchBankControl(uint64_t *prxdat64)
+{
+    g_common_dat.bzr_vol = (uint8_t)(*prxdat64 & 0xFF);
+
+    if     ((*prxdat64 & SW_KEY_UP_MASK) != 0)
+    {
+        g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;
+        *prxdat64 &= (~(SW_KEY_UP_MASK));
+    }
+    else if((*prxdat64 & SW_KEY_DN_MASK) != 0)
+    {
+        g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;
+        *prxdat64 &= (~(SW_KEY_DN_MASK));
+    }
+
+    return 0;
+}
+
+int32_t opLCDBrightness(uint8_t lcd_bl)
+{
+    g_common_dat.lcd_bl = lcd_bl;
+
+    return 0;
+}
+
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
 //    printf("%s() called...\r\n",__FUNCTION__);
@@ -649,6 +672,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     /* Get CAN1 RX message */
     if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxPacket.dat) != HAL_OK) Error_Handler();
 
+#if defined (ECO_BOOT2)
     RxPacket.canid = RxHeader.ExtId;
     RxPacket.len = RxHeader.DLC;
 
@@ -656,25 +680,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     {
         if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
     }
-}
 #else
-void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
-{
-//    printf("%s() called...\r\n",__FUNCTION__);
-    CAN_RxHeaderTypeDef RxHeader;
-    RxProtocol RxPacket;
-
-    /* Get CAN1 RX message */
-    if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxPacket.dat) != HAL_OK) Error_Handler();
-
-/*    RxPacket.canid = RxHeader.ExtId;
-    RxPacket.len = RxHeader.DLC;
-
-    for(uint8_t i=0; i < sizeof(RxProtocol); i++)
-    {
-        if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
-    }*/
-
     g_RxCan[rxCanLastIndex].canid = RxHeader.ExtId;
     g_RxCan[rxCanLastIndex].len = RxHeader.DLC;
     memcpy(g_RxCan[rxCanLastIndex].dat, RxPacket.dat, sizeof(RxPacket.dat));
@@ -686,6 +692,42 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     {
         rxCanFirstIndex++;
         rxCanFirstIndex %= CAN_RX_BUF_MAX;
+    }
+#endif
+}
+
+#if !defined (ECO_BOOT2)
+void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
+{
+    uint16_t count = 100;
+
+    while(HAL_CAN_IsTxMessagePending(&hcan1, g_TxCan[txCanBufferCount].TxMailbox) == 1)
+     {
+        osDelay(1);
+
+       if(count-- <= 0)
+       {
+         printf("HAL_CAN_IsTxMessagePending over 100ms !!\r\n");
+         break;
+       }
+     }
+
+#if 0
+    for(uint8_t i = 0; i < 8; i++) printf("%02X ", buf[i]);
+    printf("\n");
+#endif
+
+    g_TxCan[txCanBufferCount].TxHeader.ExtId = rawCanId;
+    g_TxCan[txCanBufferCount].TxHeader.IDE = CAN_ID_EXT;
+    g_TxCan[txCanBufferCount].TxHeader.DLC = len;
+
+    memcpy(g_TxCan[txCanBufferCount].TxData, buf, len);
+
+    if(HAL_CAN_AddTxMessage(&hcan1, &g_TxCan[txCanBufferCount].TxHeader,
+            g_TxCan[txCanBufferCount].TxData, &g_TxCan[txCanBufferCount].TxMailbox) != HAL_OK)
+    {
+        printf(" Error HAL_CAN_AddTxMessage hcan1 !!\r\n");
+        osDelay(1);
     }
 }
 #endif

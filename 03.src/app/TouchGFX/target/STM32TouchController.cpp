@@ -37,7 +37,7 @@ bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
 
 //    printf("%s\n",__PRETTY_FUNCTION__);
 
-    if(!getTS(&x_cur, &y_cur)) return false;
+    if(!getTouchSensor(&x_cur, &y_cur)) return false;
 
     if((x_prv == x_cur) && (y_prv == y_cur)) return false;
 

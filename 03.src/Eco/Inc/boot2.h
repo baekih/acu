@@ -17,11 +17,12 @@
 #define UPLOAD_STATE_FLASH_OK               0
 #define UPLOAD_STATE_FLASH_ING              1
 
+#define NVIC_RST_CNT_MAX          100
+
 extern uint32_t g_access_level;
 extern uint32_t g_access_seed;
 extern uint32_t boot_delay_time;
-extern uint8_t g_flash_source_addr;
-extern bool g_nvic_reset;
+extern uint8_t  g_flash_source_addr;
 
 void runEcoTaskDefault(void *argument);
 void runEcoTaskUART(void *argument);

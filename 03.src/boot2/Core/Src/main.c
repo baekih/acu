@@ -523,7 +523,7 @@ static void MX_I2C1_Init(void)
   }
   /* USER CODE BEGIN I2C1_Init 2 */
 
-  initTS();
+  initTouchSensor();
 
   if(g_board_id == BOARD_ID_DIN10)
   {
