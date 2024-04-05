@@ -7,29 +7,64 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "eco.h"
+#include <math.h>
 #include "gui/common/DataBase.hpp"
+#include "gui/common/validate_data.h"
 
-const float meterToFeetFactor = 3.28083989501312;
-const float meterToFathom = 0.546806649168854;
-const float meterToHR = 0.65997888;
-const float meterToPB = 0.617283950617284;
+#ifndef SIMULATOR
+#include "stm32f7xx_hal.h"
+#endif
 
-const float tempFahrenheitMax = 211.8;
-const float tempFahrenheitMin = 14.2;
+#define NON_RECEIVE_NMEA_TIMEOUT_30_SEC  30000 //ms
+#define NON_RECEIVE_NMEA_TIMEOUT_5_SEC   5000 //ms
 
-const float tempCelsiusDisplayMax = 99.9;
-const float tempCelsiusDisplayMin = -9.9;
+const int typeSTW = 0;
+const int typeSOG = 1;
 
-const float tempCelsiusNMEA0183Max = 99.99;
-const float tempCelsiusNMEA0183Min = -9.99;
+const double meterToFeetFactor 		= 3.28083989501312;
+const double meterToFathom 			= 0.546806649168854;
+const double meterToHR 				= 0.65997888;
+const double meterToPB 				= 0.617283950617284;
 
-float hdgValue = 0;
+const double tempFahrenheitMax 		= 130.0;
+const double tempFahrenheitMin 		= 0.0;
 
-float stwValues[4];
-float sogValues[4];
-float depthValues[5];
-float wtempValues[2];
+const double tempCelsiusDisplayMax 	= 50.0;
+const double tempCelsiusDisplayMin 	= -20.0;
+
+const double tempCelsiusNMEA0183Max = 99.99;
+const double tempCelsiusNMEA0183Min = -9.99;
+
+const double speedDisplayMax 		= 999.0;
+const double speedDisplayMin 		= 0.0;
+
+const double depthDisplayMin 		= 0.0;
+const double depthDisplayFeetMax 	= 4921.0;
+const double depthDisplayMeterMax 	= 1500.0;
+const double depthDisplayFathomMax 	= 820.0;
+const double depthDisplayPBMax 		= 926.0;
+
+double hdgValue = INVALID_DEGREE_VALUE;
+bool validHDGValue = false;
+
+#ifndef SIMULATOR
+uint32_t lastReceiveHDGValue = 0;
+#endif
+
+double stwValues[4];
+double sogValues[4];
+double depthValues[5];
+double wtempValues[2];
+
+double windSpeedValues[4];
+
+double latitudeDegree = INVALID_DEGREE_VALUE;
+double longitudeDegree = INVALID_DEGREE_VALUE;
+
+double GetRound(double val, double roundFraction)
+{
+	return ((double)round(val * roundFraction) / roundFraction);
+}
 
 inline bool isTempFahrenheitValidScope(double tempF){
 	return (tempF >= tempFahrenheitMin && tempF <= tempFahrenheitMax);
@@ -44,19 +79,19 @@ inline bool isTempCelsiusNMEA0183OutputValidScope(double tempC){
 }
 
 inline double FahrenheitToCelsius(double tempFahrenheit) {
-	return ((tempFahrenheit - 32) * ((double) 5 / (double) 9));
+	return ((tempFahrenheit - 32) / 1.8);
 }
 
 inline double FahrenheitToCelsiusSpan(double tempFahrenheit) {
-	return (tempFahrenheit * ((double) 5 / (double) 9));
+	return (tempFahrenheit / 1.8);
 }
 
-inline bool CelsiusToFahrenheit(double tempCelsius){
-	return ((tempCelsius * 9.0 / 5.0) + 32);
+inline double CelsiusToFahrenheit(double tempCelsius){
+	return ((tempCelsius * 1.8) + 32);
 }
 
-inline bool CelsiusToFahrenheitSpan(double tempCelsius){
-	return (tempCelsius * 9.0 / 5.0);
+inline double CelsiusToFahrenheitSpan(double tempCelsius){
+	return (tempCelsius * 1.8);
 }
 inline double KelvinToCelsius(double tempKelvin){
 	return (tempKelvin - 273.15);
@@ -70,22 +105,81 @@ inline double FahrenheitToKelvin(double tempF){
 	return 273.15 + FahrenheitToCelsius(tempF);
 }
 
-void setHDGValue(float hdg)
-{
-	hdgValue =  hdg / (2*M_PI) * 360;
-
-
+double GetRadianToDegree360(int radian){
+	return ((((double)radian / 10000) / (2*M_PI)) * 360);
 }
 
-float getHDGValue()
+double GetRadianToDegree180(int radian){
+	return (((double)((short)radian)/10000) / M_PI) * 180;
+}
+
+double GetCorrection0to360(double degree){
+	degree = GetRound(degree, 10.0);
+
+	if(degree >= 360.0 ) degree -= 360;
+	if(degree < 0) degree += 360;
+
+	return degree;
+}
+
+
+double adjustDisplayAngleDegree(double angle) {
+	double res = angle;
+
+	if (res >= 360.0) {
+		res = res - 360.0;
+	} else if (res <= 0.0) {
+		res = 360.0 + res;
+	}
+
+	if ((double)round(res * 10) / 10 == 360.0) {
+		res = 0.0;
+	}
+
+	return res;
+}
+
+void setHDGValue(double hdg)
+{
+	hdgValue = GetRadianToDegree360(hdg);
+#ifndef SIMULATOR
+	lastReceiveHDGValue = HAL_GetTick();
+#endif
+	validHDGValue = true;
+}
+
+double getHDGValue()
 {
 	return hdgValue;
 }
 
-void setSTWValue(float value, int type)
+void setValidHDG(bool valid)
+{
+	validHDGValue = valid;
+}
+
+bool isValidHDG()
+{
+#ifndef SIMULATOR
+	return validHDGValue;
+#else
+	return true;
+#endif
+}
+
+bool isTimeInHDG()
+{
+#ifndef SIMULATOR
+	return ((HAL_GetTick() - lastReceiveHDGValue) <= NON_RECEIVE_NMEA_TIMEOUT_5_SEC);
+#else
+	return true;
+#endif
+}
+
+void setSTWValue(double value, int type)
 {
 	if(type == SPEED_UNIT_MPS){
-		float knot = MPS_TO_KNOT(value);
+		double knot = MPS_TO_KNOT(value);
 
 		stwValues[SPEED_UNIT_KNOT] = knot;
 		stwValues[SPEED_UNIT_KMH] = KNOT_TO_KMH(knot);
@@ -94,15 +188,15 @@ void setSTWValue(float value, int type)
 	}
 }
 
-float getSTWValue(int type)
+double getSTWValue(int type)
 {
 	return stwValues[type];
 }
 
-void setSOGValue(float value, int type)
+void setSOGValue(double value, int type)
 {
 	if(type == SPEED_UNIT_MPS){
-		float knot = MPS_TO_KNOT(value);
+		double knot = MPS_TO_KNOT(value);
 
 		sogValues[SPEED_UNIT_KNOT] = knot;
 		sogValues[SPEED_UNIT_KMH] = KNOT_TO_KMH(knot);
@@ -111,12 +205,30 @@ void setSOGValue(float value, int type)
 	}
 }
 
-float getSOGValue(int type)
+double getSOGValue(int type)
 {
 	return sogValues[type];
 }
 
-void setDepthMeterValue(float depthMeter)
+void setWindValue(double windSpeed, int windDirection, int windRef)
+{
+	if(isValidSpeed(windSpeed)){
+		double mps = windSpeed / 100;
+		double knot = MPS_TO_KNOT(mps);
+
+		windSpeedValues[SPEED_UNIT_KNOT] = knot;
+		windSpeedValues[SPEED_UNIT_KMH] = KNOT_TO_KMH(knot);
+		windSpeedValues[SPEED_UNIT_MPH] = KNOT_TO_MPH(knot);
+		windSpeedValues[SPEED_UNIT_MPS] = mps;
+	}
+}
+
+double getWindSpeedValue(int type)
+{
+	return windSpeedValues[type];
+}
+
+void setDepthMeterValue(double depthMeter)
 {
     depthValues[0] = depthMeter;                        // meter
     depthValues[1] = depthMeter * meterToFeetFactor;    // feet
@@ -125,19 +237,40 @@ void setDepthMeterValue(float depthMeter)
     depthValues[4] = depthMeter * meterToPB;            // PB
 }
 
-float getDepthValue(int type)
+double getDepthValue(int type)
 {
 	return depthValues[type];
 }
 
-void setWTemp(float wtemp, int type)
+void setWTempValue(double wtemp, int type)
 {
-
+	if(type == UNIT_TEMP_CELSIUS){
+		wtempValues[UNIT_TEMP_CELSIUS] = KelvinToCelsius(wtemp);
+		wtempValues[UNIT_TEMP_FAHRENHEIT] = CelsiusToFahrenheit(wtempValues[UNIT_TEMP_CELSIUS]);
+	}
 }
 
-float getWTempValue(int type)
+double getWTempValue(int type)
 {
 	return wtempValues[type];
 }
 
+void setPosition(double latitude, double longitude, int MethodGNSS)
+{
+	if ((MethodGNSS >= 1 && MethodGNSS <= 5) || MethodGNSS == 8){
+		if(isPositionValid(latitude, longitude)){
+			latitudeDegree = latitude;
+			longitudeDegree = longitude;
+		}
+	}
+}
 
+double getLatitude()
+{
+	return latitudeDegree;
+}
+
+double getLongitude()
+{
+	return longitudeDegree;
+}

@@ -28,11 +28,6 @@ public:
 
     virtual ~SpeedPresenter() {}
 
-    virtual void notifySTWValue(float stwValue);
-    virtual void notifySOGValue(float sogValue);
-    virtual void notifyDepthValue(float depthValue);
-    virtual void notifyWTempValue(float wtempValue);
-
 private:
     SpeedPresenter();
 

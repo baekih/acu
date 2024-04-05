@@ -58,6 +58,39 @@ extern "C" {
 #define KMH_TO_KNOT(Kmh)	(Kmh * 0.539956803455724)
 #define KMH_TO_MPH(Kmh) 	(Kmh * 0.62137119223733)
 
+#define OUT_OF_RANGE		"*99.9"
+#define SPEED_OUT_OF_RANGE	"*9.9"
+
+#define INVALID_DEGREE_VALUE (-99999.9)
+
+extern const int typeSTW;
+extern const int typeSOG;
+
+extern const double meterToFeetFactor;
+extern const double meterToFathom;
+extern const double meterToHR;
+extern const double meterToPB;
+
+extern const double tempFahrenheitMax;
+extern const double tempFahrenheitMin;
+
+extern const double tempCelsiusDisplayMax;
+extern const double tempCelsiusDisplayMin;
+
+extern const double tempCelsiusNMEA0183Max;
+extern const double tempCelsiusNMEA0183Min;
+
+extern const double speedDisplayMax;
+extern const double speedDisplayMin;
+
+extern const double depthDisplayMin;
+extern const double depthDisplayFeetMax;
+extern const double depthDisplayMeterMax;
+extern const double depthDisplayFathomMax;
+extern const double depthDisplayPBMax;
+
+double GetRound(double val, double roundFraction);
+
 bool isTempFahrenheitValidScope(double tempF);
 bool isTempCelsiusValidScope(double tempC);
 
@@ -66,27 +99,44 @@ bool isTempCelsiusNMEA0183OutputValidScope(double tempC);
 double FahrenheitToCelsius(double tempFahrenheit);
 double FahrenheitToCelsiusSpan(double tempFahrenheit);
 
-bool CelsiusToFahrenheit(double tempCelsius);
-bool CelsiusToFahrenheitSpan(double tempCelsius);
+double CelsiusToFahrenheit(double tempCelsius);
+double CelsiusToFahrenheitSpan(double tempCelsius);
 
 double KelvinToCelsius(double tempKelvin);
 double CelsiusToKelvin(double tempC);
 double FahrenheitToKelvin(double tempF);
 
-void setHDGValue(float hdg);
-float getHDGValue();
+double GetRadianToDegree360(int radian);
+double GetRadianToDegree180(int radian);
 
-void setSTWValue(float value, int type);
-float getSTWValue(int type);
+double GetCorrection0to360(double degree);
 
-void setSOGValue(float value, int type);
-float getSOGValue(int type);
+double adjustDisplayAngleDegree(double angle);
 
-void setDepthMeterValue(float depthMeter);
-float getDepthValue(int type);
+void setHDGValue(double hdg);
+double getHDGValue();
+bool isTimeInHDG();
+void setValidHDG(bool valid);
+bool isValidHDG();
 
-void setWTempValue(float wtemp, int type);
-float getWTempValue(int type);
+void setSTWValue(double value, int type);
+double getSTWValue(int type);
+
+void setSOGValue(double value, int type);
+double getSOGValue(int type);
+
+void setDepthMeterValue(double depthMeter);
+double getDepthValue(int type);
+
+void setWTempValue(double wtemp, int type);
+double getWTempValue(int type);
+
+void setWindValue(double windSpeed, int windDirection, int windRef);
+double getWindSpeedValue(int type);
+
+void setPosition(double latitude, double longitude, int MethodGNSS);
+double getLatitude();
+double getLongitude();
 
 #ifdef __cplusplus
 }

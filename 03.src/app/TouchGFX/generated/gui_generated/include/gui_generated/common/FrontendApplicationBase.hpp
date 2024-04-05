@@ -17,19 +17,19 @@ public:
 
     virtual void changeToStartScreen()
     {
-        gotoSpeedScreenNoTransition();
+        gotoDataboxScreenNoTransition();
     }
 
-    // Speed
-    void gotoSpeedScreenNoTransition();
+    // Databox
+    void gotoDataboxScreenNoTransition();
 
 protected:
     touchgfx::Callback<FrontendApplicationBase> transitionCallback;
     FrontendHeap& frontendHeap;
     Model& model;
 
-    // Speed
-    void gotoSpeedScreenNoTransitionImpl();
+    // Databox
+    void gotoDataboxScreenNoTransitionImpl();
 };
 
 #endif // FRONTENDAPPLICATIONBASE_HPP

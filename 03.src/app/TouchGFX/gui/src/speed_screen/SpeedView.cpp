@@ -12,9 +12,9 @@
 #define GUAGE_START_DEGREE 			(-120)
 
 SpeedView::SpeedView() :
-	type(typeSTW)
+	speedType(typeSTW)
 {
-	setType(type);
+	setSpeedType(speedType);
 
     for(int index = 0; index < 41; index++){
 
@@ -26,19 +26,19 @@ SpeedView::SpeedView() :
 		if((index % 10) == 0){
 			shapeGuageLine[index].setPosition(0, 0, 30, 30);
 			shapeGuageLine[index].setOrigin(15.0f, 15.0f);
-			const touchgfx::AbstractShape::ShapePoint<float> shapePoints[4] = { { -2.0f, -15.0f }, { 2.0f, -15.0f }, { 2.0f, 15.0f }, { -2.0f, 15.0f } };
+			const touchgfx::AbstractShape::ShapePoint<double> shapePoints[4] = { { -2.0f, -15.0f }, { 2.0f, -15.0f }, { 2.0f, 15.0f }, { -2.0f, 15.0f } };
 			shapeGuageLine[index].setShape(shapePoints);
 		}
 		else if((index % 5) == 0){
 			shapeGuageLine[index].setPosition(0, 0, 20, 20);
 			shapeGuageLine[index].setOrigin(10.0f, 10.0f);
-			const touchgfx::AbstractShape::ShapePoint<float> shapePoints[4] = { { -2.0f, -10.0f }, { 2.0f, -10.0f }, { 2.0f, 10.0f }, { -2.0f, 10.0f } };
+			const touchgfx::AbstractShape::ShapePoint<double> shapePoints[4] = { { -2.0f, -10.0f }, { 2.0f, -10.0f }, { 2.0f, 10.0f }, { -2.0f, 10.0f } };
 			shapeGuageLine[index].setShape(shapePoints);
 		}
 		else {
 			shapeGuageLine[index].setPosition(0, 0, 20, 20);
 			shapeGuageLine[index].setOrigin(10.0f, 10.0f);
-			const touchgfx::AbstractShape::ShapePoint<float> shapePoints[4] = { { -1.0f, -10.0f }, { 1.0f, -10.0f }, { 1.0f, 10.0f }, { -1.0f, 10.0f } };
+			const touchgfx::AbstractShape::ShapePoint<double> shapePoints[4] = { { -1.0f, -10.0f }, { 1.0f, -10.0f }, { 1.0f, 10.0f }, { -1.0f, 10.0f } };
 			shapeGuageLine[index].setShape(shapePoints);
 		}
 
@@ -92,7 +92,7 @@ void SpeedView::tearDownScreen()
 }
 
 
-void SpeedView::drawSpeedGaugeLine(float degree, int offset, touchgfx::Shape<4>& shape)
+void SpeedView::drawSpeedGaugeLine(double degree, int offset, touchgfx::Shape<4>& shape)
 {
 	Point screenEnd = calcPixelGauge.getPointByDistanceBearing(degree + offset);
 
@@ -109,7 +109,7 @@ void SpeedView::drawSpeedGaugeLine(float degree, int offset, touchgfx::Shape<4>&
 }
 
 
-void SpeedView::drawSpeedGaugeText(float degree, int offset, touchgfx::TextArea& text)
+void SpeedView::drawSpeedGaugeText(double degree, int offset, touchgfx::TextArea& text)
 {
 	Point screenEnd = calcPixelGauge.getPointByDistanceBearing(degree + offset);
 
@@ -119,12 +119,15 @@ void SpeedView::drawSpeedGaugeText(float degree, int offset, touchgfx::TextArea&
 	text.invalidate();
 }
 
-void SpeedView::drawSpeedGaugeIndicator(float value, int max)
+void SpeedView::drawSpeedGaugeIndicator(double value, int max)
 {
-	const float MAX_DEGREE = 240.0f;
+	const double MAX_DEGREE = 240.0f;
 
-	float value_ratio = value / (float)max;
-	float degree = (float)GUAGE_START_DEGREE + (MAX_DEGREE * value_ratio);
+	double value_ratio = value / (double)max;
+
+	if(value > max) value_ratio = 1;
+
+	double degree = (double)GUAGE_START_DEGREE + (MAX_DEGREE * value_ratio);
 
 	Point screenEnd = calcPixelIndicator.getPointByDistanceBearing(degree);
 
@@ -135,56 +138,90 @@ void SpeedView::drawSpeedGaugeIndicator(float value, int max)
 	SPEED_INDICATOR.invalidate();
 }
 
-void SpeedView::updateSTW(float stwValue)
+void SpeedView::updateSTW(double stwValue)
 {
-	if(type == typeSTW){
+	if(speedType == typeSTW){
 		updateSpeed(stwValue, 20);
 	}
 }
 
-void SpeedView::updateSOG(float sogValue)
+void SpeedView::updateSOG(double sogValue)
 {
-	if(type == typeSOG){
+	if(speedType == typeSOG){
 		updateSpeed(sogValue, 20);
 	}
 }
 
-void SpeedView::updateSpeed(float value, int max)
+void SpeedView::updateSpeed(double value, int max)
 {
-	Unicode::snprintfFloat(SPEED_VALUEBuffer, SPEED_VALUE_SIZE, "%.1f", value);
+	if(value < speedDisplayMin || value > speedDisplayMax){
+		Unicode::snprintf(SPEED_VALUEBuffer, SPEED_VALUE_SIZE, SPEED_OUT_OF_RANGE);
 
-    SPEED_VALUE.invalidate();
-
-    drawSpeedGaugeIndicator(value, max);
-}
-
-void SpeedView::updateDepth(float depthValue)
-{
-	if(depthValue < 100){
-		Unicode::snprintfFloat(DEPTH_VALUEBuffer, DEPTH_VALUE_SIZE, "%.1f", depthValue);
+		drawSpeedGaugeIndicator(max, max);
 	}
 	else{
-		Unicode::snprintf(DEPTH_VALUEBuffer, DEPTH_VALUE_SIZE, "%d", (int)depthValue);
+		double speed = GetRound(value, 10.0);
+
+		if(speed < 100){
+			Unicode::snprintfFloat(SPEED_VALUEBuffer, SPEED_VALUE_SIZE, "%.1f", speed);
+		}
+		else {
+			Unicode::snprintf(SPEED_VALUEBuffer, SPEED_VALUE_SIZE, "%d", (int)speed);
+		}
+
+		drawSpeedGaugeIndicator(value, max);
+	}
+
+    SPEED_VALUE.invalidate();
+}
+
+void SpeedView::updateDepth(double value)
+{
+	if(value < depthDisplayMin || value > depthDisplayMeterMax){
+		Unicode::snprintf(DEPTH_VALUEBuffer, DEPTH_VALUE_SIZE, OUT_OF_RANGE);
+	}
+	else {
+		double depthValue = GetRound(value, 10.0);
+
+		if(depthValue < 100){
+			Unicode::snprintfFloat(DEPTH_VALUEBuffer, DEPTH_VALUE_SIZE, "%.1f", depthValue);
+		}
+		else{
+			Unicode::snprintf(DEPTH_VALUEBuffer, DEPTH_VALUE_SIZE, "%d", (int)depthValue);
+		}
 	}
 
 	DEPTH_VALUE.invalidate();
 }
 
-void SpeedView::updateWTemp(float value)
+void SpeedView::updateWTemp(double value)
 {
-	Unicode::snprintfFloat(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, "%.1f", value);
+    double tempC = GetRound(value, 10.0);
+
+    const char MAX_TEMP_VALUE[] = "*99.9";
+    const char MIN_TEMP_VALUE[] = "-*9.9";
+
+    if(tempC > tempCelsiusDisplayMax){
+    	Unicode::snprintf(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, MAX_TEMP_VALUE);
+    }
+    else if(tempC < tempCelsiusDisplayMin){
+    	Unicode::snprintf(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, MIN_TEMP_VALUE);
+    }
+    else{
+    	Unicode::snprintfFloat(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, "%.1f", tempC);
+    }
 
 	WTEMP_VALUE.invalidate();
 }
 
-void SpeedView::setType(int new_type)
+void SpeedView::setSpeedType(int new_type)
 {
 	if(new_type == typeSTW){
-		type = new_type;
+		speedType = new_type;
 		Unicode::snprintf(SPEED_TITLEBuffer, SPEED_TITLE_SIZE, "STW");
 	}
 	else if(new_type == typeSOG){
-		type = new_type;
+		speedType = new_type;
 		Unicode::snprintf(SPEED_TITLEBuffer, SPEED_TITLE_SIZE, "SOG");
 	}
 
@@ -203,15 +240,15 @@ void SpeedView::handleClickEvent(const ClickEvent& evt)
     }
     else if (evt.getType() == ClickEvent::RELEASED)
     {
-    	if(abs(pressedY - y) < 40 && (pressedY > x) && (pressedY - x) > 200){
+    	if((pressedY > x) && (pressedY - x) > 200){
 			static_cast<FrontendApplication*>(Application::getInstance())->gotoCompassScreenNoTransition();
 		}
-		else if(abs(pressedY - y) < 40 && (x > pressedY)  && (x - pressedY) > 200){
-			if(type == typeSTW){
-				setType(typeSOG);
+		else if((x > pressedY)  && (x - pressedY) > 200){
+			if(speedType == typeSTW){
+				setSpeedType(typeSOG);
 			}
-			else if(type == typeSOG){
-				setType(typeSTW);
+			else if(speedType == typeSOG){
+				setSpeedType(typeSTW);
 			}
 		}
     }
@@ -225,21 +262,25 @@ void SpeedView::handleDragEvent(const DragEvent& evt)
 
 void SpeedView::handleTickEvent()
 {
-/*	static int stw = 0;
+#ifdef SIMULATOR
+	static int stw = 0;
 
 	stw++;
 
 	if((stw % 10) == 0){
-		updateSTW((float)stw / 100);
+		updateSTW((double)stw / 100);
 
 		if(stw >= 2000){
 			stw = 0;
 		}
-	}*/
+	}
+#else
 
 	updateSTW(getSTWValue(SPEED_UNIT_KNOT));
 	updateSOG(getSOGValue(SPEED_UNIT_KNOT));
 	updateDepth(getDepthValue(DEPTH_UNIT_METER));
 	updateWTemp(getWTempValue(UNIT_TEMP_CELSIUS));
+
+#endif
 }
 

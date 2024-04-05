@@ -18,14 +18,14 @@ class CalcPixel
 
 	int outerWidth;
 private :
-	Point getPointByDistanceXYBearing(float distance, float baseX, float baseY, float heading);
-	Point getPointByCross(float centerX, float centerY, Point solution[], float originX, float originY, float endX, float endY);
+	Point getPointByDistanceXYBearing(double distance, double baseX, double baseY, double heading);
+	Point getPointByCross(double centerX, double centerY, Point solution[], double originX, double originY, double endX, double endY);
 
 public:	CalcPixel(int x, int y, int width);
     virtual ~CalcPixel() {}
-    float adjustAngleDegree(float angle);
+    double adjustAngleDegree(double angle);
 
-    Point getPointByDistanceBearing( float heading);
-    Point getCrossPointInCircle(float radius, float endX, float endY);
+    Point getPointByDistanceBearing( double heading);
+    Point getCrossPointInCircle(double radius, double endX, double endY);
 };
 #endif /* GUI_INCLUDE_GUI_COMMON_CALCPIXEL_HPP_ */
