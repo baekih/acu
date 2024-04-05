@@ -1,5 +1,6 @@
 ~*
 *.launch
+*.BAK
 03.src/.settings
 03.src/app/.settings
 03.src/stldr/.settings

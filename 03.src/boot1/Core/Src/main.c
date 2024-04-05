@@ -108,29 +108,22 @@ void printk(char* pch)
     }
 }
 
-void initFlashData(void)
+void checkFlashData(void)
 {
     common_dat *pcommon_dat = (common_dat*)FLASH_DATA_ADDR;
     uint32_t *pboot2_hdr = (uint32_t*)BOOT2_START_ADDR;
     uint32_t *papp_hdr   = (uint32_t*)APP_START_ADDR;
 
+    if((((*papp_hdr) & 0xF0000000)!=0x20000000) && ((*pboot2_hdr) & 0xF0000000)!=0x20000000)
+    {
+        printk("boot2 and app code empty.\r\n");
+        Error_Handler();
+    }
+
     if(pcommon_dat->jmp_adr != BOOT2_START_ADDR && pcommon_dat->jmp_adr != APP_START_ADDR)
     {
-        if(((*papp_hdr) & 0xF0000000)==0x20000000)
-        {
-            printk("No valid target jmp address. set to jmp_adr<=APP_START_ADDR\r\n");
-            pcommon_dat->jmp_adr = APP_START_ADDR;
-        }
-        else if(((*pboot2_hdr) & 0xF0000000)==0x20000000)
-        {
-            printk("No valid target jmp address. set to jmp_adr<=BOOT2_START_ADDR\r\n");
-            pcommon_dat->jmp_adr = BOOT2_START_ADDR;
-        }
-        else
-        {
-            printk("boot2 and app code empty.\r\n");
-            Error_Handler();
-        }
+        printk("No valid jmp target address. set to jmp_adr<=APP_START_ADDR\r\n");
+        pcommon_dat->jmp_adr = APP_START_ADDR;
     }
 
     g_common_dat = *pcommon_dat;
@@ -176,7 +169,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printk("ECO-DIN15 boot1 start...\r\n");
 
-  initFlashData();
+  checkFlashData();
 
 //  g_common_dat.jmp_adr = BOOT2_START_ADDR;
   /* Reinitialize the Stack pointer and jump to application address */

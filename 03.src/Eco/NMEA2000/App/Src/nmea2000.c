@@ -76,7 +76,6 @@ uint8_t		DevInstance = 0;
 uint8_t		SysInstance = 0;
 
 uint8_t g_switch_bank[6];
-uint8_t g_lcd_img_idx;
 
 /* Private functions ---------------------------------------------------------*/
 void NMEA2000_Open(void)

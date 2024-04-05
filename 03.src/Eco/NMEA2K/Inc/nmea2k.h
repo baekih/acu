@@ -8,16 +8,39 @@
 #ifndef APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_
 #define APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_
 
-#define MFG_CODE_FURUNO                     (1855UL)
-#define MFG_CODE_AIRMAR                     (135UL)
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#ifdef BOOTLOADER
+#define RSV_1BIT                            (0x1ULL)
+#define RSV_2BIT                            (0x3ULL)
+#define RSV_3BIT                            (0x7ULL)
+#define RSV_4BIT                            (0xfULL)
+#define RSV_5BIT                            (0x1fULL)
+#define RSV_6BIT                            (0x3fULL)
+#define RSV_7BIT                            (0x7fULL)
+#define RSV_8BIT                            (0xffULL)
+#define RSV_8BIT_SIZE                       (8ULL)
+#define RSV_16BIT                           (0xffffULL)
+#define RSV_16BIT_SIZE                      (16ULL)
+#define RSV_24BIT                           (0xffffffUL)
+#define RSV_24BIT_SIZE                      (24ULL)
+#define RSV_32BIT                           (0xffffffffUL)
+#define RSV_32BIT_SIZE                      (32ULL)
+
+#define IND_GRP_MARINE                      (4ULL)
+
+#define MFG_CODE_FURUNO                     (1855ULL)
+#define MFG_CODE_AIRMAR                     (135ULL)
+
+#ifdef ECO_BOOT2
 #define MFG_CODE                            MFG_CODE_AIRMAR
 #else
 #define MFG_CODE                            MFG_CODE_FURUNO
 #endif
-#define PPGN_MFGCODE                        ((0x04 << 13) | (0x3 << 11) | (MFG_CODE << 0))  // 0x9F3F
-#define PPGN_MFGCODE_SIZE                   (2U)
+#define PPGN_MFGCODE                        ((IND_GRP_MARINE<<13)|(RSV_2BIT<<11)|(MFG_CODE<<0))
+#define PPGN_MFGCODE_SIZE                   (16ULL)
+#define PPGN_MFGCODE_MASK                   (0xFFFF)
 
 #define NMEA2K_ID                           (688ULL)
 #define DEV_INSTANCE_LO                     (0ULL)
@@ -40,7 +63,7 @@
 
 #define NMEA_NET_MSG_DB_VER                 (2100UL)
 #define NMEA_MFG_PROD_CODE                  (6U)
-#define MFG_MODEL_ID                        "FI-DIN"
+#define MFG_MODEL_ID                        "ECO-DIN"
 #define MFG_SW_VER_CODE                     "00.01:00.01"
 #define MFG_MODEL_VER                       "1"
 #define MFG_MODEL_SER_CODE                  "0000"
@@ -98,7 +121,6 @@
 
 #define PGN065285_NUM                       (65285UL)
 #define PGN065285_PRI                       (7UL)
-#define PGN065285_BOOTSTAT_RUN_BOOTLOADER   (1UL)
 
 #define PGN065286_NUM                       (65286UL)
 
@@ -199,16 +221,43 @@
 #define PGN126720_CMD_255DONTCHANGE                     (255U)
 
 #define PGN126720_11DAT_SREC_BASE_PTR                   (8U)
-#define PGN126720_11DAT_TYP_0START_FLASH                 (0U)
-#define PGN126720_11DAT_TYP_3WRITE_FLASH                 (3U)
-#define PGN126720_11DAT_TYP_5COUNT_FLASH                 (5U)
-#define PGN126720_11DAT_TYP_7END_FLASH                   (7U)
+#define PGN126720_11DAT_TYP_0START_FLASH                (0U)
+#define PGN126720_11DAT_TYP_3WRITE_FLASH                (3U)
+#define PGN126720_11DAT_TYP_5COUNT_FLASH                (5U)
+#define PGN126720_11DAT_TYP_7END_FLASH                  (7U)
 #define PGN126720_11DAT_TYP_SIZE                        (1U)
 #define PGN126720_11DAT_LEN_SIZE                        (2U)
 #define PGN126720_11DAT_ADR_SIZE                        (8U)
 #define PGN126720_11DAT_CHKSUM_SIZE                     (2U)
 #define PGN126720_11DAT_DAT_MAX                         (32U)
 
+/*
+    S0230000FF010101294B0100000A00000000000007E6020E0F2432004D43552D3030360051
+    S0 23 0000 FF 01 01 01 294B 01 00 000A 0000 00000000 07E6 02 0E 0F 24 32 00 4D43552D30303600 51
+
+    S0   |  0 | 2 | N/A    | hdr
+    23   |  2 | 2 | uint8  | remain char pair cnt.
+    0000 |  4 | 4 | uint16 | srec adr field - always 0.
+    FF   |  8 | 2 | uint8  | hdr typ - always FF when blk kdr.
+    01   | 10 | 2 | uint8  | blk format.
+    01   | 12 | 2 | uint8  | num of blk in file.
+    01   | 14 | 2 | uint8  | seq num of blk of this blk - start with 1.
+    294B | 16 | 4 | uint16 | product code.
+    01   | 20 | 2 | uint8  | processor code - 01:master processor, 02:second processor.
+    00   | 22 | 2 | uint8  | rsv
+    000A | 24 | 4 | uint16 | min boot ver req to read
+    0000 | 28 | 4 | uint16 | FW ver
+    0... | 32 | 8 | uint32 | chksum
+    07E6 | 40 | 4 | uint16 | year
+    02   | 44 | 2 | uint8  | month
+    0E   | 46 | 2 | uint8  | day
+    0F   | 48 | 2 | uint8  | hour
+    24   | 50 | 2 | uint8  | min
+    32   | 52 | 2 | uint8  | sec
+    usr  |    |var| str    | any copylight message terminated by 00
+    usr  |    |var| str    | any product name terminated by 00
+    51   |    | 2 | uint8  | crc32???
+*/
 #define PGN126993_NUM                           (126993UL)
 #define PGN126993_PRI                           (7UL)
 #define PGN126993_UPDATE_RATE                   (60000ULL)
@@ -227,9 +276,31 @@
 #define BROADCAST_DEST_ADDR                     (255U)
 #define NMEA2K_THIS_ADDR                        (110U)
 
-#define M_PI                                3.1415926535
+#define FASTDAT_LEN_TRUNC(LEN) ((LEN+1)%7 ? ((LEN+1)/7)*7 + 7 : ((LEN+1)/7)*7)
 
 #pragma pack(push,1)
+typedef struct __RxProtocol
+{
+    uint32_t canid;
+    union
+    {
+        uint8_t  dat[8];
+        uint64_t dat64;
+    };
+    uint8_t  len;
+} RxProtocol ;
+
+typedef struct __TxProtocol
+{
+    uint32_t canid;
+    union
+    {
+        uint8_t  dat[8];
+        uint64_t dat64;
+    };
+    uint8_t  len;
+} TxProtocol ;
+
 typedef struct __fastpacket
 {
     uint8_t  status;
@@ -260,18 +331,6 @@ typedef struct __version_dat
     uint16_t  boot_ver;
     uint16_t  app_ver;
 } version_dat ;
-
-typedef struct __pgn060928_dat
-{
-    uint32_t NMEA2KNum;                    // 21 bits
-    uint16_t MfgCode;                      // 11 bits
-    uint8_t  DevInstance;                  // 3  bits
-    uint8_t  DevFunc;                      // 8  bits
-    uint8_t  DevClass;                     // 7  bits
-    uint8_t  SysInstance;                  // 4  bits
-    uint8_t  IndustryGrp;                  // 3  bits
-    uint8_t  ISOSelfConfig;                // 1  bits
-} pgn060928_dat;
 
 typedef struct __pgn126208_dat
 {
@@ -306,6 +365,60 @@ typedef struct __pgn126208_ack_dat
     uint8_t  param_err[7];              // 8*7 bit array.
 } pgn126208_ack_dat;
 
+typedef struct __pgn126720_boot_srec
+{
+    uint8_t  *pbase;
+    uint8_t  typ;
+    uint32_t adr;
+    uint8_t  *psdat;
+    uint8_t  sdat_len;
+    uint8_t  dat[PGN126720_11DAT_DAT_MAX];
+    uint8_t  dat_len;
+    uint8_t  crc_rcv;
+    uint8_t  crc_cal;
+} pgn126720_boot_srec;
+
+typedef struct __pgn126720_boot_srec_hdr1_raw
+{
+    uint8_t hdr[2];
+    uint8_t cnt[2];
+    uint8_t srec_adr[4];
+    uint8_t hdr_typ[2];
+    uint8_t blk_fmt[2];
+    uint8_t blk_num[2];
+    uint8_t blk_seq[2];
+    uint8_t prod_code[4];
+    uint8_t cpu_code[2];
+    uint8_t rsv[2];
+    uint8_t bootver[4];
+    uint8_t appver[4];
+    uint8_t chksum[8];
+    uint8_t year[4];
+    uint8_t month[2];
+    uint8_t day[2];
+    uint8_t hour[2];
+    uint8_t min[2];
+    uint8_t sec[2];
+    uint8_t crc8[2];
+    uint8_t *pstr_copylight;
+    uint8_t *pstr_prod_name;
+} pgn126720_boot_srec_hdr1_raw;
+
+typedef struct __pgn126720_boot_srec_hdr2_raw
+{
+
+} pgn126720_boot_srec_hdr2_raw;
+
+#if 0
+typedef struct __pgn126720_boot_srec_dat_raw
+{
+    uint8_t hdr[2];
+    uint8_t len[PGN126720_11DAT_LEN_SIZE];
+    uint8_t adr[PGN126720_11DAT_ADR_SIZE];
+    uint8_t *pdat;
+    uint8_t crc8;
+} pgn126720_boot_srec_dat_raw;
+#endif
 typedef struct _pgn126996_dat
 {
     uint16_t NMEANetMsgDbVer;
@@ -317,22 +430,50 @@ typedef struct _pgn126996_dat
     uint8_t  NMEA2KCertLvl;
     uint8_t  LoadEq;
 } pgn126996_dat ;
+
+typedef union _pgn127502_dat
+{
+    uint64_t dat64;
+    uint8_t  dat[8];
+} pgn127502_dat ;
+
 #pragma pack(pop)
 
-#define FASTDAT_LEN_TRUNC(LEN) ((LEN+1)%7 ? ((LEN+1)/7)*7 + 7 : ((LEN+1)/7)*7)
+// nmea2k multi var
+extern fastpacket g_fastpacket[FASTPACKET_ARRAY_MAX];
+extern multipacket g_multipacket;
+extern pgn127502_dat g_swbnkctl_dat;
 
+
+// nmea2k ctl func
+uint32_t getPGN(uint32_t canid);
 uint8_t  getRxPF(uint32_t canid);
 uint8_t  getRxPS(uint32_t canid);
+uint8_t  getRxDA(uint32_t canid);
 uint8_t  getRxSA(uint32_t canid);
 uint32_t getRxPGN(uint32_t canid);
-bool     IsKnownPGN(uint32_t PGN);
+uint32_t getStr2Uint(uint8_t *pstr, uint8_t len);
+bool     isKnownPGN(uint32_t PGN);
 
-void NMEA2KProc(RxProtocol rxpacket);
-void NMEA2KInit(void);
+// multi ctrl
+int32_t Pgn060160MultiPktDataRx(RxProtocol* prxpkt);
+int32_t Pgn060416MultiPktCtrl(RxProtocol rxpkt);
+
+// boot ctrl
+void Pgn126720BootVer(fastpacket* pfastpkt);
+void Pgn126720Proc(fastpacket* pfastpkt);
+
+// nmea2k op func
+int32_t opFastpktQueuePut(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc);
+int32_t opFastpacketBuildup(RxProtocol *prxpkt);
+int32_t opChkMultiPktRunning(RxProtocol *prxpkt);
+void opBootStatChk(RxProtocol rxpkt);
+void opNMEA2K(RxProtocol rxpacket);
+void initNMEA2K(void);
 
 int32_t Pgn126993HeartBeat(void);
 
-extern uint8_t g_switch_bank[6];
-extern uint8_t g_lcd_img_idx;
-
+#ifdef __cplusplus
+}
+#endif
 #endif /* APPLICATION_USER_ECOTRONIX_INC_NMEA2K_H_ */
