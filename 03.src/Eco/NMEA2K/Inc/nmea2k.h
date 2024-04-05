@@ -221,16 +221,43 @@ extern "C" {
 #define PGN126720_CMD_255DONTCHANGE                     (255U)
 
 #define PGN126720_11DAT_SREC_BASE_PTR                   (8U)
-#define PGN126720_11DAT_TYP_0START_FLASH                 (0U)
-#define PGN126720_11DAT_TYP_3WRITE_FLASH                 (3U)
-#define PGN126720_11DAT_TYP_5COUNT_FLASH                 (5U)
-#define PGN126720_11DAT_TYP_7END_FLASH                   (7U)
+#define PGN126720_11DAT_TYP_0START_FLASH                (0U)
+#define PGN126720_11DAT_TYP_3WRITE_FLASH                (3U)
+#define PGN126720_11DAT_TYP_5COUNT_FLASH                (5U)
+#define PGN126720_11DAT_TYP_7END_FLASH                  (7U)
 #define PGN126720_11DAT_TYP_SIZE                        (1U)
 #define PGN126720_11DAT_LEN_SIZE                        (2U)
 #define PGN126720_11DAT_ADR_SIZE                        (8U)
 #define PGN126720_11DAT_CHKSUM_SIZE                     (2U)
 #define PGN126720_11DAT_DAT_MAX                         (32U)
 
+/*
+    S0230000FF010101294B0100000A00000000000007E6020E0F2432004D43552D3030360051
+    S0 23 0000 FF 01 01 01 294B 01 00 000A 0000 00000000 07E6 02 0E 0F 24 32 00 4D43552D30303600 51
+
+    S0   |  0 | 2 | N/A    | hdr
+    23   |  2 | 2 | uint8  | remain char pair cnt.
+    0000 |  4 | 4 | uint16 | srec adr field - always 0.
+    FF   |  8 | 2 | uint8  | hdr typ - always FF when blk kdr.
+    01   | 10 | 2 | uint8  | blk format.
+    01   | 12 | 2 | uint8  | num of blk in file.
+    01   | 14 | 2 | uint8  | seq num of blk of this blk - start with 1.
+    294B | 16 | 4 | uint16 | product code.
+    01   | 20 | 2 | uint8  | processor code - 01:master processor, 02:second processor.
+    00   | 22 | 2 | uint8  | rsv
+    000A | 24 | 4 | uint16 | min boot ver req to read
+    0000 | 28 | 4 | uint16 | FW ver
+    0... | 32 | 8 | uint32 | chksum
+    07E6 | 40 | 4 | uint16 | year
+    02   | 44 | 2 | uint8  | month
+    0E   | 46 | 2 | uint8  | day
+    0F   | 48 | 2 | uint8  | hour
+    24   | 50 | 2 | uint8  | min
+    32   | 52 | 2 | uint8  | sec
+    usr  |    |var| str    | any copylight message terminated by 00
+    usr  |    |var| str    | any product name terminated by 00
+    51   |    | 2 | uint8  | crc32???
+*/
 #define PGN126993_NUM                           (126993UL)
 #define PGN126993_PRI                           (7UL)
 #define PGN126993_UPDATE_RATE                   (60000ULL)
@@ -338,6 +365,60 @@ typedef struct __pgn126208_ack_dat
     uint8_t  param_err[7];              // 8*7 bit array.
 } pgn126208_ack_dat;
 
+typedef struct __pgn126720_boot_srec
+{
+    uint8_t  *pbase;
+    uint8_t  typ;
+    uint32_t adr;
+    uint8_t  *psdat;
+    uint8_t  sdat_len;
+    uint8_t  dat[PGN126720_11DAT_DAT_MAX];
+    uint8_t  dat_len;
+    uint8_t  crc_rcv;
+    uint8_t  crc_cal;
+} pgn126720_boot_srec;
+
+typedef struct __pgn126720_boot_srec_hdr1_raw
+{
+    uint8_t hdr[2];
+    uint8_t cnt[2];
+    uint8_t srec_adr[4];
+    uint8_t hdr_typ[2];
+    uint8_t blk_fmt[2];
+    uint8_t blk_num[2];
+    uint8_t blk_seq[2];
+    uint8_t prod_code[4];
+    uint8_t cpu_code[2];
+    uint8_t rsv[2];
+    uint8_t bootver[4];
+    uint8_t appver[4];
+    uint8_t chksum[8];
+    uint8_t year[4];
+    uint8_t month[2];
+    uint8_t day[2];
+    uint8_t hour[2];
+    uint8_t min[2];
+    uint8_t sec[2];
+    uint8_t crc8[2];
+    uint8_t *pstr_copylight;
+    uint8_t *pstr_prod_name;
+} pgn126720_boot_srec_hdr1_raw;
+
+typedef struct __pgn126720_boot_srec_hdr2_raw
+{
+
+} pgn126720_boot_srec_hdr2_raw;
+
+#if 0
+typedef struct __pgn126720_boot_srec_dat_raw
+{
+    uint8_t hdr[2];
+    uint8_t len[PGN126720_11DAT_LEN_SIZE];
+    uint8_t adr[PGN126720_11DAT_ADR_SIZE];
+    uint8_t *pdat;
+    uint8_t crc8;
+} pgn126720_boot_srec_dat_raw;
+#endif
 typedef struct _pgn126996_dat
 {
     uint16_t NMEANetMsgDbVer;
@@ -391,8 +472,6 @@ void opNMEA2K(RxProtocol rxpacket);
 void initNMEA2K(void);
 
 int32_t Pgn126993HeartBeat(void);
-
-extern uint8_t g_lcd_img_idx;
 
 #ifdef __cplusplus
 }

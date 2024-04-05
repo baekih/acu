@@ -26,7 +26,6 @@ void printk(const char* pstr, ...)
     va_end(args);
 
     while(HAL_BUSY == HAL_UART_Transmit(&huart1, (uint8_t*)&buf[0], strlen(buf), 1000)) osDelay(1);
-
 }
 
 void initTouchSensor(void)
@@ -139,7 +138,7 @@ uint32_t eraseFlash(uint32_t addr)
     else if((addr < ADDR_FLASH_SECTOR_5) && (addr >= ADDR_FLASH_SECTOR_4)) EraseInit.Sector = FLASH_SECTOR_4;
     else if((addr < ADDR_FLASH_SECTOR_6) && (addr >= ADDR_FLASH_SECTOR_5)) EraseInit.Sector = FLASH_SECTOR_5;
     else if((addr < ADDR_FLASH_SECTOR_7) && (addr >= ADDR_FLASH_SECTOR_6)) EraseInit.Sector = FLASH_SECTOR_6;
-    else if(addr >= ADDR_FLASH_SECTOR_7) EraseInit.Sector = FLASH_SECTOR_7;
+    else if( addr >= ADDR_FLASH_SECTOR_7) EraseInit.Sector = FLASH_SECTOR_7;
 
     /* Unlock the Flash to enable the flash control register access *************/
     HAL_FLASH_Unlock();
@@ -189,6 +188,36 @@ uint32_t writeFlash(uint32_t addr, uint32_t* pdata, uint32_t len)
     }
 
     return (FLASHIF_OK);
+}
+
+int32_t eraseFlashApp(void)
+{
+    uint32_t SectorError;
+
+    printf("%s()\n",__FUNCTION__);
+    FLASH_EraseInitTypeDef EraseInit =
+    {
+        .TypeErase = TYPEERASE_SECTORS,
+        .NbSectors = 1,
+        .Sector = FLASH_SECTOR_5,
+        .VoltageRange = VOLTAGE_RANGE_3
+    };
+
+    /* Unlock the Flash to enable the flash control register access *************/
+    HAL_FLASH_Unlock();
+
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP    | FLASH_FLAG_OPERR  | FLASH_FLAG_WRPERR |
+                           FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_ERSERR);
+
+    for(EraseInit.Sector = FLASH_SECTOR_5; EraseInit.Sector <= FLASH_SECTOR_7; EraseInit.Sector++)
+    {
+        if (HAL_FLASHEx_Erase(&EraseInit, &SectorError) != HAL_OK)
+        {
+            return FLASHIF_ERASE_ERROR;
+        }
+    }
+
+    return FLASHIF_OK;
 }
 
 static uint8_t QSPI_WriteEnable(void)

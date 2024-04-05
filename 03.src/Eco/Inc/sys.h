@@ -252,6 +252,8 @@ void printk(const char* pstr, ...);
 uint32_t eraseFlash(uint32_t);
 uint32_t writeFlash(uint32_t, uint32_t*, uint32_t);
 
+int32_t eraseFlashApp(void);
+
 int32_t opSwitchBankControl(uint64_t *pdat64);
 int32_t opLCDBrightness(uint8_t lcd_bl);
 bool getKeyPending(uint8_t idx);

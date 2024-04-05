@@ -14,7 +14,6 @@ uint32_t g_access_level;
 uint32_t g_access_seed;
 uint32_t boot_delay_time = DEFAULT_BOOT_DELAY_MS;
 uint8_t g_flash_source_addr = 255;
-bool    g_nvic_reset = false;
 
 void test_proc(void)
 {
@@ -161,14 +160,14 @@ void test_proc(void)
 
         if(tick%1000 == 0)
         {
+            timer_sec_1++;
+            printf("[%08ld] boot2\n", timer_sec_1);
         }
 
         if(tick%3000 == 0)
         {
-            timer_sec_1 += 3;
-
-            printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
-            Pgn126993HeartBeat();
+//            printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
+//            Pgn126993HeartBeat();
         }
 
         osDelayUntil(tick);
@@ -183,7 +182,7 @@ void runEcoTaskMain(void *argument)
 
     for(;;)
     {
-        osDelay(1000);
+        osDelay(1);
     }
 }
 

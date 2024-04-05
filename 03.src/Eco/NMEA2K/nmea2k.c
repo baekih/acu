@@ -360,7 +360,7 @@ void opNMEA2K(RxProtocol rxpacket)
     uint32_t rxpgn = getPGN(rxpacket.canid);
     uint32_t txpgn = 0;
 
-    printf("pgn rx:%ld\n", rxpgn);
+//    printf("pgn rx:%ld\n", rxpgn);
 
     //Single and Fast/Multi packet build-up.
     switch(rxpgn)

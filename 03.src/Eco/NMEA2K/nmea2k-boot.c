@@ -88,7 +88,6 @@ void opBootStatChk(RxProtocol rxpkt)//    Boot State Acknowledgment
 void Pgn126720Proc(fastpacket* pfastpkt)
 {
 //    printf("%s() Enter\n",__FUNCTION__);
-    int32_t op = 0;
     uint8_t pid = pfastpkt->dat[2]; // properity id(command code)
     uint8_t sid = pfastpkt->dat[3]; // sequence id
     uint8_t cmd = pfastpkt->dat[4]; // flash command
@@ -103,13 +102,12 @@ void Pgn126720Proc(fastpacket* pfastpkt)
         .len = PGN126720_06_LEN
     };
 
-
-    *(uint64_t*)(pfastpkt_dat+0) =
-        ((uint64_t)(PGN126720_06_PROCESSCODE_MASTER)      << (8+16+8+8))          | \
-        ((uint64_t)(sid)                                  << (8+16+8))            | \
-        ((uint64_t)(PGN126720_PID_BOOTLDR_STAT)           << (8+16))              | \
-        ((uint64_t)(PPGN_MFGCODE)                         << (8))                 | \
-        ((uint64_t)(PGN126720_06_LEN)                     << (0));
+    *(uint64_t*)(pfastpkt_dat) = \
+        ((uint64_t)(PGN126720_06_LEN)                     << (0))           |\
+        ((uint64_t)(PPGN_MFGCODE)                         << (8))           |\
+        ((uint64_t)(PGN126720_PID_BOOTLDR_STAT)           << (8+16))        | \
+        ((uint64_t)(sid)                                  << (8+16+8))      | \
+        ((uint64_t)(PGN126720_06_PROCESSCODE_MASTER)      << (8+16+8+8));
 
 //    printf("pid[%d]\n",pid);
 
@@ -118,7 +116,7 @@ void Pgn126720Proc(fastpacket* pfastpkt)
     case PGN126720_PID_BOOTLDR_CMD:
     {
         *(pfastpkt_dat+6) = (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
-//        printf("cmd[%d]\n",cmd);
+        printf("cmd[%d]\n",cmd);
 
         switch(cmd)
         {
@@ -134,7 +132,7 @@ void Pgn126720Proc(fastpacket* pfastpkt)
             break;
         case PGN126720_CMD_2ERASE_FLASH:
             printf("PGN126720_CMD_2ERASE_FLASH\n");
-//            doFlashErase();
+            eraseFlashApp();
             *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
             break;
         case PGN126720_CMD_3READY_FLASH:
@@ -169,76 +167,97 @@ void Pgn126720Proc(fastpacket* pfastpkt)
         break;
     case PGN126720_PID_BOOTLDR_DAT:
     {
-        uint8_t  *psrec_base = &pfastpkt->dat[6];
-        uint8_t  srec_typ = getStr2Uint(psrec_base + PGN126720_11DAT_TYP_SIZE, PGN126720_11DAT_TYP_SIZE);
-        uint8_t  srec_len;
-        uint8_t  srec_dat_len;
-        uint32_t srec_adr;
-        uint8_t  *psrec_dat = NULL;
-        uint8_t  srec_chksum;
-        uint8_t  srec_chksum_local;
-        uint8_t  srec_bin_dat[PGN126720_11DAT_DAT_MAX];
+        pgn126720_boot_srec srec =
+        {
+            .pbase = &pfastpkt->dat[6],
+            .typ = getStr2Uint(srec.pbase + PGN126720_11DAT_TYP_SIZE, PGN126720_11DAT_TYP_SIZE)
+        };
 
-        *(pfastpkt_dat+6) = PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
-//        printf("srec_typ[%d]\n",srec_typ);
-        switch(srec_typ)
+
+        *(srec.pbase) = PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
+        printf("srec.typ[%d]\n",srec.typ);
+
+        switch(srec.typ)
         {
         case PGN126720_11DAT_TYP_0START_FLASH:
-            psrec_dat = psrec_base + 8;
-            g_version_dat.boot_ver = getStr2Uint(psrec_dat + 16, 4);
-            g_version_dat.app_ver  = getStr2Uint(psrec_dat + 20, 4);
+        {
+            pgn126720_boot_srec_hdr1_raw srec_hdr1_raw;
+            memcpy(&srec_hdr1_raw, srec.pbase, sizeof(pgn126720_boot_srec_hdr1_raw)-2-4-4);
+
+            g_version_dat.boot_ver = getStr2Uint(srec_hdr1_raw.bootver, sizeof(srec_hdr1_raw.bootver));
+            g_version_dat.app_ver  = getStr2Uint(srec_hdr1_raw.appver,  sizeof(srec_hdr1_raw.appver ));
             printf("StartFlash boot[%d] app[%d]\n", g_version_dat.boot_ver, g_version_dat.app_ver);
-            *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
+            printf("curr date %d/%d/%d-%d:%d:%d\n", getStr2Uint(srec_hdr1_raw.year,  sizeof(srec_hdr1_raw.year )),
+                                                    getStr2Uint(srec_hdr1_raw.month, sizeof(srec_hdr1_raw.month)),
+                                                    getStr2Uint(srec_hdr1_raw.day,   sizeof(srec_hdr1_raw.day  )),
+                                                    getStr2Uint(srec_hdr1_raw.hour,  sizeof(srec_hdr1_raw.hour )),
+                                                    getStr2Uint(srec_hdr1_raw.min,   sizeof(srec_hdr1_raw.min  )),
+                                                    getStr2Uint(srec_hdr1_raw.sec,   sizeof(srec_hdr1_raw.sec  )));
+
+            *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
+        }
             break;
         case PGN126720_11DAT_TYP_3WRITE_FLASH:
-            psrec_dat = psrec_base + 12;
-            srec_len = getStr2Uint(psrec_base + 2, PGN126720_11DAT_LEN_SIZE);
-            srec_dat_len = srec_len - 1 - 4;
-            srec_adr = getStr2Uint(psrec_base + 4, PGN126720_11DAT_ADR_SIZE);
-            srec_chksum = getStr2Uint(psrec_base + 2*(1 + srec_len), PGN126720_11DAT_CHKSUM_SIZE);
-            srec_chksum_local = 0;
-            printf("WriteToFlash adr[0x%lx] len[%d] chksum[0x%x]\n", srec_adr, srec_dat_len, srec_chksum);
+        {
+            printf("write flash Enter\n");
 
-            if(0 != srec_adr%0x20)
+            srec.psdat = srec.pbase + 12;
+            srec.sdat_len = getStr2Uint(srec.pbase + 2, PGN126720_11DAT_LEN_SIZE);
+            srec.adr = getStr2Uint(srec.pbase + 4, PGN126720_11DAT_ADR_SIZE);
+            srec.crc_rcv = getStr2Uint(srec.pbase + 2*(1 + srec.sdat_len), PGN126720_11DAT_CHKSUM_SIZE);
+
+            srec.dat_len = srec.sdat_len - 4 - 1; // 4:addr size. 1:crc8 size.
+            srec.crc_cal = 0;
+
+            if(0 != srec.adr%0x10) //address align error. address jump unit must be 16byte, 32byte, 64byte.
             {
-                *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_5BUFOVERFLOW<<3) & 0xF8;
+                printf("addr misalign Error.\n");
+                *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_9SRECORDERR<<3) & 0xF8;
                 break;
             }
 
-            for(uint32_t i=1; i<1+1+4; i++)
+            // calculate crc8 per .srec(aka. .ax) line.
+            for(uint32_t i=1; i<1+1+4; i++) //calculate crc8 in header.
             {
-                srec_chksum_local += getStr2Uint(psrec_base + 2*i, 2);
+                srec.crc_cal += getStr2Uint(srec.pbase + 2*i, 2);
             }
 
-            for(uint32_t i=0; i<srec_dat_len; i++)
+            for(uint32_t i=0; i<srec.dat_len; i++) //calculate crc8 in dat field.
             {
-                srec_bin_dat[i] = getStr2Uint(psrec_dat + 2*i, 2);
-                srec_chksum_local += srec_bin_dat[i];
+                srec.dat[i] = getStr2Uint(srec.psdat + 2*i, 2);
+                srec.crc_cal += srec.dat[i];
             }
-            srec_chksum_local = 0xFF - srec_chksum_local;
 
-            if(srec_chksum_local != srec_chksum)
+            srec.crc_cal = 0xFF - srec.crc_cal; //bit upset crc8 data.
+
+            if(srec.crc_cal != srec.crc_rcv) //if crc_cal and crc_rcv different. crc error.
             {
-                *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_7CHKSUMERR<<3) & 0xF8;
-                printf("chksum err [0x%02x:0x%02x]\n", srec_chksum, srec_chksum_local);
+                *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_7CHKSUMERR<<3) & 0xF8;
+                printf("crc8 Error[0x%02x:0x%02x]\n", srec.crc_rcv, srec.crc_cal);
+                break;
+            }
+            // crc8 chk end.
+
+            // flash app binary.
+            if(0/*FLASHIF_OK != IAP_Write(srec.adr, (uint64_t*)srec.dat, g_PGN126720DATS3NAME.mLEN/8)*/)
+            {
+                printf("write to flash[adr:0x%02x dat0:0x%02x len:%d] Error.\n", srec.adr, srec.dat[0], srec.dat_len);
+                *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_2PROGERR<<3) & 0xF8;
                 break;
             }
 
-            if(0/*FLASHIF_OK != IAP_Write(srec_adr, (uint64_t*)(&srec_bin_dat[0]), g_PGN126720DATS3NAME.mLEN/8)*/)
-            {
-                *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_2PROGERR<<3) & 0xF8;
-                break;
-            }
-
-            *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
+            printf("write to flash[adr:0x%02x dat0:0x%02x len:%d crc8:%x:%x] ok.\n",
+                   srec.adr, srec.dat[0], srec.dat_len, srec.crc_rcv, srec.crc_cal);
+            *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
+        }
             break;
         case PGN126720_11DAT_TYP_5COUNT_FLASH:
             printf("CountFlash\n");
-            *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
+            *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
             break;
         case PGN126720_11DAT_TYP_7END_FLASH:
             printf("FinishFlash\n");
-            *(pfastpkt_dat+6) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
+            *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
             break;
         }
     }
@@ -246,15 +265,14 @@ void Pgn126720Proc(fastpacket* pfastpkt)
     case PGN126720_PID_MASTER_RESET:
     case PGN126720_PID_APP_LAUNCH:
         printf("Launch APP... reset device.\r\n");
-        op = 1;
+        osDelay(NVIC_RST_CNT_MAX);
+        HAL_NVIC_SystemReset();
         break;
     default:
         printf("PGN1276720:?? Invaild prop_id\n");
-        op = 2;
         break;
     }
 
-    if(op == 0) opFastpktQueuePut(&txpkt, pfastpkt_dat, fastdat_len_trunc);
-
+    opFastpktQueuePut(&txpkt, pfastpkt_dat, fastdat_len_trunc);
     vPortFree(pfastpkt_dat);
 }
