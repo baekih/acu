@@ -16,8 +16,8 @@
 
 #include "pgn_128259.h"
 
+#include <gui/common/validate_data.h>
 #include <gui/common/DataBase.hpp>
-#include "validate_data.h"
 
 uint16_t 	SpeedWaterRefereced;     	// 16 bit
 uint16_t 	SpeedGroundRefereced;     	// 16 bit

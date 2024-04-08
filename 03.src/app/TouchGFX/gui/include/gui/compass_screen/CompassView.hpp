@@ -15,8 +15,9 @@
 #include <gui/compass_screen/CompassPresenter.hpp>
 
 #include <gui/common/CalcPixel.hpp>
+#include <gui/common/ViewCommon.hpp>
 
-class CompassView : public CompassViewBase
+class CompassView : public CompassViewBase, protected ViewCommon
 {
     touchgfx::Shape<4> shapeCompassLine[72];
     touchgfx::PainterRGB565 shapeCompassPainter[72];
@@ -31,20 +32,19 @@ public:
     virtual void setupScreen();
     virtual void tearDownScreen();
 
-    void updateHDG(float hdgValue);
+    void updateHDG(double hdgValue);
 
-    void drawBearingLine(float degree, int offset, touchgfx::Shape<4>& line);
-    void drawBearingText(float degree, int offset, touchgfx::TextArea& text);
-    void updateBearingLine(float degree);
+    void drawBearingLine(double degree, int offset, touchgfx::Shape<4>& line);
+    void drawBearingText(double degree, int offset, touchgfx::TextArea& text);
+    void updateBearingLine(double degree);
+
+    void hideCompassLine();
 
     void handleTickEvent();
 
     virtual void handleClickEvent(const ClickEvent& evt);
     virtual void handleDragEvent(const DragEvent& evt);
 protected:
-
-    int pressedX;
-    int pressedY;
 
 };
 

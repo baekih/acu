@@ -3,6 +3,8 @@
 #include <touchgfx/transitions/NoTransition.hpp>
 #include <gui/compass_screen/CompassView.hpp>
 #include <gui/compass_screen/CompassPresenter.hpp>
+#include <gui/speed_screen/SpeedView.hpp>
+#include <gui/speed_screen/SpeedPresenter.hpp>
 
 FrontendApplication::FrontendApplication(Model& m, FrontendHeap& heap)
     : FrontendApplicationBase(m, heap)
@@ -18,4 +20,15 @@ void FrontendApplication::gotoCompassScreenNoTransition()
 void FrontendApplication::gotoCompassScreenNoTransitionImpl()
 {
     touchgfx::makeTransition<CompassView, CompassPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
+}
+
+void FrontendApplication::gotoSpeedScreenNoTransition()
+{
+    transitionCallback = touchgfx::Callback<FrontendApplication>(this, &FrontendApplication::gotoSpeedScreenNoTransitionImpl);
+    pendingScreenTransitionCallback = &transitionCallback;
+}
+
+void FrontendApplication::gotoSpeedScreenNoTransitionImpl()
+{
+    touchgfx::makeTransition<SpeedView, SpeedPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }

@@ -196,6 +196,24 @@
     <Filter Include="Source Files\generated\gui_generated\speed_screen">
       <UniqueIdentifier>F0CA4C14-C64B-9286-4297-0175C6B66BDD</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gui\databox_screen">
+      <UniqueIdentifier>8FE6DDA8-7A37-4E82-2D54-674AD3E76739</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gui\databox_screen">
+      <UniqueIdentifier>AEF67736-DE9C-C69F-058A-6ED2A3522FF3</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\generated\gui_generated\databox_screen">
+      <UniqueIdentifier>BAAE165B-B4BB-FEC2-8185-06E4BA5A6E2B</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\gui_generated\databox_screen">
+      <UniqueIdentifier>0A725875-C85F-F834-8FD1-D45E06EB41C6</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\gui\data">
+      <UniqueIdentifier>0E132EB7-298B-080D-933F-9A8BEF1C43FA</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gui\data">
+      <UniqueIdentifier>CB5FF7EC-ECC5-F861-4C75-C819FD3AD375</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(TouchGFXReleasePath)\framework\source\platform\driver\touch\SDL2TouchController.cpp">
@@ -251,6 +269,24 @@
     </ClCompile>
     <ClCompile Include="..\..\gui\src\common\DataBase.cpp">
       <Filter>Source Files\gui\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\databox_screen\DataboxPresenter.cpp">
+      <Filter>Source Files\gui\databox_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\databox_screen\DataboxView.cpp">
+      <Filter>Source Files\gui\databox_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\generated\gui_generated\src\databox_screen\DataboxViewBase.cpp">
+      <Filter>Source Files\generated\gui_generated\databox_screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\common\ViewCommon.cpp">
+      <Filter>Source Files\gui\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\common\validate_data.c">
+      <Filter>Source Files\gui\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gui\src\data\DataBoxNavi.cpp">
+      <Filter>Source Files\gui\data</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -717,6 +753,24 @@
     </ClInclude>
     <ClInclude Include="..\..\gui\include\gui\common\DataBase.hpp">
       <Filter>Header Files\gui\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\databox_screen\DataboxPresenter.hpp">
+      <Filter>Header Files\gui\databox_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\databox_screen\DataboxView.hpp">
+      <Filter>Header Files\gui\databox_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\databox_screen\DataboxViewBase.hpp">
+      <Filter>Header Files\generated\gui_generated\databox_screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\common\ViewCommon.hpp">
+      <Filter>Header Files\gui\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\common\validate_data.h">
+      <Filter>Source Files\gui\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gui\include\gui\data\DataBoxNavi.hpp">
+      <Filter>Header Files\gui\data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

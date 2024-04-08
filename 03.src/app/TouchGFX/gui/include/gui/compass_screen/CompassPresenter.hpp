@@ -27,9 +27,6 @@ public:
 
     virtual ~CompassPresenter() {}
 
-    // override the empty function.
-    void notifyHDGValue(float hdgValue);
-
 private:
     CompassPresenter();
 

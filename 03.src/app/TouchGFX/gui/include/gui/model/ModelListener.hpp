@@ -29,13 +29,6 @@ public:
         model = m;
     }
 
-    virtual void notifyHDGValue(float hdgValue){}
-
-    virtual void notifySTWValue(float stwValue){}
-    virtual void notifySOGValue(float sogValue){}
-    virtual void notifyDepthValue(float depthValue){}
-    virtual void notifyWTempValue(float wtempValue){}
-
 protected:
     Model* model;
 };

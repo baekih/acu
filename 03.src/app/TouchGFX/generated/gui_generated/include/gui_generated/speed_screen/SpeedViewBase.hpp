@@ -12,7 +12,6 @@
 #include <touchgfx/widgets/canvas/Circle.hpp>
 #include <touchgfx/widgets/canvas/PainterRGB565.hpp>
 #include <touchgfx/widgets/canvas/Shape.hpp>
-#include <touchgfx/widgets/ScalableImage.hpp>
 #include <touchgfx/widgets/canvas/Line.hpp>
 #include <touchgfx/widgets/TextAreaWithWildcard.hpp>
 #include <touchgfx/widgets/TextArea.hpp>
@@ -43,11 +42,12 @@ protected:
      */
     touchgfx::Box __background;
     touchgfx::Image BACK_IMAGE;
-    touchgfx::Circle CIRCLE_BACKGROUND;
-    touchgfx::PainterRGB565 CIRCLE_BACKGROUNDPainter;
+    touchgfx::Circle CIRCLE_BACKGROUND_1_1;
+    touchgfx::PainterRGB565 CIRCLE_BACKGROUND_1_1Painter;
     touchgfx::Shape<3> SPEED_INDICATOR;
     touchgfx::PainterRGB565 SPEED_INDICATORPainter;
-    touchgfx::ScalableImage INDICATOR_GUIDE;
+    touchgfx::Circle INDICATOR_GUIDE;
+    touchgfx::PainterRGB565 INDICATOR_GUIDEPainter;
     touchgfx::Line TEXT_LINE;
     touchgfx::PainterRGB565 TEXT_LINEPainter;
     touchgfx::TextAreaWithOneWildcard SPEED_TITLE;

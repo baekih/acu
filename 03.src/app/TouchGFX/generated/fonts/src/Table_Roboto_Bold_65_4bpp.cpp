@@ -55,7 +55,8 @@ KEEP extern const touchgfx::GlyphNode glyphs_Roboto_Bold_65_4bpp[] FONT_TABLE_LO
     { 34730, 0x0057,  55,  46,  46,   1,  57, 113,   5, 0x00 },
     { 36018, 0x0058,  41,  46,  46,   0,  41, 118,   3, 0x00 },
     { 36984, 0x0059,  40,  46,  46,   0,  40, 121,  10, 0x00 },
-    { 37904, 0x005A,  36,  46,  46,   2,  39, 131,   3, 0x00 }
+    { 37904, 0x005A,  36,  46,  46,   2,  39, 131,   3, 0x00 },
+    { 38732, 0x02DA,  15,  13,  49,   3,  22,   0,   0, 0x00 }
 };
 
 // Roboto_Bold_65_4bpp
@@ -73,6 +74,6 @@ touchgfx::GeneratedFont& getFont_Roboto_Bold_65_4bpp();
 
 touchgfx::GeneratedFont& getFont_Roboto_Bold_65_4bpp()
 {
-    static touchgfx::GeneratedFont Roboto_Bold_65_4bpp(glyphs_Roboto_Bold_65_4bpp, 52, 80, 65, 0, 0, 4, 1, 1, 1, unicodes_Roboto_Bold_65_4bpp, kerning_Roboto_Bold_65_4bpp, 63, 0, 0, 0);
+    static touchgfx::GeneratedFont Roboto_Bold_65_4bpp(glyphs_Roboto_Bold_65_4bpp, 53, 80, 65, 0, 0, 4, 1, 1, 1, unicodes_Roboto_Bold_65_4bpp, kerning_Roboto_Bold_65_4bpp, 63, 0, 0, 0);
     return Roboto_Bold_65_4bpp;
 }

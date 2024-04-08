@@ -12,18 +12,3 @@
 
 #define INTEGER_SPEED_MIN_VALUE		0
 #define INTEGER_SPEED_MAX_VALUE 	SHORT_MAX_VALID_VALUE
-
-bool isValidLongInteger(long longInt)
-{
-	return (longInt >= 0 && longInt < LONG_INT_MAX_VALUE) ? true : false;
-}
-
-bool isValidSpeed(int speedValue)
-{
-	return (speedValue >= INTEGER_SPEED_MIN_VALUE && speedValue <= INTEGER_SPEED_MAX_VALUE) ? true : false;
-}
-
-float GetRound(float val, float roundFraction)
-{
-	return ((float)round(val * roundFraction) / roundFraction);
-}

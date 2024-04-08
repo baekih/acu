@@ -13,31 +13,35 @@ class FlashDataReader;
 
 struct Typography
 {
-    static const touchgfx::FontId TYPEPO_30PX = 0;
-    static const touchgfx::FontId TYPEPO_40PX = 1;
-    static const touchgfx::FontId TYPEPO_65PX = 2;
-    static const touchgfx::FontId TYPEPO_70PX = 3;
-    static const touchgfx::FontId TYPEPO_80PX = 4;
-    static const touchgfx::FontId TYPEPO_90PX = 5;
-    static const touchgfx::FontId TYPEPO_100PX = 6;
-    static const touchgfx::FontId TYPEPO_120PX = 7;
-    static const touchgfx::FontId TYPEPO_150PX = 8;
-    static const touchgfx::FontId TYPEPO_160PX = 9;
+    static const touchgfx::FontId TYPEPO_25PX = 0;
+    static const touchgfx::FontId TYPEPO_30PX = 1;
+    static const touchgfx::FontId TYPEPO_40PX = 2;
+    static const touchgfx::FontId TYPEPO_65PX = 3;
+    static const touchgfx::FontId TYPEPO_70PX = 4;
+    static const touchgfx::FontId TYPEPO_80PX = 5;
+    static const touchgfx::FontId TYPEPO_90PX = 6;
+    static const touchgfx::FontId TYPEPO_100PX = 7;
+    static const touchgfx::FontId TYPEPO_110PX = 8;
+    static const touchgfx::FontId TYPEPO_120PX = 9;
+    static const touchgfx::FontId TYPEPO_150PX = 10;
+    static const touchgfx::FontId TYPEPO_160PX = 11;
 };
 
 struct TypographyFontIndex
 {
-    static const touchgfx::FontId TYPEPO_30PX = 0;  // Roboto_Bold_30_4bpp
-    static const touchgfx::FontId TYPEPO_40PX = 1;  // Roboto_Bold_40_4bpp
-    static const touchgfx::FontId TYPEPO_65PX = 2;  // Roboto_Bold_65_4bpp
-    static const touchgfx::FontId TYPEPO_70PX = 3;  // Roboto_Bold_70_4bpp
-    static const touchgfx::FontId TYPEPO_80PX = 4;  // Roboto_Bold_80_4bpp
-    static const touchgfx::FontId TYPEPO_90PX = 5;  // Roboto_Bold_90_4bpp
-    static const touchgfx::FontId TYPEPO_100PX = 6; // Roboto_Bold_100_4bpp
-    static const touchgfx::FontId TYPEPO_120PX = 7; // Roboto_Bold_120_1bpp
-    static const touchgfx::FontId TYPEPO_150PX = 8; // Roboto_Bold_150_4bpp
-    static const touchgfx::FontId TYPEPO_160PX = 9; // Roboto_Bold_160_1bpp
-    static const uint16_t NUMBER_OF_FONTS = 10;
+    static const touchgfx::FontId TYPEPO_25PX = 0;  // Roboto_Bold_25_4bpp
+    static const touchgfx::FontId TYPEPO_30PX = 1;  // Roboto_Bold_30_4bpp
+    static const touchgfx::FontId TYPEPO_40PX = 2;  // Roboto_Bold_40_4bpp
+    static const touchgfx::FontId TYPEPO_65PX = 3;  // Roboto_Bold_65_4bpp
+    static const touchgfx::FontId TYPEPO_70PX = 4;  // Roboto_Bold_70_4bpp
+    static const touchgfx::FontId TYPEPO_80PX = 5;  // Roboto_Bold_80_4bpp
+    static const touchgfx::FontId TYPEPO_90PX = 6;  // Roboto_Bold_90_4bpp
+    static const touchgfx::FontId TYPEPO_100PX = 7; // Roboto_Bold_100_4bpp
+    static const touchgfx::FontId TYPEPO_110PX = 8; // Roboto_Bold_110_4bpp
+    static const touchgfx::FontId TYPEPO_120PX = 9; // Roboto_Bold_120_1bpp
+    static const touchgfx::FontId TYPEPO_150PX = 10; // Roboto_Bold_150_4bpp
+    static const touchgfx::FontId TYPEPO_160PX = 11; // Roboto_Bold_160_1bpp
+    static const uint16_t NUMBER_OF_FONTS = 12;
 };
 
 class ApplicationFontProvider : public touchgfx::FontProvider

@@ -13,6 +13,8 @@
 #include <gui/speed_screen/SpeedPresenter.hpp>
 #include <gui/compass_screen/CompassView.hpp>
 #include <gui/compass_screen/CompassPresenter.hpp>
+#include <gui/databox_screen/DataboxView.hpp>
+#include <gui/databox_screen/DataboxPresenter.hpp>
 
 using namespace touchgfx;
 
@@ -32,15 +34,15 @@ FrontendApplicationBase::FrontendApplicationBase(Model& m, FrontendHeap& heap)
  * Screen Transition Declarations
  */
 
-// Speed
+// Databox
 
-void FrontendApplicationBase::gotoSpeedScreenNoTransition()
+void FrontendApplicationBase::gotoDataboxScreenNoTransition()
 {
-    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplicationBase::gotoSpeedScreenNoTransitionImpl);
+    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplicationBase::gotoDataboxScreenNoTransitionImpl);
     pendingScreenTransitionCallback = &transitionCallback;
 }
 
-void FrontendApplicationBase::gotoSpeedScreenNoTransitionImpl()
+void FrontendApplicationBase::gotoDataboxScreenNoTransitionImpl()
 {
-    touchgfx::makeTransition<SpeedView, SpeedPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
+    touchgfx::makeTransition<DataboxView, DataboxPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }
