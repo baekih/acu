@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>fi-din</name>
+	<name>app</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -702,4 +702,10 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_130823.c</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>copy_PARENT</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/fi-din/03.src</value>
+		</variable>
+	</variableList>
 </projectDescription>
