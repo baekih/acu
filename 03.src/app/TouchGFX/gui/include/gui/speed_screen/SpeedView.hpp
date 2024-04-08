@@ -15,45 +15,41 @@
 #include <gui/speed_screen/SpeedPresenter.hpp>
 
 #include <gui/common/CalcPixel.hpp>
+#include <gui/common/ViewCommon.hpp>
 
-class SpeedView : public SpeedViewBase
+class SpeedView : public SpeedViewBase, protected ViewCommon
 {
-public :
-	enum {
-		typeSTW,
-		typeSOG,
-	} SpeedType;
+	int speedType;
 
 private :
-	int type;
-
     touchgfx::Shape<4> shapeGuageLine[41];
 	touchgfx::PainterRGB565 shapeGuagePainter[41];
 
 	touchgfx::TextArea textGaugeSpeed[5];
 
 	CalcPixel calcPixelGauge = CalcPixel(290, 288, 800);
-	CalcPixel calcPixelIndicator = CalcPixel(290, 288, 800);
+	CalcPixel calcPixelIndicator = CalcPixel(290, 290, 800);
 
 private :
-    void drawSpeedGaugeLine(float degree, int offset, touchgfx::Shape<4>& line);
-    void drawSpeedGaugeText(float degree, int offset, touchgfx::TextArea& text);
-    void drawSpeedGaugeIndicator(float value, int max);
+    void drawSpeedGaugeLine(double degree, int offset, touchgfx::Shape<4>& line);
+    void drawSpeedGaugeText(double degree, int offset, touchgfx::TextArea& text);
+    void drawSpeedGaugeIndicator(double value, int max);
 
-    void updateSpeed(float value, int max);
+    void updateSpeed(double value, int max);
 public:
     SpeedView();
     virtual ~SpeedView() {}
     virtual void setupScreen();
     virtual void tearDownScreen();
 
-    void updateSTW(float stwValue);
-    void updateSOG(float sogValue);
+    void updateSTW(double value);
+    void updateSOG(double value);
 
-    void updateDepth(float depthValue);
-    void updateWTemp(float wTempValue);
+    void updateDepth(double value);
+    void updateWTemp(double value);
 
-    void setType(int new_type);
+    void setSpeedType(int new_type);
+    int getSpeedType();
 
     void handleTickEvent();
 
@@ -61,8 +57,6 @@ public:
     virtual void handleDragEvent(const DragEvent& evt);
 protected:
 
-    int pressedX;
-    int pressedY;
 
 };
 

@@ -15,11 +15,6 @@
 extern "C" {
 #endif
 
-float GetRound(float val, float roundFraction);
-
-bool isValidLongInteger(long longInt);
-bool isValidSpeed(int speedValue);
-
 #ifdef __cplusplus
 }
 #endif

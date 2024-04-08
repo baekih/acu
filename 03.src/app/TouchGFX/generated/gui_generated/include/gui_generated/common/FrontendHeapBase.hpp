@@ -16,6 +16,8 @@
 #include <gui/speed_screen/SpeedPresenter.hpp>
 #include <gui/compass_screen/CompassView.hpp>
 #include <gui/compass_screen/CompassPresenter.hpp>
+#include <gui/databox_screen/DataboxView.hpp>
+#include <gui/databox_screen/DataboxPresenter.hpp>
 
 
 /**
@@ -40,7 +42,8 @@ public:
      */
     typedef touchgfx::meta::TypeList< SpeedView,
             touchgfx::meta::TypeList< CompassView,
-            touchgfx::meta::Nil >
+            touchgfx::meta::TypeList< DataboxView,
+            touchgfx::meta::Nil > >
             > GeneratedViewTypes;
 
     /**
@@ -54,7 +57,8 @@ public:
      */
     typedef touchgfx::meta::TypeList< SpeedPresenter,
             touchgfx::meta::TypeList< CompassPresenter,
-            touchgfx::meta::Nil >
+            touchgfx::meta::TypeList< DataboxPresenter,
+            touchgfx::meta::Nil > >
             > GeneratedPresenterTypes;
 
     /**
@@ -77,7 +81,7 @@ public:
 
     virtual void gotoStartScreen(FrontendApplication& app)
     {
-        app.gotoSpeedScreenNoTransition();
+        app.gotoDataboxScreenNoTransition();
     }
 protected:
     FrontendHeapBase(touchgfx::AbstractPartition& presenters, touchgfx::AbstractPartition& views, touchgfx::AbstractPartition& transitions, FrontendApplication& app)

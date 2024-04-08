@@ -12,9 +12,9 @@ CalcPixel::CalcPixel(int x, int y, int width) :
 
 }
 
-float CalcPixel::adjustAngleDegree(float angle)
+double CalcPixel::adjustAngleDegree(double angle)
 {
-	float res = angle;
+	double res = angle;
 
 	if (res >= 360.0) {
 		res = res - 360.0;
@@ -29,26 +29,26 @@ float CalcPixel::adjustAngleDegree(float angle)
 	return res;
 }
 
-Point CalcPixel::getPointByDistanceXYBearing(float distance, float baseX, float baseY, float heading)
+Point CalcPixel::getPointByDistanceXYBearing(double distance, double baseX, double baseY, double heading)
 {
-	float dSetDegree = toRadians(heading);
+	double dSetDegree = toRadians(heading);
 	Point point;
 
-	point.x = (float)baseX + (float)( distance * sin(dSetDegree)); // 결과 좌표 x
-	point.y = (float)baseY - (float)( distance * cos(dSetDegree)); // 결과 좌표 y
+	point.x = (double)baseX + (double)( distance * sin(dSetDegree)); // 결과 좌표 x
+	point.y = (double)baseY - (double)( distance * cos(dSetDegree)); // 결과 좌표 y
 
 	return point;
 }
 
-Point CalcPixel::getPointByCross(float centerX, float centerY, Point solution[], float originX, float originY, float endX, float endY)
+Point CalcPixel::getPointByCross(double centerX, double centerY, Point solution[], double originX, double originY, double endX, double endY)
 {
 	Point result;
 
-	float bigX;
-	float smallX;
+	double bigX;
+	double smallX;
 
-	float bigY;
-	float smallY;
+	double bigY;
+	double smallY;
 
 	if(originX > endX) {
 		bigX = originX;
@@ -84,27 +84,27 @@ Point CalcPixel::getPointByCross(float centerX, float centerY, Point solution[],
 	return result;
 }
 
-Point CalcPixel::getPointByDistanceBearing(float heading)
+Point CalcPixel::getPointByDistanceBearing(double heading)
 {
 	return getPointByDistanceXYBearing(outerWidth, centerX, centerY, heading);
 }
 
 
-Point CalcPixel::getCrossPointInCircle( float radius, float endX, float endY)
+Point CalcPixel::getCrossPointInCircle( double radius, double endX, double endY)
 {
-	float m, n;
+	double m, n;
 
-	float circleX = centerX;
-	float circleY = centerY;
+	double circleX = centerX;
+	double circleY = centerY;
 
-	float startX = centerX;
-	float startY = centerY;
+	double startX = centerX;
+	double startY = centerY;
 
 	Point solution[2] = { {-1, -1}, {-1, -1} };
 	Point result = {-1, -1};
 
-	float A, B1, C, D;
-	float X, Y;
+	double A, B1, C, D;
+	double X, Y;
 
 	if( endX != startX)
 	{
@@ -118,28 +118,31 @@ Point CalcPixel::getCrossPointInCircle( float radius, float endX, float endY)
 
 		if( D == 0 ) // error
 		{
+#ifdef SIMULATOR
+			touchgfx_printf("error1\n");
+#endif
 			X = -B1/A;
 			Y = m*X + n;
 
-			solution[0].x = (float)X;
-			solution[0].y = (float)Y;
+			solution[0].x = (double)X;
+			solution[0].y = (double)Y;
 
-			solution[1].x = (float)X;
-			solution[1].y = (float)Y;
+			solution[1].x = (double)X;
+			solution[1].y = (double)Y;
 		}
 		else if( D > 0 )
 		{
 			X = -(B1 + sqrt(D))/A;
 			Y = m*X + n;
 
-			solution[0].x = (float)X;
-			solution[0].y = (float)Y;
+			solution[0].x = (double)X;
+			solution[0].y = (double)Y;
 
 			X = -(B1 - sqrt(D))/A;
 			Y = m*X + n;
 
-			solution[1].x = (float)X;
-			solution[1].y = (float)Y;
+			solution[1].x = (double)X;
+			solution[1].y = (double)Y;
 
 			result = getPointByCross(circleX, circleY, solution, startX, startY, endX, endY);
 		}
@@ -148,29 +151,32 @@ Point CalcPixel::getCrossPointInCircle( float radius, float endX, float endY)
 	{
 		if( startX ==(circleX -radius) || startX ==(circleX +radius) ) // error
 		{
+#ifdef SIMULATOR
+			touchgfx_printf("error2\n");
+#endif
 			X = startX;
 			Y = circleY;
 
-			solution[0].x = (float)X;
-			solution[0].y = (float)Y;
+			solution[0].x = (double)X;
+			solution[0].y = (double)Y;
 
-			solution[1].x = (float)X;
-			solution[1].y = (float)Y;
+			solution[1].x = (double)X;
+			solution[1].y = (double)Y;
 		}
 		else if( startX > (circleX -radius) && startX < (circleX +radius) )
 		{
 			X = startX;
-			float sqrt_X = sqrt(radius * radius - (startX - circleX) * (startX - circleX));
+			double sqrt_X = sqrt(radius * radius - (startX - circleX) * (startX - circleX));
 
 			Y = circleY + sqrt_X;
 
-			solution[0].x = (float)X;
-			solution[0].y = (float)Y;
+			solution[0].x = (double)X;
+			solution[0].y = (double)Y;
 
 			Y = circleY - sqrt_X;
 
-			solution[1].x = (float)X;
-			solution[1].y = (float)Y;
+			solution[1].x = (double)X;
+			solution[1].y = (double)Y;
 
 			result = getPointByCross(circleX, circleY, solution, startX, startY, endX, endY);
 		}

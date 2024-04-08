@@ -22,12 +22,14 @@ private:
 
 public :
     // Speed
+	void gotoSpeedScreenNoTransition();
 	void gotoCompassScreenNoTransition();
 
 protected:
     touchgfx::Callback<FrontendApplication> transitionCallback;
 
     // Compass
+    void gotoSpeedScreenNoTransitionImpl();
     void gotoCompassScreenNoTransitionImpl();
 };
 

@@ -4,6 +4,7 @@
 #include <touchgfx/Utils.hpp>
 #include <stdint.h>
 
+#include <gui/common/Database.hpp>
 
 class ModelListener;
 

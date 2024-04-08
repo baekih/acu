@@ -19,15 +19,15 @@ SpeedViewBase::SpeedViewBase()
     BACK_IMAGE.setBitmap(touchgfx::Bitmap(BITMAP_SPEED_BACKGROUND_ID));
     add(BACK_IMAGE);
 
-    CIRCLE_BACKGROUND.setPosition(0, 0, 580, 576);
-    CIRCLE_BACKGROUND.setCenter(290, 288);
-    CIRCLE_BACKGROUND.setRadius(272);
-    CIRCLE_BACKGROUND.setLineWidth(4);
-    CIRCLE_BACKGROUND.setArc(-120.3f, 120.4f);
-    CIRCLE_BACKGROUND.setCapPrecision(180);
-    CIRCLE_BACKGROUNDPainter.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
-    CIRCLE_BACKGROUND.setPainter(CIRCLE_BACKGROUNDPainter);
-    add(CIRCLE_BACKGROUND);
+    CIRCLE_BACKGROUND_1_1.setPosition(0, 0, 580, 576);
+    CIRCLE_BACKGROUND_1_1.setCenter(290, 288);
+    CIRCLE_BACKGROUND_1_1.setRadius(272);
+    CIRCLE_BACKGROUND_1_1.setLineWidth(4);
+    CIRCLE_BACKGROUND_1_1.setArc(-120.3f, 120.4f);
+    CIRCLE_BACKGROUND_1_1.setCapPrecision(180);
+    CIRCLE_BACKGROUND_1_1Painter.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
+    CIRCLE_BACKGROUND_1_1.setPainter(CIRCLE_BACKGROUND_1_1Painter);
+    add(CIRCLE_BACKGROUND_1_1);
 
     SPEED_INDICATOR.setPosition(219, 14, 144, 144);
     SPEED_INDICATOR.setOrigin(72.0f, 72.0f);
@@ -39,9 +39,14 @@ SpeedViewBase::SpeedViewBase()
     SPEED_INDICATOR.setShape(SPEED_INDICATORPoints);
     add(SPEED_INDICATOR);
 
-    INDICATOR_GUIDE.setBitmap(touchgfx::Bitmap(BITMAP_INDICATOR_GUIDE_ID));
-    INDICATOR_GUIDE.setPosition(159, 158, 264, 264);
-    INDICATOR_GUIDE.setScalingAlgorithm(touchgfx::ScalableImage::NEAREST_NEIGHBOR);
+    INDICATOR_GUIDE.setPosition(0, 0, 580, 576);
+    INDICATOR_GUIDE.setCenter(290, 289);
+    INDICATOR_GUIDE.setRadius(128);
+    INDICATOR_GUIDE.setLineWidth(4);
+    INDICATOR_GUIDE.setArc(0, 360);
+    INDICATOR_GUIDE.setCapPrecision(180);
+    INDICATOR_GUIDEPainter.setColor(touchgfx::Color::getColorFromRGB(0, 0, 0));
+    INDICATOR_GUIDE.setPainter(INDICATOR_GUIDEPainter);
     add(INDICATOR_GUIDE);
 
     TEXT_LINE.setPosition(233, 344, 109, 15);
@@ -68,12 +73,12 @@ SpeedViewBase::SpeedViewBase()
     SPEED_UNIT.setTypedText(touchgfx::TypedText(T___SINGLEUSE_A4E5));
     add(SPEED_UNIT);
 
-    SPEED_VALUE.setPosition(162, 206, 252, 132);
+    SPEED_VALUE.setPosition(169, 206, 245, 132);
     SPEED_VALUE.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     SPEED_VALUE.setLinespacing(0);
     Unicode::snprintf(SPEED_VALUEBuffer, SPEED_VALUE_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_82LB).getText());
     SPEED_VALUE.setWildcard(SPEED_VALUEBuffer);
-    SPEED_VALUE.setTypedText(touchgfx::TypedText(T___SINGLEUSE_X4C0));
+    SPEED_VALUE.setTypedText(touchgfx::TypedText(T_WILDCARD_120PX));
     add(SPEED_VALUE);
 
     TEXT_LINE_CENTER.setPosition(582, 220, 213, 43);
@@ -90,13 +95,13 @@ SpeedViewBase::SpeedViewBase()
     DEPTH_VALUE.setLinespacing(0);
     Unicode::snprintf(DEPTH_VALUEBuffer, DEPTH_VALUE_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_5D19).getText());
     DEPTH_VALUE.setWildcard(DEPTH_VALUEBuffer);
-    DEPTH_VALUE.setTypedText(touchgfx::TypedText(T___SINGLEUSE_XDWV));
+    DEPTH_VALUE.setTypedText(touchgfx::TypedText(T_WILDCARD_100PX));
     add(DEPTH_VALUE);
 
     DEPTH_UNIT.setXY(744, 22);
     DEPTH_UNIT.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     DEPTH_UNIT.setLinespacing(0);
-    DEPTH_UNIT.setTypedText(touchgfx::TypedText(T___SINGLEUSE_WU69));
+    DEPTH_UNIT.setTypedText(touchgfx::TypedText(T_DEPTH_UNIT_30PX));
     add(DEPTH_UNIT);
 
     DEPTH_TITLE.setXY(602, 22);
@@ -110,19 +115,19 @@ SpeedViewBase::SpeedViewBase()
     WTEMP_VALUE.setLinespacing(0);
     Unicode::snprintf(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_AUKH).getText());
     WTEMP_VALUE.setWildcard(WTEMP_VALUEBuffer);
-    WTEMP_VALUE.setTypedText(touchgfx::TypedText(T___SINGLEUSE_R9JF));
+    WTEMP_VALUE.setTypedText(touchgfx::TypedText(T_WILDCARD_65PX));
     add(WTEMP_VALUE);
 
     DEGREE_UNIT.setXY(753, 256);
     DEGREE_UNIT.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     DEGREE_UNIT.setLinespacing(0);
-    DEGREE_UNIT.setTypedText(touchgfx::TypedText(T___SINGLEUSE_A6IN));
+    DEGREE_UNIT.setTypedText(touchgfx::TypedText(T_DEGREE_30PX));
     add(DEGREE_UNIT);
 
     WTEMP_UNIT.setXY(743, 253);
     WTEMP_UNIT.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     WTEMP_UNIT.setLinespacing(0);
-    WTEMP_UNIT.setTypedText(touchgfx::TypedText(T___SINGLEUSE_ERTP));
+    WTEMP_UNIT.setTypedText(touchgfx::TypedText(T_TEMP_UNIT_30PX));
     add(WTEMP_UNIT);
 
     WTEMP_TITLE.setXY(601, 253);

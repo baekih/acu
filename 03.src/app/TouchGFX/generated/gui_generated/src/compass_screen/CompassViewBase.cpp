@@ -29,10 +29,10 @@ CompassViewBase::CompassViewBase()
     CIRCLE_BACKGROUND.setPainter(CIRCLE_BACKGROUNDPainter);
     add(CIRCLE_BACKGROUND);
 
-    HDG_UNIT.setXY(543, 318);
+    HDG_UNIT.setPosition(517, 288, 50, 77);
     HDG_UNIT.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     HDG_UNIT.setLinespacing(0);
-    HDG_UNIT.setTypedText(touchgfx::TypedText(T___SINGLEUSE_2AZB));
+    HDG_UNIT.setTypedText(touchgfx::TypedText(T_DEGREE_150PX));
     add(HDG_UNIT);
 
     HDG_TYPE.setXY(215, 398);
@@ -47,12 +47,12 @@ CompassViewBase::CompassViewBase()
     HDG_TITLE.setTypedText(touchgfx::TypedText(T___SINGLEUSE_9XEG));
     add(HDG_TITLE);
 
-    HDG_VALUE.setPosition(265, 288, 270, 155);
+    HDG_VALUE.setPosition(256, 288, 270, 155);
     HDG_VALUE.setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
     HDG_VALUE.setLinespacing(0);
     Unicode::snprintf(HDG_VALUEBuffer, HDG_VALUE_SIZE, "%s", touchgfx::TypedText(T___SINGLEUSE_KBPR).getText());
     HDG_VALUE.setWildcard(HDG_VALUEBuffer);
-    HDG_VALUE.setTypedText(touchgfx::TypedText(T_NUMERIC_WILD));
+    HDG_VALUE.setTypedText(touchgfx::TypedText(T_WILDCARD_150PX));
     add(HDG_VALUE);
 
     TEXT_LINE.setPosition(210, 449, 380, 18);
