@@ -383,7 +383,7 @@ uint8_t QSPI_EnableMemoryMappedMode(void)
     return QSPI_OK;
 }
 
-void InitQSPI(void)
+void initQSPI(void)
 {
     /* QSPI memory reset */
     if(QSPI_ResetMemory() != QSPI_OK) Error_Handler();
@@ -638,7 +638,7 @@ void setLCDTestImage(uint8_t img_sel)
     }
 }
 
-int32_t opSwitchBankControl(uint64_t *prxdat64)
+int32_t doSwitchBankControl(uint64_t *prxdat64)
 {
     g_common_dat.bzr_vol = (uint8_t)(*prxdat64 & 0xFF);
 
@@ -656,7 +656,7 @@ int32_t opSwitchBankControl(uint64_t *prxdat64)
     return 0;
 }
 
-int32_t opLCDBrightness(uint8_t lcd_bl)
+int32_t setLCDBrightness(uint8_t lcd_bl)
 {
     g_common_dat.lcd_bl = lcd_bl;
 
@@ -672,7 +672,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     /* Get CAN1 RX message */
     if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxPacket.dat) != HAL_OK) Error_Handler();
 
-#if defined (ECO_BOOT2)
     RxPacket.canid = RxHeader.ExtId;
     RxPacket.len = RxHeader.DLC;
 
@@ -680,54 +679,4 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     {
         if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
     }
-#else
-    g_RxCan[rxCanLastIndex].canid = RxHeader.ExtId;
-    g_RxCan[rxCanLastIndex].len = RxHeader.DLC;
-    memcpy(g_RxCan[rxCanLastIndex].dat, RxPacket.dat, sizeof(RxPacket.dat));
-
-    rxCanLastIndex++;
-    rxCanLastIndex %= CAN_RX_BUF_MAX;
-
-    if(rxCanLastIndex == rxCanFirstIndex)
-    {
-        rxCanFirstIndex++;
-        rxCanFirstIndex %= CAN_RX_BUF_MAX;
-    }
-#endif
 }
-
-#if !defined (ECO_BOOT2)
-void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
-{
-    uint16_t count = 100;
-
-    while(HAL_CAN_IsTxMessagePending(&hcan1, g_TxCan[txCanBufferCount].TxMailbox) == 1)
-     {
-        osDelay(1);
-
-       if(count-- <= 0)
-       {
-         printf("HAL_CAN_IsTxMessagePending over 100ms !!\r\n");
-         break;
-       }
-     }
-
-#if 0
-    for(uint8_t i = 0; i < 8; i++) printf("%02X ", buf[i]);
-    printf("\n");
-#endif
-
-    g_TxCan[txCanBufferCount].TxHeader.ExtId = rawCanId;
-    g_TxCan[txCanBufferCount].TxHeader.IDE = CAN_ID_EXT;
-    g_TxCan[txCanBufferCount].TxHeader.DLC = len;
-
-    memcpy(g_TxCan[txCanBufferCount].TxData, buf, len);
-
-    if(HAL_CAN_AddTxMessage(&hcan1, &g_TxCan[txCanBufferCount].TxHeader,
-            g_TxCan[txCanBufferCount].TxData, &g_TxCan[txCanBufferCount].TxMailbox) != HAL_OK)
-    {
-        printf(" Error HAL_CAN_AddTxMessage hcan1 !!\r\n");
-        osDelay(1);
-    }
-}
-#endif

@@ -463,13 +463,13 @@ int32_t Pgn060416MultiPktCtrl(RxProtocol rxpkt);
 void Pgn126720BootVer(fastpacket* pfastpkt);
 void Pgn126720Proc(fastpacket* pfastpkt);
 
-// nmea2k op func
-int32_t opFastpktQueuePut(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc);
-int32_t opFastpacketBuildup(RxProtocol *prxpkt);
-int32_t opChkMultiPktRunning(RxProtocol *prxpkt);
-void opBootStatChk(RxProtocol rxpkt);
-void opNMEA2K(RxProtocol rxpacket);
+// nmea2k func
+int32_t putFastpktQueue(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc);
+int32_t bldFastpacket(RxProtocol *prxpkt);
+int32_t chkMultiPktRunning(RxProtocol *prxpkt);
+void chkBootStat(RxProtocol rxpkt);
 void initNMEA2K(void);
+void opNMEA2K(RxProtocol rxpacket);
 
 int32_t Pgn126993HeartBeat(void);
 

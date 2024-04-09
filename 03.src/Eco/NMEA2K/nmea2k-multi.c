@@ -34,7 +34,7 @@ uint8_t getFastpacketTxSeqId(void)
     return fastpacket_tx_seq_id << 5;
 }
 
-int32_t opFastpktQueuePut(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc)
+int32_t putFastpktQueue(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc)
 {
     uint8_t fastpkt_tx_seq_id = getFastpacketTxSeqId();
 
@@ -48,7 +48,7 @@ int32_t opFastpktQueuePut(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fas
     return 0;
 }
 
-int32_t opFastpacketBuildup(RxProtocol *prxpkt)
+int32_t bldFastpacket(RxProtocol *prxpkt)
 {
     uint8_t cnt_frame, cnt_seqid;
     fastpacket *pfastpkt;
@@ -131,7 +131,7 @@ int32_t opFastpacketBuildup(RxProtocol *prxpkt)
     return 0;
 }
 
-int32_t opChkMultiPktRunning(RxProtocol *prxpkt)
+int32_t chkMultiPktRunning(RxProtocol *prxpkt)
 {
     // Invalid Source Address.
     if(g_multipacket.SA != getRxSA(prxpkt->canid)) return -1;
@@ -197,7 +197,7 @@ int32_t Pgn060160MultiPktDataRx(RxProtocol* prxpkt)
 //    printf("%s() Enter\n",__FUNCTION__);
     int32_t ret;
 
-    if(0 != (ret = opChkMultiPktRunning(prxpkt))){printf("ret[%ld]\n", ret); return -1;}
+    if(0 != (ret = chkMultiPktRunning(prxpkt))){printf("ret[%ld]\n", ret); return -1;}
 
     if(g_multipacket.status != MULTIPACKET_BUF_MERGING) return -2;
 

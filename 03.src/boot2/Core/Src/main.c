@@ -700,7 +700,7 @@ static void MX_QUADSPI_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN QUADSPI_Init 2 */
-  InitQSPI();
+  initQSPI();
   /* USER CODE END QUADSPI_Init 2 */
 
 }
