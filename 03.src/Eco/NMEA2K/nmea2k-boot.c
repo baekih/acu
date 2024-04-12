@@ -67,22 +67,9 @@ void Pgn126720BootVer(fastpacket* pfastpkt)
     *(uint16_t*)(pf_dat + pf_ofst) = PGN126720_05_BOOTVER;                  pf_ofst+=sizeof(uint16_t);
     *(uint16_t*)(pf_dat + pf_ofst) = PGN126720_05_APPVER;                   pf_ofst+=sizeof(uint16_t);
 
-    opFastpktQueuePut(&txpkt, pf_dat, fastdat_len_trunc);
+    putFastpktQueue(&txpkt, pf_dat, fastdat_len_trunc);
 
     vPortFree(pf_dat);
-}
-
-void opBootStatChk(RxProtocol rxpkt)//    Boot State Acknowledgment
-{
-    uint16_t ppgn_mfgcode = (uint16_t)PPGN_MFGCODE;
-
-    if(memcmp((uint8_t*)&rxpkt.dat64, (uint8_t*)(&ppgn_mfgcode), sizeof(ppgn_mfgcode)))
-    {
-        printf("%s() Error PPGN_MFGCODE[%d]\n",__FUNCTION__, MFG_CODE);
-        return;
-    }
-
-    Pgn065285BootStatAck();
 }
 
 void Pgn126720Proc(fastpacket* pfastpkt)
@@ -273,6 +260,19 @@ void Pgn126720Proc(fastpacket* pfastpkt)
         break;
     }
 
-    opFastpktQueuePut(&txpkt, pfastpkt_dat, fastdat_len_trunc);
+    putFastpktQueue(&txpkt, pfastpkt_dat, fastdat_len_trunc);
     vPortFree(pfastpkt_dat);
+}
+
+void chkBootStat(RxProtocol rxpkt)//    Boot State Acknowledgment
+{
+    uint16_t ppgn_mfgcode = (uint16_t)PPGN_MFGCODE;
+
+    if(memcmp((uint8_t*)&rxpkt.dat64, (uint8_t*)(&ppgn_mfgcode), sizeof(ppgn_mfgcode)))
+    {
+        printf("%s() Error PPGN_MFGCODE[%d]\n",__FUNCTION__, MFG_CODE);
+        return;
+    }
+
+    Pgn065285BootStatAck();
 }

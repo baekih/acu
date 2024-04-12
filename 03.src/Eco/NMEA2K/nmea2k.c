@@ -166,7 +166,7 @@ int32_t Pgn126996ProdInfo(void)
     *(uint8_t *)(pf_dat + pf_ofst) = g_pgn126996_dat.NMEA2KCertLvl;     pf_ofst+=sizeof(uint8_t );
     *(uint8_t *)(pf_dat + pf_ofst) = g_pgn126996_dat.LoadEq;            pf_ofst+=sizeof(uint8_t );
 
-    opFastpktQueuePut(&txpkt, pf_dat, fastdat_len_trunc);
+    putFastpktQueue(&txpkt, pf_dat, fastdat_len_trunc);
 
     vPortFree(pf_dat);
     return 0;
@@ -199,7 +199,7 @@ int32_t Pgn126208GrpFuncAck(fastpacket *pfastpkt, pgn126208_ack_dat *pack_dat)
         printf("i[%ld] param_err[%d] fastpkt_dat[0x%02x]\n", i, pack_dat->param_err[i], *(pfastpkt_dat+7+i/2));
     }
 
-    opFastpktQueuePut(&txpkt, pfastpkt_dat, fastdat_len_trunc);
+    putFastpktQueue(&txpkt, pfastpkt_dat, fastdat_len_trunc);
 
     vPortFree(pfastpkt_dat);
     return 0;
@@ -395,19 +395,19 @@ void opNMEA2K(RxProtocol rxpacket)
         Pgn060416MultiPktCtrl(rxpacket);
         break;
     case PGN065286_NUM: // Boot State Request
-        opBootStatChk(rxpacket);
+        chkBootStat(rxpacket);
         break;
     case PGN065288_NUM: // Boot State Request
-        opLCDBrightness(rxpacket.dat[4]);
+        setLCDBrightness(rxpacket.dat[4]);
         break;
         //Fastpacket build-up.
     case PGN126208_NUM: // NMEA2K Group Function
     case PGN126720_NUM: // Various Function
-        opFastpacketBuildup(&rxpacket);
+        bldFastpacket(&rxpacket);
         break;
     case PGN127502_NUM: // Switch bank control
         g_swbnkctl_dat.dat64 = rxpacket.dat64;
-        opSwitchBankControl(&g_swbnkctl_dat.dat64);
+        doSwitchBankControl(&g_swbnkctl_dat.dat64);
         Pgn127502SwitchBankControl(g_swbnkctl_dat);
         break;
     default:

@@ -383,7 +383,7 @@ uint8_t QSPI_EnableMemoryMappedMode(void)
     return QSPI_OK;
 }
 
-void InitQSPI(void)
+void initQSPI(void)
 {
     /* QSPI memory reset */
     if(QSPI_ResetMemory() != QSPI_OK) Error_Handler();
@@ -638,7 +638,7 @@ void setLCDTestImage(uint8_t img_sel)
     }
 }
 
-int32_t opSwitchBankControl(uint64_t *prxdat64)
+int32_t doSwitchBankControl(uint64_t *prxdat64)
 {
     g_common_dat.bzr_vol = (uint8_t)(*prxdat64 & 0xFF);
 
@@ -656,7 +656,7 @@ int32_t opSwitchBankControl(uint64_t *prxdat64)
     return 0;
 }
 
-int32_t opLCDBrightness(uint8_t lcd_bl)
+int32_t setLCDBrightness(uint8_t lcd_bl)
 {
     g_common_dat.lcd_bl = lcd_bl;
 

@@ -75,6 +75,8 @@ typedef void (*pFunction)(void);
 #define BOOT2_START_ADDR          ADDR_FLASH_SECTOR_4
 #define APP_START_ADDR            ADDR_FLASH_SECTOR_5
 
+//#define ECO_FORCE_BOOT2
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -171,7 +173,9 @@ int main(void)
 
   checkFlashData();
 
-//  g_common_dat.jmp_adr = BOOT2_START_ADDR;
+#ifdef ECO_FORCE_BOOT2
+  g_common_dat.jmp_adr = BOOT2_START_ADDR;
+#endif
   /* Reinitialize the Stack pointer and jump to application address */
   uint32_t JumpAddress = *(__IO uint32_t *) (g_common_dat.jmp_adr + 4);
   pFunction JumpToApplication = (pFunction) JumpAddress;
