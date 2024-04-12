@@ -48,12 +48,12 @@ int32_t Pgn065285BootStatAck(void)//    Boot State Acknowledgment
 void Pgn126720BootVer(fastpacket* pfastpkt)
 {
     printf("%s() Enter\n",__FUNCTION__);
-    uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(1 + PGN126720_05_LEN);
+    uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(PGN126720_05_LEN);
 
     TxProtocol txpkt =
     {
         .canid = (PGN126720_PRI<<26)|((PGN126720_NUM+pfastpkt->src_addr)<<8)|(NMEA2K_THIS_ADDR<<0),
-        .len = PGN126720_05_LEN
+        .len = PGN126720_05_LEN + 2
     };
 
     uint8_t *pf_dat = pvPortMalloc(fastdat_len_trunc);
@@ -78,18 +78,19 @@ void Pgn126720Proc(fastpacket* pfastpkt)
     uint8_t pid = pfastpkt->dat[2]; // properity id(command code)
     uint8_t sid = pfastpkt->dat[3]; // sequence id
     uint8_t cmd = pfastpkt->dat[4]; // flash command
-    uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(1 + PGN126720_06_LEN);
-
-    uint8_t *pfastpkt_dat = pvPortMalloc(fastdat_len_trunc);
-    memset(pfastpkt_dat, 0xFF, fastdat_len_trunc);
+    uint8_t fastdat_len_trunc = FASTDAT_LEN_TRUNC(PGN126720_06_LEN);
 
     TxProtocol txpkt =
     {
         .canid = (PGN126720_PRI<<26)|((PGN126720_NUM+pfastpkt->src_addr)<<8)|(NMEA2K_THIS_ADDR<<0),
-        .len = PGN126720_06_LEN
+        .len = PGN126720_06_LEN + 2
     };
 
-    *(uint64_t*)(pfastpkt_dat) = \
+    uint8_t *pfkt_dat = pvPortMalloc(fastdat_len_trunc);
+    memset(pfkt_dat, 0xFF, fastdat_len_trunc);
+
+
+    *(uint64_t*)(pfkt_dat) = \
         ((uint64_t)(PGN126720_06_LEN)                     << (0))           |\
         ((uint64_t)(PPGN_MFGCODE)                         << (8))           |\
         ((uint64_t)(PGN126720_PID_BOOTLDR_STAT)           << (8+16))        | \
@@ -102,7 +103,7 @@ void Pgn126720Proc(fastpacket* pfastpkt)
     {
     case PGN126720_PID_BOOTLDR_CMD:
     {
-        *(pfastpkt_dat+6) = (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
+        *(pfkt_dat+6) = (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
         printf("cmd[%d]\n",cmd);
 
         switch(cmd)
@@ -110,42 +111,42 @@ void Pgn126720Proc(fastpacket* pfastpkt)
         case PGN126720_CMD_0LOCK_FLASH:
             printf("PGN126720_CMD_0LOCK_FLASH\n");
             HAL_FLASH_Lock();
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
             break;
         case PGN126720_CMD_1UNLOCK_FLASH:
             printf("PGN126720_CMD_1UNLOCK_FLASH\n");
             HAL_FLASH_Unlock();
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
+            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
             break;
         case PGN126720_CMD_2ERASE_FLASH:
             printf("PGN126720_CMD_2ERASE_FLASH\n");
             eraseFlashApp();
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
+            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
             break;
         case PGN126720_CMD_3READY_FLASH:
             printf("PGN126720_CMD_3READY_FLASH\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
+            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
             break;
         case PGN126720_CMD_4VERIFY_FLASH:
             printf("PGN126720_CMD_4VERIFY_FLASH\n");
             //No need ToDo
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_3UNLOCKVERIFY & 0x07;
+            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_3UNLOCKVERIFY & 0x07;
             break;
         case PGN126720_CMD_5ABORT_FLASH:
             printf("PGN126720_CMD_5ABORT_FLASH\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
           break;
         case PGN126720_CMD_6CHANGE_PROCESSOR:
             printf("PGN126720_CMD_6CHANGE_PROCESSOR\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
             break;
         case PGN126720_CMD_254OUTOFRANGE:
             printf("PGN126720_CMD_254OUTOFRANGE\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
           break;
         case PGN126720_CMD_255DONTCHANGE:
             printf("PGN126720_CMD_255DONTCHANGE\n");
-            *(pfastpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
           break;
         default:
             break;
@@ -162,7 +163,7 @@ void Pgn126720Proc(fastpacket* pfastpkt)
 
 
         *(srec.pbase) = PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
-        printf("srec.typ[%d]\n",srec.typ);
+//        printf("srec.typ[%d]\n",srec.typ);
 
         switch(srec.typ)
         {
@@ -186,7 +187,7 @@ void Pgn126720Proc(fastpacket* pfastpkt)
             break;
         case PGN126720_11DAT_TYP_3WRITE_FLASH:
         {
-            printf("write flash Enter\n");
+//            printf("write flash Enter\n");
 
             srec.psdat = srec.pbase + 12;
             srec.sdat_len = getStr2Uint(srec.pbase + 2, PGN126720_11DAT_LEN_SIZE);
@@ -228,13 +229,13 @@ void Pgn126720Proc(fastpacket* pfastpkt)
             // flash app binary.
             if(0/*FLASHIF_OK != IAP_Write(srec.adr, (uint64_t*)srec.dat, g_PGN126720DATS3NAME.mLEN/8)*/)
             {
-                printf("write to flash[adr:0x%02x dat0:0x%02x len:%d] Error.\n", srec.adr, srec.dat[0], srec.dat_len);
+                printf("WR[A%02x D%02x L%d] Error.\n", srec.adr, srec.dat[0], srec.dat_len);
                 *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_2PROGERR<<3) & 0xF8;
                 break;
             }
 
-            printf("write to flash[adr:0x%02x dat0:0x%02x len:%d crc8:%x:%x] ok.\n",
-                   srec.adr, srec.dat[0], srec.dat_len, srec.crc_rcv, srec.crc_cal);
+            printf("WR[%08x:%02x L%d C%02x] ok.\n",
+                   srec.adr, srec.dat[0], srec.dat_len, srec.crc_rcv - srec.crc_cal);
             *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
         }
             break;
@@ -260,8 +261,8 @@ void Pgn126720Proc(fastpacket* pfastpkt)
         break;
     }
 
-    putFastpktQueue(&txpkt, pfastpkt_dat, fastdat_len_trunc);
-    vPortFree(pfastpkt_dat);
+    putFastpktQueue(&txpkt, pfkt_dat, fastdat_len_trunc);
+    vPortFree(pfkt_dat);
 }
 
 void chkBootStat(RxProtocol rxpkt)//    Boot State Acknowledgment
