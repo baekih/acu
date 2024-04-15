@@ -83,7 +83,7 @@ osThreadId_t EcoTaskNMEA2KRxHandle;
 const osThreadAttr_t EcoTaskNMEA2KRx_attributes = {
   .name = "EcoTaskNMEA2KRx",
   .stack_size = 1024 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for EcoTaskNMEA2KTx */
 osThreadId_t EcoTaskNMEA2KTxHandle;
