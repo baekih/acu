@@ -234,8 +234,12 @@ void Pgn126720Proc(fastpacket* pfastpkt)
                 break;
             }
 
-            printf("WR[%08x:%02x L%d C%02x] ok.\n",
-                   srec.adr, srec.dat[0], srec.dat_len, srec.crc_rcv - srec.crc_cal);
+            if(srec.adr%0x00001000 == 0)
+            {
+                printf("WR[%08x:%02x L%d C%02x] ok.\n",
+                       srec.adr, srec.dat[0], srec.dat_len, srec.crc_rcv - srec.crc_cal);
+            }
+
             *(srec.pbase) |= (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
         }
             break;
