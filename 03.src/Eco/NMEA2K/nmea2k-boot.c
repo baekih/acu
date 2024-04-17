@@ -53,23 +53,25 @@ void Pgn126720BootVer(fastpacket* pfastpkt)
     TxProtocol txpkt =
     {
         .canid = (PGN126720_PRI<<26)|((PGN126720_NUM+pfastpkt->src_addr)<<8)|(NMEA2K_THIS_ADDR<<0),
-        .len = PGN126720_05_LEN + 2
+        .len = sizeof(uint64_t)
     };
 
-    uint8_t *pf_dat = pvPortMalloc(fastdat_len_trunc);
-    uint32_t pf_ofst = 0;
+    uint8_t *pfpkt_dat = pvPortMalloc(fastdat_len_trunc);
+    printf("%s() fastdat_len_trunc[%d]\n",__FUNCTION__, fastdat_len_trunc);
+    memset(pfpkt_dat, 0xFF, fastdat_len_trunc);
+    uint32_t pfpkt_ofst = 0;
 
-    *(uint8_t *)(pf_dat + pf_ofst) = PGN126720_05_LEN;                      pf_ofst+=sizeof(uint8_t );
-    *(uint16_t*)(pf_dat + pf_ofst) = PPGN_MFGCODE;                          pf_ofst+=sizeof(uint16_t);
-    *(uint8_t *)(pf_dat + pf_ofst) = PGN126720_PID_BOOTLDR_VER;             pf_ofst+=sizeof(uint8_t );
-    *(uint16_t*)(pf_dat + pf_ofst) = PGN126720_05_PRODUCTCODE;              pf_ofst+=sizeof(uint16_t);
-    *(uint8_t *)(pf_dat + pf_ofst) = PGN126720_05_PROCESSORCODE_MASTER;     pf_ofst+=sizeof(uint8_t );
-    *(uint16_t*)(pf_dat + pf_ofst) = PGN126720_05_BOOTVER;                  pf_ofst+=sizeof(uint16_t);
-    *(uint16_t*)(pf_dat + pf_ofst) = PGN126720_05_APPVER;                   pf_ofst+=sizeof(uint16_t);
+    *(uint8_t *)(pfpkt_dat + pfpkt_ofst) = PGN126720_05_LEN;                      pfpkt_ofst+=sizeof(uint8_t );
+    *(uint16_t*)(pfpkt_dat + pfpkt_ofst) = PPGN_MFGCODE;                          pfpkt_ofst+=sizeof(uint16_t);
+    *(uint8_t *)(pfpkt_dat + pfpkt_ofst) = PGN126720_PID_BOOTLDR_VER;             pfpkt_ofst+=sizeof(uint8_t );
+    *(uint16_t*)(pfpkt_dat + pfpkt_ofst) = PGN126720_05_PRODUCTCODE;              pfpkt_ofst+=sizeof(uint16_t);
+    *(uint8_t *)(pfpkt_dat + pfpkt_ofst) = PGN126720_05_PROCESSORCODE_MASTER;     pfpkt_ofst+=sizeof(uint8_t );
+    *(uint16_t*)(pfpkt_dat + pfpkt_ofst) = PGN126720_05_BOOTVER;                  pfpkt_ofst+=sizeof(uint16_t);
+    *(uint16_t*)(pfpkt_dat + pfpkt_ofst) = PGN126720_05_APPVER;                   pfpkt_ofst+=sizeof(uint16_t);
 
-    putFastpktQueue(&txpkt, pf_dat, fastdat_len_trunc);
+    putFastpktQueue(&txpkt, pfpkt_dat, fastdat_len_trunc);
 
-    vPortFree(pf_dat);
+    vPortFree(pfpkt_dat);
 }
 
 void Pgn126720Proc(fastpacket* pfastpkt)
@@ -83,27 +85,19 @@ void Pgn126720Proc(fastpacket* pfastpkt)
     TxProtocol txpkt =
     {
         .canid = (PGN126720_PRI<<26)|((PGN126720_NUM+pfastpkt->src_addr)<<8)|(NMEA2K_THIS_ADDR<<0),
-        .len = PGN126720_06_LEN + 2
+        .len =  sizeof(uint64_t)
     };
 
-    uint8_t *pfkt_dat = pvPortMalloc(fastdat_len_trunc);
-    memset(pfkt_dat, 0xFF, fastdat_len_trunc);
-
-
-    *(uint64_t*)(pfkt_dat) = \
-        ((uint64_t)(PGN126720_06_LEN)                     << (0))           |\
-        ((uint64_t)(PPGN_MFGCODE)                         << (8))           |\
-        ((uint64_t)(PGN126720_PID_BOOTLDR_STAT)           << (8+16))        | \
-        ((uint64_t)(sid)                                  << (8+16+8))      | \
-        ((uint64_t)(PGN126720_06_PROCESSCODE_MASTER)      << (8+16+8+8));
+    uint8_t *pfpkt_dat = pvPortMalloc(fastdat_len_trunc);
+    printf("%s() fastdat_len_trunc[%d]\n",__FUNCTION__, fastdat_len_trunc);
+    memset(pfpkt_dat, 0xFF, fastdat_len_trunc);
 
 //    printf("pid[%d]\n",pid);
-
     switch(pid)
     {
     case PGN126720_PID_BOOTLDR_CMD:
     {
-        *(pfkt_dat+6) = (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
+        *(pfpkt_dat+6) = (PGN126720_6STATUS_STATUSOFOP_0NOERR<<3) & 0xF8;
         printf("cmd[%d]\n",cmd);
 
         switch(cmd)
@@ -111,42 +105,42 @@ void Pgn126720Proc(fastpacket* pfastpkt)
         case PGN126720_CMD_0LOCK_FLASH:
             printf("PGN126720_CMD_0LOCK_FLASH\n");
             HAL_FLASH_Lock();
-            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
             break;
         case PGN126720_CMD_1UNLOCK_FLASH:
             printf("PGN126720_CMD_1UNLOCK_FLASH\n");
             HAL_FLASH_Unlock();
-            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
+            *(pfpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
             break;
         case PGN126720_CMD_2ERASE_FLASH:
             printf("PGN126720_CMD_2ERASE_FLASH\n");
             eraseFlashApp();
-            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
+            *(pfpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_1UNLOCKED & 0x07;
             break;
         case PGN126720_CMD_3READY_FLASH:
             printf("PGN126720_CMD_3READY_FLASH\n");
-            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
+            *(pfpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_2UNLOCKPROGRAM & 0x07;
             break;
         case PGN126720_CMD_4VERIFY_FLASH:
             printf("PGN126720_CMD_4VERIFY_FLASH\n");
             //No need ToDo
-            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_3UNLOCKVERIFY & 0x07;
+            *(pfpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_3UNLOCKVERIFY & 0x07;
             break;
         case PGN126720_CMD_5ABORT_FLASH:
             printf("PGN126720_CMD_5ABORT_FLASH\n");
-            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
           break;
         case PGN126720_CMD_6CHANGE_PROCESSOR:
             printf("PGN126720_CMD_6CHANGE_PROCESSOR\n");
-            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
             break;
         case PGN126720_CMD_254OUTOFRANGE:
             printf("PGN126720_CMD_254OUTOFRANGE\n");
-            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
           break;
         case PGN126720_CMD_255DONTCHANGE:
             printf("PGN126720_CMD_255DONTCHANGE\n");
-            *(pfkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
+            *(pfpkt_dat+6) |= PGN126720_6STATUS_PROGRAMMODE_0LOCKED & 0x07;
           break;
         default:
             break;
@@ -265,8 +259,15 @@ void Pgn126720Proc(fastpacket* pfastpkt)
         break;
     }
 
-    putFastpktQueue(&txpkt, pfkt_dat, fastdat_len_trunc);
-    vPortFree(pfkt_dat);
+    uint32_t pfpkt_ofst = 0;
+    *(uint8_t *)(pfpkt_dat + pfpkt_ofst) = PGN126720_06_LEN;                      pfpkt_ofst+=sizeof(uint8_t );
+    *(uint16_t*)(pfpkt_dat + pfpkt_ofst) = PPGN_MFGCODE;                          pfpkt_ofst+=sizeof(uint16_t);
+    *(uint8_t *)(pfpkt_dat + pfpkt_ofst) = PGN126720_PID_BOOTLDR_STAT;            pfpkt_ofst+=sizeof(uint8_t );
+    *(uint16_t*)(pfpkt_dat + pfpkt_ofst) = sid;                                   pfpkt_ofst+=sizeof(uint8_t );
+    *(uint8_t *)(pfpkt_dat + pfpkt_ofst) = PGN126720_06_PROCESSCODE_MASTER;
+
+    putFastpktQueue(&txpkt, pfpkt_dat, fastdat_len_trunc);
+    vPortFree(pfpkt_dat);
 }
 
 void chkBootStat(RxProtocol rxpkt)//    Boot State Acknowledgment
