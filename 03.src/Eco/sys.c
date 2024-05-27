@@ -6,6 +6,8 @@
  */
 #include "eco.h"
 
+#if defined (ECO_APP) | defined(ECO_BOOT2)
+
 const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .rsv1 = 0, .rsv2 = {0, 0}};
 common_dat g_common_dat;
 
@@ -15,6 +17,10 @@ key_stat g_key_stat[KEY_MAX];
 uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
 uint8_t g_board_id = BOARD_ID_INVAL;
+
+#else
+
+#endif
 
 void printk(const char* pstr, ...)
 {
@@ -28,6 +34,7 @@ void printk(const char* pstr, ...)
     while(HAL_BUSY == HAL_UART_Transmit(&huart1, (uint8_t*)&buf[0], strlen(buf), 1000)) osDelay(1);
 }
 
+#if defined (ECO_APP)
 void initTouchSensor(void)
 {
     uint8_t res[4] = {0};
@@ -119,7 +126,9 @@ bool getTouchSensor(uint16_t* x, uint16_t* y)
 
     return true;
 }
+#endif
 
+#if defined (ECO_BOOT2)
 uint32_t eraseFlash(uint32_t addr)
 {
     uint32_t SectorError;
@@ -219,7 +228,9 @@ int32_t eraseFlashApp(void)
 
     return FLASHIF_OK;
 }
+#endif
 
+#if defined (ECO_BOOT2)
 static uint8_t QSPI_WriteEnable(void)
 {
     QSPI_CommandTypeDef scmd;
@@ -396,7 +407,9 @@ void initQSPI(void)
 
     QSPI_EnableMemoryMappedMode();
 }
+#endif
 
+#if defined (ECO_APP) | defined(ECO_BOOT2)
 bool getKeyPending(uint8_t idx)
 {
     bool ret = g_key_stat[idx].cur;
@@ -443,7 +456,9 @@ void setLCDBL(uint8_t lcd_bl)
     HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
     return;
 }
+#endif
 
+#if defined (ECO_APP) | defined(ECO_BOOT2)
 void initFlashData(void)
 {
     common_dat *pcommon_dat = (common_dat*)FLASH_DATA_ADDR;
@@ -486,7 +501,9 @@ void updateFlashData(void)
 
     return;
 }
+#endif
 
+#if defined (ECO_BOOT2)
 void setLCDTestImage(uint8_t img_sel)
 {
     uint16_t *pbuf = (uint16_t*)0xC0000000;
@@ -637,7 +654,9 @@ void setLCDTestImage(uint8_t img_sel)
         break;
     }
 }
+#endif
 
+#if defined (ECO_APP) | defined(ECO_BOOT2)
 int32_t doSwitchBankControl(uint64_t *prxdat64)
 {
     g_common_dat.bzr_vol = (uint8_t)(*prxdat64 & 0xFF);
@@ -662,6 +681,7 @@ int32_t setLCDBrightness(uint8_t lcd_bl)
 
     return 0;
 }
+#endif
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
@@ -672,7 +692,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     /* Get CAN1 RX message */
     if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxPacket.dat) != HAL_OK) Error_Handler();
 
-#if defined (ECO_BOOT2)
+#if defined (ECO_BOOT2) | defined (ECO_ECU)
     RxPacket.canid = RxHeader.ExtId;
     RxPacket.len = RxHeader.DLC;
 
@@ -696,7 +716,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 #endif
 }
 
-#if !defined (ECO_BOOT2)
+#if defined (ECO_APP)
 void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
 {
     uint16_t count = 100;
@@ -731,3 +751,4 @@ void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
     }
 }
 #endif
+

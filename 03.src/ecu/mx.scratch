@@ -3,15 +3,15 @@
   <FileVersion>3.0</FileVersion>
   <Workspace>
     <WorkspaceType>Single-project</WorkspaceType>
-    <WorkspacePath>C:\dev\work\st\fi-din\03.src\boot2\</WorkspacePath>
+    <WorkspacePath>C:\dev\work\st\fi-din\03.src\ecu\</WorkspacePath>
     <underRoot>true</underRoot>
     <TrustZone>0</TrustZone>
     <HAL_Driver>C:\dev\ide\st\repo\STM32Cube_FW_F7_V1.17.1</HAL_Driver>
     <CMSIS>Drivers/CMSIS</CMSIS>
     <Toolchain>STM32CubeIDE</Toolchain>
-    <IocFile>boot2.ioc</IocFile>
+    <IocFile>ecu.ioc</IocFile>
     <Project>
-      <ProjectName>boot2</ProjectName>
+      <ProjectName>ecu</ProjectName>
       <ProjectNature>Cpp</ProjectNature>
       <Secure />
       <filestoremove />
@@ -20,7 +20,7 @@
       </sourceEntriesToRemove>
       <configs>
         <config>
-          <name>boot2</name>
+          <name>ecu</name>
           <mainSourceRepo>Core</mainSourceRepo>
           <sourceStructure>Advanced</sourceStructure>
           <device>STM32F767NGHx</device>

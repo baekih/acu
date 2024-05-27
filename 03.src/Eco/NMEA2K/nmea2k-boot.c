@@ -92,21 +92,12 @@ void Pgn126720Proc(fastpacket* pfastpkt)
 //    printf("%s() fastdat_len_trunc[%d]\n",__FUNCTION__, fastdat_len_trunc);
     memset(pfpkt_dat, 0xFF, fastdat_len_trunc);
 
-#if 1
     *(uint64_t*)(pfpkt_dat) = \
         ((uint64_t)(PGN126720_06_LEN)                     << (0))           |\
         ((uint64_t)(PPGN_MFGCODE)                         << (8))           |\
         ((uint64_t)(PGN126720_PID_BOOTLDR_STAT)           << (8+16))        |\
         ((uint64_t)(sid)                                  << (8+16+8))      |\
         ((uint64_t)(PGN126720_06_PROCESSCODE_MASTER)      << (8+16+8+8));
-#else
-    uint32_t pfpkt_ofst = 0;
-    *(uint8_t *)(pfpkt_dat + pfpkt_ofst) = PGN126720_06_LEN;                      pfpkt_ofst+=sizeof(uint8_t );
-    *(uint16_t*)(pfpkt_dat + pfpkt_ofst) = PPGN_MFGCODE;                          pfpkt_ofst+=sizeof(uint16_t);
-    *(uint8_t *)(pfpkt_dat + pfpkt_ofst) = PGN126720_PID_BOOTLDR_STAT;            pfpkt_ofst+=sizeof(uint8_t );
-    *(uint8_t* )(pfpkt_dat + pfpkt_ofst) = sid;                                   pfpkt_ofst+=sizeof(uint8_t );
-    *(uint8_t *)(pfpkt_dat + pfpkt_ofst) = PGN126720_06_PROCESSCODE_MASTER;
-#endif
 
 //    printf("pid[%d]\n",pid);
     switch(pid)

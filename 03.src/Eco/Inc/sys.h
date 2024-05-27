@@ -234,12 +234,15 @@ typedef struct _key_stat
 
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
-extern QSPI_HandleTypeDef hqspi;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
+
+#if defined (ECO_APP) | defined (ECO_BOOT2)
+extern QSPI_HandleTypeDef hqspi;
 extern I2C_HandleTypeDef hi2c1;
 extern CRC_HandleTypeDef hcrc;
 extern LTDC_HandleTypeDef hltdc;
+#endif
 
 extern const common_dat g_common_dat_def;
 extern common_dat g_common_dat;
