@@ -19,7 +19,7 @@ void runEcoTaskMain(void *argument)
 
     for(;;)
     {
-        printk("[%06d] ECU\r\n", ++cnt);
+        printf("[%06d] ECU\r\n", ++cnt);
         osDelay(1000);
     }
 }
