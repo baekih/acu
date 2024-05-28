@@ -15,9 +15,12 @@ uint8_t g_flash_source_addr = 255;
 
 void runEcoTaskMain(void *argument)
 {
+    uint32_t cnt = 0;
+
     for(;;)
     {
-        osDelay(1);
+        printk("[%06d] ECU\r\n", ++cnt);
+        osDelay(1000);
     }
 }
 
@@ -95,18 +98,12 @@ void runEcoTaskNMEA2KTx(void *argument)
     {
         EcoQueueWait(EcoQueueNMEA2KTX1Handle, (uint8_t*)&TxPacket, sizeof(TxProtocol));
 
-        while(0 == HAL_CAN_GetTxMailboxesFreeLevel(&hcan1))
-        {
-            osDelay(1);
-        }
+        while(0 == HAL_CAN_GetTxMailboxesFreeLevel(&hcan1)) osDelay(1);
 
         txhdr.ExtId = TxPacket.canid;
         txhdr.DLC = TxPacket.len;
         memcpy(txdat, TxPacket.dat,TxPacket.len);
 
-        if(HAL_OK != HAL_CAN_AddTxMessage(&hcan1, &txhdr, txdat, NULL))
-        {
-            osDelay(1);
-        }
+        if(HAL_OK != HAL_CAN_AddTxMessage(&hcan1, &txhdr, txdat, NULL)) osDelay(1);
     }
 }

@@ -44,11 +44,8 @@ _Min_Stack_Size = 0x1000; /* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  RAM           (xrw) : ORIGIN = 0x20000000, LENGTH = 512K
-  FLASH_BOOT2   (rx)  : ORIGIN = 0x08020000, LENGTH = 128K
-/*  FLASH_BOOT2   (rx)  : ORIGIN = 0x08040000, LENGTH = 128K*/
-  FLASH_DATA    (rw)  : ORIGIN = 0x08018000, LENGTH = 32K
-  QUADSPI       (r)   : ORIGIN = 0x91F00000, LENGTH = 1M
+  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 512K
+  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 1024K
 }
 
 /* Sections */
@@ -60,7 +57,7 @@ SECTIONS
     . = ALIGN(4);
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH_BOOT2
+  } >FLASH
 
   /* The program code and other data into "FLASH" Rom type memory */
   .text :
@@ -77,7 +74,7 @@ SECTIONS
 
     . = ALIGN(4);
     _etext = .;        /* define a global symbols at end of code */
-  } >FLASH_BOOT2
+  } >FLASH
 
   /* Constant data into "FLASH" Rom type memory */
   .rodata :
@@ -86,13 +83,13 @@ SECTIONS
     *(.rodata)         /* .rodata sections (constants, strings, etc.) */
     *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
     . = ALIGN(4);
-  } >FLASH_BOOT2
+  } >FLASH
 
   .ARM.extab   : {
     . = ALIGN(4);
     *(.ARM.extab* .gnu.linkonce.armextab.*)
     . = ALIGN(4);
-  } >FLASH_BOOT2
+  } >FLASH
 
   .ARM : {
     . = ALIGN(4);
@@ -100,7 +97,7 @@ SECTIONS
     *(.ARM.exidx*)
     __exidx_end = .;
     . = ALIGN(4);
-  } >FLASH_BOOT2
+  } >FLASH
 
   .preinit_array     :
   {
@@ -109,7 +106,7 @@ SECTIONS
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
     . = ALIGN(4);
-  } >FLASH_BOOT2
+  } >FLASH
 
   .init_array :
   {
@@ -119,7 +116,7 @@ SECTIONS
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
     . = ALIGN(4);
-  } >FLASH_BOOT2
+  } >FLASH
 
   .fini_array :
   {
@@ -129,7 +126,7 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(4);
-  } >FLASH_BOOT2
+  } >FLASH
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
@@ -147,7 +144,7 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
 
-  } >RAM AT> FLASH_BOOT2
+  } >RAM AT> FLASH
 
   /* Uninitialized data section into "RAM" Ram type memory */
   . = ALIGN(4);
@@ -183,27 +180,6 @@ SECTIONS
     libm.a ( * )
     libgcc.a ( * )
   }
-
-  ExtFlashSection :
-  {
-    *(ExtFlashSection ExtFlashSection.*)
-    *(.gnu.linkonce.r.*)
-    . = ALIGN(0x4);
-  } >QUADSPI
-
-  FontFlashSection :
-  {
-    *(FontFlashSection FontFlashSection.*)
-    *(.gnu.linkonce.r.*)
-    . = ALIGN(0x4);
-  } >QUADSPI
-
-  TextFlashSection :
-  {
-    *(TextFlashSection TextFlashSection.*)
-    *(.gnu.linkonce.r.*)
-    . = ALIGN(0x4);
-  } >QUADSPI
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }

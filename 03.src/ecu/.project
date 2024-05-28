@@ -32,11 +32,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Eco</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>Eco/BSP</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -77,11 +72,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Eco/BSP/fi-din</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>Eco/Inc/common.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/common.h</locationURI>
@@ -100,6 +90,11 @@
 			<name>Eco/Inc/features.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/features.h</locationURI>
+		</link>
+		<link>
+			<name>Eco/Inc/images.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/images.h</locationURI>
 		</link>
 		<link>
 			<name>Eco/Inc/printf.h</name>
@@ -207,10 +202,4 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/Components/Common/tsensor.h</locationURI>
 		</link>
 	</linkedResources>
-	<variableList>
-		<variable>
-			<name>copy_PARENT</name>
-			<value>$%7BPARENT-1-PROJECT_LOC%7D/fi-din/03.src</value>
-		</variable>
-	</variableList>
 </projectDescription>
