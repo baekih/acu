@@ -1,5 +1,5 @@
 /*
- * boot2.cpp
+ * ecu.cpp
  *
  *  Created on: Jan 29, 2024
  *      Author: ihbaek
@@ -17,9 +17,13 @@ void runEcoTaskMain(void *argument)
 {
     uint32_t cnt = 0;
 
+    initMotor();
+
     for(;;)
     {
-        printf("[%06d] ECU\r\n", ++cnt);
+        printf("[%06d]ECU GATE_HS_DRV[0x%x]\r\n", ++cnt, readMotor(MTR_DRV8323_GATE_DRV_HS));
+//        printf("GATE_HS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_HS));
+//        printf("GATE_LS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_LS));
         osDelay(1000);
     }
 }

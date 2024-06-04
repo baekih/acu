@@ -67,6 +67,8 @@ void Error_Handler(void);
 #define DBG_RX_GPIO_Port GPIOA
 #define DBG_TX_Pin GPIO_PIN_9
 #define DBG_TX_GPIO_Port GPIOA
+#define DRV8323_CS_Pin GPIO_PIN_6
+#define DRV8323_CS_GPIO_Port GPIOH
 
 /* USER CODE BEGIN Private defines */
 
