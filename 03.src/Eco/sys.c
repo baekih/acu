@@ -24,7 +24,7 @@ uint16_t DRV8323DrvCtrl =
     0 << 9  | //DIS_CPUV
     1 << 8  | //DIS_GDF
     0 << 7  | //OTW_REP
-    0 << 5  | //PWM_MODE
+    2 << 5  | //PWM_MODE
     0 << 4  | //1PWM_COM
     0 << 3  | //1PWM_DIR
     0 << 2  | //COAST
