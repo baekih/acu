@@ -254,6 +254,8 @@ extern CRC_HandleTypeDef hcrc;
 extern LTDC_HandleTypeDef hltdc;
 #elif defined (ECO_ECU)
 extern SPI_HandleTypeDef hspi2;
+extern ADC_HandleTypeDef hadc1;
+extern TIM_HandleTypeDef htim11;
 #else
 #error ECO_XXX NOT defined!
 #endif
@@ -291,6 +293,7 @@ void CAN1_SendFrame(uint32_t, uint8_t*, uint8_t);
 uint16_t readMotor(uint8_t);
 void writeMotor(uint8_t, uint16_t);
 void initMotor(void);
+void setMotor(uint8_t);
 #endif
 
 #ifdef __cplusplus

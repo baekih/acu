@@ -752,6 +752,24 @@ void writeMotor(uint8_t addr, uint16_t data)
     return;
 }
 
+void setMotor(uint8_t pwm_motor)
+{
+    static uint8_t pwm_motor_prev = 0;
+    TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
+
+    if(100 < pwm_motor) pwm_motor = 100;
+    if(pwm_motor_prev == pwm_motor) return;
+    pwm_motor_prev = pwm_motor;
+
+    sConfigOC.Pulse = (100*pwm_motor)/100;
+    printf("set pwm_motor[%d] Pulse[%d]\n", pwm_motor, sConfigOC.Pulse);
+
+    HAL_TIM_PWM_Stop(&htim11, TIM_CHANNEL_1);
+    HAL_TIM_PWM_ConfigChannel(&htim11, &sConfigOC, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim11, TIM_CHANNEL_1);
+    return;
+}
+
 void initMotor(void)
 {
     HAL_GPIO_WritePin(DRV8323_CS_GPIO_Port, DRV8323_CS_Pin, GPIO_PIN_SET); //enable to motor controller

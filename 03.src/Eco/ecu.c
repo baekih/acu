@@ -16,14 +16,22 @@ uint8_t g_flash_source_addr = 255;
 void runEcoTaskMain(void *argument)
 {
     uint32_t cnt = 0;
+    uint32_t vol_adc = 0;
+
 
     initMotor();
 
     for(;;)
     {
-        printf("[%06d]ECU GATE_HS_DRV[0x%x]\r\n", ++cnt, readMotor(MTR_DRV8323_GATE_DRV_HS));
-//        printf("GATE_HS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_HS));
-//        printf("GATE_LS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_LS));
+        HAL_ADC_Start(&hadc1);
+        HAL_ADC_PollForConversion(&hadc1, 10);
+        vol_adc = (HAL_ADC_GetValue(&hadc1)*101)/0xfff;
+        vol_adc == 101 ? vol_adc = 100 : vol_adc;
+        setMotor((uint8_t)vol_adc);
+
+        printf("[%06d]ECU MTR_DRV8323_DRV_CTRL[0x%x]\r\n", ++cnt, readMotor(MTR_DRV8323_DRV_CTRL));
+        printf("vol_adc[%ld]\r\n", vol_adc);
+
         osDelay(1000);
     }
 }
