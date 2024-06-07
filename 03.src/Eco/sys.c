@@ -75,7 +75,7 @@ void printk(const char* pstr, ...)
     while(HAL_BUSY == HAL_UART_Transmit(&huart1, (uint8_t*)&buf[0], strlen(buf), 1000)) osDelay(1);
 }
 
-#if defined (ECO_APP)
+#if defined (ECO_APP) | defined(ECO_BOOT2)
 void initTouchSensor(void)
 {
     uint8_t res[4] = {0};
