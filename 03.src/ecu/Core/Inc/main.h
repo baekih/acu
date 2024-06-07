@@ -69,8 +69,18 @@ void Error_Handler(void);
 #define DBG_RX_GPIO_Port GPIOA
 #define DBG_TX_Pin GPIO_PIN_9
 #define DBG_TX_GPIO_Port GPIOA
+#define MTR_DIR_Pin GPIO_PIN_8
+#define MTR_DIR_GPIO_Port GPIOC
+#define MTR_P2_Pin GPIO_PIN_6
+#define MTR_P2_GPIO_Port GPIOF
+#define MTR_BRK_Pin GPIO_PIN_3
+#define MTR_BRK_GPIO_Port GPIOJ
 #define DRV8323_CS_Pin GPIO_PIN_6
 #define DRV8323_CS_GPIO_Port GPIOH
+#define MTR_P3_Pin GPIO_PIN_0
+#define MTR_P3_GPIO_Port GPIOJ
+#define MTR_P1_Pin GPIO_PIN_1
+#define MTR_P1_GPIO_Port GPIOJ
 
 /* USER CODE BEGIN Private defines */
 

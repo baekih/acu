@@ -81,6 +81,13 @@ const osThreadAttr_t EcoTaskNMEA2KTx_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for EcoTaskMTR */
+osThreadId_t EcoTaskMTRHandle;
+const osThreadAttr_t EcoTaskMTR_attributes = {
+  .name = "EcoTaskMTR",
+  .stack_size = 2048 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
 /* Definitions for EcoQueueUART1 */
 osMessageQueueId_t EcoQueueUART1Handle;
 uint8_t EcoQueueUART1Buffer[ 256 * sizeof( uint8_t ) ];
@@ -131,6 +138,7 @@ void runEcoTaskMain(void *argument);
 void runEcoTaskUART(void *argument);
 void runEcoTaskNMEA2KRx(void *argument);
 void runEcoTaskNMEA2KTx(void *argument);
+extern void runEcoTaskMTR(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -227,6 +235,9 @@ int main(void)
 
   /* creation of EcoTaskNMEA2KTx */
   EcoTaskNMEA2KTxHandle = osThreadNew(runEcoTaskNMEA2KTx, NULL, &EcoTaskNMEA2KTx_attributes);
+
+  /* creation of EcoTaskMTR */
+  EcoTaskMTRHandle = osThreadNew(runEcoTaskMTR, NULL, &EcoTaskMTR_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -566,13 +577,21 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOJ_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(WDI_GPIO_Port, WDI_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOJ, LED1_ON_Pin|LED2_ON_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOJ, LED1_ON_Pin|LED2_ON_Pin|MTR_BRK_Pin|MTR_P3_Pin
+                          |MTR_P1_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(MTR_DIR_GPIO_Port, MTR_DIR_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(MTR_P2_GPIO_Port, MTR_P2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(DRV8323_CS_GPIO_Port, DRV8323_CS_Pin, GPIO_PIN_SET);
@@ -584,12 +603,28 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(WDI_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED1_ON_Pin LED2_ON_Pin */
-  GPIO_InitStruct.Pin = LED1_ON_Pin|LED2_ON_Pin;
+  /*Configure GPIO pins : LED1_ON_Pin LED2_ON_Pin MTR_BRK_Pin MTR_P3_Pin
+                           MTR_P1_Pin */
+  GPIO_InitStruct.Pin = LED1_ON_Pin|LED2_ON_Pin|MTR_BRK_Pin|MTR_P3_Pin
+                          |MTR_P1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : MTR_DIR_Pin */
+  GPIO_InitStruct.Pin = MTR_DIR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(MTR_DIR_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : MTR_P2_Pin */
+  GPIO_InitStruct.Pin = MTR_P2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(MTR_P2_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : DRV8323_CS_Pin */
   GPIO_InitStruct.Pin = DRV8323_CS_Pin;

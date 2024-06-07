@@ -15,24 +15,41 @@ uint8_t g_flash_source_addr = 255;
 
 void runEcoTaskMain(void *argument)
 {
+    uint32_t tick_start = 0;
     uint32_t cnt = 0;
-    uint32_t vol_adc = 0;
 
+    for(;;)
+    {
+        tick_start = osKernelGetTickCount();
+
+        printf("[%06d]ECU\r\n", ++cnt);
+
+        osDelay(1000);
+        osDelayUntil(tick_start + 1000);
+    }
+}
+
+void runEcoTaskMTR(void *argument)
+{
+    uint32_t tick_start = 0;
+    uint32_t vol_adc = 0;
 
     initMotor();
 
     for(;;)
     {
+        tick_start = osKernelGetTickCount();
+
         HAL_ADC_Start(&hadc1);
         HAL_ADC_PollForConversion(&hadc1, 10);
         vol_adc = (HAL_ADC_GetValue(&hadc1)*101)/0xfff;
         vol_adc == 101 ? vol_adc = 100 : vol_adc;
+
         setMotor((uint8_t)vol_adc);
 
-        printf("[%06d]ECU MTR_DRV8323_DRV_CTRL[0x%x]\r\n", ++cnt, readMotor(MTR_DRV8323_DRV_CTRL));
-        printf("vol_adc[%ld]\r\n", vol_adc);
+        printf("MTR MTR_DRV8323_DRV_CTRL[0x%x] vol_adc[%ld]\r\n", readMotor(MTR_DRV8323_DRV_CTRL), vol_adc);
 
-        osDelay(1000);
+        osDelayUntil(tick_start + 1000);
     }
 }
 
