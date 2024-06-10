@@ -584,17 +584,16 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(WDI_GPIO_Port, WDI_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOJ, LED1_ON_Pin|LED2_ON_Pin|MTR_BRK_Pin|MTR_P3_Pin
-                          |MTR_P1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOJ, LED1_ON_Pin|LED2_ON_Pin|MTR_P1_Pin|MTR_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(MTR_DIR_GPIO_Port, MTR_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, MTR_P0_Pin|MTR_nBRK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(MTR_P2_GPIO_Port, MTR_P2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(DRV8323_CS_GPIO_Port, DRV8323_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(MTR_CS_GPIO_Port, MTR_CS_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin : WDI_Pin */
   GPIO_InitStruct.Pin = WDI_Pin;
@@ -603,21 +602,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(WDI_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED1_ON_Pin LED2_ON_Pin MTR_BRK_Pin MTR_P3_Pin
-                           MTR_P1_Pin */
-  GPIO_InitStruct.Pin = LED1_ON_Pin|LED2_ON_Pin|MTR_BRK_Pin|MTR_P3_Pin
-                          |MTR_P1_Pin;
+  /*Configure GPIO pins : LED1_ON_Pin LED2_ON_Pin MTR_P1_Pin MTR_DIR_Pin */
+  GPIO_InitStruct.Pin = LED1_ON_Pin|LED2_ON_Pin|MTR_P1_Pin|MTR_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : MTR_DIR_Pin */
-  GPIO_InitStruct.Pin = MTR_DIR_Pin;
+  /*Configure GPIO pins : MTR_P0_Pin MTR_nBRK_Pin */
+  GPIO_InitStruct.Pin = MTR_P0_Pin|MTR_nBRK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(MTR_DIR_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : MTR_P2_Pin */
   GPIO_InitStruct.Pin = MTR_P2_Pin;
@@ -626,12 +623,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(MTR_P2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : DRV8323_CS_Pin */
-  GPIO_InitStruct.Pin = DRV8323_CS_Pin;
+  /*Configure GPIO pin : MTR_CS_Pin */
+  GPIO_InitStruct.Pin = MTR_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(DRV8323_CS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(MTR_CS_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
