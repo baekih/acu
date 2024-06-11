@@ -28,7 +28,7 @@ void test_proc(void)
     for(;;)
     {
         tick += 10;
-        HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
+//        HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
 
         if(tick%10 == 0)
         {
@@ -159,13 +159,13 @@ void test_proc(void)
         if(tick%1000 == 0)
         {
             timer_sec_1++;
-            printf("[%08ld] boot2\n", timer_sec_1);
+//            printf("[%08ld] boot2\n", timer_sec_1);
         }
 
         if(tick%3000 == 0)
         {
-//            printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
-//            Pgn126993HeartBeat();
+            printf("[%08ld] Pgn126993HeartBeat()\n", timer_sec_1);
+            Pgn126993HeartBeat();
         }
 
         osDelayUntil(tick);
@@ -188,11 +188,13 @@ void runEcoTaskKey(void *argument)
 {
     uint8_t  timer_pwroff = 0;
 
+    HAL_GPIO_WritePin(LED_PWR_GPIO_Port, LED_PWR_Pin, GPIO_PIN_SET);
+
     for(;;)
     {
 //        printf("%s():%d\n",__func__,__LINE__);
 
-        if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+        if(GPIO_PIN_SET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
         {
             printf("Push KEY_PWR %d sec\n", timer_pwroff++);
             if(3 < timer_pwroff) NVIC_SystemReset();
