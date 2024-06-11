@@ -169,7 +169,7 @@ bool getTouchSensor(uint16_t* x, uint16_t* y)
 }
 #endif
 
-#if defined (ECO_BOOT2)
+#if defined (ECO_BOOT2) | defined (ECO_APP)
 uint32_t eraseFlash(uint32_t addr)
 {
     uint32_t SectorError;
@@ -271,7 +271,7 @@ int32_t eraseFlashApp(void)
 }
 #endif
 
-#if defined (ECO_BOOT2)
+#if defined (ECO_BOOT2) | defined (ECO_APP)
 static uint8_t QSPI_WriteEnable(void)
 {
     QSPI_CommandTypeDef scmd;
