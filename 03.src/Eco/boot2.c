@@ -13,6 +13,100 @@ uint32_t g_access_seed;
 uint32_t boot_delay_time = DEFAULT_BOOT_DELAY_MS;
 uint8_t g_flash_source_addr = 255;
 
+void pollKeypad(void)
+{
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+    {
+        if(g_key_stat[KEY_PWR].prv == false)
+        {
+            g_key_stat[KEY_PWR].cur = true;
+            printf("KEY_PWR pressed\n");
+        }
+
+        g_key_stat[KEY_PWR].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_PWR].prv = false;
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
+    {
+        if(g_key_stat[KEY_PREV].prv == false)
+        {
+            g_key_stat[KEY_PREV].cur = true;
+            printf("KEY_PREV pressed\n");
+        }
+
+        g_key_stat[KEY_PREV].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_PREV].prv = false;
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
+    {
+        if(g_key_stat[KEY_SEL].prv == false)
+        {
+            g_key_stat[KEY_SEL].cur = true;
+            printf("KEY_SEL pressed\n");
+        }
+
+        g_key_stat[KEY_SEL].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_SEL].prv = false;
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
+    {
+        if(g_key_stat[KEY_UP].prv == false)
+        {
+            g_key_stat[KEY_UP].cur = true;
+            printf("KEY_UP pressed\n");
+        }
+
+        g_key_stat[KEY_UP].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_UP].prv = false;
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
+    {
+        if(g_key_stat[KEY_DN].prv == false)
+        {
+            g_key_stat[KEY_DN].cur = true;
+            printf("KEY_DN pressed\n");
+        }
+
+        g_key_stat[KEY_DN].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_DN].prv = false;
+    }
+
+    return;
+}
+
+bool pollTouchSensor(uint16_t *px, uint16_t *py)
+{
+    static uint16_t x_prv=0, y_prv=0;
+    getTouchSensor(px, py);
+    if(x_prv==*px && y_prv==*py) return false;
+
+    x_prv = *px;
+    y_prv = *py;
+
+    printf("TS[X:%03d Y:%03d]\n", *px, *py);
+
+    return true;
+}
+
 void test_proc(void)
 {
     uint32_t timer_sec_1 = 0;
@@ -20,7 +114,16 @@ void test_proc(void)
 
     printf("%s() start\n",__func__);
 
-    memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+//    memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+//    memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
+    BSP_LCD_Clear(0x00FFFFFF);
+    BSP_LCD_SetTextColor(0x00000000);
+    BSP_LCD_SetBackColor(0xFFFFFFFF);
+
+    BSP_LCD_SetFont(&Font24);
+
+    BSP_LCD_DrawLine(0, 0, 799, 479);
+    BSP_LCD_DrawLine(799, 0, 0, 479);
 
     memset(&g_key_stat[0], 0x00, sizeof(key_stat)*KEY_MAX);
 
@@ -28,83 +131,20 @@ void test_proc(void)
     for(;;)
     {
         tick += 10;
-//        HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
 
         if(tick%10 == 0)
         {
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
-            {
-                if(g_key_stat[KEY_PWR].prv == false)
-                {
-                    g_key_stat[KEY_PWR].cur = true;
-                    printf("KEY_PWR pressed\n");
-                }
+            uint16_t x=0, y=0;
 
-                g_key_stat[KEY_PWR].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_PWR].prv = false;
-            }
+//            pollKeypad();
 
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
+            if(pollTouchSensor(&x, &y))
             {
-                if(g_key_stat[KEY_PREV].prv == false)
-                {
-                    g_key_stat[KEY_PREV].cur = true;
-                    printf("KEY_PREV pressed\n");
-                }
+                uint8_t pos_str[] = "";
 
-                g_key_stat[KEY_PREV].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_PREV].prv = false;
-            }
-
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
-            {
-                if(g_key_stat[KEY_SEL].prv == false)
-                {
-                    g_key_stat[KEY_SEL].cur = true;
-                    printf("KEY_SEL pressed\n");
-                }
-
-                g_key_stat[KEY_SEL].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_SEL].prv = false;
-            }
-
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
-            {
-                if(g_key_stat[KEY_UP].prv == false)
-                {
-                    g_key_stat[KEY_UP].cur = true;
-                    printf("KEY_UP pressed\n");
-                }
-
-                g_key_stat[KEY_UP].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_UP].prv = false;
-            }
-
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
-            {
-                if(g_key_stat[KEY_DN].prv == false)
-                {
-                    g_key_stat[KEY_DN].cur = true;
-                    printf("KEY_DN pressed\n");
-                }
-
-                g_key_stat[KEY_DN].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_DN].prv = false;
+                sprintf((char*)pos_str, "%03d:%03d", x, y);
+                BSP_LCD_DisplayStringAt(40, 0, pos_str, CENTER_MODE);
+                BSP_LCD_DisplayStringAt(40, 480-24, pos_str, CENTER_MODE);
             }
         }
 
@@ -145,8 +185,8 @@ void test_proc(void)
             {
                 static uint8_t lcd_img_idx_prv = 0;
 
-                if(getKeyPending(KEY_UP)){g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;}
-                if(getKeyPending(KEY_DN)){g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;}
+                if(getKeyPending(KEY_UP)){g_lcd_img_idx == 7 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;}
+                if(getKeyPending(KEY_DN)){g_lcd_img_idx == 0 ? g_lcd_img_idx = 7 : g_lcd_img_idx--;}
 
                 if(g_lcd_img_idx != lcd_img_idx_prv)
                 {
@@ -175,6 +215,7 @@ void test_proc(void)
 void runEcoTaskMain(void *argument)
 {
     initFlashData();
+    initTouchSensor();
 
     test_proc();
 

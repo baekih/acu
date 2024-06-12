@@ -684,6 +684,7 @@ void setLCDTestImage(uint8_t img_sel)
         if(g_board_id == BOARD_ID_DIN15)
         {
             memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+//            memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
             printf("autopilot\n");
         }
         else

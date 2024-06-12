@@ -113,6 +113,7 @@ extern "C" {
 #define LCD_TST_IMG_BLUE        4
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_CHESS       6
+#define LCD_TST_IMG_TS          7
 
 #define TS_INVAL_I2C_ADR            0xFF
 
