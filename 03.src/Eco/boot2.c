@@ -114,16 +114,8 @@ void test_proc(void)
 
     printf("%s() start\n",__func__);
 
-//    memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+    memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 //    memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
-    BSP_LCD_Clear(0x00FFFFFF);
-    BSP_LCD_SetTextColor(0x00000000);
-    BSP_LCD_SetBackColor(0xFFFFFFFF);
-
-    BSP_LCD_SetFont(&Font24);
-
-    BSP_LCD_DrawLine(0, 0, 799, 479);
-    BSP_LCD_DrawLine(799, 0, 0, 479);
 
     memset(&g_key_stat[0], 0x00, sizeof(key_stat)*KEY_MAX);
 
@@ -132,19 +124,29 @@ void test_proc(void)
     {
         tick += 10;
 
-        if(tick%10 == 0)
+        if(tick%10 == 0)  //100Hz
+        {
+//            pollKeypad();
+
+        }
+
+        if(tick%20 == 0)  //50Hz
         {
             uint16_t x=0, y=0;
 
-//            pollKeypad();
-
-            if(pollTouchSensor(&x, &y))
+            if(g_lcd_img_idx == LCD_TST_IMG_TS && pollTouchSensor(&x, &y))
             {
-                uint8_t pos_str[] = "";
+//                    uint8_t pos_str[] = "";
 
-                sprintf((char*)pos_str, "%03d:%03d", x, y);
-                BSP_LCD_DisplayStringAt(40, 0, pos_str, CENTER_MODE);
-                BSP_LCD_DisplayStringAt(40, 480-24, pos_str, CENTER_MODE);
+//                    sprintf((char*)pos_str, "%03d:%03d", x, y);
+//                BSP_LCD_DisplayStringAt(40, 0, pos_str, CENTER_MODE);
+//                BSP_LCD_DisplayStringAt(40, 480-24, pos_str, CENTER_MODE);
+                BSP_LCD_SetTextColor(0x00FF0000);
+                if(x<30) x=30;
+                if((800-30)<x) x=800-30;
+                if(y<30) y=30;
+                if((480-30)<y) y=480-30;
+                BSP_LCD_FillCircle(x,y,30);
             }
         }
 
@@ -191,6 +193,7 @@ void test_proc(void)
                 if(g_lcd_img_idx != lcd_img_idx_prv)
                 {
                     lcd_img_idx_prv = g_lcd_img_idx;
+                    printf("call setLCDTestImage()\n");
                     setLCDTestImage(g_lcd_img_idx);
                 }
             }

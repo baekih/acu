@@ -680,6 +680,17 @@ void setLCDTestImage(uint8_t img_sel)
         printf("gray\n");
         break;
     }
+    case LCD_TST_IMG_TS:
+        BSP_LCD_Clear(0x00FFFFFF);
+        BSP_LCD_SetTextColor(0x00000000);
+        BSP_LCD_SetBackColor(0xFFFFFFFF);
+
+        BSP_LCD_DrawLine(0, 0, 799, 479);
+        BSP_LCD_DrawLine(799, 0, 0, 479);
+
+        printf("ts_test\n");
+
+        break;
     case LCD_TST_IMG_DEF:
         if(g_board_id == BOARD_ID_DIN15)
         {
@@ -705,12 +716,12 @@ int32_t doSwitchBankControl(uint64_t *prxdat64)
 
     if     ((*prxdat64 & SW_KEY_UP_MASK) != 0)
     {
-        g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;
+        g_lcd_img_idx == 7 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;
         *prxdat64 &= (~(SW_KEY_UP_MASK));
     }
     else if((*prxdat64 & SW_KEY_DN_MASK) != 0)
     {
-        g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;
+        g_lcd_img_idx == 0 ? g_lcd_img_idx = 7 : g_lcd_img_idx--;
         *prxdat64 &= (~(SW_KEY_DN_MASK));
     }
 

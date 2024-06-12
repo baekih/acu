@@ -34,7 +34,6 @@
 #include "images.h"
 #include "stm32f767_fi-din_sdram.h"
 #include "stm32f767_fi-din_lcd.h"
-//#include "fonts.h"
 #elif defined(ECO_ECU)
 #include "ecu.h"
 #include "nmea2k.h"
