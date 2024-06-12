@@ -171,10 +171,12 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printk("ECO-DIN15 boot1 start...\r\n");
 
-  LL_Init1msTick(16000000);
-
   checkFlashData();
 
+#if 1
+  LL_Init1msTick(16000000);
+
+  while( LL_GPIO_IsInputPinSet(PWR_ON_GPIO_Port, PWR_ON_Pin)) LL_mDelay(1);
   while(!LL_GPIO_IsInputPinSet(PWR_ON_GPIO_Port, PWR_ON_Pin)) LL_mDelay(1);
 
   while(LL_GPIO_IsInputPinSet(PWR_ON_GPIO_Port, PWR_ON_Pin))
@@ -184,6 +186,9 @@ int main(void)
   }
 
   if(300 < cnt_pwr) g_common_dat.jmp_adr = BOOT2_START_ADDR;
+#else
+  g_common_dat.jmp_adr = BOOT2_START_ADDR;
+#endif
 
   /* Reinitialize the Stack pointer and jump to application address */
   uint32_t JumpAddress = *(__IO uint32_t *) (g_common_dat.jmp_adr + 4);
