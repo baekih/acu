@@ -113,6 +113,7 @@ extern "C" {
 #define LCD_TST_IMG_BLUE        4
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_CHESS       6
+#define LCD_TST_IMG_TS          7
 
 #define TS_INVAL_I2C_ADR            0xFF
 
@@ -183,6 +184,16 @@ extern "C" {
 #define KEY_DN                      4
 #define KEY_MAX                     5
 
+#if defined (ECO_ECU)
+#define MTR_DRV8323_FAULT_STAT      (0x00)
+#define MTR_DRV8323_VGS_STAT        (0x01)
+#define MTR_DRV8323_DRV_CTRL        (0x02)
+#define MTR_DRV8323_GATE_DRV_HS     (0x03)
+#define MTR_DRV8323_GATE_DRV_LS     (0x04)
+#define MTR_DRV8323_OCP_CTRL        (0x05)
+#define MTR_DRV8323_CSA_CTRL        (0x06)
+#endif
+
 enum
 {
     FLASHIF_OK = 0,
@@ -213,7 +224,7 @@ typedef struct _common_dat
     uint16_t appver;
 // 8byte
     uint8_t  uniquenum[3];
-    uint8_t  rsv1;
+    uint8_t  lcd_img_idx;
 // 12byte
     ISOAdrClame adrclame;
     uint8_t  rsv2[2];
@@ -234,19 +245,28 @@ typedef struct _key_stat
 
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
-extern QSPI_HandleTypeDef hqspi;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
+
+#if defined (ECO_APP) | defined (ECO_BOOT2)
+extern QSPI_HandleTypeDef hqspi;
 extern I2C_HandleTypeDef hi2c1;
 extern CRC_HandleTypeDef hcrc;
 extern LTDC_HandleTypeDef hltdc;
+#elif defined (ECO_ECU)
+extern SPI_HandleTypeDef hspi2;
+extern ADC_HandleTypeDef hadc1;
+extern TIM_HandleTypeDef htim11;
+#else
+#error ECO_XXX NOT defined!
+#endif
+
 
 extern const common_dat g_common_dat_def;
 extern common_dat g_common_dat;
 extern uint8_t g_board_id;
 extern key_stat g_key_stat[KEY_MAX];
 extern uint8_t g_switch_bank[];
-extern uint8_t g_lcd_img_idx;
 
 void printk(const char* pstr, ...);
 uint32_t eraseFlash(uint32_t);
@@ -265,8 +285,15 @@ void setLCDBL(uint8_t);
 void initFlashData(void);
 void updateFlashData(void);
 void setLCDTestImage(uint8_t);
-#if !defined (ECO_BOOT2)
+#if defined (ECO_APP)
 void CAN1_SendFrame(uint32_t, uint8_t*, uint8_t);
+#endif
+
+#if defined (ECO_ECU)
+uint16_t readMotor(uint8_t);
+void writeMotor(uint8_t, uint16_t);
+void initMotor(void);
+void setMotor(uint8_t);
 #endif
 
 #ifdef __cplusplus

@@ -34,14 +34,14 @@ uint8_t getFastpacketTxSeqId(void)
     return fastpacket_tx_seq_id << 5;
 }
 
-int32_t putFastpktQueue(TxProtocol *ptxpkt, uint8_t *pfastpkt_dat, uint8_t fastdat_len_trunc)
+int32_t putFastpktQueue(TxProtocol *ptxpkt, uint8_t *pfpkt_dat, uint8_t fdat_len_trunc)
 {
     uint8_t fastpkt_tx_seq_id = getFastpacketTxSeqId();
 
-    for(uint32_t i = 0; i < (fastdat_len_trunc/7); i++)
+    for(uint32_t i = 0; i < (fdat_len_trunc/7); i++)
     {
         ptxpkt->dat[0] = fastpkt_tx_seq_id + i;
-        memcpy(&ptxpkt->dat[1], pfastpkt_dat + 7*i, 7);
+        memcpy(&ptxpkt->dat[1], pfpkt_dat + 7*i, 7);
         EcoQueuePut(EcoQueueNMEA2KTX1Handle, (uint8_t*)ptxpkt, sizeof(TxProtocol));
     }
 

@@ -375,14 +375,18 @@ void opNMEA2K(RxProtocol rxpacket)
             Pgn060928ISOAddrClame(rxpacket);
             break;
         case PGN065288_NUM: // Brightness control
+#if defined (ECO_APP) | defined(ECO_BOOT2)
             Pgn065288Brightness();
+#endif
             break;
         case PGN126996_NUM:
             Pgn126996ProdInfo();
             break;
         case PGN127502_NUM:
+#if defined (ECO_APP) | defined(ECO_BOOT2)
             Pgn127502SwitchBankControl(g_swbnkctl_dat);
             break;
+#endif
         default:
             if(BROADCAST_DEST_ADDR != getRxPS(rxpacket.canid)) Pgn059392ISOAck(rxpacket);
             break;
@@ -398,7 +402,9 @@ void opNMEA2K(RxProtocol rxpacket)
         chkBootStat(rxpacket);
         break;
     case PGN065288_NUM: // Boot State Request
+#if defined (ECO_APP) | defined(ECO_BOOT2)
         setLCDBrightness(rxpacket.dat[4]);
+#endif
         break;
         //Fastpacket build-up.
     case PGN126208_NUM: // NMEA2K Group Function
@@ -406,9 +412,11 @@ void opNMEA2K(RxProtocol rxpacket)
         bldFastpacket(&rxpacket);
         break;
     case PGN127502_NUM: // Switch bank control
+#if defined (ECO_APP) | defined(ECO_BOOT2)
         g_swbnkctl_dat.dat64 = rxpacket.dat64;
         doSwitchBankControl(&g_swbnkctl_dat.dat64);
         Pgn127502SwitchBankControl(g_swbnkctl_dat);
+#endif
         break;
     default:
         printf("Single PGNError[%ld]\n", rxpgn);
@@ -432,7 +440,9 @@ void opNMEA2K(RxProtocol rxpacket)
             Pgn126208Proc(pfastpkt);
             break;
         case PGN126720_NUM: // Various Functions
+#if defined(ECO_BOOT2)
             Pgn126720Proc(pfastpkt);
+#endif
             break;
         default:
             printf("Fastpacket PGNError[%ld]\n", pfastpkt->pgn);

@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 /* USER CODE END Includes */
 
@@ -74,8 +75,6 @@ typedef void (*pFunction)(void);
 #define FLASH_DATA_ADDR           ADDR_FLASH_SECTOR_3
 #define BOOT2_START_ADDR          ADDR_FLASH_SECTOR_4
 #define APP_START_ADDR            ADDR_FLASH_SECTOR_5
-
-//#define ECO_FORCE_BOOT2
 
 /* USER CODE END PD */
 
@@ -142,6 +141,7 @@ void checkFlashData(void)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+  uint32_t cnt_pwr = 0;
 
   /* USER CODE END 1 */
 
@@ -173,9 +173,23 @@ int main(void)
 
   checkFlashData();
 
-#ifdef ECO_FORCE_BOOT2
+#if 0
+  LL_Init1msTick(16000000);
+
+  while( LL_GPIO_IsInputPinSet(PWR_ON_GPIO_Port, PWR_ON_Pin)) LL_mDelay(1);
+  while(!LL_GPIO_IsInputPinSet(PWR_ON_GPIO_Port, PWR_ON_Pin)) LL_mDelay(1);
+
+  while(LL_GPIO_IsInputPinSet(PWR_ON_GPIO_Port, PWR_ON_Pin))
+  {
+      LL_mDelay(10);
+      if(300 < cnt_pwr++) break;
+  }
+
+  if(300 < cnt_pwr) g_common_dat.jmp_adr = BOOT2_START_ADDR;
+#else
   g_common_dat.jmp_adr = BOOT2_START_ADDR;
 #endif
+
   /* Reinitialize the Stack pointer and jump to application address */
   uint32_t JumpAddress = *(__IO uint32_t *) (g_common_dat.jmp_adr + 4);
   pFunction JumpToApplication = (pFunction) JumpAddress;
@@ -300,11 +314,19 @@ static void MX_USART1_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
   LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+
+  /**/
+  GPIO_InitStruct.Pin = PWR_ON_Pin;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  LL_GPIO_Init(PWR_ON_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

@@ -6,14 +6,106 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#ifdef ECO_BOOT2
-
 #include "eco.h"
 
 uint32_t g_access_level;
 uint32_t g_access_seed;
 uint32_t boot_delay_time = DEFAULT_BOOT_DELAY_MS;
 uint8_t g_flash_source_addr = 255;
+
+void pollKeypad(void)
+{
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+    {
+        if(g_key_stat[KEY_PWR].prv == false)
+        {
+            g_key_stat[KEY_PWR].cur = true;
+            printf("KEY_PWR pressed\n");
+        }
+
+        g_key_stat[KEY_PWR].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_PWR].prv = false;
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
+    {
+        if(g_key_stat[KEY_PREV].prv == false)
+        {
+            g_key_stat[KEY_PREV].cur = true;
+            printf("KEY_PREV pressed\n");
+        }
+
+        g_key_stat[KEY_PREV].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_PREV].prv = false;
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
+    {
+        if(g_key_stat[KEY_SEL].prv == false)
+        {
+            g_key_stat[KEY_SEL].cur = true;
+            printf("KEY_SEL pressed\n");
+        }
+
+        g_key_stat[KEY_SEL].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_SEL].prv = false;
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
+    {
+        if(g_key_stat[KEY_UP].prv == false)
+        {
+            g_key_stat[KEY_UP].cur = true;
+            printf("KEY_UP pressed\n");
+        }
+
+        g_key_stat[KEY_UP].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_UP].prv = false;
+    }
+
+    if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
+    {
+        if(g_key_stat[KEY_DN].prv == false)
+        {
+            g_key_stat[KEY_DN].cur = true;
+            printf("KEY_DN pressed\n");
+        }
+
+        g_key_stat[KEY_DN].prv = true;
+    }
+    else
+    {
+        g_key_stat[KEY_DN].prv = false;
+    }
+
+    return;
+}
+
+bool pollTouchSensor(uint16_t *px, uint16_t *py)
+{
+    static uint16_t x_prv=0, y_prv=0;
+    getTouchSensor(px, py);
+    if(x_prv==*px && y_prv==*py) return false;
+
+    x_prv = *px;
+    y_prv = *py;
+
+    printf("TS[X:%03d Y:%03d]\n", *px, *py);
+
+    return true;
+}
 
 void test_proc(void)
 {
@@ -23,6 +115,7 @@ void test_proc(void)
     printf("%s() start\n",__func__);
 
     memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+//    memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
 
     memset(&g_key_stat[0], 0x00, sizeof(key_stat)*KEY_MAX);
 
@@ -30,83 +123,30 @@ void test_proc(void)
     for(;;)
     {
         tick += 10;
-        HAL_GPIO_TogglePin(WDI_GPIO_Port, WDI_Pin);
 
-        if(tick%10 == 0)
+        if(tick%10 == 0)  //100Hz
         {
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
-            {
-                if(g_key_stat[KEY_PWR].prv == false)
-                {
-                    g_key_stat[KEY_PWR].cur = true;
-                    printf("KEY_PWR pressed\n");
-                }
+//            pollKeypad();
 
-                g_key_stat[KEY_PWR].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_PWR].prv = false;
-            }
+        }
 
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PREV_GPIO_Port, KEY_PREV_Pin))
-            {
-                if(g_key_stat[KEY_PREV].prv == false)
-                {
-                    g_key_stat[KEY_PREV].cur = true;
-                    printf("KEY_PREV pressed\n");
-                }
+        if(tick%20 == 0)  //50Hz
+        {
+            uint16_t x=0, y=0;
 
-                g_key_stat[KEY_PREV].prv = true;
-            }
-            else
+            if(g_common_dat.lcd_img_idx == LCD_TST_IMG_TS && pollTouchSensor(&x, &y))
             {
-                g_key_stat[KEY_PREV].prv = false;
-            }
+//                    uint8_t pos_str[] = "";
 
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_SEL_GPIO_Port, KEY_SEL_Pin))
-            {
-                if(g_key_stat[KEY_SEL].prv == false)
-                {
-                    g_key_stat[KEY_SEL].cur = true;
-                    printf("KEY_SEL pressed\n");
-                }
-
-                g_key_stat[KEY_SEL].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_SEL].prv = false;
-            }
-
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_UP_GPIO_Port, KEY_UP_Pin))
-            {
-                if(g_key_stat[KEY_UP].prv == false)
-                {
-                    g_key_stat[KEY_UP].cur = true;
-                    printf("KEY_UP pressed\n");
-                }
-
-                g_key_stat[KEY_UP].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_UP].prv = false;
-            }
-
-            if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_DN_GPIO_Port, KEY_DN_Pin))
-            {
-                if(g_key_stat[KEY_DN].prv == false)
-                {
-                    g_key_stat[KEY_DN].cur = true;
-                    printf("KEY_DN pressed\n");
-                }
-
-                g_key_stat[KEY_DN].prv = true;
-            }
-            else
-            {
-                g_key_stat[KEY_DN].prv = false;
+//                    sprintf((char*)pos_str, "%03d:%03d", x, y);
+//                BSP_LCD_DisplayStringAt(40, 0, pos_str, CENTER_MODE);
+//                BSP_LCD_DisplayStringAt(40, 480-24, pos_str, CENTER_MODE);
+                BSP_LCD_SetTextColor(0x00FF0000);
+                if(x<30) x=30;
+                if((800-30)<x) x=800-30;
+                if(y<30) y=30;
+                if((480-30)<y) y=480-30;
+                BSP_LCD_FillCircle(x,y,30);
             }
         }
 
@@ -147,13 +187,14 @@ void test_proc(void)
             {
                 static uint8_t lcd_img_idx_prv = 0;
 
-                if(getKeyPending(KEY_UP)){g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;}
-                if(getKeyPending(KEY_DN)){g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;}
+                if(getKeyPending(KEY_UP)){g_common_dat.lcd_img_idx == 7 ? g_common_dat.lcd_img_idx = 0 : g_common_dat.lcd_img_idx++;}
+                if(getKeyPending(KEY_DN)){g_common_dat.lcd_img_idx == 0 ? g_common_dat.lcd_img_idx = 7 : g_common_dat.lcd_img_idx--;}
 
-                if(g_lcd_img_idx != lcd_img_idx_prv)
+                if(g_common_dat.lcd_img_idx != lcd_img_idx_prv)
                 {
-                    lcd_img_idx_prv = g_lcd_img_idx;
-                    setLCDTestImage(g_lcd_img_idx);
+                    lcd_img_idx_prv = g_common_dat.lcd_img_idx;
+                    printf("call setLCDTestImage()\n");
+                    setLCDTestImage(g_common_dat.lcd_img_idx);
                 }
             }
         }
@@ -161,13 +202,13 @@ void test_proc(void)
         if(tick%1000 == 0)
         {
             timer_sec_1++;
-            printf("[%08ld] boot2\n", timer_sec_1);
+//            printf("[%08ld] boot2\n", timer_sec_1);
         }
 
         if(tick%3000 == 0)
         {
-//            printf("[%08ld] call Pgn126993HeartBeat()\n", timer_sec_1);
-//            Pgn126993HeartBeat();
+            printf("[%08ld] Pgn126993HeartBeat()\n", timer_sec_1);
+            Pgn126993HeartBeat();
         }
 
         osDelayUntil(tick);
@@ -177,6 +218,7 @@ void test_proc(void)
 void runEcoTaskMain(void *argument)
 {
     initFlashData();
+    initTouchSensor();
 
     test_proc();
 
@@ -190,11 +232,13 @@ void runEcoTaskKey(void *argument)
 {
     uint8_t  timer_pwroff = 0;
 
+    HAL_GPIO_WritePin(LED_PWR_GPIO_Port, LED_PWR_Pin, GPIO_PIN_SET);
+
     for(;;)
     {
 //        printf("%s():%d\n",__func__,__LINE__);
 
-        if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+        if(GPIO_PIN_SET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
         {
             printf("Push KEY_PWR %d sec\n", timer_pwroff++);
             if(3 < timer_pwroff) NVIC_SystemReset();
@@ -241,7 +285,6 @@ void runEcoTaskFlash(void *argument)
 
 void runEcoTaskNMEA2KRx(void *argument)
 {
-#if defined (ECO_BOOT2)
     RxProtocol RxPacket;
     uint32_t RxPGN;
     uint8_t  RxPF;
@@ -280,36 +323,10 @@ void runEcoTaskNMEA2KRx(void *argument)
             opNMEA2K(RxPacket);
         }
     }
-#else
-    int remain = 0;
-
-    for(;;)
-    {
-
-        if(rxCanLastIndex >= rxCanFirstIndex)
-        {
-            remain =  rxCanLastIndex - rxCanFirstIndex;
-        }
-        else
-        {
-            remain = (CAN_RX_BUF_MAX - rxCanFirstIndex);
-            remain += rxCanLastIndex;
-        }
-
-        if(remain != 0){
-            NMEA2000_ReceiveParseMessages(g_RxCan[rxCanFirstIndex].canid, g_RxCan[rxCanFirstIndex].dat, g_RxCan[rxCanFirstIndex].len);
-
-            rxCanFirstIndex++;
-            rxCanFirstIndex %= CAN_RX_BUF_MAX;
-        }
-    }
-
-#endif
 }
 
 void runEcoTaskNMEA2KTx(void *argument)
 {
-#if defined (ECO_BOOT2)
     TxProtocol TxPacket;
     CAN_TxHeaderTypeDef txhdr = {0, 0, CAN_ID_EXT, 0, DISABLE};
     uint8_t txdat[8];
@@ -332,13 +349,4 @@ void runEcoTaskNMEA2KTx(void *argument)
             osDelay(1);
         }
     }
-#else
-    for(;;)
-    {
-        osDelay(1);
-    }
-
-#endif
 }
-
-#endif // ECO_BOOT2
