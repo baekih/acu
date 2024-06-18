@@ -134,7 +134,7 @@ void test_proc(void)
         {
             uint16_t x=0, y=0;
 
-            if(g_lcd_img_idx == LCD_TST_IMG_TS && pollTouchSensor(&x, &y))
+            if(g_common_dat.lcd_img_idx == LCD_TST_IMG_TS && pollTouchSensor(&x, &y))
             {
 //                    uint8_t pos_str[] = "";
 
@@ -187,14 +187,14 @@ void test_proc(void)
             {
                 static uint8_t lcd_img_idx_prv = 0;
 
-                if(getKeyPending(KEY_UP)){g_lcd_img_idx == 7 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;}
-                if(getKeyPending(KEY_DN)){g_lcd_img_idx == 0 ? g_lcd_img_idx = 7 : g_lcd_img_idx--;}
+                if(getKeyPending(KEY_UP)){g_common_dat.lcd_img_idx == 7 ? g_common_dat.lcd_img_idx = 0 : g_common_dat.lcd_img_idx++;}
+                if(getKeyPending(KEY_DN)){g_common_dat.lcd_img_idx == 0 ? g_common_dat.lcd_img_idx = 7 : g_common_dat.lcd_img_idx--;}
 
-                if(g_lcd_img_idx != lcd_img_idx_prv)
+                if(g_common_dat.lcd_img_idx != lcd_img_idx_prv)
                 {
-                    lcd_img_idx_prv = g_lcd_img_idx;
+                    lcd_img_idx_prv = g_common_dat.lcd_img_idx;
                     printf("call setLCDTestImage()\n");
-                    setLCDTestImage(g_lcd_img_idx);
+                    setLCDTestImage(g_common_dat.lcd_img_idx);
                 }
             }
         }

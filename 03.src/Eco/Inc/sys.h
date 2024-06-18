@@ -224,7 +224,7 @@ typedef struct _common_dat
     uint16_t appver;
 // 8byte
     uint8_t  uniquenum[3];
-    uint8_t  rsv1;
+    uint8_t  lcd_img_idx;
 // 12byte
     ISOAdrClame adrclame;
     uint8_t  rsv2[2];
@@ -267,7 +267,6 @@ extern common_dat g_common_dat;
 extern uint8_t g_board_id;
 extern key_stat g_key_stat[KEY_MAX];
 extern uint8_t g_switch_bank[];
-extern uint8_t g_lcd_img_idx;
 
 void printk(const char* pstr, ...);
 uint32_t eraseFlash(uint32_t);

@@ -173,7 +173,7 @@ int main(void)
 
   checkFlashData();
 
-#if 1
+#if 0
   LL_Init1msTick(16000000);
 
   while( LL_GPIO_IsInputPinSet(PWR_ON_GPIO_Port, PWR_ON_Pin)) LL_mDelay(1);

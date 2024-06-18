@@ -8,10 +8,8 @@
 
 #if defined (ECO_APP) | defined(ECO_BOOT2)
 
-const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .rsv1 = 0, .rsv2 = {0, 0}};
+const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .lcd_img_idx = 0, .jmp_adr = APP_START_ADDR, .rsv2 = {0, 0}};
 common_dat g_common_dat;
-
-uint8_t g_lcd_img_idx = 0;
 
 key_stat g_key_stat[KEY_MAX];
 uint32_t sys_lcd_width;
@@ -483,13 +481,19 @@ void setBuzzer(uint8_t bzr_vol)
 void setLCDBL(uint8_t lcd_bl)
 {
     static uint8_t lcd_bl_prev = 0;
+    uint8_t lcd_bl_log = 0;
+
     TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
 
     if(100 < lcd_bl) lcd_bl = 100;
     if(lcd_bl_prev == lcd_bl) return;
     lcd_bl_prev = lcd_bl;
 
-    sConfigOC.Pulse = (100*lcd_bl)/100;
+    lcd_bl_log = (lcd_bl + 9)/10;
+
+    if(lcd_bl_log == 0) sConfigOC.Pulse = 0;
+    else if(lcd_bl_log == 10) sConfigOC.Pulse = 512-1;
+    else sConfigOC.Pulse = (1<<(lcd_bl_log-1));
     printf("set lcd_bl[%d] Pulse[%d]\n", lcd_bl, sConfigOC.Pulse);
 
     HAL_TIM_PWM_Stop(&htim14, TIM_CHANNEL_1);
@@ -716,12 +720,12 @@ int32_t doSwitchBankControl(uint64_t *prxdat64)
 
     if     ((*prxdat64 & SW_KEY_UP_MASK) != 0)
     {
-        g_lcd_img_idx == 7 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;
+        g_common_dat.lcd_img_idx == 7 ? g_common_dat.lcd_img_idx = 0 : g_common_dat.lcd_img_idx++;
         *prxdat64 &= (~(SW_KEY_UP_MASK));
     }
     else if((*prxdat64 & SW_KEY_DN_MASK) != 0)
     {
-        g_lcd_img_idx == 0 ? g_lcd_img_idx = 7 : g_lcd_img_idx--;
+        g_common_dat.lcd_img_idx == 0 ? g_common_dat.lcd_img_idx = 7 : g_common_dat.lcd_img_idx--;
         *prxdat64 &= (~(SW_KEY_DN_MASK));
     }
 
@@ -784,7 +788,7 @@ void setMotor(uint8_t pwm_motor)
 
 void initMotor(void)
 {
-    HAL_GPIO_WritePin(DRV8323_CS_GPIO_Port, DRV8323_CS_Pin, GPIO_PIN_SET); //enable to motor controller
+    HAL_GPIO_WritePin(MTR_CS_GPIO_Port, MTR_CS_Pin, GPIO_PIN_SET); //enable to motor controller
 
     //In TI sample firmware http://www.ti.com/tool/tida-00774, DRV8323regGateDrvHS is written first, and it is written twice
     //In http://www.ti.com/tool/boostxl-drv8323rs, the 5 control register are just written once in order.
