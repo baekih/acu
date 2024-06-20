@@ -72,6 +72,8 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define PWR_ON_Pin LL_GPIO_PIN_15
 #define PWR_ON_GPIO_Port GPIOA
+#define LCD_BKL_Pin LL_GPIO_PIN_7
+#define LCD_BKL_GPIO_Port GPIOA
 #ifndef NVIC_PRIORITYGROUP_0
 #define NVIC_PRIORITYGROUP_0         ((uint32_t)0x00000007) /*!< 0 bit  for pre-emption priority,
                                                                  4 bits for subpriority */
