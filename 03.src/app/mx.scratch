@@ -9,9 +9,9 @@
     <HAL_Driver>C:\dev\ide\st\repo\STM32Cube_FW_F7_V1.17.1</HAL_Driver>
     <CMSIS>Drivers/CMSIS</CMSIS>
     <Toolchain>STM32CubeIDE</Toolchain>
-    <IocFile>fi-din.ioc</IocFile>
+    <IocFile>app.ioc</IocFile>
     <Project>
-      <ProjectName>fi-din</ProjectName>
+      <ProjectName>app</ProjectName>
       <ProjectNature>Cpp</ProjectNature>
       <Secure />
       <filestoremove />
@@ -20,7 +20,7 @@
       </sourceEntriesToRemove>
       <configs>
         <config>
-          <name>fi-din</name>
+          <name>app</name>
           <mainSourceRepo>Core</mainSourceRepo>
           <sourceStructure>Advanced</sourceStructure>
           <device>STM32F767NGHx</device>
