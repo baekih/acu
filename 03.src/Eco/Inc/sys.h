@@ -255,7 +255,6 @@ extern CRC_HandleTypeDef hcrc;
 extern LTDC_HandleTypeDef hltdc;
 #elif defined (ECO_ECU)
 extern SPI_HandleTypeDef hspi2;
-extern ADC_HandleTypeDef hadc1;
 extern TIM_HandleTypeDef htim11;
 #else
 #error ECO_XXX NOT defined!

@@ -42,8 +42,6 @@ typedef StaticQueue_t osStaticMessageQDef_t;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
-
 CAN_HandleTypeDef hcan1;
 
 SPI_HandleTypeDef hspi2;
@@ -132,7 +130,6 @@ static void MX_USART1_UART_Init(void);
 static void MX_CAN1_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_SPI2_Init(void);
-static void MX_ADC1_Init(void);
 static void MX_TIM11_Init(void);
 void runEcoTaskMain(void *argument);
 void runEcoTaskUART(void *argument);
@@ -188,7 +185,6 @@ int main(void)
   MX_CAN1_Init();
   MX_TIM7_Init();
   MX_SPI2_Init();
-  MX_ADC1_Init();
   MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
 
@@ -316,58 +312,6 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief ADC1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_ADC1_Init(void)
-{
-
-  /* USER CODE BEGIN ADC1_Init 0 */
-
-  /* USER CODE END ADC1_Init 0 */
-
-  ADC_ChannelConfTypeDef sConfig = {0};
-
-  /* USER CODE BEGIN ADC1_Init 1 */
-
-  /* USER CODE END ADC1_Init 1 */
-
-  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
-  */
-  hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
-  hadc1.Init.ContinuousConvMode = DISABLE;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-  if (HAL_ADC_Init(&hadc1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-  */
-  sConfig.Channel = ADC_CHANNEL_6;
-  sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN ADC1_Init 2 */
-
-  /* USER CODE END ADC1_Init 2 */
-
-}
-
-/**
   * @brief CAN1 Initialization Function
   * @param None
   * @retval None
@@ -376,6 +320,7 @@ static void MX_CAN1_Init(void)
 {
 
   /* USER CODE BEGIN CAN1_Init 0 */
+    CAN_FilterTypeDef  sFilterConfig;
 
   /* USER CODE END CAN1_Init 0 */
 
@@ -399,6 +344,26 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
+  /* Configure the CAN Filter */
+  sFilterConfig.FilterBank = 0;
+  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+  sFilterConfig.FilterIdHigh = 0x0000;
+  sFilterConfig.FilterIdLow = 0x0000;
+  sFilterConfig.FilterMaskIdHigh = 0x0000;
+  sFilterConfig.FilterMaskIdLow = 0x0000;
+  sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+  sFilterConfig.FilterActivation = ENABLE;
+  sFilterConfig.SlaveStartFilterBank = 14;
+
+  /* Filter configuration Error */
+  if(HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK) Error_Handler();
+
+  /* Start the CAN peripheral */
+  if(HAL_CAN_Start(&hcan1) != HAL_OK) Error_Handler();
+
+  /* Activate CAN RX notification */
+  if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) Error_Handler();
 
   /* USER CODE END CAN1_Init 2 */
 
@@ -425,7 +390,7 @@ static void MX_SPI2_Init(void)
   hspi2.Init.Direction = SPI_DIRECTION_2LINES;
   hspi2.Init.DataSize = SPI_DATASIZE_16BIT;
   hspi2.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi2.Init.TIMode = SPI_TIMODE_ENABLE;
   hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi2.Init.CRCPolynomial = 7;
@@ -575,60 +540,78 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOJ_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOI_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(WDI_GPIO_Port, WDI_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(MTR_EN_GPIO_Port, MTR_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOJ, LED1_ON_Pin|LED2_ON_Pin|MTR_P1_Pin|MTR_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOJ, LED1_Pin|W_EN_Pin|V_EN_Pin|U_EN_Pin
+                          |V_CTL_Pin|W_CTL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, MTR_P0_Pin|MTR_nBRK_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(MTR_P2_GPIO_Port, MTR_P2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, CAN1_STBY_Pin|U_CTL_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(MTR_CS_GPIO_Port, MTR_CS_Pin, GPIO_PIN_SET);
-
-  /*Configure GPIO pin : WDI_Pin */
-  GPIO_InitStruct.Pin = WDI_Pin;
+  /*Configure GPIO pin : MTR_EN_Pin */
+  GPIO_InitStruct.Pin = MTR_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(WDI_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(MTR_EN_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED1_ON_Pin LED2_ON_Pin MTR_P1_Pin MTR_DIR_Pin */
-  GPIO_InitStruct.Pin = LED1_ON_Pin|LED2_ON_Pin|MTR_P1_Pin|MTR_DIR_Pin;
+  /*Configure GPIO pins : LED1_Pin LED2_Pin */
+  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : MTR_P0_Pin MTR_nBRK_Pin */
-  GPIO_InitStruct.Pin = MTR_P0_Pin|MTR_nBRK_Pin;
+  /*Configure GPIO pin : CAN1_STBY_Pin */
+  GPIO_InitStruct.Pin = CAN1_STBY_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(CAN1_STBY_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : MTR_P2_Pin */
-  GPIO_InitStruct.Pin = MTR_P2_Pin;
+  /*Configure GPIO pins : W_EN_Pin V_EN_Pin U_EN_Pin V_CTL_Pin
+                           W_CTL_Pin */
+  GPIO_InitStruct.Pin = W_EN_Pin|V_EN_Pin|U_EN_Pin|V_CTL_Pin
+                          |W_CTL_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(MTR_P2_GPIO_Port, &GPIO_InitStruct);
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : MTR_CS_Pin */
-  GPIO_InitStruct.Pin = MTR_CS_Pin;
+  /*Configure GPIO pin : H3_Pin */
+  GPIO_InitStruct.Pin = H3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(H3_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : H1_Pin */
+  GPIO_InitStruct.Pin = H1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(H1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : U_CTL_Pin */
+  GPIO_InitStruct.Pin = U_CTL_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(MTR_CS_GPIO_Port, &GPIO_InitStruct);
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(U_CTL_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : H2_Pin */
+  GPIO_InitStruct.Pin = H2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(H2_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

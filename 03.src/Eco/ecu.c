@@ -16,23 +16,23 @@ uint8_t g_flash_source_addr = 255;
 void runEcoTaskMain(void *argument)
 {
     uint32_t tick_start = 0;
-    uint32_t cnt = 0;
+//    uint32_t cnt = 0;
 
     for(;;)
     {
         tick_start = osKernelGetTickCount();
 
-        printf("[%06d]ECU\r\n", ++cnt);
+        printf("\tPgn126993HeartBeat()\r\n");
+        Pgn126993HeartBeat();
 
-        osDelay(1000);
-        osDelayUntil(tick_start + 1000);
+        osDelayUntil(tick_start + 2000);
     }
 }
 
 void runEcoTaskMTR(void *argument)
 {
     uint32_t tick_start = 0;
-    uint32_t vol_adc = 0;
+    uint32_t cnt = 0;
 
     initMotor();
 
@@ -40,14 +40,68 @@ void runEcoTaskMTR(void *argument)
     {
         tick_start = osKernelGetTickCount();
 
-        HAL_ADC_Start(&hadc1);
-        HAL_ADC_PollForConversion(&hadc1, 10);
-        vol_adc = (HAL_ADC_GetValue(&hadc1)*101)/0xfff;
-        vol_adc == 101 ? vol_adc = 100 : vol_adc;
+//        setMotor((uint8_t)vol_adc);
 
-        setMotor((uint8_t)vol_adc);
+//        printf("MTR MTR_DRV8323_DRV_CTRL[0x%x]\r\n", readMotor(MTR_DRV8323_DRV_CTRL));
+        printf("[%06ld] Hall[%d:%d:%d]\r\n", ++cnt,
+               HAL_GPIO_ReadPin(H1_GPIO_Port, H1_Pin),
+               HAL_GPIO_ReadPin(H2_GPIO_Port, H2_Pin),
+               HAL_GPIO_ReadPin(H3_GPIO_Port, H3_Pin));
+    //    printf("DRV_CTRL[0x%x]\r\n", readMotor(MTR_DRV8323_DRV_CTRL));
+        HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 
-        printf("MTR MTR_DRV8323_DRV_CTRL[0x%x] vol_adc[%ld]\r\n", readMotor(MTR_DRV8323_DRV_CTRL), vol_adc);
+        switch(cnt%6)
+        {
+        case 0:
+            HAL_GPIO_WritePin(U_EN_GPIO_Port, U_EN_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(V_EN_GPIO_Port, V_EN_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(W_EN_GPIO_Port, W_EN_Pin, GPIO_PIN_SET);
+
+            HAL_GPIO_WritePin(V_CTL_GPIO_Port, V_CTL_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(W_CTL_GPIO_Port, W_CTL_Pin, GPIO_PIN_RESET);
+            break;
+        case 1:
+            HAL_GPIO_WritePin(U_EN_GPIO_Port, U_EN_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(V_EN_GPIO_Port, V_EN_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(W_EN_GPIO_Port, W_EN_Pin, GPIO_PIN_SET);
+
+            HAL_GPIO_WritePin(U_CTL_GPIO_Port, U_CTL_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(W_CTL_GPIO_Port, W_CTL_Pin, GPIO_PIN_RESET);
+            break;
+        case 2:
+            HAL_GPIO_WritePin(U_EN_GPIO_Port, U_EN_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(V_EN_GPIO_Port, V_EN_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(W_EN_GPIO_Port, W_EN_Pin, GPIO_PIN_RESET);
+
+            HAL_GPIO_WritePin(U_CTL_GPIO_Port, U_CTL_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(V_CTL_GPIO_Port, V_CTL_Pin, GPIO_PIN_RESET);
+            break;
+        case 3:
+            HAL_GPIO_WritePin(U_EN_GPIO_Port, U_EN_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(V_EN_GPIO_Port, V_EN_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(W_EN_GPIO_Port, W_EN_Pin, GPIO_PIN_SET);
+
+            HAL_GPIO_WritePin(V_CTL_GPIO_Port, V_CTL_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(W_CTL_GPIO_Port, W_CTL_Pin, GPIO_PIN_SET);
+            break;
+        case 4:
+            HAL_GPIO_WritePin(U_EN_GPIO_Port, U_EN_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(V_EN_GPIO_Port, V_EN_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(W_EN_GPIO_Port, W_EN_Pin, GPIO_PIN_SET);
+
+            HAL_GPIO_WritePin(U_CTL_GPIO_Port, U_CTL_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(W_CTL_GPIO_Port, W_CTL_Pin, GPIO_PIN_SET);
+            break;
+        case 5:
+            HAL_GPIO_WritePin(U_EN_GPIO_Port, U_EN_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(V_EN_GPIO_Port, V_EN_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(W_EN_GPIO_Port, W_EN_Pin, GPIO_PIN_RESET);
+
+            HAL_GPIO_WritePin(U_CTL_GPIO_Port, U_CTL_Pin, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(V_CTL_GPIO_Port, V_CTL_Pin, GPIO_PIN_SET);
+            break;
+        }
 
         osDelayUntil(tick_start + 1000);
     }

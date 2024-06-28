@@ -20,9 +20,9 @@ uint8_t g_board_id = BOARD_ID_INVAL;
 //default values for the DRV8323 registers
 uint16_t DRV8323DrvCtrl =
     0 << 9  | //DIS_CPUV
-    1 << 8  | //DIS_GDF
+    0 << 8  | //DIS_GDF
     0 << 7  | //OTW_REP
-    2 << 5  | //PWM_MODE
+    1 << 5  | //PWM_MODE
     0 << 4  | //1PWM_COM
     0 << 3  | //1PWM_DIR
     0 << 2  | //COAST
@@ -788,23 +788,22 @@ void setMotor(uint8_t pwm_motor)
 
 void initMotor(void)
 {
-    HAL_GPIO_WritePin(MTR_CS_GPIO_Port, MTR_CS_Pin, GPIO_PIN_SET); //enable to motor controller
+    HAL_GPIO_WritePin(MTR_EN_GPIO_Port, MTR_EN_Pin, GPIO_PIN_SET); //enable to motor controller
+    HAL_Delay(100);
 
-    //In TI sample firmware http://www.ti.com/tool/tida-00774, DRV8323regGateDrvHS is written first, and it is written twice
-    //In http://www.ti.com/tool/boostxl-drv8323rs, the 5 control register are just written once in order.
     writeMotor(MTR_DRV8323_DRV_CTRL, DRV8323DrvCtrl);
-    writeMotor(MTR_DRV8323_GATE_DRV_HS, DRV8323GateDrvHS);
-    writeMotor(MTR_DRV8323_GATE_DRV_LS, DRV8323GateDrvLS);
-    writeMotor(MTR_DRV8323_OCP_CTRL, DRV8323OcpCtrl);
-    writeMotor(MTR_DRV8323_CSA_CTRL, DRV8323CsaCtrl);
+//    writeMotor(MTR_DRV8323_GATE_DRV_HS, DRV8323GateDrvHS);
+//    writeMotor(MTR_DRV8323_GATE_DRV_LS, DRV8323GateDrvLS);
+//    writeMotor(MTR_DRV8323_OCP_CTRL, DRV8323OcpCtrl);
+//    writeMotor(MTR_DRV8323_CSA_CTRL, DRV8323CsaCtrl);
 
     printf("FAULT_STAT[0x%x]\r\n", readMotor(MTR_DRV8323_FAULT_STAT));
     printf("VGS_STAT[0x%x]\r\n", readMotor(MTR_DRV8323_VGS_STAT));
     printf("DRV_CTRL[0x%x]\r\n", readMotor(MTR_DRV8323_DRV_CTRL));
-    printf("GATE_HS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_HS));
-    printf("GATE_LS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_LS));
-    printf("ADR_OCP[0x%x]\r\n", readMotor(MTR_DRV8323_OCP_CTRL));
-    printf("ADR_CSA[0x%x]\r\n\r\n", readMotor(MTR_DRV8323_CSA_CTRL));
+//    printf("GATE_HS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_HS));
+//    printf("GATE_LS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_LS));
+//    printf("ADR_OCP[0x%x]\r\n", readMotor(MTR_DRV8323_OCP_CTRL));
+//    printf("ADR_CSA[0x%x]\r\n\r\n", readMotor(MTR_DRV8323_CSA_CTRL));
     return;
 }
 

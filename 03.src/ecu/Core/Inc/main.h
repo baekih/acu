@@ -59,30 +59,38 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define WDI_Pin GPIO_PIN_15
-#define WDI_GPIO_Port GPIOA
-#define LED1_ON_Pin GPIO_PIN_13
-#define LED1_ON_GPIO_Port GPIOJ
-#define LED2_ON_Pin GPIO_PIN_14
-#define LED2_ON_GPIO_Port GPIOJ
-#define DBG_RX_Pin GPIO_PIN_10
-#define DBG_RX_GPIO_Port GPIOA
-#define DBG_TX_Pin GPIO_PIN_9
-#define DBG_TX_GPIO_Port GPIOA
-#define MTR_P0_Pin GPIO_PIN_8
-#define MTR_P0_GPIO_Port GPIOC
-#define MTR_nBRK_Pin GPIO_PIN_6
-#define MTR_nBRK_GPIO_Port GPIOC
+#define MTR_EN_Pin GPIO_PIN_8
+#define MTR_EN_GPIO_Port GPIOB
+#define LED1_Pin GPIO_PIN_13
+#define LED1_GPIO_Port GPIOJ
+#define LED2_Pin GPIO_PIN_14
+#define LED2_GPIO_Port GPIOJ
+#define CAN1_STBY_Pin GPIO_PIN_10
+#define CAN1_STBY_GPIO_Port GPIOA
 #define MTR_PWM_Pin GPIO_PIN_7
 #define MTR_PWM_GPIO_Port GPIOF
-#define MTR_P2_Pin GPIO_PIN_6
-#define MTR_P2_GPIO_Port GPIOF
-#define MTR_CS_Pin GPIO_PIN_6
-#define MTR_CS_GPIO_Port GPIOH
-#define MTR_P1_Pin GPIO_PIN_0
-#define MTR_P1_GPIO_Port GPIOJ
-#define MTR_DIR_Pin GPIO_PIN_1
-#define MTR_DIR_GPIO_Port GPIOJ
+#define W_EN_Pin GPIO_PIN_4
+#define W_EN_GPIO_Port GPIOJ
+#define H3_Pin GPIO_PIN_12
+#define H3_GPIO_Port GPIOD
+#define V_EN_Pin GPIO_PIN_3
+#define V_EN_GPIO_Port GPIOJ
+#define H1_Pin GPIO_PIN_5
+#define H1_GPIO_Port GPIOA
+#define U_EN_Pin GPIO_PIN_2
+#define U_EN_GPIO_Port GPIOJ
+#define U_CTL_Pin GPIO_PIN_3
+#define U_CTL_GPIO_Port GPIOA
+#define H2_Pin GPIO_PIN_0
+#define H2_GPIO_Port GPIOB
+#define V_CTL_Pin GPIO_PIN_0
+#define V_CTL_GPIO_Port GPIOJ
+#define W_CTL_Pin GPIO_PIN_1
+#define W_CTL_GPIO_Port GPIOJ
+#define DBG_TX_Pin GPIO_PIN_14
+#define DBG_TX_GPIO_Port GPIOB
+#define DBG_RX_Pin GPIO_PIN_15
+#define DBG_RX_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
