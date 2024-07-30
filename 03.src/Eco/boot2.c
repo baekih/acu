@@ -207,8 +207,9 @@ void test_proc(void)
 
         if(tick%3000 == 0)
         {
-            printf("[%08ld] Pgn126993HeartBeat()\n", timer_sec_1);
+            printf("[%08ld] Pgn126993HeartBeat(), NMEA0183:GLHDG\n", timer_sec_1);
             Pgn126993HeartBeat();
+            HAL_UART_Transmit(&huart2, (uint8_t*)"$GLHDG,180.0,0,W,0.0,E*47", strlen("$GLHDG,180.0,0,W,0.0,E*47"), 0xFFFFFFFF);
         }
 
         osDelayUntil(tick);
