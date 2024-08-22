@@ -76,6 +76,7 @@ typedef void (*pFunction)(void);
 #define BOOT2_START_ADDR          ADDR_FLASH_SECTOR_4
 #define APP_START_ADDR            ADDR_FLASH_SECTOR_5
 
+//#define FEATURE_POWER_PLUGIN_BOOT
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -175,6 +176,9 @@ int main(void)
 
   LL_Init1msTick(16000000);
 
+#ifdef FEATURE_POWER_PLUGIN_BOOT
+  g_common_dat.jmp_adr = BOOT2_START_ADDR;
+#else
   LL_mDelay(10);
   while( LL_GPIO_IsInputPinSet(PWR_ON_GPIO_Port, PWR_ON_Pin)) LL_mDelay(10);
   LL_mDelay(10);
@@ -187,6 +191,7 @@ int main(void)
   }
 
   if(300 < cnt_pwr) g_common_dat.jmp_adr = BOOT2_START_ADDR;
+#endif
 
   /* Reinitialize the Stack pointer and jump to application address */
   uint32_t JumpAddress = *(__IO uint32_t *) (g_common_dat.jmp_adr + 4);
