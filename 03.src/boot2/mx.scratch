@@ -6,7 +6,7 @@
     <WorkspacePath>C:\dev\work\st\fi-din\03.src\boot2\</WorkspacePath>
     <underRoot>true</underRoot>
     <TrustZone>0</TrustZone>
-    <HAL_Driver>C:\dev\ide\st\repo\STM32Cube_FW_F7_V1.17.1</HAL_Driver>
+    <HAL_Driver>C:\dev\ide\st\repo\STM32Cube_FW_F7_V1.17.2</HAL_Driver>
     <CMSIS>Drivers/CMSIS</CMSIS>
     <Toolchain>STM32CubeIDE</Toolchain>
     <IocFile>boot2.ioc</IocFile>
@@ -30,7 +30,7 @@
             <memory access="xrw" name="RAM" size="524288" start="0x20000000" />
             <memory access="rx" name="FLASH" size="1048576" start="0x8000000" />
           </memories>
-          <startup>C:\dev\ide\st\repo\STM32Cube_FW_F7_V1.17.1\Drivers\CMSIS\Device\ST\STM32F7xx\Source\Templates\gcc\startup_stm32f767xx.s</startup>
+          <startup>C:\dev\ide\st\repo\STM32Cube_FW_F7_V1.17.2\Drivers\CMSIS\Device\ST\STM32F7xx\Source\Templates\gcc\startup_stm32f767xx.s</startup>
           <LinkSettings>
             <LinkAdditionalLibs />
           </LinkSettings>
@@ -41,7 +41,14 @@
           <debugprobe>swd</debugprobe>
           <optimization />
           <Aincludes>
-            <include />
+            <include>Core\Inc</include>
+            <include>Drivers\STM32F7xx_HAL_Driver\Inc</include>
+            <include>Drivers\STM32F7xx_HAL_Driver\Inc\Legacy</include>
+            <include>Middlewares\Third_Party\FreeRTOS\Source\include</include>
+            <include>Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS_V2</include>
+            <include>Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM7\r0p1</include>
+            <include>Drivers\CMSIS\Device\ST\STM32F7xx\Include</include>
+            <include>Drivers\CMSIS\Include</include>
           </Aincludes>
           <Adefines />
           <Cdefines>
@@ -85,9 +92,6 @@
         </sourceEntry>
         <sourceEntry>
           <name>Middlewares</name>
-        </sourceEntry>
-        <sourceEntry>
-          <name>TouchGFX</name>
         </sourceEntry>
       </sourceEntries>
       <Groups />
