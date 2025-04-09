@@ -32,7 +32,7 @@ void PGN126208ACKNOWLEDGE_SetFieldValue(uint32_t _Acknowledgment_Group_Function_
 	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
 #endif
 
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add1ByteUInt( _Acknowledgment_Group_Function_Code );

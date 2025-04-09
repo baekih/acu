@@ -23,32 +23,17 @@ PGN065240NAME g_PGN065240;
 
 void PGN065240_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
-
-//  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	g_PGN065240.mUnique_Number = Get4ByteUInt(Index) & 0x1FFFFF;
-	g_PGN065240.mManufacturer_Code = (Get4ByteUInt(Index) >> 21) & 0x7FF;
-	Index = Index+4;
-	g_PGN065240.mDevice_Instance_Lower = Get1ByteUInt(Index) & 0x07;
-	g_PGN065240.mDevice_Instance_Upper = (Get1ByteUInt(Index) >> 3) & 0x1F;
-	Index = Index+1;
-	g_PGN065240.mDevice_Function = Get1ByteUInt(Index);
-	Index = Index+1;
-	g_PGN065240.mNMEA_Reserved = Get1ByteUInt(Index) & 0x01;
-	g_PGN065240.mDevice_Class = (Get1ByteUInt(Index) >> 1) & 0x7F;
-	Index = Index+1;
-	g_PGN065240.mSystem_Instance = Get1ByteUInt(Index) & 0x0F;
-	g_PGN065240.mIndustry_Group = (Get1ByteUInt(Index) >> 4) & 0x07;
-	g_PGN065240.mISO_Self_Configuration = (Get1ByteUInt(Index) >> 7) & 0x01;
-	Index = Index+1;
-	g_PGN065240.mNew_Address = Get1ByteUInt(Index);
+	g_PGN065240.mUnique_Number 			=  GetBuf_4ByteUInt(len, 0, buf) & 0x1FFFFF;
+	g_PGN065240.mManufacturer_Code 		= (GetBuf_4ByteUInt(len, 0, buf) >> 21) & 0x7FF;
+	g_PGN065240.mDevice_Instance_Lower 	=  GetBuf_1ByteUInt(len, 4, buf) & 0x07;
+	g_PGN065240.mDevice_Instance_Upper 	= (GetBuf_1ByteUInt(len, 4, buf) >> 3) & 0x1F;
+	g_PGN065240.mDevice_Function 		=  GetBuf_1ByteUInt(len, 5, buf);
+	g_PGN065240.mNMEA_Reserved 			=  GetBuf_1ByteUInt(len, 6, buf) & 0x01;
+	g_PGN065240.mDevice_Class 			= (GetBuf_1ByteUInt(len, 6, buf) >> 1) & 0x7F;
+	g_PGN065240.mSystem_Instance 		=  GetBuf_1ByteUInt(len, 7, buf) & 0x0F;
+	g_PGN065240.mIndustry_Group 		= (GetBuf_1ByteUInt(len, 7, buf) >> 4) & 0x07;
+	g_PGN065240.mISO_Self_Configuration = (GetBuf_1ByteUInt(len, 7, buf) >> 7) & 0x01;
+	g_PGN065240.mNew_Address 			=  GetBuf_1ByteUInt(len, 8, buf);
 }
 
 void PGN065240_SetInitialField(PGN065240NAME *pPGN065240)

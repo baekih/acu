@@ -40,7 +40,7 @@ typedef struct _FastPacketData_ {
 	uint32_t mFastPacket_LastReceive_Packet_Time;
 	uint8_t mReceiveFrameCheck[256];
 
-	uint8_t valid;
+	uint8_t using;
 
 } FastPacketData;
 

@@ -31,7 +31,7 @@ void PGN060416RTS_SetFieldValue(uint32_t _RTS_Group_Function_Code,
 								uint32_t _NMEA_Reserved,
 								uint32_t _PGN_of_multipacket_message)
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add1ByteUInt( _RTS_Group_Function_Code );
@@ -55,19 +55,11 @@ void PGN060416RTS_SendNameField(NmeaPgn* sendPgn)
 
 void PGN060416RTS_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	g_PGN060416RTSNAME.mRTS_Group_Function_Code 					= Get1ByteUInt(Index); Index = Index+1;
-	g_PGN060416RTSNAME.mTotal_message_size_bytes				 	= Get2ByteUInt(Index); Index = Index+2;
-	g_PGN060416RTSNAME.mTotal_number_of_frames_to_be_transmitted 	= Get1ByteUInt(Index); Index = Index+1;
-	g_PGN060416RTSNAME.mNMEA_Reserved 								= Get1ByteUInt(Index); Index = Index+1;
-	g_PGN060416RTSNAME.mPGN_of_multipacket_message 					= Get3ByteUInt(Index);
+	g_PGN060416RTSNAME.mRTS_Group_Function_Code 					= GetBuf_1ByteUInt(len, 0, buf);
+	g_PGN060416RTSNAME.mTotal_message_size_bytes				 	= GetBuf_2ByteUInt(len, 1, buf);
+	g_PGN060416RTSNAME.mTotal_number_of_frames_to_be_transmitted 	= GetBuf_1ByteUInt(len, 3, buf);
+	g_PGN060416RTSNAME.mNMEA_Reserved 								= GetBuf_1ByteUInt(len, 4, buf);
+	g_PGN060416RTSNAME.mPGN_of_multipacket_message 					= GetBuf_3ByteUInt(len, 5, buf);
 
 #if PRINTF_DEBUG_PGN060416_RTS_NON
 	printf(" [mRTS_Group_Function_Code = %ld] !!\r\n", g_PGN060416RTSNAME.mRTS_Group_Function_Code);

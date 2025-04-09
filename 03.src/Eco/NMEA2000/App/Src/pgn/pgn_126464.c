@@ -29,22 +29,13 @@ void PGN126464_SetFieldValue(uint32_t _PGN_Group_Function_Code,
 							 uint32_t _First_PGN_supported[],
 							 uint8_t _PGN_List_Unit)
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
-#if PRINTF_DEBUG_FUNC_LINE_NON
-	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
-
 	Add1ByteUInt( _PGN_Group_Function_Code );
+
 	for (uint8_t i = 0; i < _PGN_List_Unit; i++)
 		Add3ByteUInt( _First_PGN_supported[i] );
-
-#if PRINTF_DEBUG_PGN126464_NON
-	printf(" [_PGN_Group_Function_Code = %ld] !!\r\n", _PGN_Group_Function_Code);
-	printf(" [_First_PGN_supported = ");		for (uint8_t i = 0; i < _PGN_List_Unit; i++)	printf("0x%06lx ", _First_PGN_supported[i]);	printf("] !!\r\n");
-	printf(" [_PGN_List_Unit = %d] !!\r\n", _PGN_List_Unit);
-#endif
 }
 
 void PGN126464_ProcessNameField(NmeaPgn* pgnId, uint32_t messagetype)

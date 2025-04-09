@@ -16,8 +16,8 @@
 
 #include "pgn_128259.h"
 
-#include <gui/common/validate_data.h>
 #include <gui/common/DataBase.hpp>
+#include <gui/common/validate_data.h>
 
 uint16_t 	SpeedWaterRefereced;     	// 16 bit
 uint16_t 	SpeedGroundRefereced;     	// 16 bit
@@ -39,10 +39,10 @@ void PGN128259_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 
 	if (SpeedDirection == 0 || SpeedDirection == 1) {
 		if(isValidSpeed(SpeedGroundRefereced)) {
-			setSOGValue( ((float)SpeedGroundRefereced / 100.0), SPEED_UNIT_MPS );
+			setSOGValue( ((double)SpeedGroundRefereced / 100.0), SPEED_UNIT_MPS );
 		}
 		if(isValidSpeed(SpeedWaterRefereced)) {
-			setSTWValue( ((float)SpeedWaterRefereced / 100.0), SPEED_UNIT_MPS );
+			setSTWValue( ((double)SpeedWaterRefereced / 100.0), SPEED_UNIT_MPS );
 		}
 	}
 }

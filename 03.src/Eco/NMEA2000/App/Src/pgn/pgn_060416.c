@@ -32,19 +32,7 @@ uint32_t PGN060416_priority = 6;
 /* Private functions ---------------------------------------------------------*/
 void PGN060416_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
-
-#if PRINTF_DEBUG_FUNC_LINE_NON
-	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	g_PGN060416NAME.mGroup_Function_Code = Get1ByteUInt(Index);
+	g_PGN060416NAME.mGroup_Function_Code = GetBuf_1ByteUInt(len, 0, buf);
 }
 
 uint32_t PGN060416_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)

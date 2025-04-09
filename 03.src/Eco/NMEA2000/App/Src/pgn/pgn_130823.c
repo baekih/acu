@@ -21,7 +21,7 @@
 /* Private functions ---------------------------------------------------------*/
 void PGN130823_ProcessNameField(NmeaPgn* pgnId)
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add2ByteUInt(PPGN_FURUNO_MFGCODE);

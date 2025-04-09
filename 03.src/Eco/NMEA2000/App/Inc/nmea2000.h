@@ -37,8 +37,8 @@ extern "C" {
 #define BROADCAST_DESTINATION_ADDR		255
 
 #define _OFFICE_NAME_                       "2023 by ECOTRONIX Corp."
-#define _MODEL_ID_VERTICAL_                 "FI-70x"
-#define _MODEL_ID_HORIZONTAL_               "FI-70H"
+#define _MODEL_ID_VERTICAL_                 "ECO-ACU"
+#define _MODEL_ID_HORIZONTAL_               "ECO-ACU"
 #define _MODEL_ID_                          _MODEL_ID_VERTICAL_
 #define _HW_VERSION_                        30
 #define _BOOT_VERSION_                      94

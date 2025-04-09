@@ -35,22 +35,13 @@ uint32_t PGN060160_priority = 6;
 /* Private functions ---------------------------------------------------------*/
 void PGN060160_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	g_PGN060160.mMultiPacketFrameCounter = Get1ByteUInt(Index);
-	Index = Index+1;
-	g_PGN060160.mMultiPacketData = Get7ByteUInt(Index);
+	g_PGN060160.mMultiPacketFrameCounter 	= GetBuf_1ByteUInt(len, 0, buf);
+	g_PGN060160.mMultiPacketData 			= GetBuf_7ByteUInt(len, 1, buf);
 }
 
 void PGN060160_SetFieldValue(uint32_t _Sequence_number_of_multipacket_frame, uint8_t *_Multipacket_packetized_data)
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add1ByteUInt( _Sequence_number_of_multipacket_frame );

@@ -19,16 +19,11 @@
 #define REQUEST_MESSAGE_TYPE_BAM_PACKET     1
 #define REQUEST_MESSAGE_TYPE_RTSCTS_PACKET  2
 
-/* Exported variables --------------------------------------------------------*/
-extern uint32_t receivePacketLength;
 extern uint32_t sendPacketLength;
-
-extern uint8_t receiveNMEAPackets[MAX_PACKET_LENGTH];
 extern uint8_t sendNMEAPackets[MAX_PACKET_LENGTH];
 
 /* Exported functions --------------------------------------------------------*/
 // *****************************************************************************
-extern void InitializeSendNameBitPosition();
 extern void InitializeSendNameField();
 // *****************************************************************************
 extern void Set8Buf(uint64_t v, size_t len, uint32_t index, uint8_t *buf);
@@ -49,23 +44,10 @@ extern void Add1ByteUInt(uint32_t v);
 extern void Add1ByteInt(int8_t v);
 
 // *****************************************************************************
-void InitializeReceNameBitPosition();
-void InitializeReceNameField();
-// *****************************************************************************
-extern uint64_t Get8Buf(size_t len, uint8_t index, uint8_t *buf);
-extern uint64_t GetBuf7ByteUInt(uint8_t index, uint8_t *buf);
-extern uint64_t Get7ByteUInt(uint8_t Index);
+extern uint64_t Get64bit(size_t len, uint8_t index, uint8_t *buf);
+extern uint32_t Get32bit(size_t len, uint8_t index, uint8_t *buf);
 
-extern uint32_t GetBuf(size_t len, uint8_t index, uint8_t *buf);
-extern uint32_t GetBuf4ByteUInt(uint8_t index, uint8_t *buf);
-extern uint32_t GetBuf3ByteUInt(uint8_t index, uint8_t *buf);
-extern uint32_t GetBuf2ByteUInt(uint8_t index, uint8_t *buf);
-extern uint32_t Get4ByteUInt(uint8_t Index);
-extern uint32_t Get3ByteUInt(uint8_t Index);
-extern uint32_t Get2ByteUInt(uint8_t Index);
-extern uint32_t Get1ByteUInt(uint8_t Index);
-
-/* ************************************************************************** */
+extern uint64_t GetBuf_8ByteUInt(uint8_t len, uint8_t index, uint8_t *buf);
 extern uint64_t GetBuf_7ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf);
 extern uint32_t GetBuf_3ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf);
 extern uint32_t GetBuf_4ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf);

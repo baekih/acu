@@ -24,7 +24,6 @@ uint32_t PGN065288_ProcessNameField(uint8_t preset, uint8_t percentage)
 {
 //  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
 
-  InitializeSendNameBitPosition();
   InitializeSendNameField();
 
   Add2ByteUInt(PPGN_FURUNO_MFGCODE);

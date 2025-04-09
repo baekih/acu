@@ -23,7 +23,6 @@ uint32_t PGN126993_ProcessNameField(uint8_t HeartbeatSeqCnt, uint8_t Can1stCtlSt
 {
 //  printf("%s:%d Heartbeat Enter.\r\n",__FUNCTION__,__LINE__);
 
-  InitializeSendNameBitPosition();
   InitializeSendNameField();
 
   Add2ByteUInt(PGN126993_UPDATE_RATE);        // Update Rate : 60sec.

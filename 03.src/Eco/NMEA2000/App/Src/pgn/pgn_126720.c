@@ -23,29 +23,17 @@ PGN126720NAME g_PGN126720;
 /* Private functions ---------------------------------------------------------*/
 PGN126720NAME PGN126720_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
 	uint16_t Manufacturer_Code;
 	uint8_t Industry_Group;
 	uint8_t IdentifyCode;
 	uint8_t ProperietaryID;
 	uint8_t ControlFunction;
 
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	Manufacturer_Code = Get2ByteUInt(Index) & 0x7FF;	// 11 bits
-	Industry_Group = (Get2ByteUInt(Index) & 0xE000) >> 13;		// 3  bits
-	Index += 2;
-
-	IdentifyCode = Get1ByteUInt(Index);		// 8  bits
-	ProperietaryID = Get1ByteUInt(Index);
-	Index += 1;
-
-	ControlFunction = Get1ByteUInt(Index);    // 8  bits
-	Index += 1;
+	Manufacturer_Code 		=  GetBuf_2ByteUInt(len, 0, buf) & 0x7FF;			// 11 bits
+	Industry_Group 			= (GetBuf_2ByteUInt(len, 0, buf) & 0xE000) >> 13;	// 3  bits
+	IdentifyCode 			=  GetBuf_1ByteUInt(len, 2, buf);					// 8  bits
+	ProperietaryID 			=  GetBuf_1ByteUInt(len, 3, buf);					// 8  bits
+	ControlFunction 		=  GetBuf_1ByteUInt(len, 4, buf);    				// 8  bits
 
 	if(g_access_level == 1)// for Boot-loader - AIRMAR: Master Reset
 	{
@@ -88,7 +76,7 @@ PGN126720NAME PGN126720_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 
 void PGN126720_FactoryTest_SetFieldValue()
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add2ByteUInt(PPGN_FURUNO_MFGCODE);
@@ -100,7 +88,7 @@ void PGN126720_FactoryTest_SetFieldValue()
 
 void PGN126720_MemoryClearGroup_SetFieldValue()
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add2ByteUInt(PPGN_FURUNO_MFGCODE);
@@ -111,7 +99,7 @@ void PGN126720_MemoryClearGroup_SetFieldValue()
 
 void PGN126720_ResetGoup_SetFieldValue()
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add2ByteUInt(PPGN_FURUNO_MFGCODE);

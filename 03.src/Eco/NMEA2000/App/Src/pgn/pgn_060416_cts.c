@@ -29,7 +29,7 @@ void PGN060416CTS_SetFieldValue(uint32_t _CTS_Group_Function_Code,
 								uint32_t _NMEA_Reserved,
 								uint32_t _PGN_of_multipacket_message)
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 	
 	Add1ByteUInt( _CTS_Group_Function_Code );
@@ -46,23 +46,11 @@ void PGN060416CTS_SendNameField(NmeaPgn* pgnId)
 
 void PGN060416CTS_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
-
-#if PRINTF_DEBUG_FUNC_LINE_NON
-	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	g_PGN060416CTSNAME.mCTS_Group_Function_Code 				= Get1ByteUInt(Index); 	Index = Index+1;
-	g_PGN060416CTSNAME.mNumber_of_frames_that_can_be_sent 		= Get1ByteUInt(Index);	Index = Index+1;
-	g_PGN060416CTSNAME.mNumber_of_next_frame_to_be_transmitted 	= Get1ByteUInt(Index);	Index = Index+1;
-	g_PGN060416CTSNAME.mNMEA_Reserved 							= Get2ByteUInt(Index);	Index = Index+2;
-	g_PGN060416CTSNAME.mPGN_of_multipacket_message 				= Get3ByteUInt(Index);
+	g_PGN060416CTSNAME.mCTS_Group_Function_Code 				= GetBuf_1ByteUInt(len, 0, buf);
+	g_PGN060416CTSNAME.mNumber_of_frames_that_can_be_sent 		= GetBuf_1ByteUInt(len, 1, buf);
+	g_PGN060416CTSNAME.mNumber_of_next_frame_to_be_transmitted 	= GetBuf_1ByteUInt(len, 2, buf);
+	g_PGN060416CTSNAME.mNMEA_Reserved 							= GetBuf_2ByteUInt(len, 3, buf);
+	g_PGN060416CTSNAME.mPGN_of_multipacket_message 				= GetBuf_3ByteUInt(len, 5, buf);
 }
 
 void PGN060416CTS_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)

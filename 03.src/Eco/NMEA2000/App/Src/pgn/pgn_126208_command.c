@@ -550,6 +550,24 @@ void PGN126208COMMAND_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
 
 			PGN126208ACKNOWLEDGE_ProcessNameField(pgnId, buf, messagetype);
 	}
+    else if(g_PGN126208COMMANDNAME.mCommanded_PGN == 126993)
+    {
+            if (numOfParam > 0) {
+                while (numOfParam-- > 0){
+                    if(countOfFieldErrorCode < PGN126208_FIELD_ERROR_CODE_MAX) fieldErrorCodes[countOfFieldErrorCode++] = PGN126208_PARAM_ERRORCODE_ACCESS_DENIED;
+                    numOfError++;
+                }
+            }
+
+            PGN126208ACKNOWLEDGE_SetFieldValue(FUNCTION_CODE_ACKNOWLEDGE_MESSAGE,
+                                               g_PGN126208COMMANDNAME.mCommanded_PGN,
+                                               PGN126208_ACK_ERRORCODE_PGN_NOT_SUPPORT,
+                                               txPriorityErrorCode,
+                                               countOfFieldErrorCode,
+                                               fieldErrorCodes);
+
+            PGN126208ACKNOWLEDGE_ProcessNameField(pgnId, buf, messagetype);
+    }
 	else {
 		PGN126208ACKNOWLEDGE_SetFieldValue(FUNCTION_CODE_ACKNOWLEDGE_MESSAGE,
 										   g_PGN126208COMMANDNAME.mCommanded_PGN,

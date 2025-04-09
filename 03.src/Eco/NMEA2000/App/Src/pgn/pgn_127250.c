@@ -15,8 +15,8 @@
 
 #include "pgn_127250.h"
 
+#include <gui/common/validate_data.h>
 #include <gui/common/DataBase.hpp>
-#include "validate_data.h"
 
 uint8_t 	SequenceID;                 // 8  bit
 uint16_t 	HeadingSensorReading;       // 16 bit
@@ -45,5 +45,7 @@ void PGN127250_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 	printf("mDeviation : %3.1f,", (((float)Deviation/10000) / M_PI) * 180);
 	printf("mVariation : %3.1f\n", (((float)Variation/10000) / M_PI) * 180);*/
 
-	setHDGValue( (float)HeadingSensorReading / 10000 );
+	if(isValidDegreeAngle(HeadingSensorReading)){
+		setHDGValue( (double)HeadingSensorReading );
+	}
 }

@@ -23,22 +23,10 @@ uint32_t PGN061184STGF_priority = 7;
 /* Private functions ---------------------------------------------------------*/
 void PGN061184STGF_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
-
-//	printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	g_PGN061184STGFNAME.m61184Manufacturer_Code = Get2ByteUInt(Index) & 0x7FF;
-	g_PGN061184STGFNAME.m61184Industry_Group = (Get2ByteUInt(Index) & 0xE000) >> 13;
-	Index = Index+2;
-	g_PGN061184STGFNAME.m61184Identification_Code = Get1ByteUInt(Index);
-	Index = Index+1;
-	g_PGN061184STGFNAME.m61184Control_Function = Get1ByteUInt(Index);
+	g_PGN061184STGFNAME.m61184Manufacturer_Code 	=  GetBuf_2ByteUInt(len, 0, buf) & 0x7FF;
+	g_PGN061184STGFNAME.m61184Industry_Group 		= (GetBuf_2ByteUInt(len, 0, buf) & 0xE000) >> 13;
+	g_PGN061184STGFNAME.m61184Identification_Code 	=  GetBuf_1ByteUInt(len, 2, buf);
+	g_PGN061184STGFNAME.m61184Control_Function 		=  GetBuf_1ByteUInt(len, 3, buf);
 
 
 #if 0
@@ -55,7 +43,7 @@ void PGN061184STGF_SetInitialField(uint32_t _61184Manufacturer_Code,
 								   uint32_t _61184Control_Function)
 {
 //	printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add2ByteUInt(PPGN_FURUNO_MFGCODE);

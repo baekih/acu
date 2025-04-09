@@ -24,21 +24,8 @@ uint32_t PGN065286_priority = 6;
 /* Private functions ---------------------------------------------------------*/
 void PGN065286_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
-
-#if PRINTF_DEBUG_FUNC_LINE_NON
-	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	g_PGN065286NAME.mManufacturer_Code = Get2ByteUInt(Index) & 0x7FF;
-	g_PGN065286NAME.mIndustry_Group = (Get2ByteUInt(Index) >> 11) & 0x07;
-	Index = Index+2;
+	g_PGN065286NAME.mManufacturer_Code 	=  GetBuf_2ByteUInt(len, 0, buf) & 0x7FF;
+	g_PGN065286NAME.mIndustry_Group 	= (GetBuf_2ByteUInt(len, 0, buf) >> 11) & 0x07;
 
 #if PRINTF_DEBUG_PGN065286
 	printf(" [mManufacturer_Code = %ld] !!\r\n", g_PGN065286NAME.mManufacturer_Code);

@@ -35,7 +35,7 @@ void PGN059392_SetFieldValue(uint8_t _Control_Byte,
 	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
 #endif
 
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 	
 	Add1ByteUInt( _Control_Byte );

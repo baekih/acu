@@ -32,7 +32,7 @@ void PGN126998_SetFieldValue(uint8_t _InstallationDescription1[],
 							uint8_t _InstallationDescription2[],
 							uint8_t _MenufacturerDescription[])
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	int byteCount1 = _InstallationDescription1[0];

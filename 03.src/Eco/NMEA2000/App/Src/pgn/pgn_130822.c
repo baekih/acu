@@ -22,7 +22,7 @@
 void PGN130822_ProcessNameField(NmeaPgn* pgnId)
 {
 //	printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add2ByteUInt(PPGN_FURUNO_MFGCODE);

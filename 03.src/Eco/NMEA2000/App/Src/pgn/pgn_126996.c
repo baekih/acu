@@ -31,7 +31,7 @@ void PGN126996_SetFieldValue(uint32_t _NMEA_Network_Message_Database_Version,
 							 uint32_t _NMEA_2000_Certification_Level,
 							 uint32_t _Load_Equivalency)
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 //  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);

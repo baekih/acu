@@ -22,21 +22,34 @@ uint32_t NewFastPacketData(uint32_t _FastPacket_Total_Message_Byte_Size,
 					uint32_t _FastPacket_Destination_Address)
 {
 	for(int i = 0; i < FAST_MAX_PKT_SIZE; i++){
-		if(listFastPacket[i].valid == 0){
-			listFastPacket[i].mFastPacket_Total_Message_Byte_Size 	= _FastPacket_Total_Message_Byte_Size;
-			listFastPacket[i].mFastPacket_Identifier				= _FastPacket_Identifier;
-			listFastPacket[i].mFastPacket_PGNMessage				= _FastPacket_PGNMessage;
-			listFastPacket[i].mFastPacket_Source_Address			= _FastPacket_Source_Address;
-			listFastPacket[i].mFastPacket_Destination_Address		= _FastPacket_Destination_Address;
+		FastPacketData* pFastPacket = listFastPacket + i;
 
-			memset(listFastPacket[i].mMerged_FastPacket, 0, FAST_PKT_MAX_DATA_LEN);
+		if((HAL_GetTick() - pFastPacket->mFastPacket_LastReceive_Packet_Time) > 2000){
+			pFastPacket->using = 0;
+		}
 
-			listFastPacket[i].mFastPacket_Received_Byte_Size					= 0;
-			listFastPacket[i].mFastPacket_LastReceive_Packet_Time				= HAL_GetTick();
+		if(pFastPacket->mFastPacket_Identifier == _FastPacket_Identifier){
+			printf("fast packet (%d) invalid identifier %d/%d\r\n",
+				i, pFastPacket->mFastPacket_Identifier, _FastPacket_Identifier);
 
-			memset(listFastPacket[i].mReceiveFrameCheck, 0, sizeof(listFastPacket[i].mReceiveFrameCheck));
+			pFastPacket->using = 0;
+		}
 
-			listFastPacket[i].valid = 1;
+		if(pFastPacket->using == 0){
+			pFastPacket->mFastPacket_Total_Message_Byte_Size 	= _FastPacket_Total_Message_Byte_Size;
+			pFastPacket->mFastPacket_Identifier					= _FastPacket_Identifier;
+			pFastPacket->mFastPacket_PGNMessage					= _FastPacket_PGNMessage;
+			pFastPacket->mFastPacket_Source_Address				= _FastPacket_Source_Address;
+			pFastPacket->mFastPacket_Destination_Address		= _FastPacket_Destination_Address;
+
+			memset(pFastPacket->mMerged_FastPacket, 0, FAST_PKT_MAX_DATA_LEN);
+
+			pFastPacket->mFastPacket_Received_Byte_Size			= 0;
+			pFastPacket->mFastPacket_LastReceive_Packet_Time	= HAL_GetTick();
+
+			memset(pFastPacket->mReceiveFrameCheck, 0, sizeof(pFastPacket->mReceiveFrameCheck));
+
+			pFastPacket->using = 1;
 
 			return i;
 		}
@@ -66,19 +79,10 @@ uint32_t ProcessFastPacketData(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 //		printf("fastpacketDataSize[%ld]\r\n",fastpacketDataSize);
 
 		if (fastpacketDataSize > 6) {
-			for(int i = 0; i < FAST_MAX_PKT_SIZE; i++){
-				if(listFastPacket[i].mFastPacket_Identifier == fastpacketIdentifier){
-					printf("fast packet (%d) invalid identifier\r\n",  i);
-
-					listFastPacket[i].valid = 0;
-					break;
-				}
-			}
-
 			int newIndex = NewFastPacketData(fastpacketDataSize, fastpacketIdentifier, pgnId->mPGN, pgnId->mSA, pgnId->mPS);
 
 			if(newIndex != -1){
-				printf("fast packet (%d) new\r\n",  newIndex);
+//				printf("fast packet (%d) new\r\n",  newIndex);
 
 				memcpy(&listFastPacket[newIndex].mMerged_FastPacket[0], &buf[2], 6);
 
@@ -99,6 +103,10 @@ uint32_t ProcessFastPacketData(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 		for(int i = 0; i < FAST_MAX_PKT_SIZE; i++){
 			FastPacketData* pFastPacket = listFastPacket + i;
 
+			if((HAL_GetTick() - pFastPacket->mFastPacket_LastReceive_Packet_Time) > 2000){
+				pFastPacket->using = 0;
+			}
+
 			if(pFastPacket->mFastPacket_Source_Address != pgnId->mSA ||
 					pFastPacket->mFastPacket_Destination_Address != pgnId->mPS ||
 					pFastPacket->mFastPacket_Identifier != fastpacketIdentifier ||
@@ -114,9 +122,9 @@ uint32_t ProcessFastPacketData(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 				memcpy(pFastPacket->mMerged_FastPacket + pFastPacket->mFastPacket_Received_Byte_Size, buf + 1, 7);
 				pFastPacket->mFastPacket_Received_Byte_Size += 7;
 
-				pFastPacket->valid = 0;
+				pFastPacket->using = 0;
 
-				printf("fast packet (%d) done\r\n",  i);
+//				printf("fast packet (%d) done\r\n",  i);
 
 				mCompletedFastPacketSize = pFastPacket->mFastPacket_Received_Byte_Size;
 

@@ -23,7 +23,7 @@ void PGN130816_ProcessNameField(NmeaPgn* pgnId)
 {
 //	printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
 
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	uint16_t romTestResult = 0;

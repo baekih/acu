@@ -25,27 +25,11 @@ uint32_t PGN060416BAM_priority = 6;
 /* Private functions ---------------------------------------------------------*/
 void PGN060416BAM_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
-
-#if PRINTF_DEBUG_FUNC_LINE_NON
-	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	g_PGN060416BAMNAME.mBAM_Group_Function_Code = Get1ByteUInt(Index);
-	Index = Index+1;
-	g_PGN060416BAMNAME.mTotal_message_size_bytes = Get2ByteUInt(Index);
-	Index = Index+2;
-	g_PGN060416BAMNAME.mTotal_number_of_frames_to_be_transmitted = Get1ByteUInt(Index);
-	Index = Index+1;
-	g_PGN060416BAMNAME.mNMEA_Reserved = Get1ByteUInt(Index);
-	Index = Index+1;
-	g_PGN060416BAMNAME.mPGN_of_multipacket_message = Get3ByteUInt(Index);
+	g_PGN060416BAMNAME.mBAM_Group_Function_Code 					= GetBuf_1ByteUInt(len, 0, buf);
+	g_PGN060416BAMNAME.mTotal_message_size_bytes 					= GetBuf_2ByteUInt(len, 1, buf);
+	g_PGN060416BAMNAME.mTotal_number_of_frames_to_be_transmitted	= GetBuf_1ByteUInt(len, 3, buf);
+	g_PGN060416BAMNAME.mNMEA_Reserved 								= GetBuf_1ByteUInt(len, 4, buf);
+	g_PGN060416BAMNAME.mPGN_of_multipacket_message 					= GetBuf_3ByteUInt(len, 5, buf);
 
 #if PRINTF_DEBUG_PGN060416_BAM_NON
 	printf(" [mBAM_Group_Function_Code = %ld] !!\r\n", g_PGN060416BAMNAME.mBAM_Group_Function_Code);
@@ -76,7 +60,7 @@ void PGN060416BAM_SetFieldValue(uint32_t _BAM_Group_Function_Code,
 	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
 #endif
 
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add1ByteUInt( _BAM_Group_Function_Code );

@@ -31,7 +31,7 @@ void PGN060416EOM_SetFieldValue(uint32_t _EOM_Group_Function_Code,
 	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
 #endif
 
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add1ByteUInt( _EOM_Group_Function_Code );

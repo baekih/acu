@@ -14,20 +14,10 @@
 #include "fastpacketdata.h"
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t receivePacketLength = 0;
 uint32_t sendPacketLength = 0;
-
-uint32_t mIndexSendBit = 0;
-
-uint8_t receiveNMEAPackets[MAX_PACKET_LENGTH];
 uint8_t sendNMEAPackets[MAX_PACKET_LENGTH];
 
 /* Private functions ---------------------------------------------------------*/
-void InitializeSendNameBitPosition()
-{
-	mIndexSendBit = 0;
-}
-
 void InitializeSendNameField()
 {
 	sendPacketLength = 0;
@@ -126,108 +116,38 @@ void Add1ByteInt(int8_t v)
     sendPacketLength++;
 }
 
-/* ************************************************************************** */
-
-void InitializeReceNameBitPosition()
-{
-}
-
-void InitializeReceNameField()
-{
-	receivePacketLength = 0;
-	
-	for (int i = 0; i < MAX_PACKET_LENGTH; i++)
-		receiveNMEAPackets[i] = 0;
-}
-
-/* ************************************************************************** */
-
-uint64_t Get8Buf(size_t len, uint8_t index, uint8_t *buf)
+uint64_t Get64bit(size_t len, uint8_t index, uint8_t *buf)
 {
 	uint64_t v = 0;
 
 	memcpy(&v, &buf[index], len);
-	index += len;
 
 	return v;
 }
 
-uint64_t GetBuf7ByteUInt(uint8_t index, uint8_t *buf)
-{
-	return Get8Buf(7, index, buf);
-}
-
-uint64_t Get7ByteUInt(uint8_t Index)
-{
-	if (Index+7 <= receivePacketLength)
-		return GetBuf7ByteUInt(Index, receiveNMEAPackets);
-	else
-		return 0xFFFFFFFFFFFFFF;
-}
-
-uint32_t GetBuf(size_t len, uint8_t index, uint8_t *buf)
+uint32_t Get32bit(size_t len, uint8_t index, uint8_t *buf)
 {
 	uint32_t v = 0;
 
 	memcpy(&v, &buf[index], len);
-	index += len;
 
 	return v;
 }
 
-uint32_t GetBuf4ByteUInt(uint8_t index, uint8_t *buf)
-{
-	return GetBuf(4, index, buf);
-}
-
-uint32_t GetBuf3ByteUInt(uint8_t index, uint8_t *buf)
-{
-	return GetBuf(3, index, buf);
-}
-
-uint32_t GetBuf2ByteUInt(uint8_t index, uint8_t *buf)
-{
-	return GetBuf(2, index, buf);
-}
-
-uint32_t Get4ByteUInt(uint8_t Index)
-{
-	if (Index+4 <= receivePacketLength)
-		return GetBuf4ByteUInt(Index, receiveNMEAPackets);
-	else
-		return 0xFFFFFFFF;
-}
-
-uint32_t Get3ByteUInt(uint8_t Index)
-{
-	if (Index+3 <= receivePacketLength)
-		return GetBuf3ByteUInt(Index, receiveNMEAPackets);
-	else
-		return 0x00FFFFFF;
-}
-
-uint32_t Get2ByteUInt(uint8_t Index)
-{
-	if (Index+2 <= receivePacketLength)
-		return GetBuf2ByteUInt(Index, receiveNMEAPackets);
-	else
-		return 0x0000FFFF;
-}
-
-uint32_t Get1ByteUInt(uint8_t Index)
-{
-	if (Index < receivePacketLength)
-		return receiveNMEAPackets[Index];
-	else
-		return 0x000000FF;
-}
-
 /* ************************************************************************** */
+
+uint64_t GetBuf_8ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf)
+{
+	if (Index+8 <= len)
+		return Get64bit(8, Index, buf);
+	else
+		return 0xFFFFFFFFFFFFFFFF;
+}
 
 uint64_t GetBuf_7ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf)
 {
 	if (Index+7 <= len)
-		return Get8Buf(7, Index, buf);
+		return Get64bit(7, Index, buf);
 	else
 		return 0xFFFFFFFFFFFFFFFF;
 }
@@ -235,7 +155,7 @@ uint64_t GetBuf_7ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf)
 uint32_t GetBuf_4ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf)
 {
 	if (Index+4 <= len)
-		return GetBuf(4, Index, buf);
+		return Get32bit(4, Index, buf);
 	else
 		return 0xFFFFFFFF;
 }
@@ -243,7 +163,7 @@ uint32_t GetBuf_4ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf)
 uint32_t GetBuf_3ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf)
 {
 	if (Index+3 <= len)
-		return GetBuf(3, Index, buf);
+		return Get32bit(3, Index, buf);
 	else
 		return 0x00FFFFFF;
 }
@@ -251,40 +171,30 @@ uint32_t GetBuf_3ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf)
 uint32_t GetBuf_2ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf)
 {
 	if (Index+2 <= len)
-		return GetBuf(2, Index, buf);
+		return Get32bit(2, Index, buf);
 	else
 		return 0x0000FFFF;
 }
 
 uint32_t GetBuf_1ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf)
 {
-	if (Index < len)
-		return buf[Index];
+	if (Index+1 <= len)
+		return Get32bit(1, Index, buf);
 	else
 		return 0x000000FF;
 }
 
 uint64_t GetBuf_nByteUInt(uint8_t *pbuf, uint8_t index, uint8_t len)
 {
-  uint64_t ret = 0;
+	uint64_t ret = 0;
 
-  if(8 < len) return 0xFFFFFFFFFFFFFFFF;
+	if(8 < len) return 0xFFFFFFFFFFFFFFFF;
 
-  for(int i = 0; i < len; i++)
-  {
-    ret |= (uint64_t)(*(pbuf + index + i))<<(8*i);
-  }
+	for(int i = 0; i < len; i++)
+	{
+		ret |= (uint64_t)(*(pbuf + index + i))<<(8*i);
+	}
 
-  return ret;
+	return ret;
 }
 
-uint32_t SetBuf_nByte(uint8_t *pbuf, uint8_t index, uint8_t len)
-{
-  uint32_t ret = 0;
-
-  if(4 < len) return 0xFFFFFFFF;
-
-  for(int i = 0; i < len; i++) ret |= *(pbuf + index + i)<<(8*i);
-
-  return ret;
-}

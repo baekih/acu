@@ -30,40 +30,48 @@ void InitializeMyNMEAData()
 	mMyPGN060928.mManufacturer_Code		= mApp_FEC_Manufacturer_Code;
 	mMyPGN060928.mDevice_Instance_Lower = mDevice_Intance & 0x7;
 	mMyPGN060928.mDevice_Instance_Upper = (mDevice_Intance & 0xF8) >> 3;
-	mMyPGN060928.mDevice_Function		= mDevice_Function;				// 8  bits
-	mMyPGN060928.mNMEA_Reserved			= 0;		// 1  bits
-	mMyPGN060928.mDevice_Class			= mDevice_Class;					// 7  bits
-	mMyPGN060928.mSystem_Instance		= mSystem_Instance;				// 4  bits
-	mMyPGN060928.mIndustry_Group		= mIndustry_Group;				// 3  bits
-	mMyPGN060928.mISO_Self_Configuration= mISO_Self_Configuration;		// 1  bits
+	mMyPGN060928.mDevice_Function		= mDevice_Function;
+	mMyPGN060928.mNMEA_Reserved			= 0;
+	mMyPGN060928.mDevice_Class			= mDevice_Class;
+	mMyPGN060928.mSystem_Instance		= mSystem_Instance;
+	mMyPGN060928.mIndustry_Group		= mIndustry_Group;
+	mMyPGN060928.mISO_Self_Configuration= mISO_Self_Configuration;
+
+/*	printf("InitializeMyNMEAData.......\n");
+	printf("NMEAUniqueNumber 		:%d\n", mMyPGN060928.mUnique_Number);
+	printf("NMEAManufacturerCode	:%d\n", mMyPGN060928.mManufacturer_Code);
+	printf("Instance_Lower 			:%d\n", mMyPGN060928.mDevice_Instance_Lower);
+	printf("Instance_Upper 			:%d\n", mMyPGN060928.mDevice_Instance_Upper);
+	printf("ISOFunctionInstance 	:%d\n", mMyPGN060928.mDevice_Function);
+	printf("NMEAFunctionCode 		:%d\n", mMyPGN060928.mDevice_Class);
+	printf("NMEAReserved1 			:%d\n", mMyPGN060928.mNMEA_Reserved);
+	printf("NMEADeviceClass 		:%d\n", mMyPGN060928.mDevice_Class);
+	printf("SystemInstance 			:%d\n", mMyPGN060928.mSystem_Instance);
+	printf("IndustryGroup 			:%d\n", mMyPGN060928.mIndustry_Group);*/
 }
 
 void PGN060928_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf, PGN060928NAME *pPGN060928)
 {
-	uint8_t Index = 0;
+	pPGN060928->mUnique_Number 			=  GetBuf_4ByteUInt(len, 0, buf) & 0x1FFFFF;
+	pPGN060928->mManufacturer_Code 		= (GetBuf_4ByteUInt(len, 0, buf) >> 21) & 0x7FF;
+	pPGN060928->mDevice_Instance_Lower 	=  GetBuf_1ByteUInt(len, 4, buf) & 0x07;
+	pPGN060928->mDevice_Instance_Upper 	= (GetBuf_1ByteUInt(len, 4, buf) >> 3) & 0x1F;
+	pPGN060928->mDevice_Function 		=  GetBuf_1ByteUInt(len, 5, buf);
+	pPGN060928->mNMEA_Reserved 			=  GetBuf_1ByteUInt(len, 6, buf) & 0x01;
+	pPGN060928->mDevice_Class 			= (GetBuf_1ByteUInt(len, 6, buf) >> 1) & 0x7F;
+	pPGN060928->mSystem_Instance 		=  GetBuf_1ByteUInt(len, 7, buf) & 0x0F;
+	pPGN060928->mIndustry_Group 		= (GetBuf_1ByteUInt(len, 7, buf) >> 4) & 0x07;
+	pPGN060928->mISO_Self_Configuration = (GetBuf_1ByteUInt(len, 7, buf) >> 7) & 0x01;
 
-//  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	pPGN060928->mUnique_Number = Get4ByteUInt(Index) & 0x1FFFFF;
-	pPGN060928->mManufacturer_Code = (Get4ByteUInt(Index) >> 21) & 0x7FF;
-	Index = Index+4;
-	pPGN060928->mDevice_Instance_Lower = Get1ByteUInt(Index) & 0x07;
-	pPGN060928->mDevice_Instance_Upper = (Get1ByteUInt(Index) >> 3) & 0x1F;
-	Index = Index+1;
-	pPGN060928->mDevice_Function = Get1ByteUInt(Index);
-	Index = Index+1;
-	pPGN060928->mNMEA_Reserved = Get1ByteUInt(Index) & 0x01;
-	pPGN060928->mDevice_Class = (Get1ByteUInt(Index) >> 1) & 0x7F;
-	Index = Index+1;
-	pPGN060928->mSystem_Instance = Get1ByteUInt(Index) & 0x0F;
-	pPGN060928->mIndustry_Group = (Get1ByteUInt(Index) >> 4) & 0x07;
-	pPGN060928->mISO_Self_Configuration = (Get1ByteUInt(Index) >> 7) & 0x01;
+/*	printf("NMEAUniqueNumber 		:%d\n", pPGN060928->mUnique_Number);
+	printf("NMEAManufacturerCode	:%d\n", pPGN060928->mManufacturer_Code);
+	printf("Instance_Lower 			:%d\n", pPGN060928->mDevice_Instance_Lower);
+	printf("Instance_Upper 			:%d\n", pPGN060928->mDevice_Instance_Upper);
+	printf("NMEAFunctionCode 		:%d\n", pPGN060928->mDevice_Function);
+	printf("NMEAReserved1 			:%d\n", pPGN060928->mNMEA_Reserved);
+	printf("NMEADeviceClass 		:%d\n", pPGN060928->mDevice_Class);
+	printf("SystemInstance 			:%d\n", pPGN060928->mSystem_Instance);
+	printf("IndustryGroup 			:%d\n", pPGN060928->mIndustry_Group);*/
 }
 
 void PGN060928_SetInitialField()

@@ -27,7 +27,7 @@ void PGN065285_SetFieldValue(uint16_t _Manufacturer_Code,
 							 uint8_t _Boot_State,
 							 uint64_t _NMEA_Reserved_2)
 {
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add2ByteUInt( ((_Industry_Group & 0x07) << 13) | ((_NMEA_Reserved_1 & 0x3) << 11) | (_Manufacturer_Code & 0x7FF) );

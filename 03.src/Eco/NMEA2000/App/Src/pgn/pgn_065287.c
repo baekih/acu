@@ -63,13 +63,6 @@ uint32_t calculate_level_2_key (uint32_t seed, uint32_t mask, uint8_t iterations
 
 void PGN065287_FEC_GetFieldValue(NmeaPgn* pgnId, uint8_t *pbuf, uint8_t len)
 {
-//	printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	memcpy(&receiveNMEAPackets, pbuf, len);
-
 	if(((uint8_t)GetBuf_nByteUInt(pbuf, 2, 1) & 0x01) == 1)
 	{
 //		g_hidhost_addr = (uint8_t)pgnId->mSA;
@@ -80,11 +73,6 @@ void PGN065287_FEC_GetFieldValue(NmeaPgn* pgnId, uint8_t *pbuf, uint8_t len)
 void PGN065287_Airmar_GetFieldValue(NmeaPgn* pgnId, uint8_t *pbuf, uint8_t len)
 {
 //	printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	memcpy(&receiveNMEAPackets, pbuf, len);
 
 /*	if(((uint8_t)GetBuf_nByteUInt(pbuf, 2, 1) & 0x01) == 1)
 	{
@@ -100,7 +88,7 @@ void PGN065287_FEC_SendNameField(void)
 {
 //	printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
 
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add2ByteUInt(PPGN_FURUNO_MFGCODE);
@@ -115,7 +103,7 @@ void PGN065287_Airmar_SendNameField(NmeaPgn* pgnId)
 {
 //	printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
 
-	InitializeSendNameBitPosition();
+
 	InitializeSendNameField();
 
 	Add2ByteUInt(PPGN_AIRMAR_MFGCODE);

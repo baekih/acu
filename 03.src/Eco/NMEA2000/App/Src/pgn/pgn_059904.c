@@ -39,15 +39,7 @@ void PGN059904_SetFieldValue(uint32_t _PGN)
 
 void PGN059904_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-	uint8_t Index = 0;
-
-	InitializeReceNameBitPosition();
-	InitializeReceNameField();
-
-	receivePacketLength = len;
-	memcpy(&receiveNMEAPackets, buf, receivePacketLength);
-
-	g_PGN059904NAME.mPGN_being_requested = Get3ByteUInt(Index);
+	g_PGN059904NAME.mPGN_being_requested = GetBuf_3ByteUInt(len, 0, buf);
 }
 
 uint32_t PGN059904_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)

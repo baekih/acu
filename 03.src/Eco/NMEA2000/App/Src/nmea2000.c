@@ -33,6 +33,9 @@
 #include "pgn_127250.h"
 #include "pgn_128259.h"
 #include "pgn_128267.h"
+#include "pgn_129029.h"
+#include "pgn_130306.h"
+#include "pgn_130310.h"
 #include "pgn_130816.h"
 
 #define PGN_COUNT_MAX		64
@@ -50,10 +53,9 @@ uint8_t txCanBufferCount = 0;
 /* Private variables ---------------------------------------------------------*/
 PGNCounter g_PGNCount[PGN_COUNT_MAX];	// Rx array
 
-uint32_t RxCanReceiveCount = 0;
-
 uint32_t MAX_HIGH_SOURCE_ADDR = 252;
 uint32_t ADDRESS_CLAIM_FAIL_ADDR = 254;
+
 uint32_t localSourceAddr = 0;
 uint32_t savedSourceAddr = 0;
 
@@ -68,14 +70,15 @@ uint8_t g_hwver_str[7];
 uint8_t g_bootver_str[7];
 uint8_t g_appver_str[7];
 
-uint8_t uniquenum[3];
+uint32_t uniquenum = 1048577;
 
 uint8_t nmea2000_addr = 100;
 
-uint8_t		DevInstance = 0;
-uint8_t		SysInstance = 0;
+uint8_t	DevInstance = 1;
+uint8_t	SysInstance = 1;
 
 uint8_t g_switch_bank[6];
+uint8_t g_lcd_img_idx;
 
 /* Private functions ---------------------------------------------------------*/
 void NMEA2000_Open(void)
@@ -86,7 +89,7 @@ void NMEA2000_Open(void)
 	sprintf((char*)&mManufacturersModelVersion[0], "%s", g_hwver_str);
 	sprintf((char*)&mManufacturersSoftwareVersionCode[0], "%s:%s", g_appver_str, g_bootver_str);
 
-	mUnique_Number = (uniquenum[2]<<16 | uniquenum[1]<<8 | uniquenum[0]) & 0x1FFFFF;
+	mUnique_Number = uniquenum & 0x1FFFFF;
 	mDevice_Intance = DevInstance & 0x7F;
 	mSystem_Instance = SysInstance & 0x0F;
 
@@ -138,12 +141,10 @@ uint32_t FastPacketSequenceCounter(uint32_t pgnNumber)
 void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint8_t isFastPacket)
 {
 	if ((mAddress_Claiming == true) && (pgnId->mPGN != 60928)){
-	    printf("%s():%d Error\n", __func__, __LINE__);
 		return;
 	}
 
 	if(mIsNoAddress == true){
-        printf("%s():%d Error\n", __func__, __LINE__);
 		return;
 	}
 
@@ -157,7 +158,7 @@ void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint
   for (uint8_t i = 0; i < len; i++){
 	  printf("%02X ", buf[i]);
   }
-  printf(" (%03ld)\r\n", len);
+  printf(" (%03ld)\n", len);
 #endif
 
 	if (isFastPacket == 0) {
@@ -193,7 +194,7 @@ void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint
 
 				memcpy(otherFastPacket + 1, buf + 6 + (packetIndex * 7), (remainCopySize >= 7) ? 7 : remainCopySize);
 
-				osDelay(SEND_DELAY_TIME);
+				HAL_Delay(SEND_DELAY_TIME);
 
 				CAN1_SendFrame(pgnId->mCanNumericID, otherFastPacket, 8);
 			}
@@ -242,7 +243,7 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
 				}
 			}
 
-			osDelay(SEND_DELAY_TIME);
+			HAL_Delay(SEND_DELAY_TIME);
 
 			PGN060160_SetFieldValue(packetIndex + 1, &Multipacket[0]);
 			PGN060160_SendNameField(BROADCAST_DESTINATION_ADDR, localSourceAddr);
@@ -418,6 +419,26 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
 				PGN128267_GetFieldValue(pgnId, len, buf);
 			}
 			break;
+		case 129029 :
+			{
+				if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE){
+					uint8_t* completePacket = GetCompletedFastPacket();
+					uint16_t packetSize = GetCompletedFastPacketSize();
+
+					PGN129029_GetFieldValue(pgnId, packetSize, completePacket);
+				}
+			}
+			break;
+		case 130306 :
+			{
+				PGN130306_GetFieldValue(pgnId, len, buf);
+			}
+			break;
+		case 130310:
+			{
+				PGN130310_GetFieldValue(pgnId, len, buf);
+			}
+			break;
 		case 130816: // (Proprietary PGN)
 			if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE)
 			{
@@ -436,21 +457,17 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
 	}
 }
 
-
 void NMEA2000_ReceiveParseMessages(uint32_t canId, uint8_t *buf, uint8_t len)
 {
 	NmeaPgn* pgnId = CanIDToNmeaPGN(canId);
 
 #if 0
-	RxCanReceiveCount++;
+	printf("[ RCV %06ld,%03ld,%03ld]", pgnId->mPGN, pgnId->mSA, pgnId->mPS);
 
-	if (RxCanReceiveCount >= 0) {
-		printf("[ RCV %06ld,%03ld,%03ld]", pgnId->mPGN, pgnId->mSA, pgnId->mPS);
-		for (uint8_t i = 0; i < len; i++){
-			printf("%02X ", buf[i]);
-		}
-		printf("\r\n");
+	for (uint8_t i = 0; i < len; i++){
+		printf("%02X ", buf[i]);
 	}
+	printf("\r\n");
 #endif
 
 	if(pgnId->mPF <= 239)
