@@ -52,8 +52,8 @@ extern "C" {
 
 typedef struct __PGNCounter
 {
-	uint32_t PGN;
-	uint32_t value;
+    uint32_t PGN;
+    uint32_t value;
 } PGNCounter;
 
 extern uint8_t g_access_level; // temp.
@@ -66,20 +66,20 @@ extern uint32_t savedSourceAddr;
 
 extern uint32_t mDataLastReceivedTime;
 
-#define CAN_RX_BUF_MAX     128
-#define CAN_TX_BUF_MAX     3
+#define CAN_RX_BUF_MAX          128
+#define CAN_TX_BUF_MAX          3
 
 typedef struct _NmeaPgn_
 {
-  uint32_t mCanNumericID;
+    uint32_t mCanNumericID;
 
-  uint32_t mPriority;
-  uint32_t mEDP;
-  uint32_t mPGN;
-  uint32_t mDP;
-  uint32_t mPF;
-  uint32_t mPS;
-  uint32_t mSA;
+    uint32_t mPriority;
+    uint32_t mEDP;
+    uint32_t mPGN;
+    uint32_t mDP;
+    uint32_t mPF;
+    uint32_t mPS;
+    uint32_t mSA;
 } NmeaPgn;
 
 typedef struct __RxProtocol
@@ -98,16 +98,16 @@ typedef struct __RxProtocol
 
 typedef struct __TxProtocol
 {
-  CAN_TxHeaderTypeDef TxHeader;
-  uint8_t TxData[8];
-  uint32_t TxMailbox;
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+    uint32_t TxMailbox;
 } TxProtocol;
 
 /*
 typedef struct __RxProtocol
 {
-  CAN_RxHeaderTypeDef RxHeader;
-  uint8_t RxData[8];
+    CAN_RxHeaderTypeDef RxHeader;
+    uint8_t RxData[8];
 } RxProtocol;*/
 
 extern uint8_t g_switch_bank[6];
@@ -118,7 +118,7 @@ extern RxProtocol g_RxCan[CAN_RX_BUF_MAX];   // Rx array
 extern uint16_t  rxCanLastIndex;
 extern uint16_t  rxCanFirstIndex;
 
-extern TxProtocol g_TxCan[CAN_TX_BUF_MAX];	// Tx array
+extern TxProtocol g_TxCan[CAN_TX_BUF_MAX];  // Tx array
 
 extern uint8_t txCanBufferCount;
 

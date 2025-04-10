@@ -17,5 +17,4 @@ NmeaPgn* CanIDToNmeaPGN(uint32_t rawCanId);
 NmeaPgn* getRcvNmeaPgn();
 NmeaPgn* getCanId(uint32_t priority, uint32_t pgn, uint32_t destAddr, uint32_t sourceAddr);
 
-
 #endif /* NMEA2000_INC_NMEA2000_PGNBASE_H_ */

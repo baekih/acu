@@ -34,9 +34,9 @@ uint32_t mNMEANetworkMessageDatabaseVersion = 2100;
 uint32_t mNMEAManufacturersProductCode;
 
 uint8_t  mManufacturersModelID[32];
-uint8_t  mManufacturersModelVersion[32];   //"N/A"
+uint8_t  mManufacturersModelVersion[32];                    //"N/A"
 uint8_t  mManufacturersSoftwareVersionCode[32];             //"APPVER:BOOTVER"
-uint8_t  mManufacturersModelSerialCode[32] =  "0000";       //"88Y2022W04N000001"
+uint8_t  mManufacturersModelSerialCode[32] = "0000";        //"88Y2022W04N000001"
 uint32_t mNMEA2000CertificationLevel = 2;
 uint32_t mLoadEquivalency = 2;
 
@@ -45,17 +45,17 @@ uint8_t  mInstallationDescription2[72];
 uint8_t  mMenufacturerDescription[250];
 
 uint32_t mTransmit_PGN_List[] = {
-		 59392,  	 59904, 60160,  60416,  60928,
-		 61184,	 	 65285,  65287, 126208,	126464,
-		 126720,	126993, 126996,	126998, 130816,
-		 130822,	130823
+    59392,   59904,  60160,  60416,  60928,
+    61184,   65285,  65287, 126208, 126464,
+    126720, 126993, 126996, 126998, 130816,
+    130822, 130823
 };
 
 const uint32_t mTransmit_PGN_List_Size = 20;
 
 uint32_t mReceive_PGN_List[] = {
-		59392,	59904,	60160,	60416,	60928,
-		61184,	65240,	65287,	126208,	126720
+    59392,  59904,  60160,  60416,  60928,
+    61184,  65240,  65287, 126208, 126720
 };
 
 const uint32_t mReceive_PGN_List_Size = 10;

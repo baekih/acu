@@ -13,7 +13,7 @@
 #include "main.h"
 
 /* Private define ------------------------------------------------------------*/
-#define MAX_PACKET_LENGTH 	223		// with fast packet 1. frame can have 6 byte and rest 31 frames 7 bytes
+#define MAX_PACKET_LENGTH                   223     // with fast packet 1. frame can have 6 byte and rest 31 frames 7 bytes
 
 #define REQUEST_MESSAGE_TYPE_FASTPACKET     0
 #define REQUEST_MESSAGE_TYPE_BAM_PACKET     1
@@ -55,6 +55,5 @@ extern uint32_t GetBuf_2ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf);
 extern uint32_t GetBuf_1ByteUInt(uint8_t len, uint8_t Index, uint8_t *buf);
 
 extern uint64_t GetBuf_nByteUInt(uint8_t *pbuf, uint8_t index, uint8_t len);
-
 
 #endif /* NMEA2000_INC_NMEA2000_NAMEBASE_H_ */
