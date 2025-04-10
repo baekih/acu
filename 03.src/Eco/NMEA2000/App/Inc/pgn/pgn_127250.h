@@ -8,6 +8,7 @@
 #ifndef NMEA2000_INC_PGN_PGN_127250_H_
 #define NMEA2000_INC_PGN_PGN_127250_H_
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "app.h"
@@ -24,5 +25,6 @@
 /* Exported functions --------------------------------------------------------*/
 void PGN127250_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
 void PGN127250_ProcessNameField(NmeaPgn* pgnId);
+
 
 #endif /* NMEA2000_INC_PGN_PGN_127250_H_ */

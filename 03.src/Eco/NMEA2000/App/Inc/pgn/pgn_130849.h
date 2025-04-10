@@ -8,6 +8,7 @@
 #ifndef NMEA2000_INC_PGN_PGN_130849_H_
 #define NMEA2000_INC_PGN_PGN_130849_H_
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "app.h"
@@ -25,5 +26,6 @@ extern uint8_t pgn130849_datalen[4];
 
 /* Exported functions --------------------------------------------------------*/
 void PGN130849_ProcessNameField(NmeaPgn* pgnId);
+
 
 #endif /* NMEA2000_INC_PGN_PGN_130849_H_ */

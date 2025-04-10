@@ -24,15 +24,15 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN065288NAME
 {
-  uint16_t  m65288Manufacturer_Code;      // 11 bits
-  uint8_t   m65288NMEA_Reserved1;         // 2  bits
-  uint8_t   m65288Industry_Group;         // 3  bits
-  uint8_t   m65288Brightness_Instance;    // 8  bits
-  uint8_t   m65288Brightness_Source;      // 4  bits
-  uint8_t   m65288Brightness_Preset;      // 4  bits
-  uint8_t   m65288Brightness_Percentage;  // 8  bits
-  uint8_t   m65288Color_palette;          // 4  bits
-  uint32_t  m65288Reserved;               // 20 bits
+    uint16_t  m65288Manufacturer_Code;      // 11 bits
+    uint8_t   m65288NMEA_Reserved1;         // 2  bits
+    uint8_t   m65288Industry_Group;         // 3  bits
+    uint8_t   m65288Brightness_Instance;    // 8  bits
+    uint8_t   m65288Brightness_Source;      // 4  bits
+    uint8_t   m65288Brightness_Preset;      // 4  bits
+    uint8_t   m65288Brightness_Percentage;  // 8  bits
+    uint8_t   m65288Color_palette;          // 4  bits
+    uint32_t  m65288Reserved;               // 20 bits
 } PGN65288NAME;
 
 /* Exported variables --------------------------------------------------------*/

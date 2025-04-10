@@ -29,7 +29,7 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN126208NAME
 {
-	uint32_t mGrpFuncCode;	// 8  bits
+    uint32_t mGrpFuncCode;                  // 8  bits
 } PGN126208NAME;
 
 /* Exported variables --------------------------------------------------------*/

@@ -15,20 +15,20 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN065285NAME
 {
-	uint32_t mManufacturer_Code;	// 11 bits
-	uint8_t mNMEA_Reserved_1;		// 2  bits
-	uint8_t mIndustry_Group;		// 3  bits
-	uint8_t mBoot_State;			// 3  bits
-	uint64_t mNMEA_Reserved_2;		// 45 bits
+    uint32_t mManufacturer_Code;    // 11 bits
+    uint8_t mNMEA_Reserved_1;       // 2  bits
+    uint8_t mIndustry_Group;        // 3  bits
+    uint8_t mBoot_State;            // 3  bits
+    uint64_t mNMEA_Reserved_2;      // 45 bits
 } PGN065285NAME;
 
 
 /* Exported functions --------------------------------------------------------*/
 extern void PGN065285_SetFieldValue(uint16_t _Manufacturer_Code,
-									uint8_t _NMEA_Reserved_1,
-									uint8_t _Industry_Group,
-									uint8_t _Boot_State,
-									uint64_t _NMEA_Reserved_2);
+                                    uint8_t _NMEA_Reserved_1,
+                                    uint8_t _Industry_Group,
+                                    uint8_t _Boot_State,
+                                    uint64_t _NMEA_Reserved_2);
 extern void PGN065285_SetInitialField();
 extern void PGN065285_SendNameField();
 

@@ -21,17 +21,16 @@
 /* Private functions ---------------------------------------------------------*/
 void PGN130823_ProcessNameField(NmeaPgn* pgnId)
 {
+    InitializeSendNameField();
 
-	InitializeSendNameField();
+    Add2ByteUInt(PPGN_FURUNO_MFGCODE);
+    Add1ByteUInt(0);
+    Add1ByteUInt(0);
+    Add4ByteUInt(0xFFFFFFFF);
 
-	Add2ByteUInt(PPGN_FURUNO_MFGCODE);
-	Add1ByteUInt(0);
-	Add1ByteUInt(0);
-	Add4ByteUInt(0xFFFFFFFF);
+    SendNonSingleFrame(getCanId(PGN130823_PRIORITY, PGN130823_PGN, pgnId->mSA, localSourceAddr), sendPacketLength,
+                     sendNMEAPackets,
+                     REQUEST_MESSAGE_TYPE_FASTPACKET);
 
-	SendNonSingleFrame(getCanId(PGN130823_PRIORITY, PGN130823_PGN, pgnId->mSA, localSourceAddr), sendPacketLength,
-					 sendNMEAPackets,
-					 REQUEST_MESSAGE_TYPE_FASTPACKET);
-
-	return;
+    return;
 }

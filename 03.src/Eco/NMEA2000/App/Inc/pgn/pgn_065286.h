@@ -15,10 +15,10 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN065286NAME
 {
-	uint32_t mManufacturer_Code;	// 11 bits
-	uint32_t mNMEA_Reserved_1;		// 2  bits
-	uint32_t mIndustry_Group;		// 3  bits
-	uint32_t mNMEA_Reserved_2;		// 48  bits
+    uint32_t mManufacturer_Code;    // 11 bits
+    uint32_t mNMEA_Reserved_1;      // 2  bits
+    uint32_t mIndustry_Group;       // 3  bits
+    uint32_t mNMEA_Reserved_2;      // 48  bits
 } PGN065286NAME;
 
 

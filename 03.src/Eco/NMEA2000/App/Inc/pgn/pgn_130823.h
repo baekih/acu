@@ -8,6 +8,7 @@
 #ifndef NMEA2000_INC_PGN_PGN_130823_H_
 #define NMEA2000_INC_PGN_PGN_130823_H_
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "app.h"
@@ -24,5 +25,6 @@
 
 /* Exported functions --------------------------------------------------------*/
 void PGN130823_ProcessNameField(NmeaPgn* pgnId);
+
 
 #endif /* NMEA2000_INC_PGN_PGN_130823_H_ */

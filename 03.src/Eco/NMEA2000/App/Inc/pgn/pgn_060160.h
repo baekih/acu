@@ -15,20 +15,20 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN060160NAME
 {
-	uint32_t mMultiPacketFrameCounter;	// 8  bits
-	uint64_t mMultiPacketData;			// 56 bits
+    uint32_t mMultiPacketFrameCounter;      // 8  bits
+    uint64_t mMultiPacketData;              // 56 bits
 } PGN060160NAME;
 
 typedef struct __PGN060160RTSCTSNAME
 {
-	uint32_t mSequence_number_of_multipacket_frame;	// 8  bits
-	uint64_t mMultipacket_packetized_data;			// 56 bits
+    uint32_t mSequence_number_of_multipacket_frame; // 8  bits
+    uint64_t mMultipacket_packetized_data;          // 56 bits
 } PGN060160RTSCTSNAME;
 
 typedef struct __PGN060160BAMNAME
 {
-	uint32_t mSequence_number_of_multipacket_frame;	// 8  bits
-	uint64_t mMultipacket_packetized_data;			// 56 bits
+    uint32_t mSequence_number_of_multipacket_frame; // 8  bits
+    uint64_t mMultipacket_packetized_data;          // 56 bits
 } PGN060160BAMNAME;
 
 /* Exported variables --------------------------------------------------------*/
@@ -44,8 +44,8 @@ extern void PGN060160_SetFieldValue(uint32_t _Sequence_number_of_multipacket_fra
 extern void PGN060160_SendNameField(uint32_t Destination_Addr, uint32_t Source_Addr);
 
 void PGN060160_InitializeReceiveRTSCTSMulitiPacket(uint32_t _TotalMessageByteSize, uint32_t _TotalNumberOfFrametoTransmit, uint32_t _PGNMultiPacketMessage,
-		uint8_t _PacketSourceAddress, uint8_t _PacketDestinationAddress);
+                                                   uint8_t _PacketSourceAddress, uint8_t _PacketDestinationAddress);
 void PGN060160_InitializeReceiveBAMMulitiPacket(uint32_t _TotalMessageByteSize, uint32_t _TotalNumberOfFrametoTransmit, uint32_t _PGNMultiPacketMessage,
-		uint8_t _PacketSourceAddress, uint8_t _PacketDestinationAddress);
+                                                uint8_t _PacketSourceAddress, uint8_t _PacketDestinationAddress);
 
 #endif /* NMEA2000_INC_PGN_PGN_060160_H_ */

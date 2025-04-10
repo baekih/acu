@@ -26,26 +26,25 @@ PGN126208NAME g_PGN126208NAME;
 /* Private functions ---------------------------------------------------------*/
 void PGN126208_GetFieldValue(NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32_t messagetype)
 {
-	uint8_t Index = 0;
+    uint8_t Index = 0;
 
-	g_PGN126208NAME.mGrpFuncCode = GetBuf_1ByteUInt(size, Index, buf);
+    g_PGN126208NAME.mGrpFuncCode = GetBuf_1ByteUInt(size, Index, buf);
 }
 
 void PGN126208_ProcessNameField(NmeaPgn* pgnId, uint16_t size, uint8_t *pbuf, uint32_t messagetype)
 {
 #if PRINTF_DEBUG_FUNC_LINE_NON
-	printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
+    printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
 #endif
-	switch(g_PGN126208NAME.mGrpFuncCode)
-	{
-	  case FUNCTION_CODE_REQEUST_MESSAGE:
-	    PGN126208REQUEST_GetFieldValue(pgnId, pbuf, size, messagetype);
-	    PGN126208REQUEST_ProcessNameField(pgnId, pbuf, size, messagetype);
-	    break;
+    switch(g_PGN126208NAME.mGrpFuncCode)
+    {
+    case FUNCTION_CODE_REQEUST_MESSAGE:
+        PGN126208REQUEST_GetFieldValue(pgnId, pbuf, size, messagetype);
+        PGN126208REQUEST_ProcessNameField(pgnId, pbuf, size, messagetype);
+        break;
     case FUNCTION_CODE_COMMAND_MESSAGE:
-    	PGN126208COMMAND_GetFieldValue(pgnId, pbuf, size, messagetype);
-    	PGN126208COMMAND_ProcessNameField(pgnId, pbuf, size, messagetype);
-      break;
-	}
+        PGN126208COMMAND_GetFieldValue(pgnId, pbuf, size, messagetype);
+        PGN126208COMMAND_ProcessNameField(pgnId, pbuf, size, messagetype);
+        break;
+    }
 }
-

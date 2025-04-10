@@ -15,7 +15,7 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN060416NAME
 {
-	uint32_t mGroup_Function_Code;	// 8  bits
+    uint32_t mGroup_Function_Code;      // 8  bits
 } PGN060416NAME;
 
 /* Exported variables ---------------------------------------------------------*/

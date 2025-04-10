@@ -18,11 +18,11 @@
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN126208REQUESTNAME
 {
-	uint32_t mRequest_Group_Function_Code;						// 8  bits
-	uint32_t mRequested_PGN;									// 24 bits
-	uint32_t mTransmission_interval;							// 32 bits
-	uint32_t mTransmission_interval_offset;						// 16 bits
-	uint32_t mNumber_of_Pairs_of_Request_Parameters_to_follow;	// 8  bits
+    uint32_t mRequest_Group_Function_Code;                      // 8  bits
+    uint32_t mRequested_PGN;                                    // 24 bits
+    uint32_t mTransmission_interval;                            // 32 bits
+    uint32_t mTransmission_interval_offset;                     // 16 bits
+    uint32_t mNumber_of_Pairs_of_Request_Parameters_to_follow;  // 8  bits
 } PGN126208REQUESTNAME;
 
 /* Exported functions --------------------------------------------------------*/

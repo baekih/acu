@@ -26,20 +26,20 @@ uint32_t PGN126464_priority = 6;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN126464_SetFieldValue(uint32_t _PGN_Group_Function_Code,
-							 uint32_t _First_PGN_supported[],
-							 uint8_t _PGN_List_Unit)
+                             uint32_t _First_PGN_supported[],
+                             uint8_t _PGN_List_Unit)
 {
 
-	InitializeSendNameField();
+    InitializeSendNameField();
 
-	Add1ByteUInt( _PGN_Group_Function_Code );
+    Add1ByteUInt( _PGN_Group_Function_Code );
 
-	for (uint8_t i = 0; i < _PGN_List_Unit; i++)
-		Add3ByteUInt( _First_PGN_supported[i] );
+    for (uint8_t i = 0; i < _PGN_List_Unit; i++)
+        Add3ByteUInt( _First_PGN_supported[i] );
 }
 
 void PGN126464_ProcessNameField(NmeaPgn* pgnId, uint32_t messagetype)
 {
-	SendNonSingleFrame(getCanId(PGN126464_priority, 126464, pgnId->mSA, localSourceAddr), sendPacketLength, sendNMEAPackets, messagetype);
+    SendNonSingleFrame(getCanId(PGN126464_priority, 126464, pgnId->mSA, localSourceAddr), sendPacketLength, sendNMEAPackets, messagetype);
 }
 
