@@ -141,7 +141,6 @@ void runEcoTaskNMEA2KRx(void *argument)
 
     for(;;)
     {
-
         if(rxCanLastIndex >= rxCanFirstIndex)
         {
             remain =  rxCanLastIndex - rxCanFirstIndex;
@@ -158,6 +157,7 @@ void runEcoTaskNMEA2KRx(void *argument)
             rxCanFirstIndex++;
             rxCanFirstIndex %= CAN_RX_BUF_MAX;
         }
+        osDelay(1);
     }
 
 #endif
