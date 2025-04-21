@@ -76,7 +76,7 @@ uint32_t ProcessFastPacketData(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
     if (fastpacketFrameCounter == 0) {
         fastpacketDataSize = buf[1] & 0xFF;
 
-        printf("fastpacketDataSize[%ld]\r\n",fastpacketDataSize);
+//        printf("fastpacketDataSize[%ld]\r\n",fastpacketDataSize);
 
         if (fastpacketDataSize > 6) {
             int newIndex = NewFastPacketData(fastpacketDataSize, fastpacketIdentifier, pgnId->mPGN, pgnId->mSA, pgnId->mPS);
