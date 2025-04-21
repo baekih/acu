@@ -69,6 +69,7 @@ extern uint32_t mDataLastReceivedTime;
 #define CAN_RX_BUF_MAX          256
 #define CAN_TX_BUF_MAX          3
 
+#pragma pack(push,1)
 typedef struct _NmeaPgn_
 {
     uint32_t mCanNumericID;
@@ -109,6 +110,7 @@ typedef struct __RxProtocol
     CAN_RxHeaderTypeDef RxHeader;
     uint8_t RxData[8];
 } RxProtocol;*/
+#pragma pack(pop)
 
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;

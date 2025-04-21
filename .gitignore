@@ -6,3 +6,4 @@
 03.src/boot2/.settings
 03.src/stldr/.settings
 02.tools/nmea2000/simulator/5.3.11/NMEA2000.mcr.lock
+/03.src/app/app Debug.launch
