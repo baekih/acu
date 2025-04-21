@@ -66,7 +66,7 @@ extern uint32_t savedSourceAddr;
 
 extern uint32_t mDataLastReceivedTime;
 
-#define CAN_RX_BUF_MAX          128
+#define CAN_RX_BUF_MAX          256
 #define CAN_TX_BUF_MAX          3
 
 typedef struct _NmeaPgn_
