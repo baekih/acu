@@ -72,7 +72,7 @@ uint8_t g_appver_str[7];
 
 uint32_t uniquenum = 1048577;
 
-uint8_t nmea2000_addr = 100;
+uint8_t nmea2000_addr = 110;
 
 uint8_t	DevInstance = 1;
 uint8_t	SysInstance = 1;
