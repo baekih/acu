@@ -33,12 +33,13 @@
 #include "pgn_127250.h"
 #include "pgn_128259.h"
 #include "pgn_128267.h"
+#include "pgn_129026.h"
 #include "pgn_129029.h"
 #include "pgn_130306.h"
 #include "pgn_130310.h"
 #include "pgn_130816.h"
 
-#define PGN_COUNT_MAX		64
+#define PGN_COUNT_MAX           64
 
 uint8_t g_access_level = 0; // temp.
 
@@ -417,6 +418,11 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
         case 128267 :
             {
                 PGN128267_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 129026 :
+            {
+                PGN129026_GetFieldValue(pgnId, len, buf);
             }
             break;
         case 129029 :
