@@ -32,3 +32,14 @@ void FrontendApplication::gotoSpeedScreenNoTransitionImpl()
 {
     touchgfx::makeTransition<SpeedView, SpeedPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }
+
+void FrontendApplication::gotoDataboxScreenNoTransition()
+{
+    transitionCallback = touchgfx::Callback<FrontendApplication>(this, &FrontendApplication::gotoDataboxScreenNoTransitionImpl);
+    pendingScreenTransitionCallback = &transitionCallback;
+}
+
+void FrontendApplication::gotoDataboxScreenNoTransitionImpl()
+{
+    touchgfx::makeTransition<DataboxView, DataboxPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
+}

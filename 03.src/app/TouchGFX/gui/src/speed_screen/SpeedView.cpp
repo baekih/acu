@@ -12,7 +12,7 @@
 #define GUAGE_START_DEGREE 			(-120)
 
 SpeedView::SpeedView() :
-	speedType(typeSTW)
+	speedType(typeSOG)
 {
 	setSpeedType(speedType);
 
@@ -241,7 +241,7 @@ void SpeedView::handleClickEvent(const ClickEvent& evt)
     else if (evt.getType() == ClickEvent::RELEASED)
     {
     	if((pressedY > x) && (pressedY - x) > 200){
-			static_cast<FrontendApplication*>(Application::getInstance())->gotoCompassScreenNoTransition();
+			static_cast<FrontendApplication*>(Application::getInstance())->gotoDataboxScreenNoTransition();
 		}
 		else if((x > pressedY)  && (x - pressedY) > 200){
 			if(speedType == typeSTW){

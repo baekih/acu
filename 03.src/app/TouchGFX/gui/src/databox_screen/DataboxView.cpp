@@ -154,22 +154,19 @@ void DataboxView::updateWindSpeed(double value)
 
 void DataboxView::handleClickEvent(const ClickEvent& evt)
 {
-	int x = evt.getX();
-	int y = evt.getY();
+    int x = evt.getX();
+    int y = evt.getY();
 
     if (evt.getType() == ClickEvent::PRESSED)
     {
-    	pressedX = x;
-    	pressedY = y;
+        pressedX = x;
+        pressedY = y;
     }
     else if (evt.getType() == ClickEvent::RELEASED)
     {
-    	if((pressedY > x) && (pressedY - x) > 200){
-			static_cast<FrontendApplication*>(Application::getInstance())->gotoCompassScreenNoTransition();
-		}
-		else if((x > pressedY)  && (x - pressedY) > 200){
-			static_cast<FrontendApplication*>(Application::getInstance())->gotoSpeedScreenNoTransition();
-		}
+        if((pressedY > x) && (pressedY - x) > 200){
+            static_cast<FrontendApplication*>(Application::getInstance())->gotoCompassScreenNoTransition();
+        }
     }
 }
 

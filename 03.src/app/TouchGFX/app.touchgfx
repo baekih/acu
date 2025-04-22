@@ -95,7 +95,7 @@
             "Name": "SPEED_TITLE",
             "X": 244,
             "Y": 359,
-            "Width": 85,
+            "Width": 80,
             "Height": 45,
             "TextId": "__SingleUse_IOE7",
             "TextRotation": "0",
@@ -961,7 +961,7 @@
       "Height": 480
     },
     "SelectedColorDepth": 16,
-    "StartupScreenName": "Databox",
+    "StartupScreenName": "Speed",
     "SelectedStartupLanguage": "GB",
     "TouchGfxPath": "../Middlewares/ST/touchgfx",
     "UIPath": ".",
