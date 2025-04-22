@@ -512,6 +512,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_127250.h</locationURI>
 		</link>
 		<link>
+			<name>Eco/NMEA2000/App/Inc/pgn/pgn_127258.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_127258.h</locationURI>
+		</link>
+		<link>
 			<name>Eco/NMEA2000/App/Inc/pgn/pgn_128259.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_128259.h</locationURI>
@@ -685,6 +690,11 @@
 			<name>Eco/NMEA2000/App/Src/pgn/pgn_127250.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_127250.c</locationURI>
+		</link>
+		<link>
+			<name>Eco/NMEA2000/App/Src/pgn/pgn_127258.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_127258.c</locationURI>
 		</link>
 		<link>
 			<name>Eco/NMEA2000/App/Src/pgn/pgn_128259.c</name>

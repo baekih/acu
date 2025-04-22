@@ -45,6 +45,7 @@ const double depthDisplayFathomMax 	= 820.0;
 const double depthDisplayPBMax 		= 926.0;
 
 double hdgValue = INVALID_DEGREE_VALUE;
+double Variation = INVALID_DEGREE_VALUE;
 bool validHDGValue = false;
 
 #ifndef SIMULATOR
@@ -105,11 +106,11 @@ inline double FahrenheitToKelvin(double tempF){
 	return 273.15 + FahrenheitToCelsius(tempF);
 }
 
-double GetRadianToDegree360(int radian){
+double GetRadianToDegree360(double radian){
 	return ((((double)radian / 10000) / (2*M_PI)) * 360);
 }
 
-double GetRadianToDegree180(int radian){
+double GetRadianToDegree180(double radian){
 	return (((double)((short)radian)/10000) / M_PI) * 180;
 }
 
@@ -151,6 +152,16 @@ void setHDGValue(double hdg)
 double getHDGValue()
 {
 	return hdgValue;
+}
+
+void setVariation(double variation)
+{
+    Variation = GetRadianToDegree360(variation);
+}
+
+double getVariation()
+{
+    return Variation;
 }
 
 void setValidHDG(bool valid)

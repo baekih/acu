@@ -118,6 +118,8 @@ double getHDGValue();
 bool isTimeInHDG();
 void setValidHDG(bool valid);
 bool isValidHDG();
+void setVariation(double variation);
+double getVariation();
 
 void setSTWValue(double value, int type);
 double getSTWValue(int type);
