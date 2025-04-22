@@ -6,6 +6,8 @@
 
 #include <math.h>
 
+#include "printf.h"
+
 #define SPEED_GAUGE_LINE_RADIUS  	257
 #define SPEED_GAUGE_TEXT_RADIUS  	257
 
@@ -230,27 +232,27 @@ void SpeedView::setSpeedType(int new_type)
 
 void SpeedView::handleClickEvent(const ClickEvent& evt)
 {
-	int x = evt.getX();
-	int y = evt.getY();
+    int x = evt.getX();
+    int y = evt.getY();
 
     if (evt.getType() == ClickEvent::PRESSED)
     {
-    	pressedX = x;
-    	pressedY = y;
+        pressedX = x;
+        pressedY = y;
     }
     else if (evt.getType() == ClickEvent::RELEASED)
     {
-    	if((pressedY > x) && (pressedY - x) > 200){
-			static_cast<FrontendApplication*>(Application::getInstance())->gotoDataboxScreenNoTransition();
-		}
-		else if((x > pressedY)  && (x - pressedY) > 200){
-			if(speedType == typeSTW){
-				setSpeedType(typeSOG);
-			}
-			else if(speedType == typeSOG){
-				setSpeedType(typeSTW);
-			}
-		}
+        if((pressedX < 100) && (pressedX - x > 20)){
+            static_cast<FrontendApplication*>(Application::getInstance())->gotoDataboxScreenNoTransition();
+        }
+        else if((200 < x) && (x < 400) && (200 < y) && (y < 400)){
+            if(speedType == typeSTW){
+                setSpeedType(typeSOG);
+            }
+            else if(speedType == typeSOG){
+                setSpeedType(typeSTW);
+            }
+        }
     }
 }
 

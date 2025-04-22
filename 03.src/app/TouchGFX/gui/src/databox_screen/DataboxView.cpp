@@ -164,7 +164,7 @@ void DataboxView::handleClickEvent(const ClickEvent& evt)
     }
     else if (evt.getType() == ClickEvent::RELEASED)
     {
-        if((pressedY > x) && (pressedY - x) > 200){
+        if((pressedX < 100) && (pressedX - x > 20)){
             static_cast<FrontendApplication*>(Application::getInstance())->gotoCompassScreenNoTransition();
         }
     }

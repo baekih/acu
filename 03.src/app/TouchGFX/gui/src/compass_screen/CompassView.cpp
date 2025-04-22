@@ -160,18 +160,18 @@ void CompassView::updateHDG(double hdgValue)
 
 void CompassView::handleClickEvent(const ClickEvent& evt)
 {
-	int x = evt.getX();
-	int y = evt.getY();
+    int x = evt.getX();
+    int y = evt.getY();
 
     if (evt.getType() == ClickEvent::PRESSED)
     {
-    	pressedX = x;
-    	pressedY = y;
+        pressedX = x;
+        pressedY = y;
     }
     else if (evt.getType() == ClickEvent::RELEASED)
     {
-    	if((pressedY > x) && (pressedY - x) > 200){
-        	static_cast<FrontendApplication*>(Application::getInstance())->gotoSpeedScreenNoTransition();
+        if((pressedX < 100) && (pressedX - x > 20)){
+            static_cast<FrontendApplication*>(Application::getInstance())->gotoSpeedScreenNoTransition();
         }
     }
 }
