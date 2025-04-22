@@ -34,8 +34,10 @@ void PGN129026_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 //    (float)SpeedOverGround / 100.0 * 1.944, COGReference);
 //    printf("Receive 129026:COG[%ld] SOG[%ld]m/s COGRef[%d]\n", CourceOverGround, SpeedOverGround, COGReference);
 
-    if (COGReference == 0 || COGReference == 1) {
-        if(isValidSpeed(SpeedOverGround)) {
+    if (COGReference == 0 || COGReference == 1)
+    {
+        if(isValidSpeed(SpeedOverGround))
+        {
             setSOGValue( ((double)SpeedOverGround / 100.0), SPEED_UNIT_MPS );
         }
     }
