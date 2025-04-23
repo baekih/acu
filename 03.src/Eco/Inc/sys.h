@@ -184,16 +184,6 @@ extern "C" {
 #define KEY_DN                      4
 #define KEY_MAX                     5
 
-#if defined (ECO_ECU)
-#define MTR_DRV8323_FAULT_STAT      (0x00)
-#define MTR_DRV8323_VGS_STAT        (0x01)
-#define MTR_DRV8323_DRV_CTRL        (0x02)
-#define MTR_DRV8323_GATE_DRV_HS     (0x03)
-#define MTR_DRV8323_GATE_DRV_LS     (0x04)
-#define MTR_DRV8323_OCP_CTRL        (0x05)
-#define MTR_DRV8323_CSA_CTRL        (0x06)
-#endif
-
 enum
 {
     FLASHIF_OK = 0,
@@ -253,9 +243,6 @@ extern QSPI_HandleTypeDef hqspi;
 extern I2C_HandleTypeDef hi2c1;
 extern CRC_HandleTypeDef hcrc;
 extern LTDC_HandleTypeDef hltdc;
-#elif defined (ECO_ECU)
-extern SPI_HandleTypeDef hspi2;
-extern TIM_HandleTypeDef htim11;
 #else
 #error ECO_XXX NOT defined!
 #endif
@@ -286,13 +273,6 @@ void updateFlashData(void);
 void setLCDTestImage(uint8_t);
 #if defined (ECO_APP)
 void CAN1_SendFrame(uint32_t, uint8_t*, uint8_t);
-#endif
-
-#if defined (ECO_ECU)
-uint16_t readMotor(uint8_t);
-void writeMotor(uint8_t, uint16_t);
-void initMotor(void);
-void setMotor(uint8_t);
 #endif
 
 #ifdef __cplusplus

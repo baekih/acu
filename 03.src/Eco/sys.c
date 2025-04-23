@@ -7,7 +7,6 @@
 #include "eco.h"
 
 #if defined (ECO_APP) | defined(ECO_BOOT2)
-
 const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .lcd_img_idx = 0, .jmp_adr = APP_START_ADDR, .rsv2 = {0, 0}};
 common_dat g_common_dat;
 
@@ -15,48 +14,6 @@ key_stat g_key_stat[KEY_MAX];
 uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
 uint8_t g_board_id = BOARD_ID_INVAL;
-
-#elif defined (ECO_ECU)
-//default values for the DRV8323 registers
-uint16_t DRV8323DrvCtrl =
-    0 << 9  | //DIS_CPUV
-    0 << 8  | //DIS_GDF
-    0 << 7  | //OTW_REP
-    1 << 5  | //PWM_MODE
-    0 << 4  | //1PWM_COM
-    0 << 3  | //1PWM_DIR
-    0 << 2  | //COAST
-    0 << 1  | //BRAKE
-    0;        //CLR_FLT
-
-uint16_t DRV8323GateDrvHS =
-    3 << 8  | //LOCK
-    11 << 4 | //IDRIVEP_HS
-    15;       //IDRIVEN_HS
-
-uint16_t DRV8323GateDrvLS =
-    1 << 10 | //CBC
-    2 << 8  | //TDRIVE
-    15 << 4 | //IDRIVEP_LS
-    15;       //IDRIVEN_LS
-
-uint16_t DRV8323OcpCtrl =
-    0 << 10 | //TRETRY
-    1 << 8  | //DEAD_TIME
-    1 << 6  | //OCP_MODE
-    2 << 4  | //OCP_DEG
-    0;        //VDS_LVL
-
-uint16_t DRV8323CsaCtrl =
-    1 << 10 | //CSA_FET
-    1 << 9  | //VREF_DIV
-    0 << 8  | //LS_REF
-    2 << 6  | //CSA_GAIN
-    0 << 5  | //DIS_SEN
-    0 << 4  | //CSA_CAL_A
-    0 << 3  | //CCSA_CAL_B
-    0 << 2  | //CCSA_CAL_C
-    3;        //CSEN_LVL
 #else
 #error no ECO_XXX defined.
 #endif
@@ -740,75 +697,6 @@ int32_t setLCDBrightness(uint8_t lcd_bl)
 }
 #endif
 
-#if defined (ECO_ECU)
-uint16_t readMotor(uint8_t addr)
-{
-    uint16_t ctrl = 0x8000 | (addr & 0x7) << 11; //MSbit =1 for read, address is 3 bits (MSbit is always 0), data is 11 bits
-    uint16_t data = 0xbeef;
-
-    if(HAL_OK != HAL_SPI_TransmitReceive(&hspi2, (uint8_t*)(&ctrl), (uint8_t*)(&data), 1, 1000))
-    {
-        printf("HAL_SPI_TRX() error\r\n");
-    }
-
-    return (0x7ff&data);
-}
-
-void writeMotor(uint8_t addr, uint16_t data)
-{
-    uint16_t controlword = (addr & 0x7) << 11 | (data & 0x7ff); //MSbit =0 for write, address is 3 bits (MSbit is always 0), data is 11 bits
-
-    if(HAL_OK != HAL_SPI_Transmit(&hspi2, (uint8_t*)(&controlword), 1, 1000))
-    {
-        printf("HAL_SPI_TX() error\r\n");
-    }
-
-    HAL_Delay(1);
-
-    return;
-}
-
-void setMotor(uint8_t pwm_motor)
-{
-    static uint8_t pwm_motor_prev = 0;
-    TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
-
-    if(100 < pwm_motor) pwm_motor = 100;
-    if(pwm_motor_prev == pwm_motor) return;
-    pwm_motor_prev = pwm_motor;
-
-    sConfigOC.Pulse = (100*pwm_motor)/100;
-    printf("set pwm_motor[%d] Pulse[%d]\n", pwm_motor, sConfigOC.Pulse);
-
-    HAL_TIM_PWM_Stop(&htim11, TIM_CHANNEL_1);
-    HAL_TIM_PWM_ConfigChannel(&htim11, &sConfigOC, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start(&htim11, TIM_CHANNEL_1);
-    return;
-}
-
-void initMotor(void)
-{
-    HAL_GPIO_WritePin(MTR_EN_GPIO_Port, MTR_EN_Pin, GPIO_PIN_SET); //enable to motor controller
-    HAL_Delay(100);
-
-    writeMotor(MTR_DRV8323_DRV_CTRL, DRV8323DrvCtrl);
-//    writeMotor(MTR_DRV8323_GATE_DRV_HS, DRV8323GateDrvHS);
-//    writeMotor(MTR_DRV8323_GATE_DRV_LS, DRV8323GateDrvLS);
-//    writeMotor(MTR_DRV8323_OCP_CTRL, DRV8323OcpCtrl);
-//    writeMotor(MTR_DRV8323_CSA_CTRL, DRV8323CsaCtrl);
-
-    printf("FAULT_STAT[0x%x]\r\n", readMotor(MTR_DRV8323_FAULT_STAT));
-    printf("VGS_STAT[0x%x]\r\n", readMotor(MTR_DRV8323_VGS_STAT));
-    printf("DRV_CTRL[0x%x]\r\n", readMotor(MTR_DRV8323_DRV_CTRL));
-//    printf("GATE_HS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_HS));
-//    printf("GATE_LS_DRV[0x%x]\r\n", readMotor(MTR_DRV8323_GATE_DRV_LS));
-//    printf("ADR_OCP[0x%x]\r\n", readMotor(MTR_DRV8323_OCP_CTRL));
-//    printf("ADR_CSA[0x%x]\r\n\r\n", readMotor(MTR_DRV8323_CSA_CTRL));
-    return;
-}
-
-#endif
-
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
 //    printf("%s() called...\r\n",__FUNCTION__);
@@ -818,7 +706,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     /* Get CAN1 RX message */
     if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, RxPacket.dat) != HAL_OK) Error_Handler();
 
-#if defined (ECO_BOOT2) | defined (ECO_ECU)
+#if defined (ECO_BOOT2)
     RxPacket.canid = RxHeader.ExtId;
     RxPacket.len = RxHeader.DLC;
 
