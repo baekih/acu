@@ -528,7 +528,7 @@ static void MX_I2C1_Init(void)
 
   initTouchSensor();
 
-  if(g_board_id == BOARD_ID_DIN10)
+  if(g_board_id == BOARD_ID_ACU10)
   {
       SystemClock_pwrsav_Config();
 
@@ -552,8 +552,18 @@ static void MX_I2C1_Init(void)
       SystemClock_Config();
   }
 
-  if     (g_board_id==BOARD_ID_DIN10)  printk("ECO-DIN10 boot2...\r\n");
-  else if(g_board_id==BOARD_ID_DIN15)  printk("ECO-DIN15 boot2...\r\n");
+  if     (g_board_id==BOARD_ID_ACU10)
+  {
+      printk("ECO-ACU10 boot2 ");
+      printk(__DATE__);
+      printk("\r\n");
+  }
+  else if(g_board_id==BOARD_ID_ACU15)
+  {
+      printk("ECO-ACU boot2 ");
+      printk(__DATE__);
+      printk("\r\n");
+  }
 
   /* USER CODE END I2C1_Init 2 */
 
@@ -577,7 +587,7 @@ static void MX_LTDC_Init(void)
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_RESET);
   HAL_Delay(10);
   HAL_GPIO_WritePin(LCD_RSTn_GPIO_Port, LCD_RSTn_Pin, GPIO_PIN_SET);
-  if(g_board_id == BOARD_ID_DIN15)
+  if(g_board_id == BOARD_ID_ACU15)
   {
       HAL_Delay(5);
       HAL_GPIO_WritePin(LCD_STBY_GPIO_Port, LCD_STBY_Pin, GPIO_PIN_SET);
@@ -624,7 +634,7 @@ static void MX_LTDC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN LTDC_Init 2 */
-  if(g_board_id == BOARD_ID_DIN10)
+  if(g_board_id == BOARD_ID_ACU10)
   {
       hltdc.Instance = LTDC;
       hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;

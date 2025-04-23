@@ -419,7 +419,7 @@ void opNMEA2K(RxProtocol rxpacket)
 #endif
         break;
     default:
-        printf("Single PGNError[%ld]\n", rxpgn);
+//        printf("Single PGNError[%ld]\n", rxpgn);
         break;
     }
 

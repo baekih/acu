@@ -171,7 +171,9 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  printk("ECO-DIN15 boot1 start...\r\n");
+  printk("ECO-ACU boot1 ");
+  printk(__DATE__);
+  printk("\r\n");
 
   checkFlashData();
 

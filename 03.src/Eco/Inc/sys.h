@@ -14,8 +14,8 @@
 extern "C" {
 #endif
 
-#define BOARD_ID_DIN15           1
-#define BOARD_ID_DIN10           2
+#define BOARD_ID_ACU15           1
+#define BOARD_ID_ACU10           2
 #define BOARD_ID_INVAL           0xFF
 
 #define FLASH_START_ADRESS        0x08000000

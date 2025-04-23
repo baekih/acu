@@ -51,17 +51,17 @@ void initTouchSensor(void)
     if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_ST1633_I2C_ADR)<<1, TS_ST1633_RES_REG, 1, &res[0], TS_ST1633_RES_LEN, 10))
     {
         g_ts_i2c_adr = TS_ST1633_I2C_ADR;
-        g_board_id = BOARD_ID_DIN15;
+        g_board_id = BOARD_ID_ACU15;
     }
     else if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_GT911_I2C_ADR)<<1, TS_GT911_RES_REG, 2, &res[0], TS_GT911_RES_LEN, 10))
     {
         g_ts_i2c_adr = TS_GT911_I2C_ADR;
-        g_board_id = BOARD_ID_DIN15;
+        g_board_id = BOARD_ID_ACU15;
     }
     else
     {
         g_ts_i2c_adr = TS_INVAL_I2C_ADR;
-        g_board_id = BOARD_ID_DIN10;
+        g_board_id = BOARD_ID_ACU10;
         printk("no TS detected.\r\n");
         return;
     }
@@ -653,7 +653,7 @@ void setLCDTestImage(uint8_t img_sel)
 
         break;
     case LCD_TST_IMG_DEF:
-        if(g_board_id == BOARD_ID_DIN15)
+        if(g_board_id == BOARD_ID_ACU15)
         {
             memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
 //            memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
