@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32f767_fi-din_lcd.c
+  * @file    stm32f767_acu_lcd.c
   * @author  MCD Application Team
   * @brief   This file includes the driver for Liquid Crystal Display (LCD) module
   *          mounted on STM32746G-Discovery board.
@@ -52,7 +52,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include <stm32f767_fi-din_lcd.h>
+#include <stm32f767_acu_lcd.h>
 #include "fonts.h"
 
 /** @addtogroup BSP

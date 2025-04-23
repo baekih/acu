@@ -27,13 +27,13 @@
 #include "nmea2000.h"
 #include "nmea2000_deviceinfo.h"
 #include "images.h"
-#include "stm32f767_fi-din_sdram.h"
+#include "stm32f767_acu_sdram.h"
 #elif defined(ECO_BOOT2)
 #include "boot2.h"
 #include "nmea2k.h"
 #include "images.h"
-#include "stm32f767_fi-din_sdram.h"
-#include "stm32f767_fi-din_lcd.h"
+#include "stm32f767_acu_sdram.h"
+#include "stm32f767_acu_lcd.h"
 #endif
 
 //#define ECO_DEBUG

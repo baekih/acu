@@ -82,7 +82,7 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Eco/BSP/fi-din</name>
+			<name>Eco/BSP/acu</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -147,19 +147,19 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Eco/BSP/fi-din/stm32f767_fi-din_lcd.c</name>
+			<name>Eco/BSP/acu/stm32f767_acu_lcd.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/fi-din/stm32f767_fi-din_lcd.c</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/acu/stm32f767_acu_lcd.c</locationURI>
 		</link>
 		<link>
-			<name>Eco/BSP/fi-din/stm32f767_fi-din_lcd.h</name>
+			<name>Eco/BSP/acu/stm32f767_acu_lcd.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/fi-din/stm32f767_fi-din_lcd.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/acu/stm32f767_acu_lcd.h</locationURI>
 		</link>
 		<link>
-			<name>Eco/BSP/fi-din/stm32f767_fi-din_sdram.h</name>
+			<name>Eco/BSP/acu/stm32f767_acu_sdram.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/fi-din/stm32f767_fi-din_sdram.h</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/BSP/acu/stm32f767_acu_sdram.h</locationURI>
 		</link>
 		<link>
 			<name>Eco/NMEA2000/App/Inc</name>
