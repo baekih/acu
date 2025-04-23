@@ -20,7 +20,7 @@ protected:
     int pressedY;
 
 public:
-	ViewCommon();
+    ViewCommon();
     virtual ~ViewCommon() {}
 
 };

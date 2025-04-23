@@ -22,8 +22,8 @@ private:
 
 public :
     // Speed
-	void gotoSpeedScreenNoTransition();
-	void gotoCompassScreenNoTransition();
+    void gotoSpeedScreenNoTransition();
+    void gotoCompassScreenNoTransition();
     void gotoDataboxScreenNoTransition();
 
 protected:

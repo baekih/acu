@@ -18,9 +18,9 @@
 
 class DataboxView : public DataboxViewBase, protected ViewCommon
 {
-	int speedType;
+    int speedType;
 
-	DataBoxNavi databoxNavi;
+    DataBoxNavi databoxNavi;
 
 private :
     void updateSpeed(double value, int max);

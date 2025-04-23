@@ -22,7 +22,7 @@ class ModelListener;
  */
 class Model
 {
-	uint32_t tickTm;
+    uint32_t tickTm;
 
 public:
     Model();

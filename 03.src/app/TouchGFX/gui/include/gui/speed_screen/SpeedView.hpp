@@ -19,16 +19,16 @@
 
 class SpeedView : public SpeedViewBase, protected ViewCommon
 {
-	int speedType;
+    int speedType;
 
 private :
     touchgfx::Shape<4> shapeGuageLine[41];
-	touchgfx::PainterRGB565 shapeGuagePainter[41];
+    touchgfx::PainterRGB565 shapeGuagePainter[41];
 
-	touchgfx::TextArea textGaugeSpeed[5];
+    touchgfx::TextArea textGaugeSpeed[5];
 
-	CalcPixel calcPixelGauge = CalcPixel(290, 288, 800);
-	CalcPixel calcPixelIndicator = CalcPixel(290, 290, 800);
+    CalcPixel calcPixelGauge = CalcPixel(290, 288, 800);
+    CalcPixel calcPixelIndicator = CalcPixel(290, 290, 800);
 
 private :
     void drawSpeedGaugeLine(double degree, int offset, touchgfx::Shape<4>& line);

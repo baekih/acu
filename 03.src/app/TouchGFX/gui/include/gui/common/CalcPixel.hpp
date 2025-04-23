@@ -13,15 +13,15 @@
 
 class CalcPixel
 {
-	int centerX;
-	int centerY;
+    int centerX;
+    int centerY;
 
-	int outerWidth;
+    int outerWidth;
 private :
-	Point getPointByDistanceXYBearing(double distance, double baseX, double baseY, double heading);
-	Point getPointByCross(double centerX, double centerY, Point solution[], double originX, double originY, double endX, double endY);
+    Point getPointByDistanceXYBearing(double distance, double baseX, double baseY, double heading);
+    Point getPointByCross(double centerX, double centerY, Point solution[], double originX, double originY, double endX, double endY);
 
-public:	CalcPixel(int x, int y, int width);
+public:    CalcPixel(int x, int y, int width);
     virtual ~CalcPixel() {}
     double adjustAngleDegree(double angle);
 
