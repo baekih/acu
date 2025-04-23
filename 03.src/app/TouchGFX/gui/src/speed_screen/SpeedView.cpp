@@ -18,7 +18,7 @@ SpeedView::SpeedView() :
 {
     setSpeedType(speedType);
 
-    for(int index = 0; index < 41; index++){
+    for(int index = 0; index < 51; index++){
 
         shapeGuageLine[index].setScale(1.0f, 1.0f);
         shapeGuageLine[index].setAngle(0.0f);
@@ -31,12 +31,6 @@ SpeedView::SpeedView() :
             const touchgfx::AbstractShape::ShapePoint<double> shapePoints[4] = { { -2.0f, -15.0f }, { 2.0f, -15.0f }, { 2.0f, 15.0f }, { -2.0f, 15.0f } };
             shapeGuageLine[index].setShape(shapePoints);
         }
-        else if((index % 5) == 0){
-            shapeGuageLine[index].setPosition(0, 0, 20, 20);
-            shapeGuageLine[index].setOrigin(10.0f, 10.0f);
-            const touchgfx::AbstractShape::ShapePoint<double> shapePoints[4] = { { -2.0f, -10.0f }, { 2.0f, -10.0f }, { 2.0f, 10.0f }, { -2.0f, 10.0f } };
-            shapeGuageLine[index].setShape(shapePoints);
-        }
         else {
             shapeGuageLine[index].setPosition(0, 0, 20, 20);
             shapeGuageLine[index].setOrigin(10.0f, 10.0f);
@@ -46,25 +40,26 @@ SpeedView::SpeedView() :
 
         add(shapeGuageLine[index]);
 
-        drawSpeedGaugeLine(GUAGE_START_DEGREE, (index * 6), shapeGuageLine[index]);
+        drawSpeedGaugeLine(GUAGE_START_DEGREE, (index * 24 / 5), shapeGuageLine[index]);
     }
 
     int guageTextEnum[12] = {
             T_TEXT_SPEED_0,
-            T_TEXT_SPEED_5,
             T_TEXT_SPEED_10,
-            T_TEXT_SPEED_15,
             T_TEXT_SPEED_20,
+            T_TEXT_SPEED_30,
+            T_TEXT_SPEED_40,
+            T_TEXT_SPEED_50,
     };
 
-    for(int text = 0; text < 5; text++){
+    for(int text = 0; text < 6; text++){
         textGaugeSpeed[text].setXY(0, 0);
         textGaugeSpeed[text].setColor(touchgfx::Color::getColorFromRGB(255, 255, 255));
         textGaugeSpeed[text].setLinespacing(0);
         textGaugeSpeed[text].setTypedText(touchgfx::TypedText(guageTextEnum[text]));
         add(textGaugeSpeed[text]);
 
-        drawSpeedGaugeText(GUAGE_START_DEGREE, text * 60, textGaugeSpeed[text]);
+        drawSpeedGaugeText(GUAGE_START_DEGREE, text * 48, textGaugeSpeed[text]);
     }
 
     remove(SPEED_INDICATOR);
@@ -143,14 +138,14 @@ void SpeedView::drawSpeedGaugeIndicator(double value, int max)
 void SpeedView::updateSTW(double stwValue)
 {
     if(speedType == typeSTW){
-        updateSpeed(stwValue, 20);
+        updateSpeed(stwValue, 50);
     }
 }
 
 void SpeedView::updateSOG(double sogValue)
 {
     if(speedType == typeSOG){
-        updateSpeed(sogValue, 20);
+        updateSpeed(sogValue, 50);
     }
 }
 

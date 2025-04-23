@@ -72,17 +72,20 @@
       <Text Id="TEXT_SPEED_0" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB" Alignment="Center">0</Translation>
       </Text>
-      <Text Id="TEXT_SPEED_5" Alignment="Left" TypographyId="TYPEPO_40PX">
-        <Translation Language="GB">5</Translation>
-      </Text>
       <Text Id="TEXT_SPEED_10" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">10</Translation>
       </Text>
-      <Text Id="TEXT_SPEED_15" Alignment="Left" TypographyId="TYPEPO_40PX">
-        <Translation Language="GB">15</Translation>
-      </Text>
       <Text Id="TEXT_SPEED_20" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">20</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_30" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">30</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_40" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">40</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_50" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">50</Translation>
       </Text>
       <Text Id="__SingleUse_IOE7" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">&lt;*&gt;</Translation>

@@ -22,10 +22,10 @@ class SpeedView : public SpeedViewBase, protected ViewCommon
     int speedType;
 
 private :
-    touchgfx::Shape<4> shapeGuageLine[41];
-    touchgfx::PainterRGB565 shapeGuagePainter[41];
+    touchgfx::Shape<4> shapeGuageLine[51];
+    touchgfx::PainterRGB565 shapeGuagePainter[51];
 
-    touchgfx::TextArea textGaugeSpeed[5];
+    touchgfx::TextArea textGaugeSpeed[6];
 
     CalcPixel calcPixelGauge = CalcPixel(290, 288, 800);
     CalcPixel calcPixelIndicator = CalcPixel(290, 290, 800);
