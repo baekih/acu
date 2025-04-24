@@ -62,6 +62,8 @@ double windSpeedValues[4];
 double latitudeDegree = INVALID_DEGREE_VALUE;
 double longitudeDegree = INVALID_DEGREE_VALUE;
 
+XTE g_XTE = {.dat = 0, .mode = 0};
+
 double GetRound(double val, double roundFraction)
 {
     return ((double)round(val * roundFraction) / roundFraction);
@@ -176,6 +178,17 @@ bool isValidHDG()
 #else
     return true;
 #endif
+}
+
+void setXTE(double xte, unsigned char xte_mode)
+{
+    g_XTE.dat = xte;
+    g_XTE.mode = xte_mode;
+}
+
+XTE getXTE()
+{
+    return g_XTE;
 }
 
 bool isTimeInHDG()
