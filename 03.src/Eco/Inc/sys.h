@@ -227,6 +227,12 @@ typedef struct _common_dat
     uint32_t crc32;
 } common_dat __attribute__((aligned(1)));
 
+typedef struct _nav_dat
+{
+    uint16_t    hdg_magnetic;
+    int16_t     variation;
+} nav_dat __attribute__((aligned(1)));
+
 typedef struct _key_stat
 {
     bool prv;
