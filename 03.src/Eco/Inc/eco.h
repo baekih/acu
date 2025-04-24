@@ -25,7 +25,6 @@
 #if defined (ECO_APP)
 #include "app.h"
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
 #include "stm32f767_acu_sdram.h"
 #elif defined(ECO_BOOT2)
 #include "boot2.h"

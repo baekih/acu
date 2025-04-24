@@ -10,7 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN065285NAME
@@ -24,13 +23,13 @@ typedef struct __PGN065285NAME
 
 
 /* Exported functions --------------------------------------------------------*/
-extern void PGN065285_SetFieldValue(uint16_t _Manufacturer_Code,
-                                    uint8_t _NMEA_Reserved_1,
-                                    uint8_t _Industry_Group,
-                                    uint8_t _Boot_State,
-                                    uint64_t _NMEA_Reserved_2);
-extern void PGN065285_SetInitialField();
-extern void PGN065285_SendNameField();
+void PGN065285_SetFieldValue(uint16_t _Manufacturer_Code,
+                             uint8_t _NMEA_Reserved_1,
+                             uint8_t _Industry_Group,
+                             uint8_t _Boot_State,
+                             uint64_t _NMEA_Reserved_2);
+void PGN065285_SetInitialField();
+void PGN065285_SendNameField();
 
 
 #endif /* NMEA2000_INC_PGN_PGN_065285_H_ */

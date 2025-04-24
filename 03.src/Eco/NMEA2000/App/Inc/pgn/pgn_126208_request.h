@@ -10,7 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
 /* Private define ------------------------------------------------------------*/
 #define PGN126208REQUEST_PRIORITY     3
@@ -26,8 +25,8 @@ typedef struct __PGN126208REQUESTNAME
 } PGN126208REQUESTNAME;
 
 /* Exported functions --------------------------------------------------------*/
-extern void PGN126208REQUEST_GetFieldValue(NmeaPgn* pgnId, uint8_t *buf, uint16_t multiPacketSize, uint32_t messagetype);
-extern void PGN126208REQUEST_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t multiPacketSize, uint32_t messagetype);
+void PGN126208REQUEST_GetFieldValue(NmeaPgn* pgnId, uint8_t *buf, uint16_t multiPacketSize, uint32_t messagetype);
+void PGN126208REQUEST_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t multiPacketSize, uint32_t messagetype);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_126208_REQUEST_H_ */

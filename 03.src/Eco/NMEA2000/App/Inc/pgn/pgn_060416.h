@@ -10,7 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN060416NAME
@@ -26,8 +25,8 @@ extern uint32_t FunctionCodeBAM;
 extern uint32_t FunctionCodeABORT;
 
 /* Exported functions --------------------------------------------------------*/
-extern void PGN060416_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
-extern uint32_t PGN060416_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
+void PGN060416_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
+uint32_t PGN060416_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_060416_H_ */

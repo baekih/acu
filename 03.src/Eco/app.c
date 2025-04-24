@@ -9,6 +9,7 @@
 #ifdef ECO_APP
 
 #include "eco.h"
+#include "nmea2000_deviceinfo.h"
 
 void runEcoTaskMain(void *argument)
 {

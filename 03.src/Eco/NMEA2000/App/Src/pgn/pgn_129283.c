@@ -16,6 +16,7 @@
 #include <gui/common/DataBase.hpp>
 #include <gui/common/validate_data.h>
 
+
 void PGN129283_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
 //    uint8_t  sequence       =  GetBuf_1ByteUInt(len, 0, buf);               // 8 bit
@@ -26,6 +27,4 @@ void PGN129283_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 //    printf("Receive 129283:xte[%ld]m mode[%d] nav_terminated[%d]\n", xte/100, xte_mode, nav_terminate);
 
     setXTE((double)xte/100.0, (unsigned char)xte_mode);
-
-//    setPositionRapid((double)latitude/10000000.0, (double)longitude/10000000.0);
 }

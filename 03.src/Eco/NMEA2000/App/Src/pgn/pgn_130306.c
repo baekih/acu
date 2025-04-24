@@ -6,13 +6,10 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "math.h"
-
 #include "nmea2000.h"
 #include "nmea2000_deviceinfo.h"
 #include "nmea2000_pgnbase.h"
 #include "nmea2000_namebase.h"
-#include "multipacketdata.h"
 
 #include "pgn_130306.h"
 
@@ -21,15 +18,14 @@
 
 uint16_t    mWindSpeed;             // 16 bit
 uint16_t    mWindDirection;         // 16 bit
-uint8_t     mWindReference;     // 3 bit
+uint8_t     mWindReference;         // 3 bit
 
 void PGN130306_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-
-//  mSequenceID     =  GetBuf_1ByteUInt(len, 0, buf);       // 8  bit
-    mWindSpeed      =  GetBuf_2ByteUInt(len, 1, buf);       // 16 bit
-    mWindDirection  =  GetBuf_2ByteUInt(len, 3, buf);       // 16 bit
-    mWindReference  =  GetBuf_1ByteUInt(len, 5, buf) & 0x07;// 3 bit
+//    uint8_t  mSequenceID     =  GetBuf_1ByteUInt(len, 0, buf);        // 8  bit
+    uint16_t mWindSpeed      =  GetBuf_2ByteUInt(len, 1, buf);          // 16 bit
+    uint16_t mWindDirection  =  GetBuf_2ByteUInt(len, 3, buf);          // 16 bit
+    uint8_t  mWindReference  =  GetBuf_1ByteUInt(len, 5, buf) & 0x07;   // 3 bit
 
 /*  printf("Receive Wind Data - %f:%f:%d\r\n",
                 (double)mWindSpeed/100, (double)mWindDirection/10000, mWindReference);*/

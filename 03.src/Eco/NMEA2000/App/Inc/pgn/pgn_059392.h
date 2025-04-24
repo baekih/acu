@@ -10,8 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "app.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN059392NAME
@@ -28,10 +26,11 @@ extern uint8_t NEGATIVIE_ACKNOWLEDGMENT;
 extern uint32_t PGN_SUPPORTED_ACCESS_DENIED;
 
 /* Exported functions --------------------------------------------------------*/
-extern void PGN059392_SetFieldValue(uint8_t _Control_Byte,
-                                    uint8_t _Group_Function_Value,
-                                    uint32_t _NMEA_Reserved,
-                                    uint32_t _PGN_of_Requested_Information);
-extern void PGN059392_SendNameField();
+void PGN059392_SetFieldValue(uint8_t _Control_Byte,
+                             uint8_t _Group_Function_Value,
+                             uint32_t _NMEA_Reserved,
+                             uint32_t _PGN_of_Requested_Information);
+void PGN059392_SendNameField();
+
 
 #endif /* NMEA2000_INC_PGN_PGN_059392_H_ */

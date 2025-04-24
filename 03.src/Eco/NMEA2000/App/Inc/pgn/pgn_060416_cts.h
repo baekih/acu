@@ -10,9 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-
-extern uint32_t PGN060416CTS_priority;
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN060416CTSNAME
@@ -24,16 +21,18 @@ typedef struct __PGN060416CTSNAME
     uint32_t mPGN_of_multipacket_message;               // 24 bits
 } PGN060416CTSNAME;
 
-/* Exported functions --------------------------------------------------------*/
-extern void PGN060416CTS_SetFieldValue(uint32_t _CTS_Group_Function_Code,
-                                       uint32_t _Number_of_frames_that_can_be_sent,
-                                       uint32_t _Number_of_next_frame_to_be_transmitted,
-                                       uint32_t _NMEA_Reserved,
-                                       uint32_t _PGN_of_multipacket_message);
-extern void PGN060416CTS_SendNameField(NmeaPgn* pgnId);
+extern uint32_t PGN060416CTS_priority;
 
-extern void PGN060416CTS_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
-extern void PGN060416CTS_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
+/* Exported functions --------------------------------------------------------*/
+void PGN060416CTS_SetFieldValue(uint32_t _CTS_Group_Function_Code,
+                                uint32_t _Number_of_frames_that_can_be_sent,
+                                uint32_t _Number_of_next_frame_to_be_transmitted,
+                                uint32_t _NMEA_Reserved,
+                                uint32_t _PGN_of_multipacket_message);
+void PGN060416CTS_SendNameField(NmeaPgn* pgnId);
+
+void PGN060416CTS_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
+void PGN060416CTS_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_060416_CTS_H_ */

@@ -10,8 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "app.h"
 
 /* Private define ------------------------------------------------------------*/
 #define FUNCTION_CODE_REQEUST_MESSAGE       0
@@ -34,8 +32,8 @@ typedef struct __PGN126208NAME
 
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
-extern void PGN126208_GetFieldValue(NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32_t messagetype);
-extern void PGN126208_ProcessNameField(NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32_t messagetype);
+void PGN126208_GetFieldValue(NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32_t messagetype);
+void PGN126208_ProcessNameField(NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32_t messagetype);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_126208_H_ */

@@ -8,9 +8,8 @@
 #ifndef NMEA2000_INC_PGN_PGN_065288_H_
 #define NMEA2000_INC_PGN_PGN_065288_H_
 
+
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "app.h"
 
 /* Private define ------------------------------------------------------------*/
 #define PGN065288_PGN                     65288
@@ -39,5 +38,6 @@ typedef struct __PGN065288NAME
 extern uint8_t pgn65288_datalen[];
 /* Exported functions --------------------------------------------------------*/
 uint32_t PGN065288_ProcessNameField(uint8_t, uint8_t);
+
 
 #endif /* NMEA2000_INC_PGN_PGN_065288_H_ */

@@ -10,9 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "app.h"
-
 #include "pgn_126208.h"
 
 /* Private define ------------------------------------------------------------*/
@@ -54,13 +51,13 @@ typedef struct __PGN126208ACKNOWLEDGENAME
 /* Exported variables ---------------------------------------------------------*/
 
 /* Exported functions --------------------------------------------------------*/
-extern void PGN126208ACKNOWLEDGE_SetFieldValue( uint32_t _Acknowledgment_Group_Function_Code,
-                                                uint32_t _Requested_or_Commanded_PGN_being_acknowledged,
-                                                uint32_t _PGN_error_code,
-                                                uint32_t _Transmission_Interval_Priority_error_code,
-                                                uint32_t _Number_of_Requested_or_Commanded_Parameters,
-                                                uint8_t* _First_parameter_error_code);
-extern void PGN126208ACKNOWLEDGE_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint32_t messagetype);
+void PGN126208ACKNOWLEDGE_SetFieldValue(uint32_t _Acknowledgment_Group_Function_Code,
+                                        uint32_t _Requested_or_Commanded_PGN_being_acknowledged,
+                                        uint32_t _PGN_error_code,
+                                        uint32_t _Transmission_Interval_Priority_error_code,
+                                        uint32_t _Number_of_Requested_or_Commanded_Parameters,
+                                        uint8_t* _First_parameter_error_code);
+void PGN126208ACKNOWLEDGE_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint32_t messagetype);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_126208_ACKNOWLEDGE_H_ */

@@ -10,8 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "app.h"
 
 /* Private define ------------------------------------------------------------*/
 #define PGN126208CMD_PRIORITY               3
@@ -31,8 +29,8 @@ typedef struct __PGN126208COMMANDNAME
 } PGN126208COMMANDNAME;
 
 /* Exported functions --------------------------------------------------------*/
-extern void PGN126208COMMAND_GetFieldValue(NmeaPgn* pgnId, uint8_t *buf, uint16_t size, uint32_t messagetype);
-extern void PGN126208COMMAND_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t size, uint32_t messagetype);
+void PGN126208COMMAND_GetFieldValue(NmeaPgn* pgnId, uint8_t *buf, uint16_t size, uint32_t messagetype);
+void PGN126208COMMAND_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t size, uint32_t messagetype);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_126208_COMMAND_H_ */

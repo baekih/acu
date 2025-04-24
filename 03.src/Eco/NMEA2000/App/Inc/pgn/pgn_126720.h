@@ -10,7 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN126720NAME
@@ -20,7 +19,6 @@ typedef struct __PGN126720NAME
     uint8_t  IdentifyCode;                  // 8  bits
     uint8_t  ControlFunction;               // 8  bits
 } PGN126720NAME;
-
 
 /* Exported functions --------------------------------------------------------*/
 PGN126720NAME PGN126720_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);

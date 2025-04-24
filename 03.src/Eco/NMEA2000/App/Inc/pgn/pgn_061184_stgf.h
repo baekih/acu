@@ -10,7 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN061184STGFNAME
@@ -26,9 +25,9 @@ typedef struct __PGN061184STGFNAME
 extern PGN061184STGFNAME g_PGN061184STGFNAME;
 
 /* Exported functions --------------------------------------------------------*/
-extern void PGN061184STGF_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
-extern void PGN061184STGF_SendNameField(uint8_t mSA);
-extern void PGN061184STGF_ProcessNameField(uint8_t mSA);
+void PGN061184STGF_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
+void PGN061184STGF_SendNameField(uint8_t mSA);
+void PGN061184STGF_ProcessNameField(uint8_t mSA);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_061184_STGF_H_ */

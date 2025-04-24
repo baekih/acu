@@ -6,30 +6,24 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "math.h"
-
 #include "nmea2000.h"
 #include "nmea2000_deviceinfo.h"
 #include "nmea2000_pgnbase.h"
 #include "nmea2000_namebase.h"
-#include "multipacketdata.h"
 
 #include "pgn_128267.h"
 
 #include <gui/common/DataBase.hpp>
 #include <gui/common/validate_data.h>
 
-uint32_t    WaterDepth;             // 32 bit
-uint16_t    Offset;                 // 16 bit
-uint8_t     MaximumDepthRange;      // 8  bit
 
 void PGN128267_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
 
-//  SequenceID          =  GetBuf_1ByteUInt(len, 0, buf);               // 8  bit
-    WaterDepth          =  GetBuf_4ByteUInt(len, 1, buf);               // 32 bit
-    Offset              =  GetBuf_2ByteUInt(len, 5, buf);               // 16 bit
-    MaximumDepthRange   =  GetBuf_1ByteUInt(len, 7, buf);               // 8  bit
+//    uint8_t  SequenceID          =  GetBuf_1ByteUInt(len, 0, buf);               // 8  bit
+    uint32_t WaterDepth          =  GetBuf_4ByteUInt(len, 1, buf);               // 32 bit
+    uint16_t Offset              =  GetBuf_2ByteUInt(len, 5, buf);               // 16 bit
+//    uint8_t  MaximumDepthRange   =  GetBuf_1ByteUInt(len, 7, buf);               // 8  bit
 
 /*  printf("Receive Water Depth - %d:%f:%2.3f:%d\n",
         (double)((long)(WaterDepth & 0xFFFFFFFFL))/100.0, (double)((short)Offset)/1000.0,

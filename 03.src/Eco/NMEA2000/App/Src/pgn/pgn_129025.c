@@ -6,8 +6,6 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "math.h"
-
 #include "nmea2000.h"
 #include "nmea2000_deviceinfo.h"
 #include "nmea2000_pgnbase.h"

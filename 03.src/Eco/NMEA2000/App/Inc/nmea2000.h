@@ -27,16 +27,15 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "eco.h"
-#include <gui/common/DataBase.hpp>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define CAN_NAME_FEILD_SIZE				8
-#define BROADCAST_DESTINATION_ADDR		255
+#define CAN_NAME_FEILD_SIZE                 8
+#define BROADCAST_DESTINATION_ADDR          255
 
-#define _OFFICE_NAME_                       "2023 by ECOTRONIX Corp."
+#define _OFFICE_NAME_                       "2025 by ECOTRONIX Corp."
 #define _MODEL_ID_VERTICAL_                 "ECO-ACU"
 #define _MODEL_ID_HORIZONTAL_               "ECO-ACU"
 #define _MODEL_ID_                          _MODEL_ID_VERTICAL_
@@ -50,11 +49,8 @@ extern "C" {
 #define PPGN_AIRMAR_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (MFG_CODE_AIRMAR << 0))  // 0x9887
 #define PPGN_FURUNO_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (MFG_CODE_FURUNO << 0))  // 0x9F3F
 
-typedef struct __PGNCounter
-{
-    uint32_t PGN;
-    uint32_t value;
-} PGNCounter;
+#define CAN_RX_BUF_MAX          256
+#define CAN_TX_BUF_MAX          3
 
 extern uint8_t g_access_level; // temp.
 
@@ -66,10 +62,14 @@ extern uint32_t savedSourceAddr;
 
 extern uint32_t mDataLastReceivedTime;
 
-#define CAN_RX_BUF_MAX          256
-#define CAN_TX_BUF_MAX          3
 
 #pragma pack(push,1)
+typedef struct __PGNCounter
+{
+    uint32_t PGN;
+    uint32_t value;
+} PGNCounter;
+
 typedef struct _NmeaPgn_
 {
     uint32_t mCanNumericID;

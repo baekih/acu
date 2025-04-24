@@ -10,7 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN126996NAME
@@ -26,16 +25,16 @@ typedef struct __PGN126996NAME
 } PGN126996NAME;
 
 /* Exported functions --------------------------------------------------------*/
-extern void PGN126996_SetFieldValue(uint32_t _NMEA_Network_Message_Database_Version,
-                                    uint32_t _NMEA_Manufacturers_Product_Code,
-                                    uint8_t _Manufacturers_Model_ID[],
-                                    uint8_t _Manufacturers_Software_Version_Code[],
-                                    uint8_t _Manufacturers_Model_Version[],
-                                    uint8_t _Manufacturers_Model_Serial_Code[],
-                                    uint32_t _NMEA_2000_Certification_Level,
-                                    uint32_t _Load_Equivalency);
+void PGN126996_SetFieldValue(uint32_t _NMEA_Network_Message_Database_Version,
+                            uint32_t _NMEA_Manufacturers_Product_Code,
+                            uint8_t _Manufacturers_Model_ID[],
+                            uint8_t _Manufacturers_Software_Version_Code[],
+                            uint8_t _Manufacturers_Model_Version[],
+                            uint8_t _Manufacturers_Model_Serial_Code[],
+                            uint32_t _NMEA_2000_Certification_Level,
+                            uint32_t _Load_Equivalency);
 
-extern void PGN126996_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf, uint32_t messagetype);
+void PGN126996_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf, uint32_t messagetype);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_126996_H_ */

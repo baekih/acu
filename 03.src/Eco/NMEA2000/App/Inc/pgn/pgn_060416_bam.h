@@ -10,7 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN060416BAMNAME
@@ -25,15 +24,15 @@ typedef struct __PGN060416BAMNAME
 extern uint32_t PGN060416BAM_priority;
 
 /* Exported functions --------------------------------------------------------*/
-extern void PGN060416BAM_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
-extern uint32_t PGN060416BAM_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
+void PGN060416BAM_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
+uint32_t PGN060416BAM_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
 
-extern void PGN060416BAM_SetFieldValue(uint32_t _BAM_Group_Function_Code,
-                                       uint32_t _Total_message_size_bytes,
-                                       uint32_t _Total_number_of_frames_to_be_transmitted,
-                                       uint32_t _NMEA_Reserved,
-                                       uint32_t _PGN_of_multipacket_message);
-extern void PGN060416BAM_SendNameField();
+void PGN060416BAM_SetFieldValue(uint32_t _BAM_Group_Function_Code,
+                                uint32_t _Total_message_size_bytes,
+                                uint32_t _Total_number_of_frames_to_be_transmitted,
+                                uint32_t _NMEA_Reserved,
+                                uint32_t _PGN_of_multipacket_message);
+void PGN060416BAM_SendNameField();
 
 
 #endif /* NMEA2000_INC_PGN_PGN_060416_BAM_H_ */

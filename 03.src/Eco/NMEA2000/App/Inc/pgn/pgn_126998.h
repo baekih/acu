@@ -10,8 +10,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-
 extern uint8_t  installationDescription1[72];
 extern uint8_t  installationDescription2[72];
 extern uint8_t  menufacturerDescription[72];
