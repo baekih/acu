@@ -34,6 +34,7 @@
 #include "pgn_127258.h"
 #include "pgn_128259.h"
 #include "pgn_128267.h"
+#include "pgn_129025.h"
 #include "pgn_129026.h"
 #include "pgn_129029.h"
 #include "pgn_130306.h"
@@ -424,6 +425,11 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
         case 128267 :
             {
                 PGN128267_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 129025 :
+            {
+                PGN129025_GetFieldValue(pgnId, len, buf);
             }
             break;
         case 129026 :

@@ -276,6 +276,15 @@ void setPosition(double latitude, double longitude, int MethodGNSS)
     }
 }
 
+void setPositionRapid(double latitude, double longitude)
+{
+    if(isPositionValid(latitude, longitude))
+    {
+        latitudeDegree = latitude;
+        longitudeDegree = longitude;
+    }
+}
+
 double getLatitude()
 {
     return latitudeDegree;

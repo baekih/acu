@@ -137,6 +137,7 @@ void setWindValue(double windSpeed, int windDirection, int windRef);
 double getWindSpeedValue(int type);
 
 void setPosition(double latitude, double longitude, int MethodGNSS);
+void setPositionRapid(double latitude, double longitude);
 double getLatitude();
 double getLongitude();
 
