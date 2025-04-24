@@ -8,10 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
-#include "multipacketdata.h"
 
 #include "pgn_126208_acknowledge.h"
 
@@ -28,9 +24,7 @@ void PGN126208ACKNOWLEDGE_SetFieldValue(uint32_t _Acknowledgment_Group_Function_
                                         uint32_t _Number_of_Requested_or_Commanded_Parameters,
                                         uint8_t* _First_parameter_error_code)
 {
-#if PRINTF_DEBUG_FUNC_LINE_NON
-    printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
+//    printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
 
     InitializeSendNameField();
 
@@ -64,7 +58,7 @@ void PGN126208ACKNOWLEDGE_SetFieldValue(uint32_t _Acknowledgment_Group_Function_
         Add1ByteUInt( (_First_parameter_error_code[6] & 0x0F) );
     }
 
-#if PRINTF_DEBUG_PGN126208ACKNOWLEDGE_NON
+#if 0
     printf(" [_Acknowledgment_Group_Function_Code = %ld] !!\r\n", _Acknowledgment_Group_Function_Code);
     printf(" [_Requested_or_Commanded_PGN_being_acknowledged = %ld] !!\r\n", _Requested_or_Commanded_PGN_being_acknowledged);
     printf(" [_PGN_error_code = %ld] !!\r\n", _PGN_error_code);
@@ -76,8 +70,7 @@ void PGN126208ACKNOWLEDGE_SetFieldValue(uint32_t _Acknowledgment_Group_Function_
 
 void PGN126208ACKNOWLEDGE_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint32_t messagetype)
 {
-#if PRINTF_DEBUG_FUNC_LINE_NON
-    printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
+//    printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
+
     SendNonSingleFrame(getCanId(PGN126208ACKNOWLEDGE_PRIORITY, PGN126208_PGN, pgnId->mSA, localSourceAddr), sendPacketLength, sendNMEAPackets, messagetype);
 }

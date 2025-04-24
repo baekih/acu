@@ -8,9 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 #include "multipacketdata.h"
 
 #include "pgn_060160.h"
@@ -41,7 +38,6 @@ void PGN060160_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 
 void PGN060160_SetFieldValue(uint32_t _Sequence_number_of_multipacket_frame, uint8_t *_Multipacket_packetized_data)
 {
-
     InitializeSendNameField();
 
     Add1ByteUInt( _Sequence_number_of_multipacket_frame );
@@ -51,8 +47,8 @@ void PGN060160_SetFieldValue(uint32_t _Sequence_number_of_multipacket_frame, uin
 }
 
 void PGN060160_InitializeReceiveMulitiPacket(uint32_t _TotalMessageByteSize, uint32_t _TotalNumberOfFrametoTransmit, uint32_t _PGNMultiPacketMessage,
-                                             uint8_t _PacketSourceAddress, uint8_t _PacketDestinationAddress, uint8_t _RTSCTS){
-
+                                             uint8_t _PacketSourceAddress, uint8_t _PacketDestinationAddress, uint8_t _RTSCTS)
+{
     MultiPacket* pMultiPacket = (MultiPacket *)malloc(sizeof(MultiPacket));
 
     if(pMultiPacket == NULL){

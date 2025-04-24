@@ -7,15 +7,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_129283.h"
 
 #include <gui/common/DataBase.hpp>
 #include <gui/common/validate_data.h>
-
 
 void PGN129283_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {

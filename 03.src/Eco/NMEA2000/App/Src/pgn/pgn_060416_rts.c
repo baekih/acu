@@ -8,9 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_060160.h"
 
@@ -39,7 +36,7 @@ void PGN060416RTS_SetFieldValue(uint32_t _RTS_Group_Function_Code,
     Add1ByteUInt( _NMEA_Reserved );
     Add3ByteUInt( _PGN_of_multipacket_message );
 
-#if PRINTF_DEBUG_PGN060416_RTS_NON
+#if 0
     printf(" [_RTS_Group_Function_Code = %ld] !!\r\n", _RTS_Group_Function_Code);
     printf(" [_Total_message_size_bytes = %ld] !!\r\n", _Total_message_size_bytes);
     printf(" [_Total_number_of_frames_to_be_transmitted = %ld] !!\r\n", _Total_number_of_frames_to_be_transmitted);
@@ -60,7 +57,7 @@ void PGN060416RTS_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
     g_PGN060416RTSNAME.mNMEA_Reserved                               = GetBuf_1ByteUInt(len, 4, buf);
     g_PGN060416RTSNAME.mPGN_of_multipacket_message                  = GetBuf_3ByteUInt(len, 5, buf);
 
-#if PRINTF_DEBUG_PGN060416_RTS_NON
+#if 0
     printf(" [mRTS_Group_Function_Code = %ld] !!\r\n", g_PGN060416RTSNAME.mRTS_Group_Function_Code);
     printf(" [mTotal_message_size_bytes = %ld] !!\r\n", g_PGN060416RTSNAME.mTotal_message_size_bytes);
     printf(" [mTotal_number_of_frames_to_be_transmitted = %ld] !!\r\n", g_PGN060416RTSNAME.mTotal_number_of_frames_to_be_transmitted);

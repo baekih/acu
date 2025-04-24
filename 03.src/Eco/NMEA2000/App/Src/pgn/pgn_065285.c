@@ -5,12 +5,8 @@
  *      Author: eco_kj
  */
 
-
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_065285.h"
 
@@ -27,7 +23,6 @@ void PGN065285_SetFieldValue(uint16_t _Manufacturer_Code,
                              uint8_t _Boot_State,
                              uint64_t _NMEA_Reserved_2)
 {
-
     InitializeSendNameField();
 
     Add2ByteUInt( ((_Industry_Group & 0x07) << 13) | ((_NMEA_Reserved_1 & 0x3) << 11) | (_Manufacturer_Code & 0x7FF) );

@@ -7,15 +7,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_130310.h"
 
 #include <gui/common/DataBase.hpp>
 #include <gui/common/validate_data.h>
-
 
 void PGN130310_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
@@ -28,10 +24,12 @@ void PGN130310_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
             (double)mWaterTemp/100, (double)mOutsideAmbientAirTemp/100,
             mAtmosphericPressure*100);*/
 
-    if(isValidWaterTemp(mWaterTemp)) {
+    if(isValidWaterTemp(mWaterTemp))
+    {
         setWTempValue((float)mWaterTemp / 100, UNIT_TEMP_CELSIUS);
     }
-    if(isValidPressure(mAtmosphericPressure)) {
+    if(isValidPressure(mAtmosphericPressure))
+    {
 //      NMEADataParser.dataBaromPress.SetPressValuesByN2K(this, 130310, mAtmosphericPressure);
     }
 }

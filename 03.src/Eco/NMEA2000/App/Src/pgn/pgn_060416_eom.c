@@ -8,9 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_060416_eom.h"
 
@@ -27,11 +24,7 @@ void PGN060416EOM_SetFieldValue(uint32_t _EOM_Group_Function_Code,
                                 uint32_t _NMEA_Reserved,
                                 uint32_t _PGN_of_multipacket_message)
 {
-#if PRINTF_DEBUG_FUNC_LINE_NON
-    printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
-
-
+//    printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
     InitializeSendNameField();
 
     Add1ByteUInt( _EOM_Group_Function_Code );
@@ -40,7 +33,7 @@ void PGN060416EOM_SetFieldValue(uint32_t _EOM_Group_Function_Code,
     Add1ByteUInt( _NMEA_Reserved );
     Add3ByteUInt( _PGN_of_multipacket_message );
 
-#if PRINTF_DEBUG_PGN060416_EOM_NON
+#if 0
     printf(" [_EOM_Group_Function_Code = %ld] !!\r\n", _EOM_Group_Function_Code);
     printf(" [_Total_message_size_bytes = %ld] !!\r\n", _Total_message_size_bytes);
     printf(" [_Total_number_of_frames_received = %ld] !!\r\n", _Total_number_of_frames_received);

@@ -7,18 +7,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_130306.h"
 
 #include <gui/common/DataBase.hpp>
 #include <gui/common/validate_data.h>
-
-uint16_t    mWindSpeed;             // 16 bit
-uint16_t    mWindDirection;         // 16 bit
-uint8_t     mWindReference;         // 3 bit
 
 void PGN130306_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {

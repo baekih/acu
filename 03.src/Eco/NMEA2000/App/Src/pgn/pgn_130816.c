@@ -7,9 +7,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_130816.h"
 
@@ -21,7 +18,6 @@
 void PGN130816_ProcessNameField(NmeaPgn* pgnId)
 {
 //  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-
     InitializeSendNameField();
 
     uint16_t romTestResult = 0;

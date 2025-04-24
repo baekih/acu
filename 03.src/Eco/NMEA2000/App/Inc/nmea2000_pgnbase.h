@@ -10,7 +10,22 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "nmea2000.h"
+#include <stdint.h>
+
+#pragma pack(push,1)
+typedef struct _NmeaPgn_
+{
+    uint32_t mCanNumericID;
+
+    uint32_t mPriority;
+    uint32_t mEDP;
+    uint32_t mPGN;
+    uint32_t mDP;
+    uint32_t mPF;
+    uint32_t mPS;
+    uint32_t mSA;
+} NmeaPgn;
+#pragma pack(pop)
 
 NmeaPgn* CanIDToNmeaPGN(uint32_t rawCanId);
 

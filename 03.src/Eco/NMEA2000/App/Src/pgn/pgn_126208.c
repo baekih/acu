@@ -8,9 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 #include "multipacketdata.h"
 #include "fastpacketdata.h"
 
@@ -33,9 +30,7 @@ void PGN126208_GetFieldValue(NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32
 
 void PGN126208_ProcessNameField(NmeaPgn* pgnId, uint16_t size, uint8_t *pbuf, uint32_t messagetype)
 {
-#if PRINTF_DEBUG_FUNC_LINE_NON
-    printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
+//    printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
     switch(g_PGN126208NAME.mGrpFuncCode)
     {
     case FUNCTION_CODE_REQEUST_MESSAGE:

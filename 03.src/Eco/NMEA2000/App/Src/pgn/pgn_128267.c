@@ -7,9 +7,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_128267.h"
 
@@ -19,7 +16,6 @@
 
 void PGN128267_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-
 //    uint8_t  SequenceID          =  GetBuf_1ByteUInt(len, 0, buf);               // 8  bit
     uint32_t WaterDepth          =  GetBuf_4ByteUInt(len, 1, buf);               // 32 bit
     uint16_t Offset              =  GetBuf_2ByteUInt(len, 5, buf);               // 16 bit

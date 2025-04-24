@@ -7,19 +7,14 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_129026.h"
 
 #include <gui/common/DataBase.hpp>
 #include <gui/common/validate_data.h>
 
-
 void PGN129026_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
-
 //    uint8_t  SequenceID              =  GetBuf_1ByteUInt(len, 0, buf);              // 8  bit
     uint8_t  COGReference            =  GetBuf_1ByteUInt(len, 1, buf) & 0x03;       // 8  bit
 //    uint16_t CourceOverGround        =  GetBuf_2ByteUInt(len, 2, buf);              // 16 bit

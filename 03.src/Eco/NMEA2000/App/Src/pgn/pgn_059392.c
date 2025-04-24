@@ -9,9 +9,6 @@
 /* Includes ------------------------------------------------------------------*/
 
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_059392.h"
 
@@ -31,10 +28,7 @@ void PGN059392_SetFieldValue(uint8_t _Control_Byte,
                              uint32_t _NMEA_Reserved,
                              uint32_t _PGN_of_Requested_Information)
 {
-#if PRINTF_DEBUG_FUNC_LINE_NON
-    printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
-
+//  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
 
     InitializeSendNameField();
 
@@ -43,7 +37,7 @@ void PGN059392_SetFieldValue(uint8_t _Control_Byte,
     Add3ByteUInt( _NMEA_Reserved );
     Add3ByteUInt( _PGN_of_Requested_Information );
 
-#if PRINTF_DEBUG_PGN059392_NON
+#if 0
     printf(" [_Control_Byte = %ld] !!\r\n", _Control_Byte);
     printf(" [_Group_Function_Value = %ld] !!\r\n", _Group_Function_Value);
     printf(" [_NMEA_Reserved = %ld] !!\r\n", _NMEA_Reserved);

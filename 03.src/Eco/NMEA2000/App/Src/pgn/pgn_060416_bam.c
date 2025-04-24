@@ -8,9 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_060160.h"
 
@@ -31,7 +28,7 @@ void PGN060416BAM_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
     g_PGN060416BAMNAME.mNMEA_Reserved                               = GetBuf_1ByteUInt(len, 4, buf);
     g_PGN060416BAMNAME.mPGN_of_multipacket_message                  = GetBuf_3ByteUInt(len, 5, buf);
 
-#if PRINTF_DEBUG_PGN060416_BAM_NON
+#if 0
     printf(" [mBAM_Group_Function_Code = %ld] !!\r\n", g_PGN060416BAMNAME.mBAM_Group_Function_Code);
     printf(" [mTotal_message_size_bytes = %ld] !!\r\n", g_PGN060416BAMNAME.mTotal_message_size_bytes);
     printf(" [mTotal_number_of_frames_to_be_transmitted = %ld] !!\r\n", g_PGN060416BAMNAME.mTotal_number_of_frames_to_be_transmitted);
@@ -56,11 +53,7 @@ void PGN060416BAM_SetFieldValue(uint32_t _BAM_Group_Function_Code,
                                 uint32_t _NMEA_Reserved,
                                 uint32_t _PGN_of_multipacket_message)
 {
-#if PRINTF_DEBUG_FUNC_LINE_NON
-    printf("===>> Func:%s, Line:%d !!\r\n", __FUNCTION__, __LINE__);
-#endif
-
-
+//    printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
     InitializeSendNameField();
 
     Add1ByteUInt( _BAM_Group_Function_Code );
@@ -69,7 +62,7 @@ void PGN060416BAM_SetFieldValue(uint32_t _BAM_Group_Function_Code,
     Add1ByteUInt( _NMEA_Reserved );
     Add3ByteUInt( _PGN_of_multipacket_message );
 
-#if PRINTF_DEBUG_PGN060416_BAM_NON
+#if 0
     printf(" [_BAM_Group_Function_Code = %ld] !!\r\n", _BAM_Group_Function_Code);
     printf(" [_Total_message_size_bytes = %ld] !!\r\n", _Total_message_size_bytes);
     printf(" [_Total_number_of_frames_to_be_transmitted = %ld] !!\r\n", _Total_number_of_frames_to_be_transmitted);

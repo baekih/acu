@@ -8,9 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_065288.h"
 
@@ -28,7 +25,7 @@ uint32_t PGN065288_ProcessNameField(uint8_t preset, uint8_t percentage)
 
     Add2ByteUInt(PPGN_FURUNO_MFGCODE);
     Add1ByteUInt(PGN065288_BRIGHT_INSTANCE);                                      //Brightness Instance. (fixed to 0).
-    Add1ByteUInt((0xF0 & (preset << 4 )) | PGN065288_BRIGHT_SOURCE);             //Brightness Preset|Source(fixed to 1)
+    Add1ByteUInt((0xF0 & (preset << 4 )) | PGN065288_BRIGHT_SOURCE);              //Brightness Preset|Source(fixed to 1)
     Add1ByteUInt(percentage);                                                     //Brightness persentage.
     Add3ByteUInt(0xFFFFF0 | (PGN065288_BRIGHT_COLOR_PALETTE << 0));               //Brightness Palette (fixed to 15)
 

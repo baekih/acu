@@ -8,10 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
-#include "multipacketdata.h"
 
 #include "pgn_126464.h"
 
@@ -29,7 +25,6 @@ void PGN126464_SetFieldValue(uint32_t _PGN_Group_Function_Code,
                              uint32_t _First_PGN_supported[],
                              uint8_t _PGN_List_Unit)
 {
-
     InitializeSendNameField();
 
     Add1ByteUInt( _PGN_Group_Function_Code );

@@ -8,9 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 #include "multipacketdata.h"
 
 #include "pgn_060416_cts.h"
@@ -29,7 +26,6 @@ void PGN060416CTS_SetFieldValue(uint32_t _CTS_Group_Function_Code,
                                 uint32_t _NMEA_Reserved,
                                 uint32_t _PGN_of_multipacket_message)
 {
-
     InitializeSendNameField();
 
     Add1ByteUInt( _CTS_Group_Function_Code );

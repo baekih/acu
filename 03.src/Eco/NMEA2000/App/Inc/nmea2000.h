@@ -28,6 +28,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "eco.h"
 
+#include "nmea2000_deviceinfo.h"
+#include "nmea2000_pgnbase.h"
+#include "nmea2000_namebase.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -69,19 +73,6 @@ typedef struct __PGNCounter
     uint32_t PGN;
     uint32_t value;
 } PGNCounter;
-
-typedef struct _NmeaPgn_
-{
-    uint32_t mCanNumericID;
-
-    uint32_t mPriority;
-    uint32_t mEDP;
-    uint32_t mPGN;
-    uint32_t mDP;
-    uint32_t mPF;
-    uint32_t mPS;
-    uint32_t mSA;
-} NmeaPgn;
 
 typedef struct __RxProtocol
 {

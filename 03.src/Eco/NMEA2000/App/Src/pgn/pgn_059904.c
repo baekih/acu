@@ -8,9 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
 
 #include "pgn_059392.h"
 #include "pgn_059904.h"
@@ -44,6 +41,7 @@ void PGN059904_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 
 uint32_t PGN059904_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
+//    printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
 //    printf(" [mPGN_being_requested = %ld] !!\r\n", g_PGN059904NAME.mPGN_being_requested);
     switch(g_PGN059904NAME.mPGN_being_requested)
     {
