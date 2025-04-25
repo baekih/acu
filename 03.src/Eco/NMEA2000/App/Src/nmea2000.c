@@ -38,6 +38,7 @@
 #include "pgn_129026.h"
 #include "pgn_129029.h"
 #include "pgn_129283.h"
+#include "pgn_129284.h"
 #include "pgn_130306.h"
 #include "pgn_130310.h"
 #include "pgn_130816.h"
@@ -451,6 +452,17 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
         case 129283 :
             {
                 PGN129283_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 129284 :
+            {
+                if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE)
+                {
+                    uint8_t* completePacket = GetCompletedFastPacket();
+                    uint16_t packetSize = GetCompletedFastPacketSize();
+
+                    PGN129284_GetFieldValue(pgnId, packetSize, completePacket);
+                }
             }
             break;
         case 130306 :
