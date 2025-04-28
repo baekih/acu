@@ -29,7 +29,7 @@ void runEcoTaskMain(void *argument)
             mAddress_Claiming = false;
         }
 
-        if(tick%3000 == 0)
+        if(tick%30000 == 0)
         {
             NMEA2000_126993_heartbeat();
             printf("[%08ld]NMEA2000_126993_heartbeat() called \n", tick);
