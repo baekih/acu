@@ -30,6 +30,7 @@
 #include "pgn_126208.h"
 #include "pgn_126993.h"
 #include "pgn_126720.h"
+#include "pgn_127245.h"
 #include "pgn_127250.h"
 #include "pgn_127258.h"
 #include "pgn_128259.h"
@@ -408,6 +409,11 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
 
 //              printf("PGN126720:MfgCode[%d] INDCode[%d] CMDFunc[%d]\r\n",
 //              pgn126720.mManufacturer_Code, pgn126720.IdentifyCode, pgn126720.ControlFunction);
+            }
+            break;
+        case 127245 :
+            {
+                PGN127245_GetFieldValue(pgnId, len, buf);
             }
             break;
         case 127250 :

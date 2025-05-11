@@ -16,6 +16,7 @@
 #include "pgn_126720.h"
 #include "pgn_126996.h"
 #include "pgn_126998.h"
+#include "pgn_127245.h"
 #include "pgn_130816.h"
 #include "pgn_130822.h"
 #include "pgn_130823.h"
@@ -65,6 +66,9 @@ uint32_t PGN059904_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
             break;
         case 126998:
             PGN126998_ProcessNameField(pgnId, REQUEST_MESSAGE_TYPE_FASTPACKET);
+            break;
+        case 127245:
+            PGN127245_ProcessNameField(pgnId);
             break;
         case 130816:
             PGN130816_ProcessNameField(pgnId);
