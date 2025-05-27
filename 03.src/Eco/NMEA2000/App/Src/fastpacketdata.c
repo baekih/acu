@@ -29,8 +29,8 @@ uint32_t NewFastPacketData( uint32_t _FastPacket_Total_Message_Byte_Size,
         }
 
         if(pFastPacket->mFastPacket_Identifier == _FastPacket_Identifier){
-            printf("fast packet (%d) invalid identifier %d/%d\r\n",
-                i, pFastPacket->mFastPacket_Identifier, _FastPacket_Identifier);
+//            printf("fast packet (%d) invalid identifier %d/%d\r\n",
+//                i, pFastPacket->mFastPacket_Identifier, _FastPacket_Identifier);
 
             pFastPacket->using = 0;
         }

@@ -16,45 +16,14 @@
 #include "multipacketdata.h"
 #include "fastpacketdata.h"
 
-#include "pgn_059904.h"
-#include "pgn_060160.h"
-#include "pgn_060416.h"
-#include "pgn_060416_rts.h"
-#include "pgn_060416_bam.h"
-#include "pgn_060928.h"
-#include "pgn_061184_stgf.h"
-#include "pgn_065240.h"
-#include "pgn_065285.h"
-#include "pgn_065286.h"
-#include "pgn_065287.h"
-#include "pgn_126208.h"
-#include "pgn_126993.h"
-#include "pgn_126720.h"
-#include "pgn_127245.h"
-#include "pgn_127250.h"
-#include "pgn_127258.h"
-#include "pgn_128259.h"
-#include "pgn_128267.h"
-#include "pgn_129025.h"
-#include "pgn_129026.h"
-#include "pgn_129029.h"
-#include "pgn_129283.h"
-#include "pgn_129284.h"
-#include "pgn_129285.h"
-#include "pgn_130306.h"
-#include "pgn_130310.h"
-#include "pgn_130816.h"
-
-#define PGN_COUNT_MAX           64
-
 uint8_t g_access_level = 0; // temp.
 
-RxProtocol g_RxCan[CAN_RX_BUF_MAX];   // Rx array
+RxProtocol g_RxCan[CAN_RX_BUF_MAX];     // Rx array
+TxProtocol g_TxCan[CAN_TX_BUF_MAX];     // Tx array
 
 uint16_t  rxCanLastIndex = 0;
 uint16_t  rxCanFirstIndex = 0;
 
-TxProtocol g_TxCan[CAN_TX_BUF_MAX];	// Tx array
 uint8_t txCanBufferCount = 0;
 
 /* Private variables ---------------------------------------------------------*/
@@ -86,6 +55,13 @@ uint8_t	SysInstance = 1;
 
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx;
+
+rudder g_rudder = {
+    .instance           = 0,
+    .direction_order    = 0x0,
+    .angle_order        = N2K_DATA_NOT_AVAILABLE_INT16,
+    .position           = N2K_DATA_NOT_AVAILABLE_INT16
+};
 
 /* Private functions ---------------------------------------------------------*/
 void NMEA2000_Open(void)

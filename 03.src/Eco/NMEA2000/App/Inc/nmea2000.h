@@ -32,6 +32,35 @@
 #include "nmea2000_pgnbase.h"
 #include "nmea2000_namebase.h"
 
+#include "pgn_059904.h"
+#include "pgn_060160.h"
+#include "pgn_060416.h"
+#include "pgn_060416_rts.h"
+#include "pgn_060416_bam.h"
+#include "pgn_060928.h"
+#include "pgn_061184_stgf.h"
+#include "pgn_065240.h"
+#include "pgn_065285.h"
+#include "pgn_065286.h"
+#include "pgn_065287.h"
+#include "pgn_126208.h"
+#include "pgn_126993.h"
+#include "pgn_126720.h"
+#include "pgn_127245.h"
+#include "pgn_127250.h"
+#include "pgn_127258.h"
+#include "pgn_128259.h"
+#include "pgn_128267.h"
+#include "pgn_129025.h"
+#include "pgn_129026.h"
+#include "pgn_129029.h"
+#include "pgn_129283.h"
+#include "pgn_129284.h"
+#include "pgn_129285.h"
+#include "pgn_130306.h"
+#include "pgn_130310.h"
+#include "pgn_130816.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -53,20 +82,16 @@ extern "C" {
 #define PPGN_AIRMAR_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (MFG_CODE_AIRMAR << 0))  // 0x9887
 #define PPGN_FURUNO_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (MFG_CODE_FURUNO << 0))  // 0x9F3F
 
-#define CAN_RX_BUF_MAX          256
-#define CAN_TX_BUF_MAX          3
+#define CAN_RX_BUF_MAX                      256
+#define CAN_TX_BUF_MAX                      3
 
-extern uint8_t g_access_level; // temp.
+#define PGN_COUNT_MAX           64
 
-/* Exported variables --------------------------------------------------------*/
-extern uint32_t MAX_HIGH_SOURCE_ADDR;
-extern uint32_t ADDRESS_CLAIM_FAIL_ADDR;
-extern uint32_t localSourceAddr;
-extern uint32_t savedSourceAddr;
+#define N2K_DATA_NOT_AVAILABLE_INT16        32767
+#define N2K_DO_NOT_CHANGE_INT16             32766
+#define N2K_OUT_OF_ORDER_INT16              32765
 
-extern uint32_t mDataLastReceivedTime;
-
-
+/* Private function prototypes -----------------------------------------------*/
 #pragma pack(push,1)
 typedef struct __PGNCounter
 {
@@ -81,39 +106,36 @@ typedef struct __RxProtocol
     uint8_t  len;
 } RxProtocol ;
 
-/*typedef struct __TxProtocol
-{
-    uint32_t canid;
-    uint8_t  dat[8];
-    uint8_t  len;
-} TxProtocol ;*/
-
 typedef struct __TxProtocol
 {
     CAN_TxHeaderTypeDef TxHeader;
     uint8_t TxData[8];
     uint32_t TxMailbox;
 } TxProtocol;
-
-/*
-typedef struct __RxProtocol
-{
-    CAN_RxHeaderTypeDef RxHeader;
-    uint8_t RxData[8];
-} RxProtocol;*/
 #pragma pack(pop)
+
+/* Exported variables --------------------------------------------------------*/
+extern uint8_t g_access_level; // temp.
+
+extern uint32_t MAX_HIGH_SOURCE_ADDR;
+extern uint32_t ADDRESS_CLAIM_FAIL_ADDR;
+extern uint32_t localSourceAddr;
+extern uint32_t savedSourceAddr;
+
+extern uint32_t mDataLastReceivedTime;
 
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
 
 extern RxProtocol g_RxCan[CAN_RX_BUF_MAX];   // Rx array
+extern TxProtocol g_TxCan[CAN_TX_BUF_MAX];  // Tx array
 
 extern uint16_t  rxCanLastIndex;
 extern uint16_t  rxCanFirstIndex;
 
-extern TxProtocol g_TxCan[CAN_TX_BUF_MAX];  // Tx array
-
 extern uint8_t txCanBufferCount;
+
+extern rudder g_rudder;
 
 /* Exported functions --------------------------------------------------------*/
 void NMEA2000_Open(void);

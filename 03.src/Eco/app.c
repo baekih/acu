@@ -11,11 +11,6 @@
 #include "eco.h"
 #include "nmea2000_deviceinfo.h"
 
-uint8_t g_rudder_instance = 0;
-uint8_t g_rudder_direction_order = 0x0;
-int16_t g_rudder_angle_order = 32767;
-int16_t g_rudder_position = 32767;
-
 void runEcoTaskMain(void *argument)
 {
     int32_t tick;

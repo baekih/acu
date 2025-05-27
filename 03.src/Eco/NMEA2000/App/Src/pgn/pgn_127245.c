@@ -23,19 +23,19 @@ void PGN127245_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
            ((double)rud_angle_order)*180.0/M_PI/10000.0,
            ((double)rud_position)*180.0/M_PI/10000.0);
 */
-    if(g_rudder_instance != rud_instance) return;
+    if(g_rudder.instance != rud_instance) return;
     if(rud_direction_order == 0x03)
-    g_rudder_position = rud_position;
+    g_rudder.position = rud_position;
 }
 
 void PGN127245_ProcessNameField(NmeaPgn* pgnId)
 {
     InitializeSendNameField();
 
-    Add1ByteUInt(g_rudder_instance);
-    Add1ByteUInt(g_rudder_direction_order);
-    Add2ByteUInt(g_rudder_angle_order);
-    Add2ByteUInt(g_rudder_position);
+    Add1ByteUInt(g_rudder.instance);
+    Add1ByteUInt(g_rudder.direction_order);
+    Add2ByteUInt(g_rudder.angle_order);
+    Add2ByteUInt(g_rudder.position);
     Add2ByteUInt(0xFFFF);
 
     NMEA2000_SendParseMessages(getCanId(PGN127245_PRIORITY, PGN127245_PGN, BROADCAST_DESTINATION_ADDR, localSourceAddr), sendPacketLength, sendNMEAPackets, 0);

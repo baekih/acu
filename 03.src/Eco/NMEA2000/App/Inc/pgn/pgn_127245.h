@@ -16,8 +16,13 @@
 #define PGN127245_PGN                       127245
 
 /* Private typedef -----------------------------------------------------------*/
-
-/* Private typedef -----------------------------------------------------------*/
+typedef struct __rudder
+{
+    uint8_t instance;
+    uint8_t direction_order;
+    int16_t angle_order;
+    int16_t position;
+} rudder;
 
 /* Exported variables --------------------------------------------------------*/
 
