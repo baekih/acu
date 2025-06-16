@@ -93,6 +93,9 @@ extern "C" {
 #define N2K_DEVICE_INSTANCE                 1
 #define N2K_SYSTEM_INSTANCE                 1
 
+#define N2K_ADDR_MAX_HIGH_SOURCE            252
+#define N2K_ADDR_CLAIM_FAIL                 254
+
 #define N2K_DATA_NOT_AVAILABLE_INT16        32767
 #define N2K_DO_NOT_CHANGE_INT16             32766
 #define N2K_OUT_OF_ORDER_INT16              32765
@@ -121,8 +124,6 @@ typedef struct __TxProtocol
 /* Exported variables --------------------------------------------------------*/
 extern uint8_t g_access_level; // temp.
 
-extern uint32_t MAX_HIGH_SOURCE_ADDR;
-extern uint32_t ADDRESS_CLAIM_FAIL_ADDR;
 extern uint32_t localSourceAddr;
 extern uint32_t savedSourceAddr;
 

@@ -29,9 +29,6 @@ uint8_t txCanBufferCount = 0;
 /* Private variables ---------------------------------------------------------*/
 PGNCounter g_PGNCount[PGN_COUNT_MAX];	// Rx array
 
-uint32_t MAX_HIGH_SOURCE_ADDR = 252;
-uint32_t ADDRESS_CLAIM_FAIL_ADDR = 254;
-
 uint32_t localSourceAddr = 0;
 uint32_t savedSourceAddr = 0;
 
@@ -126,7 +123,7 @@ void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint
         return;
     }
 
-    if (pgnId->mSA == ADDRESS_CLAIM_FAIL_ADDR){
+    if (pgnId->mSA == N2K_ADDR_CLAIM_FAIL){
         mIsNoAddress = true;
     }
 
@@ -283,7 +280,7 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
                 PGN060928_GetFieldValue(pgnId, len, buf, &g_PGN060928NAME);
 
                 if (g_PGN060928NAME.mUnique_Number <= mMyPGN060928.mUnique_Number) {
-                    if (localSourceAddr != ADDRESS_CLAIM_FAIL_ADDR) {
+                    if (localSourceAddr != N2K_ADDR_CLAIM_FAIL) {
                         localSourceAddr++;
 
 //                      Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
@@ -294,7 +291,7 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
                         printf("New NMEA2000 addr:%ld\r\n", localSourceAddr);
                     }
 
-                    if (localSourceAddr >= MAX_HIGH_SOURCE_ADDR && localSourceAddr < ADDRESS_CLAIM_FAIL_ADDR) {
+                    if (localSourceAddr >= N2K_ADDR_MAX_HIGH_SOURCE && localSourceAddr < N2K_ADDR_CLAIM_FAIL) {
                         localSourceAddr = 0;
 
 //                      Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
@@ -304,7 +301,7 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
 
                         printf("New NMEA2000 addr:%ld\r\n", localSourceAddr);
                     } else if (localSourceAddr == savedSourceAddr) {
-                        localSourceAddr = ADDRESS_CLAIM_FAIL_ADDR;
+                        localSourceAddr = N2K_ADDR_CLAIM_FAIL;
                     }
                 }
 
