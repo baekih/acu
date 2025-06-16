@@ -9,7 +9,6 @@
 #ifdef ECO_APP
 
 #include "eco.h"
-#include "nmea2000_deviceinfo.h"
 
 void runEcoTaskMain(void *argument)
 {
@@ -22,19 +21,18 @@ void runEcoTaskMain(void *argument)
 
     for(;;)
     {
-        tick += 10;
-
         if ((osKernelGetTickCount() - mLast_Send_Address_Claim_Time) > 250)
         {
             mAddress_Claiming = false;
         }
 
-        if(tick%30000 == 0)
+        if(tick%60000 == 0)
         {
             NMEA2000_126993_heartbeat();
             printf("[%08ld]NMEA2000_126993_heartbeat() called \n", tick);
         }
 
+        tick += 10;
         osDelayUntil(tick);
     }
 }
