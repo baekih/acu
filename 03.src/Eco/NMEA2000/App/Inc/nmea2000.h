@@ -87,6 +87,8 @@ extern "C" {
 
 #define PGN_COUNT_MAX                       64
 
+#define N2K_TX_DELAY_MS                     1
+
 #define N2K_UNIQUE_NUMBER                   1048577
 #define N2K_DEVICE_INSTANCE                 1
 #define N2K_SYSTEM_INSTANCE                 1
