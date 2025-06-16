@@ -71,6 +71,24 @@ void initTouchSensor(void)
         printk("no TS detected.\r\n");
         return;
     }
+
+    if     (g_board_id==BOARD_ID_ACU10)
+    {
+#ifdef DEBUG
+        printk("ECO-ACU10 app DBG " __DATE__ " " __TIME__ "\r\n");
+#else
+        printk("ECO-ACU10 app " __DATE__ "\r\n");
+#endif
+    }
+    else if(g_board_id==BOARD_ID_ACU15)
+    {
+#ifdef DEBUG
+        printk("ECO-ACU app DBG " __DATE__ " " __TIME__ "\r\n");
+#else
+        printk("ECO-ACU app " __DATE__ "\r\n");
+#endif
+    }
+
 }
 
 bool getTouchSensor(uint16_t* x, uint16_t* y)

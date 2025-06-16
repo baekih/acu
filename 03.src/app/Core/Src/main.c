@@ -567,19 +567,6 @@ static void MX_I2C1_Init(void)
       SystemClock_Config();
   }
 
-  if     (g_board_id==BOARD_ID_ACU10)
-  {
-      printk("ECO-ACU10 app   ");
-      printk(__DATE__);
-      printk("\r\n");
-  }
-  else if(g_board_id==BOARD_ID_ACU15)
-  {
-      printk("ECO-ACU app   ");
-      printk(__DATE__);
-      printk("\r\n");
-  }
-
   /* USER CODE END I2C1_Init 2 */
 
 }
