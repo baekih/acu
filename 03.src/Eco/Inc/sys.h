@@ -199,7 +199,7 @@ enum{
     FLASHIF_PROTECTION_RDPENABLED   = 0x4,
 };
 
-typedef struct _IOSAddrClame
+typedef struct _ISOAddrClame
 {
     uint8_t DevInstance;
     uint8_t SysInstance;

@@ -75,9 +75,6 @@ extern "C" {
 #define _MODEL_ID_VERTICAL_                 "ECO-ACU"
 #define _MODEL_ID_HORIZONTAL_               "ECO-ACU"
 #define _MODEL_ID_                          _MODEL_ID_VERTICAL_
-#define _HW_VERSION_                        30
-#define _BOOT_VERSION_                      94
-#define _APP_VERSION_                       95
 
 #define MFG_CODE_AIRMAR                     (135)
 #define MFG_CODE_FURUNO                     (1855)

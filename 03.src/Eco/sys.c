@@ -15,6 +15,8 @@ uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
 uint8_t g_board_id = BOARD_ID_INVAL;
 
+version g_ver;
+
 nav_dat g_nav = {
     .hdg_magnetic    = 0,
     .variation       = 0,

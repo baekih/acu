@@ -34,12 +34,6 @@ uint32_t mDataLastReceivedTime = 0;
 uint32_t MaxPGNSequenceCounters = 0;
 uint32_t *PGNSequenceCounters = 0;
 
-uint8_t g_hwver_str[7];
-uint8_t g_bootver_str[7];
-uint8_t g_appver_str[7];
-
-uint32_t uniquenum = 1048577;
-
 uint8_t nmea2000_addr = 110;
 
 uint8_t g_switch_bank[6];
@@ -58,8 +52,12 @@ void NMEA2000_Open(void)
     savedSourceAddr = nmea2000_addr;
     localSourceAddr = savedSourceAddr;
 
-    sprintf((char*)&mManufacturersModelVersion[0], "%s", g_hwver_str);
-    sprintf((char*)&mManufacturersSoftwareVersionCode[0], "%s:%s", g_appver_str, g_bootver_str);
+    sprintf((char*)g_ver.hw, "%02d", HW_VERSION);
+    sprintf((char*)g_ver.boot, "%02d", BOOT_VERSION);
+    sprintf((char*)g_ver.app, "%02d", APP_VERSION);
+
+    sprintf((char*)&mManufacturersModelVersion[0], "%s", g_ver.hw);
+    sprintf((char*)&mManufacturersSoftwareVersionCode[0], "%s:%s", g_ver.app, g_ver.boot);
 
     mUnique_Number = N2K_UNIQUE_NUMBER & 0x1FFFFF;
     mDevice_Intance = N2K_DEVICE_INSTANCE & 0x7F;
