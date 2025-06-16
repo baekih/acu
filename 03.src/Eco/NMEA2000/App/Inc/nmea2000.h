@@ -85,7 +85,11 @@ extern "C" {
 #define CAN_RX_BUF_MAX                      256
 #define CAN_TX_BUF_MAX                      3
 
-#define PGN_COUNT_MAX           64
+#define PGN_COUNT_MAX                       64
+
+#define N2K_UNIQUE_NUMBER                   1048577
+#define N2K_DEVICE_INSTANCE                 1
+#define N2K_SYSTEM_INSTANCE                 1
 
 #define N2K_DATA_NOT_AVAILABLE_INT16        32767
 #define N2K_DO_NOT_CHANGE_INT16             32766

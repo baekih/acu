@@ -50,9 +50,6 @@ uint32_t uniquenum = 1048577;
 
 uint8_t nmea2000_addr = 110;
 
-uint8_t	DevInstance = 1;
-uint8_t	SysInstance = 1;
-
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx;
 
@@ -72,9 +69,9 @@ void NMEA2000_Open(void)
     sprintf((char*)&mManufacturersModelVersion[0], "%s", g_hwver_str);
     sprintf((char*)&mManufacturersSoftwareVersionCode[0], "%s:%s", g_appver_str, g_bootver_str);
 
-    mUnique_Number = uniquenum & 0x1FFFFF;
-    mDevice_Intance = DevInstance & 0x7F;
-    mSystem_Instance = SysInstance & 0x0F;
+    mUnique_Number = N2K_UNIQUE_NUMBER & 0x1FFFFF;
+    mDevice_Intance = N2K_DEVICE_INSTANCE & 0x7F;
+    mSystem_Instance = N2K_SYSTEM_INSTANCE & 0x0F;
 
     InitializeMyNMEAData();
     InitMultiPacketArray();
