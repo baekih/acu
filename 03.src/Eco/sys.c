@@ -24,6 +24,47 @@ nav_dat g_nav = {
 #error no ECO_XXX defined.
 #endif
 
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_pwrsav_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
 void printk(const char* pstr, ...)
 {
     char buf[128] = {0};
@@ -70,6 +111,30 @@ void initTouchSensor(void)
         g_board_id = BOARD_ID_ACU10;
         printk("no TS detected.\r\n");
         return;
+    }
+
+    if(g_board_id == BOARD_ID_ACU10)
+    {
+        SystemClock_pwrsav_Config();
+
+        GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+        __HAL_RCC_GPIOC_CLK_ENABLE();
+        GPIO_InitStruct.Pin = KEY_PWR_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+        while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+        {
+            HAL_Delay(100);
+        }
+
+        while(GPIO_PIN_SET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+        {
+            HAL_Delay(100);
+        }
+
+        SystemClock_Config();
     }
 
     if     (g_board_id==BOARD_ID_ACU10)
