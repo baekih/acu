@@ -32,6 +32,9 @@
 #include "nmea2000_pgnbase.h"
 #include "nmea2000_namebase.h"
 
+#include "multipacketdata.h"
+#include "fastpacketdata.h"
+
 #include "pgn_059904.h"
 #include "pgn_060160.h"
 #include "pgn_060416.h"

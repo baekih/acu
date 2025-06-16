@@ -25,17 +25,17 @@ uint32_t NewFastPacketData( uint32_t _FastPacket_Total_Message_Byte_Size,
         FastPacketData* pFastPacket = listFastPacket + i;
 
         if((HAL_GetTick() - pFastPacket->mFastPacket_LastReceive_Packet_Time) > 2000){
-            pFastPacket->using = 0;
+            pFastPacket->running = 0;
         }
 
         if(pFastPacket->mFastPacket_Identifier == _FastPacket_Identifier){
 //            printf("fast packet (%d) invalid identifier %d/%d\r\n",
 //                i, pFastPacket->mFastPacket_Identifier, _FastPacket_Identifier);
 
-            pFastPacket->using = 0;
+            pFastPacket->running = 0;
         }
 
-        if(pFastPacket->using == 0){
+        if(pFastPacket->running == 0){
             pFastPacket->mFastPacket_Total_Message_Byte_Size    = _FastPacket_Total_Message_Byte_Size;
             pFastPacket->mFastPacket_Identifier                 = _FastPacket_Identifier;
             pFastPacket->mFastPacket_PGNMessage                 = _FastPacket_PGNMessage;
@@ -49,7 +49,7 @@ uint32_t NewFastPacketData( uint32_t _FastPacket_Total_Message_Byte_Size,
 
             memset(pFastPacket->mReceiveFrameCheck, 0, sizeof(pFastPacket->mReceiveFrameCheck));
 
-            pFastPacket->using = 1;
+            pFastPacket->running = 1;
 
             return i;
         }
@@ -104,7 +104,7 @@ uint32_t ProcessFastPacketData(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
             FastPacketData* pFastPacket = listFastPacket + i;
 
             if((HAL_GetTick() - pFastPacket->mFastPacket_LastReceive_Packet_Time) > 2000){
-                pFastPacket->using = 0;
+                pFastPacket->running = 0;
             }
 
             if(pFastPacket->mFastPacket_Source_Address != pgnId->mSA ||
@@ -122,7 +122,7 @@ uint32_t ProcessFastPacketData(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
                 memcpy(pFastPacket->mMerged_FastPacket + pFastPacket->mFastPacket_Received_Byte_Size, buf + 1, 7);
                 pFastPacket->mFastPacket_Received_Byte_Size += 7;
 
-                pFastPacket->using = 0;
+                pFastPacket->running = 0;
 
 //                printf("fast packet (%d) done\r\n",  i);
 

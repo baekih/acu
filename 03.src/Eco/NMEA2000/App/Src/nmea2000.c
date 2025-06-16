@@ -10,11 +10,6 @@
 #include "common.h"
 
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
-#include "multipacketdata.h"
-#include "fastpacketdata.h"
 
 uint8_t g_access_level = 0; // temp.
 
