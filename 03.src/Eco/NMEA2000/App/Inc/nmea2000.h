@@ -92,7 +92,6 @@ extern "C" {
 #define N2K_OUT_OF_ORDER_INT16              32765
 
 /* Private function prototypes -----------------------------------------------*/
-#pragma pack(push,1)
 typedef struct __PGNCounter
 {
     uint32_t PGN;
@@ -112,7 +111,6 @@ typedef struct __TxProtocol
     uint8_t TxData[8];
     uint32_t TxMailbox;
 } TxProtocol;
-#pragma pack(pop)
 
 /* Exported variables --------------------------------------------------------*/
 extern uint8_t g_access_level; // temp.
