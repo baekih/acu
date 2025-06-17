@@ -26,6 +26,20 @@ uint8_t g_n2k_addr_saved = N2K_ADDR_DEFAULT;
 bool  g_n2k_is_addr_claiming = true;
 uint32_t g_n2k_last_addr_claim_time = 0;
 
+PGN060928NAME g_pgn060928_curr = {
+    .mUnique_Number = N2K_UNIQUE_NUMBER & 0x1FFFFF,
+    .mManufacturer_Code = N2K_MFG_CODE_FURUNO,
+    .mDevice_Instance = N2K_DEVICE_INSTANCE,
+    .mDevice_Instance_Lower = N2K_DEVICE_INSTANCE & 0x7,
+    .mDevice_Instance_Upper = (N2K_DEVICE_INSTANCE & 0xF8) >> 3,
+    .mDevice_Function = N2K_DEVICE_FUNCTION,
+    .mNMEA_Reserved = 0,
+    .mDevice_Class = N2K_DEVICE_CLASS,
+    .mSystem_Instance = N2K_SYSTEM_INSTANCE & 0x0F,
+    .mIndustry_Group = N2K_INDUSTRY_GROUP,
+    .mISO_Self_Configuration = N2K_ISO_SELF_CONFIG
+};
+
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx;
 rudder g_rudder = {
@@ -47,11 +61,6 @@ void NMEA2000_Open(void)
     sprintf((char*)&mManufacturersModelVersion[0], "%s", g_ver.hw);
     sprintf((char*)&mManufacturersSoftwareVersionCode[0], "%s:%s", g_ver.app, g_ver.boot);
 
-    mUnique_Number = N2K_UNIQUE_NUMBER & 0x1FFFFF;
-    mDevice_Intance = N2K_DEVICE_INSTANCE & 0x7F;
-    mSystem_Instance = N2K_SYSTEM_INSTANCE & 0x0F;
-
-    InitializeMyNMEAData();
     InitMultiPacketArray();
 
     PGN060928_SetInitialField();
@@ -262,9 +271,10 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
             break;
         case 60928: // ISO Address Claim
             if(pgnId->mSA == g_n2k_addr_local) {  // Address crash.
-                PGN060928_GetFieldValue(pgnId, len, buf, &g_PGN060928NAME);
+                PGN060928NAME pgn60928_name;
+                PGN060928_GetFieldValue(pgnId, len, buf, &pgn60928_name);
 
-                if (g_PGN060928NAME.mUnique_Number <= mMyPGN060928.mUnique_Number) {
+                if (pgn60928_name.mUnique_Number <= g_pgn060928_curr.mUnique_Number) {
                     if (g_n2k_addr_local != N2K_ADDR_CLAIM_FAIL) {
                         g_n2k_addr_local++;
 
@@ -317,8 +327,8 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
         {
             PGN061184STGF_GetFieldValue(pgnId, len, buf);
 
-            if(g_PGN061184STGFNAME.m61184Manufacturer_Code == mApp_FEC_Manufacturer_Code &&
-                    g_PGN061184STGFNAME.m61184Industry_Group == mIndustry_Group &&
+            if(g_PGN061184STGFNAME.m61184Manufacturer_Code == N2K_MFG_CODE_FURUNO &&
+                    g_PGN061184STGFNAME.m61184Industry_Group == g_pgn060928_curr.mIndustry_Group &&
                     g_PGN061184STGFNAME.m61184Identification_Code == 0 &&
                     (g_PGN061184STGFNAME.m61184Control_Function == 0 || g_PGN061184STGFNAME.m61184Control_Function == 1)){
                 PGN061184STGF_ProcessNameField(pgnId->mSA);

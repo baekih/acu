@@ -52,7 +52,7 @@ void PGN061184STGF_SetInitialField(uint32_t _61184Manufacturer_Code,
 void PGN061184STGF_SendNameField(uint8_t mSA)
 {
 //  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-    PGN061184STGF_SetInitialField(mApp_FEC_Manufacturer_Code, mIndustry_Group, 0, 3);
+    PGN061184STGF_SetInitialField(N2K_MFG_CODE_FURUNO, g_pgn060928_curr.mIndustry_Group, 0, 3);
 
     NMEA2000_SendParseMessages(getCanId(PGN061184STGF_priority, 61184, mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
 }

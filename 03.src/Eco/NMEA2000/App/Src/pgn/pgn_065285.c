@@ -33,9 +33,9 @@ void PGN065285_SetInitialField()
 {
     uint8_t Boot_State = 0; // temp.
 
-    PGN065285_SetFieldValue(mBoot_Airmar_Manufacturer_Code,
+    PGN065285_SetFieldValue(N2K_MFG_CODE_AIRMAR,
                             0x3,
-                            mIndustry_Group,
+                            g_pgn060928_curr.mIndustry_Group,
                             Boot_State,
                             0x1FFFFFFFFFFF);
 }

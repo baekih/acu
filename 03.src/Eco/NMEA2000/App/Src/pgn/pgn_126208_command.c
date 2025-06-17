@@ -87,17 +87,17 @@ void PGN126208COMMAND_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
 
                 if(paramPos == 3)
                 {
-                    mDevice_Intance = (mDevice_Intance & 0xF8) | (GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x07);
+                    g_pgn060928_curr.mDevice_Instance = (g_pgn060928_curr.mDevice_Instance & 0xF8) | (GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x07);
                     PGN126208CMD_paramPos += 1;
                 }
                 else if(paramPos == 4)
                 {
-                    mDevice_Intance = (mDevice_Intance & 0x07) | ((GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x1F) << 3);
+                    g_pgn060928_curr.mDevice_Instance = (g_pgn060928_curr.mDevice_Instance & 0x07) | ((GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x1F) << 3);
                     PGN126208CMD_paramPos += 1;
                 }
                 else if(paramPos == 8)
                 {
-                    mSystem_Instance = (GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x0F);
+                    g_pgn060928_curr.mSystem_Instance = (GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x0F);
                     PGN126208CMD_paramPos += 1;
                 }
                 else
@@ -130,13 +130,11 @@ void PGN126208COMMAND_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
         {
             HAL_Delay(1);
 
-            InitializeMyNMEAData();
-
             PGN060928_SetInitialField();
             PGN060928_SendAddressClaim();
 
-//          g_spayload_curr.addrclame.DevInstance = mDevice_Intance;
-//          g_spayload_curr.addrclame.SysInstance = mSystem_Instance;
+//          g_spayload_curr.addrclame.DevInstance = g_pgn060928_curr.mDevice_Instance;
+//          g_spayload_curr.addrclame.SysInstance = g_pgn060928_curr.mSystem_Instance;
         }
     }
     else if(g_PGN126208COMMANDNAME.mCommanded_PGN == 61184)
@@ -151,14 +149,14 @@ void PGN126208COMMAND_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
                 {
                     case 1:{
                         uint32_t ManufacturerCode = GetBuf_2ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x7FF;
-                        isParamValid = (ManufacturerCode == mApp_FEC_Manufacturer_Code);
+                        isParamValid = (ManufacturerCode == N2K_MFG_CODE_FURUNO);
 
                         PGN126208CMD_paramPos = PGN126208CMD_paramPos + 2;
                     }
                         break;
                     case 3:{
                         uint32_t IndustryGroup = GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x07;
-                        isParamValid = (IndustryGroup ==  mIndustry_Group);
+                        isParamValid = (IndustryGroup == g_pgn060928_curr.mIndustry_Group);
 
                         PGN126208CMD_paramPos = PGN126208CMD_paramPos + 1;
                     }
@@ -215,14 +213,14 @@ void PGN126208COMMAND_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
                 {
                     case 1:{
                         uint32_t ManufacturerCode = GetBuf_2ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x7FF;
-                        isParamValid = (ManufacturerCode == mBoot_Airmar_Manufacturer_Code);
+                        isParamValid = (ManufacturerCode == N2K_MFG_CODE_AIRMAR);
 
                         PGN126208CMD_paramPos = PGN126208CMD_paramPos + 2;
                     }
                         break;
                     case 3:{
                         uint32_t IndustryGroup = GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf);
-                        isParamValid = (IndustryGroup ==  mIndustry_Group);
+                        isParamValid = (IndustryGroup == g_pgn060928_curr.mIndustry_Group);
 
                         PGN126208CMD_paramPos = PGN126208CMD_paramPos + 1;
                     }
@@ -328,13 +326,13 @@ void PGN126208COMMAND_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
                 {
                     case 1:{
                         uint32_t ManufacturerCode = GetBuf_2ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x7FF;
-                        isParamValid = (ManufacturerCode == mBoot_Airmar_Manufacturer_Code) | (ManufacturerCode == mApp_FEC_Manufacturer_Code);
+                        isParamValid = (ManufacturerCode == N2K_MFG_CODE_AIRMAR) | (ManufacturerCode == N2K_MFG_CODE_FURUNO);
                         PGN126208CMD_paramPos = PGN126208CMD_paramPos + 2;
                     }
                         break;
                     case 3:{
                         uint32_t IndustryGroup = GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x07;
-                        isParamValid = (IndustryGroup ==  mIndustry_Group);
+                        isParamValid = (IndustryGroup == g_pgn060928_curr.mIndustry_Group);
                         PGN126208CMD_paramPos = PGN126208CMD_paramPos + 1;
                     }
                         break;

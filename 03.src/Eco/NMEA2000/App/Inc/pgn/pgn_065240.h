@@ -23,16 +23,16 @@
 typedef struct __PGN065240NAME
 {
     uint32_t mUnique_Number;                // 21 bits
-    uint32_t mManufacturer_Code;            // 11 bits
-    uint32_t mDevice_Instance_Lower;        // 3  bits
-    uint32_t mDevice_Instance_Upper;        // 5  bits
-    uint32_t mDevice_Function;              // 8  bits
-    uint32_t mNMEA_Reserved;                // 1  bits
-    uint32_t mDevice_Class;                 // 7  bits
-    uint32_t mSystem_Instance;              // 4  bits
-    uint32_t mIndustry_Group;               // 3  bits
-    uint32_t mISO_Self_Configuration;       // 1  bits
-    uint32_t mNew_Address;                  // 8  bits
+    uint16_t mManufacturer_Code;            // 11 bits
+    uint8_t mDevice_Instance_Lower;         // 3  bits
+    uint8_t mDevice_Instance_Upper;         // 5  bits
+    uint8_t mDevice_Function;               // 8  bits
+    uint8_t mNMEA_Reserved;                 // 1  bits
+    uint8_t mDevice_Class;                  // 7  bits
+    uint8_t mSystem_Instance;               // 4  bits
+    uint8_t mIndustry_Group;                // 3  bits
+    uint8_t mISO_Self_Configuration;        // 1  bits
+    uint8_t mNew_Address;                   // 8  bits
 } PGN065240NAME;
 
 /* Exported functions --------------------------------------------------------*/

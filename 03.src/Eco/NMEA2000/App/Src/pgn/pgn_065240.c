@@ -56,16 +56,16 @@ void PGN065240_SendAddressClaim(void)
 
 void PGN065240_ProcessNameField()
 {
-    if(g_PGN065240.mUnique_Number           != mMyPGN060928.mUnique_Number) return;
-    if(g_PGN065240.mManufacturer_Code       != mMyPGN060928.mManufacturer_Code) return;
-    if(g_PGN065240.mDevice_Instance_Lower   != mMyPGN060928.mDevice_Instance_Lower) return;
-    if(g_PGN065240.mDevice_Instance_Upper   != mMyPGN060928.mDevice_Instance_Upper) return;
-    if(g_PGN065240.mDevice_Function         != mMyPGN060928.mDevice_Function) return;
+    if(g_PGN065240.mUnique_Number           != g_pgn060928_curr.mUnique_Number) return;
+    if(g_PGN065240.mManufacturer_Code       != g_pgn060928_curr.mManufacturer_Code) return;
+    if(g_PGN065240.mDevice_Instance_Lower   != g_pgn060928_curr.mDevice_Instance_Lower) return;
+    if(g_PGN065240.mDevice_Instance_Upper   != g_pgn060928_curr.mDevice_Instance_Upper) return;
+    if(g_PGN065240.mDevice_Function         != g_pgn060928_curr.mDevice_Function) return;
     if(g_PGN065240.mNMEA_Reserved           != 0) return;
-    if(g_PGN065240.mDevice_Class            != mMyPGN060928.mDevice_Class) return;
-    if(g_PGN065240.mSystem_Instance         != mMyPGN060928.mSystem_Instance) return;
-    if(g_PGN065240.mIndustry_Group          != mMyPGN060928.mIndustry_Group) return;
-    if(g_PGN065240.mISO_Self_Configuration  != mMyPGN060928.mISO_Self_Configuration) return;
+    if(g_PGN065240.mDevice_Class            != g_pgn060928_curr.mDevice_Class) return;
+    if(g_PGN065240.mSystem_Instance         != g_pgn060928_curr.mSystem_Instance) return;
+    if(g_PGN065240.mIndustry_Group          != g_pgn060928_curr.mIndustry_Group) return;
+    if(g_PGN065240.mISO_Self_Configuration  != g_pgn060928_curr.mISO_Self_Configuration) return;
 
     if(0 <= g_PGN065240.mNew_Address && g_PGN065240.mNew_Address < N2K_ADDR_MAX_HIGH_SOURCE)
     {

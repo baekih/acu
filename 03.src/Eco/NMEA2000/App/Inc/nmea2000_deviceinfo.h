@@ -19,8 +19,6 @@
 
 /* Exported variables --------------------------------------------------------*/
 extern uint32_t mUnique_Number;
-extern const uint16_t mApp_FEC_Manufacturer_Code;
-extern const uint16_t mBoot_Airmar_Manufacturer_Code;
 extern const uint8_t mIndustry_Group;
 extern const uint8_t mDevice_Function;
 extern const uint8_t mDevice_Class;

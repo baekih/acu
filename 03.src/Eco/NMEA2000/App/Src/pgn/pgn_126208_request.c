@@ -97,43 +97,43 @@ void PGN126208REQUEST_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
 
                 if (paramPos == 2) {
                     uint32_t ManufacturerCode = GetBuf_2ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x7FF;
-                    isParamValid = (ManufacturerCode == mApp_FEC_Manufacturer_Code);
+                    isParamValid = (ManufacturerCode == N2K_MFG_CODE_FURUNO);
 
                     PGN126208REQ_paramPos = PGN126208REQ_paramPos + 2;
                 }
                 else if(paramPos == 3) {
                     uint32_t ISOECUInstance = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x07;
-                    isParamValid = (ISOECUInstance == (mDevice_Intance & 0x07));
+                    isParamValid = (ISOECUInstance == (g_pgn060928_curr.mDevice_Instance & 0x07));
 
                     PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                 }
                 else if(paramPos == 4) {
                     uint32_t ISOFunctionInstance = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x1F;
-                    isParamValid = (ISOFunctionInstance == ((mDevice_Intance & 0xF8) >> 3));
+                    isParamValid = (ISOFunctionInstance == ((g_pgn060928_curr.mDevice_Instance & 0xF8) >> 3));
 
                     PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                 }
                 else if(paramPos == 5) {
                     uint32_t ISOFunction = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf);
-                    isParamValid = (ISOFunction == mDevice_Function);
+                    isParamValid = (ISOFunction == g_pgn060928_curr.mDevice_Function);
 
                     PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                 }
                 else if(paramPos == 7) {
                     uint32_t ISODeviceClassInstance = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x7F;
-                    isParamValid = (ISODeviceClassInstance == mDevice_Class);
+                    isParamValid = (ISODeviceClassInstance == g_pgn060928_curr.mDevice_Class);
 
                     PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                 }
                 else if(paramPos == 8) {
                     uint32_t SystemIntance = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x0F;
-                    isParamValid = (SystemIntance == mSystem_Instance);
+                    isParamValid = (SystemIntance == g_pgn060928_curr.mSystem_Instance);
 
                     PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                 }
                 else if(paramPos == 9) {
                     uint32_t IndustryGroup = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x07;
-                    isParamValid = (IndustryGroup ==  mIndustry_Group);
+                    isParamValid = (IndustryGroup == g_pgn060928_curr.mIndustry_Group);
 
                     PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                 }
@@ -285,14 +285,14 @@ void PGN126208REQUEST_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
                 {
                     case 1:{
                         ManufacturerCode = GetBuf_2ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x7FF;
-                        isParamValid = (ManufacturerCode == mApp_FEC_Manufacturer_Code);
+                        isParamValid = (ManufacturerCode == N2K_MFG_CODE_FURUNO);
 
                         PGN126208REQ_paramPos = PGN126208REQ_paramPos + 2;
                     }
                         break;
                     case 3:{ // Industry Group. 3bit fixed to 4. skip
                         uint32_t IndustryGroup = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x07;
-                        isParamValid = (IndustryGroup ==  mIndustry_Group);
+                        isParamValid = (IndustryGroup == g_pgn060928_curr.mIndustry_Group);
 
                         PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                     }
@@ -384,13 +384,13 @@ void PGN126208REQUEST_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
                 {
                     case 1:
                         ManufacturerCode = GetBuf_2ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x7FF;
-                        isParamValid = (ManufacturerCode == mApp_FEC_Manufacturer_Code);
+                        isParamValid = (ManufacturerCode == N2K_MFG_CODE_FURUNO);
 
                         PGN126208REQ_paramPos = PGN126208REQ_paramPos + 2;
                         break;
                     case 3:
                         IndustryGroup = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x07;
-                        isParamValid = (IndustryGroup ==  mIndustry_Group);
+                        isParamValid = (IndustryGroup == g_pgn060928_curr.mIndustry_Group);
 
                         PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                         break;
@@ -443,13 +443,13 @@ void PGN126208REQUEST_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
                 {
                     case 1:
                         ManufacturerCode = GetBuf_2ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x7FF;
-                        isParamValid = (ManufacturerCode == mApp_FEC_Manufacturer_Code);
+                        isParamValid = (ManufacturerCode == N2K_MFG_CODE_FURUNO);
 
                         PGN126208REQ_paramPos = PGN126208REQ_paramPos + 2;
                         break;
                     case 3:
                         IndustryGroup = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x07;
-                        isParamValid = (IndustryGroup ==  mIndustry_Group);
+                        isParamValid = (IndustryGroup == g_pgn060928_curr.mIndustry_Group);
 
                         PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                         break;

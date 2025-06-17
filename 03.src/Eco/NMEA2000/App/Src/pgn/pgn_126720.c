@@ -33,8 +33,8 @@ PGN126720NAME PGN126720_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 
     if(g_access_level == 1)// for Boot-loader - AIRMAR: Master Reset
     {
-        if(Manufacturer_Code == mBoot_Airmar_Manufacturer_Code
-            && Industry_Group == mIndustry_Group
+        if(Manufacturer_Code == N2K_MFG_CODE_AIRMAR
+            && Industry_Group == g_pgn060928_curr.mIndustry_Group
             && ProperietaryID == 1)
         { // for Boot-loader - AIRMAR: Master Reset
           NVIC_SystemReset();
@@ -42,7 +42,7 @@ PGN126720NAME PGN126720_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
     }
     else
     {
-        if(Manufacturer_Code == mApp_FEC_Manufacturer_Code && Industry_Group == mIndustry_Group)
+        if(Manufacturer_Code == N2K_MFG_CODE_FURUNO && Industry_Group == g_pgn060928_curr.mIndustry_Group)
         { // for Boot-loader - AIRMAR: Master Reset
             if(IdentifyCode == 1 && ControlFunction == 0)
             {

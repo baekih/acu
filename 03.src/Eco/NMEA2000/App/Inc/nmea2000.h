@@ -135,6 +135,8 @@ extern uint8_t g_n2k_addr_saved;
 extern bool  g_n2k_is_addr_claiming;
 extern uint32_t g_n2k_last_addr_claim_time;
 
+extern PGN060928NAME g_pgn060928_curr;
+
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
 extern rudder g_rudder;
