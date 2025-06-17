@@ -16,15 +16,15 @@
 
 /* Private variables ---------------------------------------------------------*/
 uint32_t mUnique_Number;
-const uint32_t mApp_FEC_Manufacturer_Code = MFG_CODE_FURUNO;
-const uint32_t mBoot_Airmar_Manufacturer_Code = MFG_CODE_AIRMAR;
-uint32_t mDevice_Intance = 0;
-uint32_t mDevice_Function = 130;
-uint32_t mDevice_Class = 110;
-uint32_t mSystem_Instance = 0;
-uint32_t mName_Field_Reserved = 0x3;
-uint32_t mIndustry_Group = 4;
-uint32_t mISO_Self_Configuration = 1;
+const uint16_t mApp_FEC_Manufacturer_Code = N2K_MFG_CODE_FURUNO;
+const uint16_t mBoot_Airmar_Manufacturer_Code = N2K_MFG_CODE_AIRMAR;
+const uint8_t mIndustry_Group = N2K_INDUSTRY_GROUP;
+const uint8_t mDevice_Function = N2K_DEVICE_FUNCTION;
+const uint8_t mDevice_Class = N2K_DEVICE_CLASS;
+uint8_t mDevice_Intance;
+uint8_t mSystem_Instance;
+//uint32_t mName_Field_Reserved = 0x3;
+uint8_t mISO_Self_Configuration = N2K_ISO_SELF_CONFIG;
 
 
 uint32_t mLast_Send_Address_Claim_Time = 0;

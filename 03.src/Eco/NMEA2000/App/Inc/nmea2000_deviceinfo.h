@@ -13,23 +13,21 @@
 #include <stdint.h>
 
 /* Private define ------------------------------------------------------------*/
-#define NMEA2000_THIS_DEFAULT_ADDR      110
-
 #define PPGN_061184_SELFTEST            0
 #define PPGN_061184_KEYPAD              2
 #define PPGN_061184_MOUSE               3
 
 /* Exported variables --------------------------------------------------------*/
 extern uint32_t mUnique_Number;
-extern const uint32_t mApp_FEC_Manufacturer_Code;
-extern const uint32_t mBoot_Airmar_Manufacturer_Code;
-extern uint32_t mDevice_Intance;
-extern uint32_t mDevice_Function;
-extern uint32_t mDevice_Class;
-extern uint32_t mSystem_Instance;
-extern uint32_t mName_Field_Reserved;
-extern uint32_t mIndustry_Group;
-extern uint32_t mISO_Self_Configuration;
+extern const uint16_t mApp_FEC_Manufacturer_Code;
+extern const uint16_t mBoot_Airmar_Manufacturer_Code;
+extern const uint8_t mIndustry_Group;
+extern const uint8_t mDevice_Function;
+extern const uint8_t mDevice_Class;
+extern uint8_t mDevice_Intance;
+extern uint8_t mSystem_Instance;
+//extern uint32_t mName_Field_Reserved;
+extern uint8_t mISO_Self_Configuration;
 
 
 extern uint32_t mLast_Send_Address_Claim_Time;

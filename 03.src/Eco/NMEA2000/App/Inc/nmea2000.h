@@ -76,11 +76,11 @@ extern "C" {
 #define _MODEL_ID_HORIZONTAL_               "ECO-ACU"
 #define _MODEL_ID_                          _MODEL_ID_VERTICAL_
 
-#define MFG_CODE_AIRMAR                     (135)
-#define MFG_CODE_FURUNO                     (1855)
+#define N2K_MFG_CODE_AIRMAR                 (135)
+#define N2K_MFG_CODE_FURUNO                 (1855)
 
-#define PPGN_AIRMAR_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (MFG_CODE_AIRMAR << 0))  // 0x9887
-#define PPGN_FURUNO_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (MFG_CODE_FURUNO << 0))  // 0x9F3F
+#define PPGN_AIRMAR_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (N2K_MFG_CODE_AIRMAR << 0))  // 0x9887
+#define PPGN_FURUNO_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (N2K_MFG_CODE_FURUNO << 0))  // 0x9F3F
 
 #define CAN_RX_BUF_MAX                      256
 #define CAN_TX_BUF_MAX                      3
@@ -92,6 +92,10 @@ extern "C" {
 #define N2K_UNIQUE_NUMBER                   1048577
 #define N2K_DEVICE_INSTANCE                 1
 #define N2K_SYSTEM_INSTANCE                 1
+#define N2K_DEVICE_CLASS                    40      //40:rudder control
+#define N2K_DEVICE_FUNCTION                 150     //150:auto rudder
+#define N2K_INDUSTRY_GROUP                  4       //4:marine
+#define N2K_ISO_SELF_CONFIG                 1       //1:reserved
 
 #define N2K_ADDR_DEFAULT                    110
 #define N2K_ADDR_MAX_HIGH_SOURCE            252
