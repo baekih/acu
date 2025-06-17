@@ -50,8 +50,8 @@ void PGN065240_SendAddressClaim(void)
 
     NMEA2000_SendParseMessages(sendPgnId, sendPacketLength, sendNMEAPackets, 0);
 
-    mAddress_Claiming = true;
-    mLast_Send_Address_Claim_Time = HAL_GetTick();
+    g_n2k_is_addr_claiming = true;
+    g_n2k_last_addr_claim_time = HAL_GetTick();
 }
 
 void PGN065240_ProcessNameField()

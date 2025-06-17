@@ -21,10 +21,7 @@ void runEcoTaskMain(void *argument)
 
     for(;;)
     {
-        if ((osKernelGetTickCount() - mLast_Send_Address_Claim_Time) > 250)
-        {
-            mAddress_Claiming = false;
-        }
+        chkN2KLastAddrClaimTime();
 
         if(tick%60000 == 0)
         {
@@ -138,7 +135,7 @@ void runEcoTaskNMEA2KRx(void *argument)
 #else
     for(;;)
     {
-        runCANRXBuffer();
+        runN2KCANRXBuffer();
         osDelay(1);
     }
 

@@ -85,8 +85,6 @@ extern "C" {
 #define CAN_BUF_RX_MAX                      256
 #define CAN_BUF_TX_MAX                      3
 
-#define PGN_COUNT_MAX                       64
-
 #define N2K_TX_DELAY_MS                     1
 
 #define N2K_UNIQUE_NUMBER                   1048577
@@ -106,12 +104,6 @@ extern "C" {
 #define N2K_OUT_OF_ORDER_INT16              32765
 
 /* Private function prototypes -----------------------------------------------*/
-typedef struct __PGNCounter
-{
-    uint32_t PGN;
-    uint32_t value;
-} PGNCounter;
-
 typedef struct __RxProtocol
 {
     uint32_t canid;
@@ -140,6 +132,9 @@ extern uint8_t g_access_level; // temp.
 extern CANBuffer g_canbuf;
 extern uint32_t g_n2k_addr_local;
 extern uint32_t g_n2k_addr_saved;
+extern bool  g_n2k_is_addr_claiming;
+extern uint32_t g_n2k_last_addr_claim_time;
+
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
 extern rudder g_rudder;
@@ -149,10 +144,13 @@ void NMEA2000_Open(void);
 void NMEA2000_126993_heartbeat(void);
 
 void NMEA2000_SendParseMessages(NmeaPgn* pngId, uint32_t len, uint8_t *buf, uint8_t isFastPacket);
-void SendNonSingleFrame(NmeaPgn* pngId, uint32_t len, uint8_t *buf, uint32_t messagetype);
-void runCANRXBuffer(void);
-
 void ProcessNMEA2000MultiPacket(uint32_t proc_pgn_number, NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32_t messagetype);
+
+void SendNonSingleFrame(NmeaPgn* pngId, uint32_t len, uint8_t *buf, uint32_t messagetype);
+
+void runN2KCANRXBuffer(void);
+void chkN2KLastAddrClaimTime(void);
+
 
 #ifdef __cplusplus
 }

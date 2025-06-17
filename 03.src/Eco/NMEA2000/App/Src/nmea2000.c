@@ -10,11 +10,23 @@
 #include "common.h"
 #include "nmea2000.h"
 
+#define PGN_COUNT_MAX                       64
+
+/* Private function prototypes -----------------------------------------------*/
+typedef struct __PGNCounter
+{
+    uint32_t PGN;
+    uint32_t value;
+} PGNCounter;
+
 /* Private variables ---------------------------------------------------------*/
 uint8_t g_access_level = 0; // temp.
 CANBuffer g_canbuf = {.rx_idx_head = 0, .rx_idx_tail = 0, .tx_idx = 0};
 uint32_t g_n2k_addr_local;
 uint32_t g_n2k_addr_saved = N2K_ADDR_DEFAULT;
+bool  g_n2k_is_addr_claiming = true;
+uint32_t g_n2k_last_addr_claim_time = 0;
+
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx;
 rudder g_rudder = {
@@ -89,7 +101,7 @@ void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint
 {
     bool is_no_addr = false;
 
-    if ((mAddress_Claiming == true) && (pgnId->mPGN != 60928)){
+    if ((g_n2k_is_addr_claiming == true) && (pgnId->mPGN != 60928)){
         return;
     }
 
@@ -477,7 +489,7 @@ void NMEA2000_ReceiveParseMessages(uint32_t canId, uint8_t *buf, uint8_t len)
     }
 }
 
-void runCANRXBuffer(void)
+void runN2KCANRXBuffer(void)
 {
     static uint32_t remain = 0;
 
@@ -499,3 +511,10 @@ void runCANRXBuffer(void)
     }
 }
 
+void chkN2KLastAddrClaimTime(void)
+{
+    if ((osKernelGetTickCount() - g_n2k_last_addr_claim_time) > 250)
+    {
+        g_n2k_is_addr_claiming = false;
+    }
+}

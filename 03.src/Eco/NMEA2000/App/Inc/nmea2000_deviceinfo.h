@@ -29,10 +29,6 @@ extern uint8_t mSystem_Instance;
 //extern uint32_t mName_Field_Reserved;
 extern uint8_t mISO_Self_Configuration;
 
-
-extern uint32_t mLast_Send_Address_Claim_Time;
-extern uint8_t  mAddress_Claiming;
-
 extern uint32_t mNMEANetworkMessageDatabaseVersion;
 extern uint32_t mNMEAManufacturersProductCode;
 extern uint8_t  mManufacturersModelID[32];

@@ -90,13 +90,13 @@ void PGN060928_SendAddressClaim(void)
 
     NMEA2000_SendParseMessages(sendPgnId, sendPacketLength, sendNMEAPackets, 0);
 
-    mAddress_Claiming = true;
-    mLast_Send_Address_Claim_Time = HAL_GetTick();
+    g_n2k_is_addr_claiming = true;
+    g_n2k_last_addr_claim_time = HAL_GetTick();
 }
 
 void PGN060928_ProcessNameField()
 {
-    if (mAddress_Claiming == true)
+    if (g_n2k_is_addr_claiming == true)
     {
         printf("%s:%d In Address Claiming... \r\n",__FUNCTION__,__LINE__);
         return;

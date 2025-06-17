@@ -26,10 +26,6 @@ uint8_t mSystem_Instance;
 //uint32_t mName_Field_Reserved = 0x3;
 uint8_t mISO_Self_Configuration = N2K_ISO_SELF_CONFIG;
 
-
-uint32_t mLast_Send_Address_Claim_Time = 0;
-uint8_t  mAddress_Claiming = true;
-
 uint32_t mNMEANetworkMessageDatabaseVersion = 2100;
 uint32_t mNMEAManufacturersProductCode;
 
