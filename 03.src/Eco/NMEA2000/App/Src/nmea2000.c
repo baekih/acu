@@ -13,20 +13,13 @@
 
 uint8_t g_access_level = 0; // temp.
 
-CANBuffer g_canbuf;
-
-uint16_t  rxCanLastIndex = 0;
-uint16_t  rxCanFirstIndex = 0;
-
-uint8_t txCanBufferCount = 0;
+CANBuffer g_canbuf = {.rx_idx_head = 0, .rx_idx_tail = 0, .tx_idx = 0};
 
 /* Private variables ---------------------------------------------------------*/
 PGNCounter g_PGNCount[PGN_COUNT_MAX];	// Rx array
 
 
 uint32_t mIsNoAddress = false;
-
-uint32_t mDataLastReceivedTime = 0;
 
 uint32_t MaxPGNSequenceCounters = 0;
 uint32_t *PGNSequenceCounters = 0;
@@ -497,21 +490,21 @@ void runCANRXBuffer(void)
 {
     static uint32_t remain = 0;
 
-    if(rxCanLastIndex >= rxCanFirstIndex)
+    if(g_canbuf.rx_idx_tail >= g_canbuf.rx_idx_head)
     {
-        remain =  rxCanLastIndex - rxCanFirstIndex;
+        remain =  g_canbuf.rx_idx_tail - g_canbuf.rx_idx_head;
     }
     else
     {
-        remain = (CAN_RX_BUF_MAX - rxCanFirstIndex);
-        remain += rxCanLastIndex;
+        remain = (CAN_BUF_RX_MAX - g_canbuf.rx_idx_head);
+        remain += g_canbuf.rx_idx_tail;
     }
 
     if(remain != 0){
-        NMEA2000_ReceiveParseMessages(g_canbuf.rx[rxCanFirstIndex].canid, g_canbuf.rx[rxCanFirstIndex].dat, g_canbuf.rx[rxCanFirstIndex].len);
+        NMEA2000_ReceiveParseMessages(g_canbuf.rx[g_canbuf.rx_idx_head].canid, g_canbuf.rx[g_canbuf.rx_idx_head].dat, g_canbuf.rx[g_canbuf.rx_idx_head].len);
 
-        rxCanFirstIndex++;
-        rxCanFirstIndex %= CAN_RX_BUF_MAX;
+        g_canbuf.rx_idx_head++;
+        g_canbuf.rx_idx_head %= CAN_BUF_RX_MAX;
     }
 }
 

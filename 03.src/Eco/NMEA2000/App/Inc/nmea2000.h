@@ -82,8 +82,8 @@ extern "C" {
 #define PPGN_AIRMAR_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (N2K_MFG_CODE_AIRMAR << 0))  // 0x9887
 #define PPGN_FURUNO_MFGCODE                 ((0x04 << 13) | (0x3 << 11) | (N2K_MFG_CODE_FURUNO << 0))  // 0x9F3F
 
-#define CAN_RX_BUF_MAX                      256
-#define CAN_TX_BUF_MAX                      3
+#define CAN_BUF_RX_MAX                      256
+#define CAN_BUF_TX_MAX                      3
 
 #define PGN_COUNT_MAX                       64
 
@@ -128,27 +128,19 @@ typedef struct __TxProtocol
 
 typedef struct __CANBuffer
 {
-    RxProtocol rx[CAN_RX_BUF_MAX];
-    TxProtocol tx[CAN_TX_BUF_MAX];
+    RxProtocol rx[CAN_BUF_RX_MAX];
+    uint16_t   rx_idx_head;
+    uint16_t   rx_idx_tail;
+    TxProtocol tx[CAN_BUF_TX_MAX];
+    uint8_t    tx_idx;
 } CANBuffer;
 
 /* Exported variables --------------------------------------------------------*/
 extern uint8_t g_access_level; // temp.
-
+extern CANBuffer g_canbuf;
 extern uint32_t g_n2k_addr_local;
-
-extern uint32_t mDataLastReceivedTime;
-
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
-
-extern CANBuffer g_canbuf;
-
-extern uint16_t  rxCanLastIndex;
-extern uint16_t  rxCanFirstIndex;
-
-extern uint8_t txCanBufferCount;
-
 extern rudder g_rudder;
 
 /* Exported functions --------------------------------------------------------*/
