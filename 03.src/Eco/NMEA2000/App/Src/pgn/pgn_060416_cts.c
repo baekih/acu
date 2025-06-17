@@ -74,7 +74,7 @@ void PGN060416CTS_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 
             HAL_Delay(1);
             PGN060160_SetFieldValue(sendFrame, multiPacketData);
-            PGN060160_SendNameField(pgnId->mSA, localSourceAddr);
+            PGN060160_SendNameField(pgnId->mSA, g_n2k_addr_local);
 
             sendFrame++;
 

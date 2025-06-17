@@ -136,14 +136,14 @@ uint32_t PGN060160_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 
             PGN060416EOM_SetFieldValue(FunctionCodeEOM, completeMultiPacketData.mTotalMessageByteSize,	completeMultiPacketData.mTotalNumberOfFrametoTransmit,
                     0xFF,completeMultiPacketData.mPGNMultiPacketMessage);
-            PGN060416EOM_SendNameField(getCanId(PGN060416EOM_priority, 60416, pgnId->mSA, localSourceAddr));
+            PGN060416EOM_SendNameField(getCanId(PGN060416EOM_priority, 60416, pgnId->mSA, g_n2k_addr_local));
 
             return PACKET_PROC_RESULT_MULTIPACKET_DONE;
         }
         else{
             if ((pMultiPacket->mCurrentPacketFrameNumber % 2) == 0) {
                 PGN060416CTS_SetFieldValue(FunctionCodeCTS, 2, pMultiPacket->mCurrentPacketFrameNumber + 1, 0xFFFF, pMultiPacket->mPGNMultiPacketMessage);
-                PGN060416CTS_SendNameField(getCanId(PGN060416CTS_priority, 60416, pgnId->mSA, localSourceAddr));
+                PGN060416CTS_SendNameField(getCanId(PGN060416CTS_priority, 60416, pgnId->mSA, g_n2k_addr_local));
             }
 
             pMultiPacket->mCurrentPacketFrameNumber++;

@@ -94,7 +94,7 @@ uint32_t PGN059904_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 void PGN059904_SendNameField(uint32_t mDA)
 {
     NMEA2000_SendParseMessages(
-            getCanId(PGN059904_priority, 59904, mDA, localSourceAddr),
+            getCanId(PGN059904_priority, 59904, mDA, g_n2k_addr_local),
             sendPacketLength,
             sendNMEAPackets,
             0);

@@ -103,5 +103,5 @@ void PGN126720_ResetGoup_SetFieldValue()
 
 void PGN126720_ProcessNameField(NmeaPgn* pgnId)
 {
-    SendNonSingleFrame(getCanId(PGN126720_priority, 126720, pgnId->mSA, localSourceAddr), sendPacketLength, sendNMEAPackets, REQUEST_MESSAGE_TYPE_FASTPACKET);
+    SendNonSingleFrame(getCanId(PGN126720_priority, 126720, pgnId->mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, REQUEST_MESSAGE_TYPE_FASTPACKET);
 }

@@ -92,7 +92,7 @@ void PGN065287_FEC_SendNameField(void)
     Add4ByteUInt( 0xFFFFFFFF );
     Add1ByteUInt( 0xFF );
 
-    NMEA2000_SendParseMessages(getCanId(PGN065287_priority, 65287, 255, localSourceAddr), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(getCanId(PGN065287_priority, 65287, 255, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
 }
 
 void PGN065287_Airmar_SendNameField(NmeaPgn* pgnId)
@@ -116,5 +116,5 @@ void PGN065287_Airmar_SendNameField(NmeaPgn* pgnId)
 
     Add4ByteUInt( access_key );
 
-    NMEA2000_SendParseMessages(getCanId(PGN065287_priority, 65287, pgnId->mSA, localSourceAddr), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(getCanId(PGN065287_priority, 65287, pgnId->mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
 }

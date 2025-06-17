@@ -35,6 +35,6 @@ void PGN126464_SetFieldValue(uint32_t _PGN_Group_Function_Code,
 
 void PGN126464_ProcessNameField(NmeaPgn* pgnId, uint32_t messagetype)
 {
-    SendNonSingleFrame(getCanId(PGN126464_priority, 126464, pgnId->mSA, localSourceAddr), sendPacketLength, sendNMEAPackets, messagetype);
+    SendNonSingleFrame(getCanId(PGN126464_priority, 126464, pgnId->mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, messagetype);
 }
 

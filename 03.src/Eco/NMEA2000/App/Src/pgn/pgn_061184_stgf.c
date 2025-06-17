@@ -54,7 +54,7 @@ void PGN061184STGF_SendNameField(uint8_t mSA)
 //  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
     PGN061184STGF_SetInitialField(mApp_FEC_Manufacturer_Code, mIndustry_Group, 0, 3);
 
-    NMEA2000_SendParseMessages(getCanId(PGN061184STGF_priority, 61184, mSA, localSourceAddr), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(getCanId(PGN061184STGF_priority, 61184, mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
 }
 
 void  PGN061184STGF_ProcessNameField(uint8_t mSA)

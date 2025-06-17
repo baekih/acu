@@ -38,5 +38,5 @@ void PGN127245_ProcessNameField(NmeaPgn* pgnId)
     Add2ByteUInt(g_rudder.position);
     Add2ByteUInt(0xFFFF);
 
-    NMEA2000_SendParseMessages(getCanId(PGN127245_PRIORITY, PGN127245_PGN, BROADCAST_DESTINATION_ADDR, localSourceAddr), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(getCanId(PGN127245_PRIORITY, PGN127245_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
 }

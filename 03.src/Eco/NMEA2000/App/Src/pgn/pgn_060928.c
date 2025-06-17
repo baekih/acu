@@ -86,7 +86,7 @@ void PGN060928_SetInitialField()
 
 void PGN060928_SendAddressClaim(void)
 {
-    NmeaPgn* sendPgnId = getCanId(PGN060928_PRIORITY, PGN060928_PGN, BROADCAST_DESTINATION_ADDR, localSourceAddr);
+    NmeaPgn* sendPgnId = getCanId(PGN060928_PRIORITY, PGN060928_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local);
 
     NMEA2000_SendParseMessages(sendPgnId, sendPacketLength, sendNMEAPackets, 0);
 
@@ -102,7 +102,7 @@ void PGN060928_ProcessNameField()
         return;
     }
 
-    NmeaPgn* sendPgnId = getCanId(PGN060928_PRIORITY, PGN060928_PGN, BROADCAST_DESTINATION_ADDR, localSourceAddr);
+    NmeaPgn* sendPgnId = getCanId(PGN060928_PRIORITY, PGN060928_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local);
 
     NMEA2000_SendParseMessages(sendPgnId, sendPacketLength, sendNMEAPackets, 0);
 }

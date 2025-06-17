@@ -24,8 +24,6 @@ uint8_t txCanBufferCount = 0;
 /* Private variables ---------------------------------------------------------*/
 PGNCounter g_PGNCount[PGN_COUNT_MAX];	// Rx array
 
-uint32_t localSourceAddr = 0;
-uint32_t savedSourceAddr = 0;
 
 uint32_t mIsNoAddress = false;
 
@@ -34,7 +32,8 @@ uint32_t mDataLastReceivedTime = 0;
 uint32_t MaxPGNSequenceCounters = 0;
 uint32_t *PGNSequenceCounters = 0;
 
-uint8_t nmea2000_addr = 110;
+uint32_t g_n2k_addr_local;
+uint32_t g_n2k_addr_saved = N2K_ADDR_DEFAULT;
 
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx;
@@ -49,8 +48,7 @@ rudder g_rudder = {
 /* Private functions ---------------------------------------------------------*/
 void NMEA2000_Open(void)
 {
-    savedSourceAddr = nmea2000_addr;
-    localSourceAddr = savedSourceAddr;
+    g_n2k_addr_local = g_n2k_addr_saved;
 
     sprintf((char*)g_ver.hw, "%02d", HW_VERSION);
     sprintf((char*)g_ver.boot, "%02d", BOOT_VERSION);
@@ -187,7 +185,7 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
         memcpy(sendMultiPacket.mMergedMultiPacket, buf, len);
 
         PGN060416RTS_SetFieldValue(FunctionCodeRTS, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
-        PGN060416RTS_SendNameField(getCanId(PGN060416RTS_priority, 60416, pgnId->mPS, localSourceAddr));
+        PGN060416RTS_SendNameField(getCanId(PGN060416RTS_priority, 60416, pgnId->mPS, g_n2k_addr_local));
 
     }
     else if (messagetype == REQUEST_MESSAGE_TYPE_BAM_PACKET) {
@@ -197,7 +195,7 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
         totalNumberOfFrametoTransmit = (len / 7) + (((len % 7) == 0) ? 0 : 1);
 
         PGN060416BAM_SetFieldValue(FunctionCodeBAM, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
-        PGN060416BAM_SendNameField(getCanId(PGN060416BAM_priority, 60416, BROADCAST_DESTINATION_ADDR, localSourceAddr));
+        PGN060416BAM_SendNameField(getCanId(PGN060416BAM_priority, 60416, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local));
 
         for (uint8_t packetIndex = 0; packetIndex < totalNumberOfFrametoTransmit; packetIndex++) {
             memset(&Multipacket[0], 0xff, 7);
@@ -214,7 +212,7 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
             osDelay(N2K_TX_DELAY_MS);
 
             PGN060160_SetFieldValue(packetIndex + 1, &Multipacket[0]);
-            PGN060160_SendNameField(BROADCAST_DESTINATION_ADDR, localSourceAddr);
+            PGN060160_SendNameField(BROADCAST_DESTINATION_ADDR, g_n2k_addr_local);
         }
     }
 }
@@ -239,7 +237,7 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
     {
         case 59392: // ISO Acknowledgement for Certification
             break;
-        case 59904:	// ISO Request
+        case 59904: // ISO Request
         {
             PGN059904_GetFieldValue(pgnId, len, buf);
             PGN059904_ProcessNameField(pgnId, len, buf);
@@ -262,39 +260,37 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
             }
         }
             break;
-        case 60416:	// ISO Transport Protocol, Connection Management - BAM group function
+        case 60416: // ISO Transport Protocol, Connection Management - BAM group function
         {
             PGN060416_GetFieldValue(pgnId, len, buf);
             PGN060416_ProcessNameField(pgnId, len, buf);
         }
             break;
-        case 60928:	// ISO Address Claim
-            if(pgnId->mSA == localSourceAddr) {  // Address crash.
+        case 60928: // ISO Address Claim
+            if(pgnId->mSA == g_n2k_addr_local) {  // Address crash.
                 PGN060928_GetFieldValue(pgnId, len, buf, &g_PGN060928NAME);
 
                 if (g_PGN060928NAME.mUnique_Number <= mMyPGN060928.mUnique_Number) {
-                    if (localSourceAddr != N2K_ADDR_CLAIM_FAIL) {
-                        localSourceAddr++;
+                    if (g_n2k_addr_local != N2K_ADDR_CLAIM_FAIL) {
+                        g_n2k_addr_local++;
 
 //                      Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
 //                      EEPROM_Write_Byte(EEPROM_NMEA2000ADDR_ADDR, localSourceAddr, 0);
+                        g_n2k_addr_saved = g_n2k_addr_local;
 
-                        nmea2000_addr = localSourceAddr;
-
-                        printf("New NMEA2000 addr:%ld\r\n", localSourceAddr);
+                        printf("New NMEA2000 addr:%ld\r\n", g_n2k_addr_local);
                     }
 
-                    if (localSourceAddr >= N2K_ADDR_MAX_HIGH_SOURCE && localSourceAddr < N2K_ADDR_CLAIM_FAIL) {
-                        localSourceAddr = 0;
+                    if (g_n2k_addr_local >= N2K_ADDR_MAX_HIGH_SOURCE && g_n2k_addr_local < N2K_ADDR_CLAIM_FAIL) {
+                        g_n2k_addr_local = 0;
 
 //                      Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
 //                      EEPROM_Write_Byte(EEPROM_NMEA2000ADDR_ADDR, localSourceAddr, 0);
+                        g_n2k_addr_saved = g_n2k_addr_local;
 
-                        nmea2000_addr = localSourceAddr;
-
-                        printf("New NMEA2000 addr:%ld\r\n", localSourceAddr);
-                    } else if (localSourceAddr == savedSourceAddr) {
-                        localSourceAddr = N2K_ADDR_CLAIM_FAIL;
+                        printf("New NMEA2000 addr:%ld\r\n", g_n2k_addr_local);
+                    } else if (g_n2k_addr_local == N2K_ADDR_DEFAULT) {
+                        g_n2k_addr_local = N2K_ADDR_CLAIM_FAIL;
                     }
                 }
 
@@ -487,7 +483,7 @@ void NMEA2000_ReceiveParseMessages(uint32_t canId, uint8_t *buf, uint8_t len)
 
     if(pgnId->mPF <= 239)
     {
-        if(pgnId->mPS == localSourceAddr || pgnId->mPS == 255)
+        if(pgnId->mPS == g_n2k_addr_local || pgnId->mPS == 255)
         {
             ProcessNMEA2000SinglePacket(pgnId, len, buf);
         }

@@ -30,7 +30,7 @@ void PGN130822_ProcessNameField(NmeaPgn* pgnId)
     Add1ByteUInt(0); // 7
     Add1ByteUInt(0); // 8
 
-    SendNonSingleFrame(getCanId(PGN130822_PRIORITY, PGN130822_PGN, pgnId->mSA, localSourceAddr), sendPacketLength,
+    SendNonSingleFrame(getCanId(PGN130822_PRIORITY, PGN130822_PGN, pgnId->mSA, g_n2k_addr_local), sendPacketLength,
                      sendNMEAPackets,
                      REQUEST_MESSAGE_TYPE_FASTPACKET);
 }

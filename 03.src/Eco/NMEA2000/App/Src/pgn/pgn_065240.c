@@ -46,7 +46,7 @@ void PGN065240_SetInitialField(PGN065240NAME *pPGN065240)
 
 void PGN065240_SendAddressClaim(void)
 {
-    NmeaPgn* sendPgnId = getCanId(PGN065240_PRIORITY, PGN065240_PGN, BROADCAST_DESTINATION_ADDR, localSourceAddr);
+    NmeaPgn* sendPgnId = getCanId(PGN065240_PRIORITY, PGN065240_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local);
 
     NMEA2000_SendParseMessages(sendPgnId, sendPacketLength, sendNMEAPackets, 0);
 
@@ -67,10 +67,10 @@ void PGN065240_ProcessNameField()
     if(g_PGN065240.mIndustry_Group          != mMyPGN060928.mIndustry_Group) return;
     if(g_PGN065240.mISO_Self_Configuration  != mMyPGN060928.mISO_Self_Configuration) return;
 
-    if(g_PGN065240.mNew_Address >= 0 && g_PGN065240.mNew_Address <= 251)
+    if(0 <= g_PGN065240.mNew_Address && g_PGN065240.mNew_Address < N2K_ADDR_MAX_HIGH_SOURCE)
     {
-        printf("AddrChange[%ld->%ld]\r\n", localSourceAddr, g_PGN065240.mNew_Address);
-        localSourceAddr = g_PGN065240.mNew_Address;
+        printf("AddrChange[%ld->%ld]\r\n", g_n2k_addr_local, g_PGN065240.mNew_Address);
+        g_n2k_addr_local = g_PGN065240.mNew_Address;
 //      g_spayload_curr.nmea2000_addr = localSourceAddr;
 
         PGN060928_SetInitialField();
