@@ -126,6 +126,12 @@ typedef struct __TxProtocol
     uint32_t TxMailbox;
 } TxProtocol;
 
+typedef struct __CANBuffer
+{
+    RxProtocol rx[CAN_RX_BUF_MAX];
+    TxProtocol tx[CAN_TX_BUF_MAX];
+} CANBuffer;
+
 /* Exported variables --------------------------------------------------------*/
 extern uint8_t g_access_level; // temp.
 
@@ -136,8 +142,7 @@ extern uint32_t mDataLastReceivedTime;
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
 
-extern RxProtocol g_RxCan[CAN_RX_BUF_MAX];   // Rx array
-extern TxProtocol g_TxCan[CAN_TX_BUF_MAX];  // Tx array
+extern CANBuffer g_canbuf;
 
 extern uint16_t  rxCanLastIndex;
 extern uint16_t  rxCanFirstIndex;
@@ -152,7 +157,8 @@ void NMEA2000_126993_heartbeat(void);
 
 void NMEA2000_SendParseMessages(NmeaPgn* pngId, uint32_t len, uint8_t *buf, uint8_t isFastPacket);
 void SendNonSingleFrame(NmeaPgn* pngId, uint32_t len, uint8_t *buf, uint32_t messagetype);
-void NMEA2000_ReceiveParseMessages(uint32_t canId, uint8_t *buf, uint8_t len);
+//void NMEA2000_ReceiveParseMessages(uint32_t canId, uint8_t *buf, uint8_t len);
+void runCANRXBuffer(void);
 
 void ProcessNMEA2000MultiPacket(uint32_t proc_pgn_number, NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32_t messagetype);
 

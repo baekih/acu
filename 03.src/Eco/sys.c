@@ -806,9 +806,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
     }
 #else
-    g_RxCan[rxCanLastIndex].canid = RxHeader.ExtId;
-    g_RxCan[rxCanLastIndex].len = RxHeader.DLC;
-    memcpy(g_RxCan[rxCanLastIndex].dat, RxPacket.dat, sizeof(RxPacket.dat));
+    g_canbuf.rx[rxCanLastIndex].canid = RxHeader.ExtId;
+    g_canbuf.rx[rxCanLastIndex].len = RxHeader.DLC;
+    memcpy(g_canbuf.rx[rxCanLastIndex].dat, RxPacket.dat, sizeof(RxPacket.dat));
 
     rxCanLastIndex++;
     rxCanLastIndex %= CAN_RX_BUF_MAX;
@@ -826,7 +826,7 @@ void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
 {
     uint16_t count = 100;
 
-    while(HAL_CAN_IsTxMessagePending(&hcan1, g_TxCan[txCanBufferCount].TxMailbox) == 1)
+    while(HAL_CAN_IsTxMessagePending(&hcan1, g_canbuf.tx[txCanBufferCount].TxMailbox) == 1)
      {
         osDelay(1);
 
@@ -842,14 +842,14 @@ void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
     printf("\n");
 #endif
 
-    g_TxCan[txCanBufferCount].TxHeader.ExtId = rawCanId;
-    g_TxCan[txCanBufferCount].TxHeader.IDE = CAN_ID_EXT;
-    g_TxCan[txCanBufferCount].TxHeader.DLC = len;
+    g_canbuf.tx[txCanBufferCount].TxHeader.ExtId = rawCanId;
+    g_canbuf.tx[txCanBufferCount].TxHeader.IDE = CAN_ID_EXT;
+    g_canbuf.tx[txCanBufferCount].TxHeader.DLC = len;
 
-    memcpy(g_TxCan[txCanBufferCount].TxData, buf, len);
+    memcpy(g_canbuf.tx[txCanBufferCount].TxData, buf, len);
 
-    if(HAL_CAN_AddTxMessage(&hcan1, &g_TxCan[txCanBufferCount].TxHeader,
-            g_TxCan[txCanBufferCount].TxData, &g_TxCan[txCanBufferCount].TxMailbox) != HAL_OK)
+    if(HAL_CAN_AddTxMessage(&hcan1, &g_canbuf.tx[txCanBufferCount].TxHeader,
+                            g_canbuf.tx[txCanBufferCount].TxData, &g_canbuf.tx[txCanBufferCount].TxMailbox) != HAL_OK)
     {
         printf(" Error HAL_CAN_AddTxMessage hcan1 !!\r\n");
         osDelay(1);

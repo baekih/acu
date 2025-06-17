@@ -136,26 +136,9 @@ void runEcoTaskNMEA2KRx(void *argument)
         }
     }
 #else
-    int remain = 0;
-
     for(;;)
     {
-        if(rxCanLastIndex >= rxCanFirstIndex)
-        {
-            remain =  rxCanLastIndex - rxCanFirstIndex;
-        }
-        else
-        {
-            remain = (CAN_RX_BUF_MAX - rxCanFirstIndex);
-            remain += rxCanLastIndex;
-        }
-
-        if(remain != 0){
-            NMEA2000_ReceiveParseMessages(g_RxCan[rxCanFirstIndex].canid, g_RxCan[rxCanFirstIndex].dat, g_RxCan[rxCanFirstIndex].len);
-
-            rxCanFirstIndex++;
-            rxCanFirstIndex %= CAN_RX_BUF_MAX;
-        }
+        runCANRXBuffer();
         osDelay(1);
     }
 
@@ -192,7 +175,6 @@ void runEcoTaskNMEA2KTx(void *argument)
     {
         osDelay(1);
     }
-
 #endif
 }
 

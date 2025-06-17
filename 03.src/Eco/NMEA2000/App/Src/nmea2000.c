@@ -13,8 +13,7 @@
 
 uint8_t g_access_level = 0; // temp.
 
-RxProtocol g_RxCan[CAN_RX_BUF_MAX];     // Rx array
-TxProtocol g_TxCan[CAN_TX_BUF_MAX];     // Tx array
+CANBuffer g_canbuf;
 
 uint16_t  rxCanLastIndex = 0;
 uint16_t  rxCanFirstIndex = 0;
@@ -491,6 +490,28 @@ void NMEA2000_ReceiveParseMessages(uint32_t canId, uint8_t *buf, uint8_t len)
     else
     {
         ProcessNMEA2000SinglePacket(pgnId, len, buf);
+    }
+}
+
+void runCANRXBuffer(void)
+{
+    static uint32_t remain = 0;
+
+    if(rxCanLastIndex >= rxCanFirstIndex)
+    {
+        remain =  rxCanLastIndex - rxCanFirstIndex;
+    }
+    else
+    {
+        remain = (CAN_RX_BUF_MAX - rxCanFirstIndex);
+        remain += rxCanLastIndex;
+    }
+
+    if(remain != 0){
+        NMEA2000_ReceiveParseMessages(g_canbuf.rx[rxCanFirstIndex].canid, g_canbuf.rx[rxCanFirstIndex].dat, g_canbuf.rx[rxCanFirstIndex].len);
+
+        rxCanFirstIndex++;
+        rxCanFirstIndex %= CAN_RX_BUF_MAX;
     }
 }
 
