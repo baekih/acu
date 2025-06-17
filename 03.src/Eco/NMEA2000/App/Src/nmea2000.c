@@ -7,7 +7,6 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "common.h"
 #include "nmea2000.h"
 
 #define PGN_COUNT_MAX                       64
@@ -22,8 +21,8 @@ typedef struct __PGNCounter
 /* Private variables ---------------------------------------------------------*/
 uint8_t g_access_level = 0; // temp.
 CANBuffer g_canbuf = {.rx_idx_head = 0, .rx_idx_tail = 0, .tx_idx = 0};
-uint32_t g_n2k_addr_local;
-uint32_t g_n2k_addr_saved = N2K_ADDR_DEFAULT;
+uint8_t g_n2k_addr_local;
+uint8_t g_n2k_addr_saved = N2K_ADDR_DEFAULT;
 bool  g_n2k_is_addr_claiming = true;
 uint32_t g_n2k_last_addr_claim_time = 0;
 

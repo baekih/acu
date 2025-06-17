@@ -42,7 +42,7 @@ NmeaPgn* CanIDToNmeaPGN(uint32_t rawCanId)
 
 NmeaPgn _nmeaPGN;
 
-NmeaPgn* getCanId(uint32_t priority, uint32_t pgn, uint32_t destAddr, uint32_t sourceAddr)
+NmeaPgn* getCanId(uint8_t priority, uint32_t pgn, uint8_t destAddr, uint8_t sourceAddr)
 {
     _nmeaPGN.mPriority      = priority;
     _nmeaPGN.mPGN           = pgn;

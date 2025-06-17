@@ -16,20 +16,20 @@
 typedef struct _NmeaPgn_
 {
     uint32_t mCanNumericID;
-
-    uint32_t mPriority;
-    uint32_t mEDP;
     uint32_t mPGN;
-    uint32_t mDP;
-    uint32_t mPF;
-    uint32_t mPS;
-    uint32_t mSA;
+
+    uint8_t mPriority;
+    uint8_t mEDP;
+    uint8_t mDP;
+    uint8_t mPF;
+    uint8_t mPS;
+    uint8_t mSA;
 } NmeaPgn;
 #pragma pack(pop)
 
 NmeaPgn* CanIDToNmeaPGN(uint32_t rawCanId);
 
 NmeaPgn* getRcvNmeaPgn();
-NmeaPgn* getCanId(uint32_t priority, uint32_t pgn, uint32_t destAddr, uint32_t sourceAddr);
+NmeaPgn* getCanId(uint8_t priority, uint32_t pgn, uint8_t destAddr, uint8_t sourceAddr);
 
 #endif /* NMEA2000_INC_NMEA2000_PGNBASE_H_ */

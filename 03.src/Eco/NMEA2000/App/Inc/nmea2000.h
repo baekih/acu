@@ -130,8 +130,8 @@ typedef struct __CANBuffer
 /* Exported variables --------------------------------------------------------*/
 extern uint8_t g_access_level; // temp.
 extern CANBuffer g_canbuf;
-extern uint32_t g_n2k_addr_local;
-extern uint32_t g_n2k_addr_saved;
+extern uint8_t g_n2k_addr_local;
+extern uint8_t g_n2k_addr_saved;
 extern bool  g_n2k_is_addr_claiming;
 extern uint32_t g_n2k_last_addr_claim_time;
 
