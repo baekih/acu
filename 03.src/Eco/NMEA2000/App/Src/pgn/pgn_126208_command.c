@@ -87,12 +87,12 @@ void PGN126208COMMAND_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
 
                 if(paramPos == 3)
                 {
-                    g_pgn060928_curr.mDevice_Instance = (g_pgn060928_curr.mDevice_Instance & 0xF8) | (GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x07);
+                    g_pgn060928_curr.mDevice_Instance_Lower = (GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x07);
                     PGN126208CMD_paramPos += 1;
                 }
                 else if(paramPos == 4)
                 {
-                    g_pgn060928_curr.mDevice_Instance = (g_pgn060928_curr.mDevice_Instance & 0x07) | ((GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x1F) << 3);
+                    g_pgn060928_curr.mDevice_Instance_Upper = (GetBuf_1ByteUInt(size, PGN126208CMD_paramPos, buf) & 0x1F) << 3;
                     PGN126208CMD_paramPos += 1;
                 }
                 else if(paramPos == 8)

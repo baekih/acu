@@ -103,13 +103,13 @@ void PGN126208REQUEST_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
                 }
                 else if(paramPos == 3) {
                     uint32_t ISOECUInstance = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x07;
-                    isParamValid = (ISOECUInstance == (g_pgn060928_curr.mDevice_Instance & 0x07));
+                    isParamValid = (ISOECUInstance == g_pgn060928_curr.mDevice_Instance_Lower);
 
                     PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                 }
                 else if(paramPos == 4) {
                     uint32_t ISOFunctionInstance = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x1F;
-                    isParamValid = (ISOFunctionInstance == ((g_pgn060928_curr.mDevice_Instance & 0xF8) >> 3));
+                    isParamValid = (ISOFunctionInstance == g_pgn060928_curr.mDevice_Instance_Upper);
 
                     PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
                 }

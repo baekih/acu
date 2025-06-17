@@ -24,7 +24,6 @@ typedef struct __PGN060928NAME
 {
     uint32_t mUnique_Number;                // 21 bits
     uint16_t mManufacturer_Code;            // 11 bits
-    uint8_t  mDevice_Instance;              // 8  bits
     uint8_t  mDevice_Instance_Lower;        // 3  bits
     uint8_t  mDevice_Instance_Upper;        // 5  bits
     uint8_t  mDevice_Function;              // 8  bits

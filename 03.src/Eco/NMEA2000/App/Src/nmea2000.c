@@ -29,7 +29,6 @@ uint32_t g_n2k_last_addr_claim_time = 0;
 PGN060928NAME g_pgn060928_curr = {
     .mUnique_Number = N2K_UNIQUE_NUMBER & 0x1FFFFF,
     .mManufacturer_Code = N2K_MFG_CODE_FURUNO,
-    .mDevice_Instance = N2K_DEVICE_INSTANCE,
     .mDevice_Instance_Lower = N2K_DEVICE_INSTANCE & 0x7,
     .mDevice_Instance_Upper = (N2K_DEVICE_INSTANCE & 0xF8) >> 3,
     .mDevice_Function = N2K_DEVICE_FUNCTION,
