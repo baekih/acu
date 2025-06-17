@@ -139,6 +139,7 @@ typedef struct __CANBuffer
 extern uint8_t g_access_level; // temp.
 extern CANBuffer g_canbuf;
 extern uint32_t g_n2k_addr_local;
+extern uint32_t g_n2k_addr_saved;
 extern uint8_t g_switch_bank[6];
 extern uint8_t g_lcd_img_idx;
 extern rudder g_rudder;
@@ -149,7 +150,6 @@ void NMEA2000_126993_heartbeat(void);
 
 void NMEA2000_SendParseMessages(NmeaPgn* pngId, uint32_t len, uint8_t *buf, uint8_t isFastPacket);
 void SendNonSingleFrame(NmeaPgn* pngId, uint32_t len, uint8_t *buf, uint32_t messagetype);
-//void NMEA2000_ReceiveParseMessages(uint32_t canId, uint8_t *buf, uint8_t len);
 void runCANRXBuffer(void);
 
 void ProcessNMEA2000MultiPacket(uint32_t proc_pgn_number, NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32_t messagetype);

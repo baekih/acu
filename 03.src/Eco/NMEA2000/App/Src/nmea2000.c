@@ -8,28 +8,15 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "common.h"
-
 #include "nmea2000.h"
 
-uint8_t g_access_level = 0; // temp.
-
-CANBuffer g_canbuf = {.rx_idx_head = 0, .rx_idx_tail = 0, .tx_idx = 0};
-
 /* Private variables ---------------------------------------------------------*/
-PGNCounter g_PGNCount[PGN_COUNT_MAX];	// Rx array
-
-
-uint32_t mIsNoAddress = false;
-
-uint32_t MaxPGNSequenceCounters = 0;
-uint32_t *PGNSequenceCounters = 0;
-
+uint8_t g_access_level = 0; // temp.
+CANBuffer g_canbuf = {.rx_idx_head = 0, .rx_idx_tail = 0, .tx_idx = 0};
 uint32_t g_n2k_addr_local;
 uint32_t g_n2k_addr_saved = N2K_ADDR_DEFAULT;
-
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx;
-
 rudder g_rudder = {
     .instance           = 0,
     .direction_order    = 0x0,
@@ -77,16 +64,18 @@ void NMEA2000_126993_heartbeat(void)
 
 uint32_t FastPacketSequenceCounter(uint32_t pgnNumber)
 {
-    for (uint8_t i = 0; i < PGN_COUNT_MAX; i++) {
-        if (g_PGNCount[i].PGN == pgnNumber){
-            g_PGNCount[i].value = g_PGNCount[i].value + 1;
+    static PGNCounter pgn_cnt[PGN_COUNT_MAX];   // Rx array
 
-            return (g_PGNCount[i].value % 8);
+    for (uint8_t i = 0; i < PGN_COUNT_MAX; i++) {
+        if (pgn_cnt[i].PGN == pgnNumber){
+            pgn_cnt[i].value = pgn_cnt[i].value + 1;
+
+            return (pgn_cnt[i].value % 8);
         }
         else {
-            if (g_PGNCount[i].PGN == 0) {
-                g_PGNCount[i].PGN = pgnNumber;
-                g_PGNCount[i].value = 0;
+            if (pgn_cnt[i].PGN == 0) {
+                pgn_cnt[i].PGN = pgnNumber;
+                pgn_cnt[i].value = 0;
 
                 return 0;
             }
@@ -98,16 +87,18 @@ uint32_t FastPacketSequenceCounter(uint32_t pgnNumber)
 
 void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint8_t isFastPacket)
 {
+    bool is_no_addr = false;
+
     if ((mAddress_Claiming == true) && (pgnId->mPGN != 60928)){
         return;
     }
 
-    if(mIsNoAddress == true){
+    if(is_no_addr == true){
         return;
     }
 
     if (pgnId->mSA == N2K_ADDR_CLAIM_FAIL){
-        mIsNoAddress = true;
+        is_no_addr = true;
     }
 
 #if 0
