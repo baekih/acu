@@ -43,5 +43,5 @@ void PGN065285_SendNameField()
 {
     PGN065285_SetInitialField();
 
-    NMEA2000_SendParseMessages(getCanId(PGN065285_PRIORITY, PGN065285_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(getCanId(PGN065285_PRIORITY, PGN065285_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_curr), sendPacketLength, sendNMEAPackets, 0);
 }

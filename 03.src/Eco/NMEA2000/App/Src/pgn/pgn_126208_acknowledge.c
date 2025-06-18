@@ -72,5 +72,5 @@ void PGN126208ACKNOWLEDGE_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint32_
 {
 //    printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
 
-    SendNonSingleFrame(getCanId(PGN126208ACKNOWLEDGE_PRIORITY, PGN126208_PGN, pgnId->mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, messagetype);
+    SendNonSingleFrame(getCanId(PGN126208ACKNOWLEDGE_PRIORITY, PGN126208_PGN, pgnId->mSA, g_n2k_addr_curr), sendPacketLength, sendNMEAPackets, messagetype);
 }

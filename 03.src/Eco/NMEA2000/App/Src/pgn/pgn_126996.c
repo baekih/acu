@@ -65,7 +65,7 @@ void PGN126996_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf, uint3
                             mNMEA2000CertificationLevel,
                             mLoadEquivalency);
 
-    SendNonSingleFrame(getCanId(PGN126996_PRIORITY, PGN126996_PGN, pgnId->mSA, g_n2k_addr_local),
+    SendNonSingleFrame(getCanId(PGN126996_PRIORITY, PGN126996_PGN, pgnId->mSA, g_n2k_addr_curr),
                        sendPacketLength,
                        sendNMEAPackets,
                        messagetype);

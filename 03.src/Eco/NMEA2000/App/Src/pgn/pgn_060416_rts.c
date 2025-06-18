@@ -74,7 +74,7 @@ uint32_t PGN060416RTS_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf
 
     PGN060416CTS_SetFieldValue(PGN060416_FUNC_CODE_CTS, 2, 1, 0xFFFF, g_PGN060416RTSNAME.mPGN_of_multipacket_message);
 
-    PGN060416CTS_SendNameField(getCanId(PGN060416_CTS_PRIORITY, PGN060416_CTS_PGN, pgnId->mSA, g_n2k_addr_local));
+    PGN060416CTS_SendNameField(getCanId(PGN060416_CTS_PRIORITY, PGN060416_CTS_PGN, pgnId->mSA, g_n2k_addr_curr));
 
     return 0;
 }

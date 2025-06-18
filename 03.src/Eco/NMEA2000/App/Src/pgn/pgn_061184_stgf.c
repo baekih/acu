@@ -53,7 +53,7 @@ void PGN061184STGF_SendNameField(uint8_t mSA)
 //  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
     PGN061184STGF_SetInitialField(N2K_MFG_CODE_FURUNO, g_pgn060928_curr.mIndustry_Group, 0, 3);
 
-    NMEA2000_SendParseMessages(getCanId(PGN061184_PRIORITY, PGN061184_PGN, mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(getCanId(PGN061184_PRIORITY, PGN061184_PGN, mSA, g_n2k_addr_curr), sendPacketLength, sendNMEAPackets, 0);
 }
 
 void  PGN061184STGF_ProcessNameField(uint8_t mSA)

@@ -28,7 +28,7 @@ uint32_t PGN126993_ProcessNameField(uint8_t HeartbeatSeqCnt, uint8_t Can1stCtlSt
                                               // CAN class1 controller state(2bit) + CAN class2 controller state(2bit) + Equipment Status(2bit) + reserved(2bit)
     Add4ByteUInt(0xFFFFFFFF);                   //reserved 4byte
 
-    NMEA2000_SendParseMessages(getCanId(PGN126993_PRIORITY, PGN126993_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(getCanId(PGN126993_PRIORITY, PGN126993_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_curr), sendPacketLength, sendNMEAPackets, 0);
 
     return 0;
 }

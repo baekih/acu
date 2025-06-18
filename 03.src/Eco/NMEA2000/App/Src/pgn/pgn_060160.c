@@ -130,14 +130,14 @@ uint32_t PGN060160_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 
             PGN060416EOM_SetFieldValue(PGN060416_FUNC_CODE_EOM, completeMultiPacketData.mTotalMessageByteSize,	completeMultiPacketData.mTotalNumberOfFrametoTransmit,
                     0xFF,completeMultiPacketData.mPGNMultiPacketMessage);
-            PGN060416EOM_SendNameField(getCanId(PGN060416_EOM_PRIORITY, PGN060416_EOM_PGN, pgnId->mSA, g_n2k_addr_local));
+            PGN060416EOM_SendNameField(getCanId(PGN060416_EOM_PRIORITY, PGN060416_EOM_PGN, pgnId->mSA, g_n2k_addr_curr));
 
             return PGN060160_PACKET_PROC_RESULT_MULTIPACKET_DONE;
         }
         else{
             if ((pMultiPacket->mCurrentPacketFrameNumber % 2) == 0) {
                 PGN060416CTS_SetFieldValue(PGN060416_FUNC_CODE_CTS, 2, pMultiPacket->mCurrentPacketFrameNumber + 1, 0xFFFF, pMultiPacket->mPGNMultiPacketMessage);
-                PGN060416CTS_SendNameField(getCanId(PGN060416_CTS_PRIORITY, PGN060416_CTS_PGN, pgnId->mSA, g_n2k_addr_local));
+                PGN060416CTS_SendNameField(getCanId(PGN060416_CTS_PRIORITY, PGN060416_CTS_PGN, pgnId->mSA, g_n2k_addr_curr));
             }
 
             pMultiPacket->mCurrentPacketFrameNumber++;
@@ -149,7 +149,7 @@ uint32_t PGN060160_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 
 void PGN060160_SendNameField(uint8_t dest_addr)
 {
-    NMEA2000_SendParseMessages(getCanId(PGN060160_PRIORITY, PGN060160_PGN, dest_addr, g_n2k_addr_local),
+    NMEA2000_SendParseMessages(getCanId(PGN060160_PRIORITY, PGN060160_PGN, dest_addr, g_n2k_addr_curr),
                                sendPacketLength,
                                sendNMEAPackets,
                                0);

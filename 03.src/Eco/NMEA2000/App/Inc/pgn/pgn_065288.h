@@ -14,6 +14,7 @@
 /* Private define ------------------------------------------------------------*/
 #define PGN065288_PGN                     65288
 #define PGN065288_PRIORITY                7
+
 #define PGN065288_FIELD_MIN               3
 #define PGN065288_FIELD_MAX               9
 #define PGN065288_BRIGHT_INSTANCE         0
@@ -35,7 +36,7 @@ typedef struct __PGN065288NAME
 } PGN65288NAME;
 
 /* Exported variables --------------------------------------------------------*/
-extern uint8_t pgn65288_datalen[];
+
 /* Exported functions --------------------------------------------------------*/
 uint32_t PGN065288_ProcessNameField(uint8_t, uint8_t);
 

@@ -56,23 +56,23 @@ void PGN060928_SetInitialField()
 
 void PGN060928_SendAddressClaim(void)
 {
-    NmeaPgn* sendPgnId = getCanId(PGN060928_PRIORITY, PGN060928_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local);
+    NmeaPgn* sendPgnId = getCanId(PGN060928_PRIORITY, PGN060928_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_curr);
 
     NMEA2000_SendParseMessages(sendPgnId, sendPacketLength, sendNMEAPackets, 0);
 
-    g_n2k_is_addr_claiming = true;
-    g_n2k_last_addr_claim_time = HAL_GetTick();
+    g_n2k_addr_is_claiming = true;
+    g_n2k_addr_claim_time_last = HAL_GetTick();
 }
 
 void PGN060928_ProcessNameField()
 {
-    if (g_n2k_is_addr_claiming == true)
+    if (g_n2k_addr_is_claiming == true)
     {
         printf("%s:%d In Address Claiming... \r\n",__FUNCTION__,__LINE__);
         return;
     }
 
-    NmeaPgn* sendPgnId = getCanId(PGN060928_PRIORITY, PGN060928_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local);
+    NmeaPgn* sendPgnId = getCanId(PGN060928_PRIORITY, PGN060928_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_curr);
 
     NMEA2000_SendParseMessages(sendPgnId, sendPacketLength, sendNMEAPackets, 0);
 }

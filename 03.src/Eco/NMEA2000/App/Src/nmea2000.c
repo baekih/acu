@@ -21,10 +21,10 @@ typedef struct __PGNCounter
 /* Private variables ---------------------------------------------------------*/
 uint8_t g_access_level = 0; // temp.
 CANBuffer g_canbuf = {.rx_idx_head = 0, .rx_idx_tail = 0, .tx_idx = 0};
-uint8_t g_n2k_addr_local;
-uint8_t g_n2k_addr_saved = N2K_ADDR_DEFAULT;
-bool  g_n2k_is_addr_claiming = true;
-uint32_t g_n2k_last_addr_claim_time = 0;
+uint8_t g_n2k_addr_curr;
+uint8_t g_n2k_addr_eprom = N2K_ADDR_DEFAULT;
+bool  g_n2k_addr_is_claiming = true;
+uint32_t g_n2k_addr_claim_time_last = 0;
 
 PGN060928NAME g_pgn060928_curr = {
     .mUnique_Number = N2K_UNIQUE_NUMBER & 0x1FFFFF,
@@ -51,7 +51,7 @@ rudder g_rudder = {
 /* Private functions ---------------------------------------------------------*/
 void NMEA2000_Open(void)
 {
-    g_n2k_addr_local = g_n2k_addr_saved;
+    g_n2k_addr_curr = g_n2k_addr_eprom;
 
     sprintf((char*)g_ver.hw, "%02d", HW_VERSION);
     sprintf((char*)g_ver.boot, "%02d", BOOT_VERSION);
@@ -108,7 +108,7 @@ void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint
 {
     bool is_no_addr = false;
 
-    if ((g_n2k_is_addr_claiming == true) && (pgnId->mPGN != 60928)){
+    if ((g_n2k_addr_is_claiming == true) && (pgnId->mPGN != 60928)){
         return;
     }
 
@@ -187,7 +187,7 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
         memcpy(sendMultiPacket.mMergedMultiPacket, buf, len);
 
         PGN060416RTS_SetFieldValue(PGN060416_FUNC_CODE_RTS, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
-        PGN060416RTS_SendNameField(getCanId(PGN060416_RTS_PRIORITY, PGN060416_RTS_PGN, pgnId->mPS, g_n2k_addr_local));
+        PGN060416RTS_SendNameField(getCanId(PGN060416_RTS_PRIORITY, PGN060416_RTS_PGN, pgnId->mPS, g_n2k_addr_curr));
 
     }
     else if (messagetype == REQUEST_MESSAGE_TYPE_BAM_PACKET) {
@@ -197,7 +197,7 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
         totalNumberOfFrametoTransmit = (len / 7) + (((len % 7) == 0) ? 0 : 1);
 
         PGN060416BAM_SetFieldValue(PGN060416_FUNC_CODE_BAM, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
-        PGN060416BAM_SendNameField(getCanId(PGN060416_BAM_PRIORITY, PGN060416_BAM_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local));
+        PGN060416BAM_SendNameField(getCanId(PGN060416_BAM_PRIORITY, PGN060416_BAM_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_curr));
 
         for (uint8_t packetIndex = 0; packetIndex < totalNumberOfFrametoTransmit; packetIndex++) {
             memset(&Multipacket[0], 0xff, 7);
@@ -269,31 +269,31 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
         }
             break;
         case 60928: // ISO Address Claim
-            if(pgnId->mSA == g_n2k_addr_local) {  // Address crash.
+            if(pgnId->mSA == g_n2k_addr_curr) {  // Address crash.
                 PGN060928NAME pgn60928_name;
                 PGN060928_GetFieldValue(pgnId, len, buf, &pgn60928_name);
 
                 if (pgn60928_name.mUnique_Number <= g_pgn060928_curr.mUnique_Number) {
-                    if (g_n2k_addr_local != N2K_ADDR_CLAIM_FAIL) {
-                        g_n2k_addr_local++;
+                    if (g_n2k_addr_curr != N2K_ADDR_CLAIM_FAIL) {
+                        g_n2k_addr_curr++;
 
 //                      Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
 //                      EEPROM_Write_Byte(EEPROM_NMEA2000ADDR_ADDR, localSourceAddr, 0);
-                        g_n2k_addr_saved = g_n2k_addr_local;
+                        g_n2k_addr_eprom = g_n2k_addr_curr;
 
-                        printf("New NMEA2000 addr:%ld\r\n", g_n2k_addr_local);
+                        printf("New NMEA2000 addr:%ld\r\n", g_n2k_addr_curr);
                     }
 
-                    if (g_n2k_addr_local >= N2K_ADDR_MAX_HIGH_SOURCE && g_n2k_addr_local < N2K_ADDR_CLAIM_FAIL) {
-                        g_n2k_addr_local = 0;
+                    if (g_n2k_addr_curr >= N2K_ADDR_MAX_HIGH_SOURCE && g_n2k_addr_curr < N2K_ADDR_CLAIM_FAIL) {
+                        g_n2k_addr_curr = 0;
 
 //                      Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
 //                      EEPROM_Write_Byte(EEPROM_NMEA2000ADDR_ADDR, localSourceAddr, 0);
-                        g_n2k_addr_saved = g_n2k_addr_local;
+                        g_n2k_addr_eprom = g_n2k_addr_curr;
 
-                        printf("New NMEA2000 addr:%ld\r\n", g_n2k_addr_local);
-                    } else if (g_n2k_addr_local == N2K_ADDR_DEFAULT) {
-                        g_n2k_addr_local = N2K_ADDR_CLAIM_FAIL;
+                        printf("New NMEA2000 addr:%ld\r\n", g_n2k_addr_curr);
+                    } else if (g_n2k_addr_curr == N2K_ADDR_DEFAULT) {
+                        g_n2k_addr_curr = N2K_ADDR_CLAIM_FAIL;
                     }
                 }
 
@@ -486,7 +486,7 @@ void NMEA2000_ReceiveParseMessages(uint32_t canId, uint8_t *buf, uint8_t len)
 
     if(pgnId->mPF <= 239)
     {
-        if(pgnId->mPS == g_n2k_addr_local || pgnId->mPS == 255)
+        if(pgnId->mPS == g_n2k_addr_curr || pgnId->mPS == 255)
         {
             ProcessNMEA2000SinglePacket(pgnId, len, buf);
         }
@@ -521,8 +521,8 @@ void runN2KCANRXBuffer(void)
 
 void chkN2KLastAddrClaimTime(void)
 {
-    if ((osKernelGetTickCount() - g_n2k_last_addr_claim_time) > 250)
+    if ((osKernelGetTickCount() - g_n2k_addr_claim_time_last) > 250)
     {
-        g_n2k_is_addr_claiming = false;
+        g_n2k_addr_is_claiming = false;
     }
 }

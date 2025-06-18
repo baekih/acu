@@ -46,7 +46,7 @@ void PGN059392_SetFieldValue(uint8_t _Control_Byte,
 void PGN059392_SendNameField(NmeaPgn* pgnId)
 {
     NMEA2000_SendParseMessages(
-            getCanId(PGN059392_PRIORITY, PGN059392_PGN, pgnId->mSA, g_n2k_addr_local),
+            getCanId(PGN059392_PRIORITY, PGN059392_PGN, pgnId->mSA, g_n2k_addr_curr),
             sendPacketLength,
             sendNMEAPackets,
             0);
