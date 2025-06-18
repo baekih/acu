@@ -8,24 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "multipacketdata.h"
-#include "fastpacketdata.h"
-
-#include "pgn_060928.h"
-#include "pgn_061184_stgf.h"
-#include "pgn_065285.h"
-#include "pgn_065287.h"
-#include "pgn_126208.h"
-#include "pgn_126208_command.h"
-#include "pgn_126208_acknowledge.h"
-#include "pgn_126464.h"
-#include "pgn_126720.h"
-#include "pgn_126993.h"
-#include "pgn_126996.h"
-#include "pgn_126998.h"
-#include "pgn_130816.h"
-#include "pgn_130822.h"
-#include "pgn_130823.h"
 
 /* Private typedef -----------------------------------------------------------*/
 PGN126208COMMANDNAME g_PGN126208COMMANDNAME;

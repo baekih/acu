@@ -8,10 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "multipacketdata.h"
-
-#include "pgn_060416_cts.h"
-#include "pgn_060160.h"
 
 /* Private typedef -----------------------------------------------------------*/
 PGN060416CTSNAME g_PGN060416CTSNAME;

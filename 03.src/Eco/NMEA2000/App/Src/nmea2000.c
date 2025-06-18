@@ -322,18 +322,6 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
             }*/
 
             break;
-        case 61184:	// Self Test Group Function(Proprietary PGN)
-        {
-            PGN061184STGF_GetFieldValue(pgnId, len, buf);
-
-            if(g_PGN061184STGFNAME.m61184Manufacturer_Code == N2K_MFG_CODE_FURUNO &&
-                    g_PGN061184STGFNAME.m61184Industry_Group == g_pgn060928_curr.mIndustry_Group &&
-                    g_PGN061184STGFNAME.m61184Identification_Code == 0 &&
-                    (g_PGN061184STGFNAME.m61184Control_Function == 0 || g_PGN061184STGFNAME.m61184Control_Function == 1)){
-                PGN061184STGF_ProcessNameField(pgnId->mSA);
-            }
-        }
-            break;
         case 65240 : // ISO Commanded Address
         {
             ;
@@ -446,17 +434,6 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
         case 130306 :
             {
                 PGN130306_GetFieldValue(pgnId, len, buf);
-            }
-            break;
-        case 130310:
-            {
-                PGN130310_GetFieldValue(pgnId, len, buf);
-            }
-            break;
-        case 130816: // (Proprietary PGN)
-            if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE)
-            {
-                PGN130816_ProcessNameField(pgnId);
             }
             break;
         case 65286 : // (Proprietary PGN) for Boot-loader - AIRMAR: Boot State Request

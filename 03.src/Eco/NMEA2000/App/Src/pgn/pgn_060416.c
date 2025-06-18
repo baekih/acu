@@ -9,11 +9,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include "pgn_060416.h"
-#include "pgn_060416_rts.h"
-#include "pgn_060416_cts.h"
-#include "pgn_060416_bam.h"
-
 /* Private typedef -----------------------------------------------------------*/
 PGN060416NAME g_PGN060416NAME;
 

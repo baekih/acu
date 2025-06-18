@@ -10,6 +10,9 @@
 
 
 /* Includes ------------------------------------------------------------------*/
+#include "pgn_126208_acknowledge.h"
+#include "pgn_126208_command.h"
+#include "pgn_126208_request.h"
 
 /* Private define ------------------------------------------------------------*/
 #define PGN126208_PGN                       126208

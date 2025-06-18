@@ -8,35 +8,17 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include "pgn_129285.h"
-
 #include <gui/common/DataBase.hpp>
 #include <gui/common/validate_data.h>
 
-#pragma pack(push,1)
-typedef struct __route
-{
-    uint16_t id;
-    uint8_t  name[31];
-    uint8_t  name_len;
-    uint8_t  name_code;
-} s_route;
+/* Private typedef -----------------------------------------------------------*/
 
-typedef struct __waypoint
-{
-    uint16_t id;
-    uint8_t  name[31];
-    uint8_t  name_len;
-    uint8_t  name_code;
-    int32_t  latitude;
-    int32_t  longitude;
-} s_waypoint;
-#pragma pack(pop)
-
+/* Private variables ---------------------------------------------------------*/
 s_route    route;
 s_waypoint wpt[3] = {{0,},{0,},{0,}};
-
 uint8_t route_name[31] = {0,};
+
+/* Private functions ---------------------------------------------------------*/
 
 void PGN129285_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {

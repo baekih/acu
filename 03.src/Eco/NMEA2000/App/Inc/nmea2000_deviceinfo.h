@@ -13,9 +13,6 @@
 #include <stdint.h>
 
 /* Private define ------------------------------------------------------------*/
-#define PPGN_061184_SELFTEST            0
-#define PPGN_061184_KEYPAD              2
-#define PPGN_061184_MOUSE               3
 
 /* Exported variables --------------------------------------------------------*/
 extern uint32_t mUnique_Number;

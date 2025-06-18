@@ -9,10 +9,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include "pgn_126208.h"
-#include "pgn_126208_request.h"
-#include "pgn_126208_command.h"
-
 /* Private typedef -----------------------------------------------------------*/
 PGN126208NAME g_PGN126208NAME;
 

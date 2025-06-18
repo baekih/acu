@@ -9,18 +9,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include "pgn_059392.h"
-#include "pgn_059904.h"
-#include "pgn_060928.h"
-#include "pgn_126464.h"
-#include "pgn_126720.h"
-#include "pgn_126996.h"
-#include "pgn_126998.h"
-#include "pgn_127245.h"
-#include "pgn_130816.h"
-#include "pgn_130822.h"
-#include "pgn_130823.h"
-
 /* Private typedef -----------------------------------------------------------*/
 PGN059904NAME g_PGN059904NAME;
 
@@ -69,14 +57,8 @@ uint32_t PGN059904_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
         case 127245:
             PGN127245_ProcessNameField(pgnId);
             break;
-        case 130816:
-            PGN130816_ProcessNameField(pgnId);
-            break;
         case 130822:
             PGN130822_ProcessNameField(pgnId);
-            break;
-        case 130823:
-            PGN130823_ProcessNameField(pgnId);
             break;
         default:
             if(pgnId->mPS != BROADCAST_DESTINATION_ADDR)

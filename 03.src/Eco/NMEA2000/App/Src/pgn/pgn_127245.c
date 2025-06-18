@@ -8,8 +8,11 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include "pgn_127245.h"
+/* Private typedef -----------------------------------------------------------*/
 
+/* Private variables ---------------------------------------------------------*/
+
+/* Private functions ---------------------------------------------------------*/
 void PGN127245_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
     uint8_t     rud_instance        =  GetBuf_1ByteUInt(len, 0, buf);                    // 8  bits

@@ -8,11 +8,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include "pgn_129284.h"
-
 #include <gui/common/DataBase.hpp>
 #include <gui/common/validate_data.h>
 
+/* Private typedef -----------------------------------------------------------*/
+
+/* Private variables ---------------------------------------------------------*/
+
+/* Private functions ---------------------------------------------------------*/
 void PGN129284_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
 //    uint8_t  sequenceid             =  GetBuf_1ByteUInt(len,  0, buf);               // 8 bit

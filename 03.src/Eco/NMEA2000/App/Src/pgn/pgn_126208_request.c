@@ -8,24 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "multipacketdata.h"
-#include "fastpacketdata.h"
-
-#include "pgn_060928.h"
-#include "pgn_061184_stgf.h"
-#include "pgn_065285.h"
-#include "pgn_065287.h"
-#include "pgn_126208.h"
-#include "pgn_126208_request.h"
-#include "pgn_126208_acknowledge.h"
-#include "pgn_126464.h"
-#include "pgn_126720.h"
-#include "pgn_126993.h"
-#include "pgn_126996.h"
-#include "pgn_126998.h"
-#include "pgn_130816.h"
-#include "pgn_130822.h"
-#include "pgn_130823.h"
 
 /* Private typedef -----------------------------------------------------------*/
 PGN126208REQUESTNAME g_PGN126208REQUESTNAME;
@@ -424,70 +406,10 @@ void PGN126208REQUEST_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
             PGN126208ACKNOWLEDGE_ProcessNameField(pgnId, buf, messagetype);
         }
     }
-    else if (g_PGN126208REQUESTNAME.mRequested_PGN == 130823) {
-        uint32_t ManufacturerCode = 0;
-        uint32_t IndustryGroup = 0;
-
-        if(numOfParam > 0)
-        {
-            bool     isParamValid = false;
-
-            while (numOfParam-- > 0)
-            {
-                paramPos = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf);
-                PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
-
-//              printf("%s:%d numOfParam[%ld] paramPos[%ld]\r\n",__FUNCTION__,__LINE__, numOfParam, paramPos);
-
-                switch(paramPos)
-                {
-                    case 1:
-                        ManufacturerCode = GetBuf_2ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x7FF;
-                        isParamValid = (ManufacturerCode == N2K_MFG_CODE_FURUNO);
-
-                        PGN126208REQ_paramPos = PGN126208REQ_paramPos + 2;
-                        break;
-                    case 3:
-                        IndustryGroup = GetBuf_1ByteUInt(size, PGN126208REQ_paramPos, buf) & 0x07;
-                        isParamValid = (IndustryGroup == g_pgn060928_curr.mIndustry_Group);
-
-                        PGN126208REQ_paramPos = PGN126208REQ_paramPos + 1;
-                        break;
-                    default:
-                        isParamValid = false;
-                        break;
-                }
-
-                if(isParamValid == false)
-                {
-                    if(countOfFieldErrorCode < PGN126208_FIELD_ERROR_CODE_MAX) fieldErrorCodes[countOfFieldErrorCode++] = PGN126208_PARAM_ERRORCODE_ACCESS_DENIED;
-                    numOfError++;
-                }
-                else
-                {
-                    if(countOfFieldErrorCode < PGN126208_FIELD_ERROR_CODE_MAX) fieldErrorCodes[countOfFieldErrorCode++] = PGN126208_PARAM_ERRORCODE_NO_ERROR_ACK;
-                }
-            }
-        }
-
-        if (txPriorityErrorCode == PGN126208_TX_ACK_ERRORCODE_NO_ERROR_ACK && numOfError == 0) {
-            PGN130823_ProcessNameField(pgnId);
-        }
-        else {
-            PGN126208ACKNOWLEDGE_SetFieldValue(FUNCTION_CODE_ACKNOWLEDGE_MESSAGE,
-                                               g_PGN126208REQUESTNAME.mRequested_PGN,
-                                               txPriorityErrorCode == PGN126208_TX_ACK_ERRORCODE_NO_ERROR_ACK ? PGN126208_ACK_ERRORCODE_NO_ERROR_ACK : PGN126208_ACK_ERRORCODE_ACCESS_DENIED,
-                                               txPriorityErrorCode,
-                                               countOfFieldErrorCode,
-                                               fieldErrorCodes);
-            PGN126208ACKNOWLEDGE_ProcessNameField(pgnId, buf, messagetype);
-        }
-    }
     else if(g_PGN126208REQUESTNAME.mRequested_PGN == 61184 ||
         g_PGN126208REQUESTNAME.mRequested_PGN == 65285 ||
         g_PGN126208REQUESTNAME.mRequested_PGN == 65287 ||
-        g_PGN126208REQUESTNAME.mRequested_PGN == 126998 ||
-        g_PGN126208REQUESTNAME.mRequested_PGN == 130816)
+        g_PGN126208REQUESTNAME.mRequested_PGN == 126998)
     {
         if (numOfParam > 0) {
             while (numOfParam-- > 0){
@@ -500,15 +422,11 @@ void PGN126208REQUEST_ProcessNameField(NmeaPgn* pgnId, uint8_t *buf, uint16_t si
         if(txPriorityErrorCode == PGN126208_TX_ACK_ERRORCODE_NO_ERROR_ACK && numOfError == 0){
             switch(g_PGN126208REQUESTNAME.mRequested_PGN)
             {
-                case 61184 : PGN061184STGF_SendNameField(pgnId->mSA);
-                    break;
                 case 65285 : PGN065285_SendNameField();
                     break;
                 case 65287 : PGN065287_FEC_SendNameField();
                     break;
                 case 126998 : PGN126998_ProcessNameField(pgnId, messagetype);
-                    break;
-                case 130816 : PGN130816_ProcessNameField(pgnId);
                     break;
                 default :
                     break;

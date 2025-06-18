@@ -10,8 +10,6 @@
 
 #include "nmea2000.h"
 
-#include "pgn_059392.h"
-
 /* Private typedef -----------------------------------------------------------*/
 PGN059392NAME g_PGN059392NAME;
 

@@ -9,8 +9,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include "pgn_126208_acknowledge.h"
-
 /* Private typedef -----------------------------------------------------------*/
 PGN126208ACKNOWLEDGENAME g_PGN126208ACKNOWLEDGENAME;
 

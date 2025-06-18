@@ -427,11 +427,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_060928.h</locationURI>
 		</link>
 		<link>
-			<name>Eco/NMEA2000/App/Inc/pgn/pgn_061184_stgf.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_061184_stgf.h</locationURI>
-		</link>
-		<link>
 			<name>Eco/NMEA2000/App/Inc/pgn/pgn_065240.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_065240.h</locationURI>
@@ -562,24 +557,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_130306.h</locationURI>
 		</link>
 		<link>
-			<name>Eco/NMEA2000/App/Inc/pgn/pgn_130310.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_130310.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/App/Inc/pgn/pgn_130816.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_130816.h</locationURI>
-		</link>
-		<link>
 			<name>Eco/NMEA2000/App/Inc/pgn/pgn_130822.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_130822.h</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/App/Inc/pgn/pgn_130823.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_130823.h</locationURI>
 		</link>
 		<link>
 			<name>Eco/NMEA2000/App/Src/pgn/pgn_059392.c</name>
@@ -625,11 +605,6 @@
 			<name>Eco/NMEA2000/App/Src/pgn/pgn_060928.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_060928.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/App/Src/pgn/pgn_061184_stgf.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_061184_stgf.c</locationURI>
 		</link>
 		<link>
 			<name>Eco/NMEA2000/App/Src/pgn/pgn_065240.c</name>
@@ -762,24 +737,9 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_130306.c</locationURI>
 		</link>
 		<link>
-			<name>Eco/NMEA2000/App/Src/pgn/pgn_130310.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_130310.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/App/Src/pgn/pgn_130816.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_130816.c</locationURI>
-		</link>
-		<link>
 			<name>Eco/NMEA2000/App/Src/pgn/pgn_130822.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_130822.c</locationURI>
-		</link>
-		<link>
-			<name>Eco/NMEA2000/App/Src/pgn/pgn_130823.c</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_130823.c</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
