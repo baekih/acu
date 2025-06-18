@@ -8,9 +8,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include <gui/common/DataBase.hpp>
-#include <gui/common/validate_data.h>
-
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -19,7 +16,7 @@
 void PGN127250_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
 //    uint8_t     SequenceID             =  GetBuf_1ByteUInt(len, 0, buf);                    // 8  bits
-    uint16_t    HeadingSensorReading   =  GetBuf_2ByteUInt(len, 1, buf);                    // 16 bits
+    g_ship.curr.heading_sensor_reading = GetBuf_2ByteUInt(len, 1, buf);                    // 16 bits
 //    uint16_t    Deviation              =  GetBuf_2ByteUInt(len, 3, buf);                    // 16 bits
 //    uint16_t    Variation              =  GetBuf_2ByteUInt(len, 5, buf);                    // 16 bits
 //    uint8_t     HeadingSensorReference = (GetBuf_1ByteUInt(len, 7, buf) & 0x03);            // 2  bits
@@ -36,7 +33,4 @@ void PGN127250_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
     printf("mDeviation : %3.1f,", (((float)Deviation/10000) / M_PI) * 180);
     printf("mVariation : %3.1f\n", (((float)Variation/10000) / M_PI) * 180);
 */
-    if(isValidDegreeAngle(HeadingSensorReading)){
-        setHDGValue( (double)HeadingSensorReading );
-    }
 }

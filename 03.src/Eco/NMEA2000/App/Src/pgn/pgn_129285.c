@@ -8,9 +8,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include <gui/common/DataBase.hpp>
-#include <gui/common/validate_data.h>
-
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/

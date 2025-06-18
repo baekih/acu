@@ -6,8 +6,6 @@
  */
 
 #include "eco.h"
-//#include "nmea2000.h"
-
 
 void _putchar(char ch)
 {

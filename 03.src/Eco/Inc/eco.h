@@ -26,6 +26,10 @@
 #include "app.h"
 #include "nmea2000.h"
 #include "stm32f767_acu_sdram.h"
+
+#include <gui/common/DataBase.hpp>
+#include <gui/common/validate_data.h>
+
 #elif defined(ECO_BOOT2)
 #include "boot2.h"
 #include "nmea2k.h"

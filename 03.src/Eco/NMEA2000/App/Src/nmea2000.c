@@ -41,12 +41,6 @@ PGN060928NAME g_pgn060928_curr = {
 
 uint8_t g_switch_bank[6];
 uint8_t g_lcd_img_idx;
-rudder g_rudder = {
-    .instance           = 0,
-    .direction_order    = 0x0,
-    .angle_order        = N2K_DATA_NOT_AVAILABLE_INT16,
-    .position           = N2K_DATA_NOT_AVAILABLE_INT16
-};
 
 /* Private functions ---------------------------------------------------------*/
 void NMEA2000_Open(void)

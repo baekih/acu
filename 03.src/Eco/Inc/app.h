@@ -8,6 +8,81 @@
 #ifndef APPLICATION_USER_ECOTRONIX_INC_APP_H_
 #define APPLICATION_USER_ECOTRONIX_INC_APP_H_
 
+/* Includes ------------------------------------------------------------------*/
+
+/* define --------------------------------------------------------------------*/
+
+/* struct --------------------------------------------------------------------*/
+
+/* typedef -------------------------------------------------------------------*/
+typedef struct __rudder
+{
+    uint8_t instance;
+    uint8_t direction_order;
+    int16_t angle_order;
+    int16_t position;
+} rudder;
+
+typedef struct __ship_speed
+{
+    uint16_t through_water;
+    uint16_t over_ground;
+    uint8_t  water_reference_type;
+    uint8_t direction;
+} ship_speed;
+
+typedef struct __ship_course
+{
+    uint8_t cog_reference;
+    uint16_t over_ground;
+} ship_course;
+
+typedef struct __ship_position
+{
+    int32_t latitude;
+    int32_t longitude;
+    uint8_t gnss_method;
+} ship_position;
+
+typedef struct __ship_xte
+{
+    uint8_t mode;
+    int32_t val;
+} ship_xte;
+
+typedef struct __ship_wind
+{
+    uint16_t speed;
+    uint16_t direction;
+    uint8_t reference;
+} ship_wind;
+
+typedef struct __ship_param
+{
+    uint16_t heading_sensor_reading;
+    int16_t  magnetic_variation;
+    ship_speed speed;
+    ship_course course;
+    ship_position position;
+    ship_xte xte;
+    ship_wind wind;
+    uint32_t water_depth;
+    uint16_t transducer_offset;
+} ship_param;
+
+typedef struct __ship_status
+{
+    ship_param curr;
+    ship_param prev;
+} ship_status;
+
+/* macro ---------------------------------------------------------------------*/
+
+/* variables -----------------------------------------------------------------*/
+extern rudder g_rudder;
+extern ship_status g_ship;
+
+/* function prototypes -------------------------------------------------------*/
 void runEcoTaskDefault(void *argument);
 void runEcoTaskUART(void *argument);
 void runEcoTaskNMEA2KRx(void *argument);

@@ -8,9 +8,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
 
-#include <gui/common/DataBase.hpp>
-#include <gui/common/validate_data.h>
-
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -19,19 +16,11 @@
 void PGN129026_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
 //    uint8_t  SequenceID              =  GetBuf_1ByteUInt(len, 0, buf);              // 8  bit
-    uint8_t  COGReference            =  GetBuf_1ByteUInt(len, 1, buf) & 0x03;       // 8  bit
-//    uint16_t CourceOverGround        =  GetBuf_2ByteUInt(len, 2, buf);              // 16 bit
-    uint16_t SpeedOverGround         =  GetBuf_2ByteUInt(len, 4, buf);              // 16 bit
+    g_ship.curr.course.cog_reference = GetBuf_1ByteUInt(len, 1, buf) & 0x03;       // 8  bit
+    g_ship.curr.course.over_ground   =  GetBuf_2ByteUInt(len, 2, buf);              // 16 bit
+    g_ship.curr.speed.over_ground = GetBuf_2ByteUInt(len, 4, buf);              // 16 bit
 
 //    printf("Receive 129026:COG[%3.1f]deg SOG[%3.2f]knot COGRef[%d]\n", (float)CourceOverGround / 10000.0 * 360.0 / (2.0 * (M_PI)),
 //    (float)SpeedOverGround / 100.0 * 1.944, COGReference);
 //    printf("Receive 129026:COG[%ld] SOG[%ld]m/s COGRef[%d]\n", CourceOverGround, SpeedOverGround, COGReference);
-
-    if (COGReference == 0 || COGReference == 1)
-    {
-        if(isValidSpeed(SpeedOverGround))
-        {
-            setSOGValue( ((double)SpeedOverGround / 100.0), SPEED_UNIT_MPS );
-        }
-    }
 }
