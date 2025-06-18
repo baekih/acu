@@ -11,7 +11,6 @@
 #include "pgn_126720.h"
 
 /* Private typedef -----------------------------------------------------------*/
-uint32_t PGN126720_priority = 7;
 
 /* Private variables ---------------------------------------------------------*/
 PGN126720NAME g_PGN126720;
@@ -103,5 +102,8 @@ void PGN126720_ResetGoup_SetFieldValue()
 
 void PGN126720_ProcessNameField(NmeaPgn* pgnId)
 {
-    SendNonSingleFrame(getCanId(PGN126720_priority, 126720, pgnId->mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, REQUEST_MESSAGE_TYPE_FASTPACKET);
+    SendNonSingleFrame(getCanId(PGN126720_PRIORITY, PGN126720_PGN, pgnId->mSA, g_n2k_addr_local),
+                       sendPacketLength,
+                       sendNMEAPackets,
+                       REQUEST_MESSAGE_TYPE_FASTPACKET);
 }

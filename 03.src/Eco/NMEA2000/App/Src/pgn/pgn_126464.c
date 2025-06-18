@@ -15,10 +15,6 @@
 PGN126464NAME g_PGN126464NAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN_GROUP_TRANSMIT_LIST_MESSAGE = 0;
-uint32_t PGN_GROUP_RECEIVE_LIST_MESSAGE = 1;
-
-uint32_t PGN126464_priority = 6;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN126464_SetFieldValue(uint32_t _PGN_Group_Function_Code,
@@ -35,6 +31,9 @@ void PGN126464_SetFieldValue(uint32_t _PGN_Group_Function_Code,
 
 void PGN126464_ProcessNameField(NmeaPgn* pgnId, uint32_t messagetype)
 {
-    SendNonSingleFrame(getCanId(PGN126464_priority, 126464, pgnId->mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, messagetype);
+    SendNonSingleFrame(getCanId(PGN126464_PRIORITY, PGN126464_PGN, pgnId->mSA, g_n2k_addr_local),
+                       sendPacketLength,
+                       sendNMEAPackets,
+                       messagetype);
 }
 

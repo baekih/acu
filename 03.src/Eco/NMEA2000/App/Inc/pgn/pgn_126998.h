@@ -10,17 +10,23 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-extern uint8_t  installationDescription1[72];
-extern uint8_t  installationDescription2[72];
-extern uint8_t  menufacturerDescription[72];
+
+/* Private define ------------------------------------------------------------*/
+#define PGN126998_PGN                       126998
+#define PGN126998_PRIORITY                  6
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN126998NAME
 {
-    uint8_t _InstallationDescription1[72];          // n  bits
-    uint8_t _InstallationDescription2[72];          // n  bits
-    uint8_t _MenufacturerDescription[72];           // n  bits
+    uint8_t InstallationDescription1[72];          // n  bits
+    uint8_t InstallationDescription2[72];          // n  bits
+    uint8_t MenufacturerDescription[72];           // n  bits
 } PGN126998NAME;
+
+/* Exported variables --------------------------------------------------------*/
+extern uint8_t  installationDescription1[72];
+extern uint8_t  installationDescription2[72];
+extern uint8_t  menufacturerDescription[72];
 
 /* Exported functions --------------------------------------------------------*/
 void PGN126998_SetFieldValue();

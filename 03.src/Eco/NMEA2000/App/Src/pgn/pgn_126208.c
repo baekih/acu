@@ -8,8 +8,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "multipacketdata.h"
-#include "fastpacketdata.h"
 
 #include "pgn_126208.h"
 #include "pgn_126208_request.h"

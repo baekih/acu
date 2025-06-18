@@ -11,6 +11,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+/* Private define ------------------------------------------------------------*/
+#define PGN060416_EOM_PGN                       60416
+#define PGN060416_EOM_PRIORITY                  6
+
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN060416EOMNAME
 {
@@ -20,8 +24,6 @@ typedef struct __PGN060416EOMNAME
     uint32_t mNMEA_Reserved;                            // 8 bits
     uint32_t mPGN_of_multipacket_message;               // 24 bits
 } PGN060416EOMNAME;
-
-extern uint32_t PGN060416EOM_priority;
 
 /* Exported functions --------------------------------------------------------*/
 extern void PGN060416EOM_SetFieldValue(uint32_t _EOM_Group_Function_Code,

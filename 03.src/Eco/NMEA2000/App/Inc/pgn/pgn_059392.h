@@ -11,6 +11,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+/* Private define ------------------------------------------------------------*/
+#define PGN059392_PGN                       59392
+#define PGN059392_PRIORITY                  6
+
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN059392NAME
 {
@@ -30,7 +34,7 @@ void PGN059392_SetFieldValue(uint8_t _Control_Byte,
                              uint8_t _Group_Function_Value,
                              uint32_t _NMEA_Reserved,
                              uint32_t _PGN_of_Requested_Information);
-void PGN059392_SendNameField();
+void PGN059392_SendNameField(NmeaPgn* pgnId);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_059392_H_ */

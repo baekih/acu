@@ -17,7 +17,6 @@
 PGN060416BAMNAME g_PGN060416BAMNAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN060416BAM_priority = 6;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN060416BAM_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)

@@ -25,7 +25,6 @@
 PGN059904NAME g_PGN059904NAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN059904_priority = 6;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN059904_SetFieldValue(uint32_t _PGN)
@@ -91,12 +90,11 @@ uint32_t PGN059904_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
     return 0;
 }
 
-void PGN059904_SendNameField(uint32_t mDA)
+void PGN059904_SendNameField(NmeaPgn* pgnId)
 {
     NMEA2000_SendParseMessages(
-            getCanId(PGN059904_priority, 59904, mDA, g_n2k_addr_local),
+            getCanId(PGN059904_PRIORITY, PGN059904_PGN, pgnId->mSA, g_n2k_addr_local),
             sendPacketLength,
             sendNMEAPackets,
             0);
 }
-

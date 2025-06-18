@@ -14,7 +14,6 @@
 PGN065285NAME g_PGN065285NAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN065285_priority = 7;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN065285_SetFieldValue(uint16_t _Manufacturer_Code,
@@ -44,5 +43,5 @@ void PGN065285_SendNameField()
 {
     PGN065285_SetInitialField();
 
-    NMEA2000_SendParseMessages(getCanId(PGN065285_priority, 65285, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(getCanId(PGN065285_PRIORITY, PGN065285_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
 }

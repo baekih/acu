@@ -19,7 +19,6 @@
 PGN060416RTSNAME g_PGN060416RTSNAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN060416RTS_priority = 6;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN060416RTS_SetFieldValue(uint32_t _RTS_Group_Function_Code,
@@ -73,10 +72,9 @@ uint32_t PGN060416RTS_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf
                                                      pgnId->mSA,
                                                      pgnId->mPS);
 
-    PGN060416CTS_SetFieldValue(FunctionCodeCTS, 2, 1, 0xFFFF, g_PGN060416RTSNAME.mPGN_of_multipacket_message);
+    PGN060416CTS_SetFieldValue(PGN060416_FUNC_CODE_CTS, 2, 1, 0xFFFF, g_PGN060416RTSNAME.mPGN_of_multipacket_message);
 
-    NmeaPgn* sendPgn = getCanId(PGN060416CTS_priority, 60416, pgnId->mSA, g_n2k_addr_local);
-    PGN060416CTS_SendNameField(sendPgn);
+    PGN060416CTS_SendNameField(getCanId(PGN060416_CTS_PRIORITY, PGN060416_CTS_PGN, pgnId->mSA, g_n2k_addr_local));
 
     return 0;
 }

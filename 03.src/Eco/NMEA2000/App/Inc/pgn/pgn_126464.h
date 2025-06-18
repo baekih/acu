@@ -11,6 +11,13 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+/* Private define ------------------------------------------------------------*/
+#define PGN126464_PGN                       126464
+#define PGN126464_PRIORITY                  6
+
+#define PGN_GROUP_TRANSMIT_LIST_MESSAGE     0
+#define PGN_GROUP_RECEIVE_LIST_MESSAGE      1
+
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN126464NAME
 {
@@ -20,8 +27,6 @@ typedef struct __PGN126464NAME
 } PGN126464NAME;
 
 /* Exported variables ---------------------------------------------------------*/
-extern uint32_t PGN_GROUP_TRANSMIT_LIST_MESSAGE;
-extern uint32_t PGN_GROUP_RECEIVE_LIST_MESSAGE;
 
 /* Exported functions --------------------------------------------------------*/
 void PGN126464_SetFieldValue(uint32_t _PGN_Group_Function_Code,

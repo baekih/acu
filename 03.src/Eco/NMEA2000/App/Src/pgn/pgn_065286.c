@@ -16,7 +16,6 @@
 PGN065286NAME g_PGN065286NAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN065286_priority = 6;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN065286_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)

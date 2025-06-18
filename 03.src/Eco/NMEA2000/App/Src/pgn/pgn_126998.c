@@ -17,8 +17,6 @@
 PGN126998NAME g_PGN126998NAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN126998_priority = 6;
-
 uint8_t     installationDescription1[72];
 uint8_t     installationDescription2[72];
 uint8_t     menufacturerDescription[72];
@@ -69,5 +67,8 @@ void PGN126998_ProcessNameField(NmeaPgn* pgnId, uint32_t messagetype)
     PGN126998_SetFieldValue(installationDescription1, installationDescription2,
                             menufacturerDescription);
 
-    SendNonSingleFrame(getCanId(PGN126998_priority, 126998, pgnId->mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, messagetype);
+    SendNonSingleFrame(getCanId(PGN126998_PRIORITY, PGN126998_PGN, pgnId->mSA, g_n2k_addr_local),
+                       sendPacketLength,
+                       sendNMEAPackets,
+                       messagetype);
 }

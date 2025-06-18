@@ -14,6 +14,7 @@
 /* Private define ------------------------------------------------------------*/
 #define PGN126993_PGN                                   126993
 #define PGN126993_PRIORITY                              7
+
 #define PGN126993_FIELD_MIN                             5
 #define PGN126993_FIELD_MAX                             5
 #define PGN126993_UPDATE_RATE                           60000

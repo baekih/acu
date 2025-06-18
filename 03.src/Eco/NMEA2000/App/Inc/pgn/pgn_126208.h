@@ -12,6 +12,10 @@
 /* Includes ------------------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
+#define PGN126208_PGN                       126208
+#define PGN126208_PRIORITY                  3
+#define PGN126208_FIELD_ERROR_CODE_MAX      64
+
 #define FUNCTION_CODE_REQEUST_MESSAGE       0
 #define FUNCTION_CODE_COMMAND_MESSAGE       1
 #define FUNCTION_CODE_ACKNOWLEDGE_MESSAGE   2
@@ -19,10 +23,6 @@
 #define FUNCTION_CODE_READ_FIELDS_REPLY     4
 #define FUNCTION_CODE_WRITE_FIELDS          5
 #define FUNCTION_CODE_WRITE_FIELDS_REPLY    6
-
-#define PGN126208_PGN                       126208
-#define PGN126208_PRIORITY                  3
-#define PGN126208_FIELD_ERROR_CODE_MAX      64
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN126208NAME

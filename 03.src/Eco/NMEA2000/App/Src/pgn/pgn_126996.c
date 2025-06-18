@@ -15,7 +15,6 @@
 PGN126996NAME g_PGN126996NAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN126996_priority = 6;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN126996_SetFieldValue(uint32_t _NMEA_Network_Message_Database_Version,
@@ -66,5 +65,8 @@ void PGN126996_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf, uint3
                             mNMEA2000CertificationLevel,
                             mLoadEquivalency);
 
-    SendNonSingleFrame(getCanId(PGN126996_priority, 126996, pgnId->mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, messagetype);
+    SendNonSingleFrame(getCanId(PGN126996_PRIORITY, PGN126996_PGN, pgnId->mSA, g_n2k_addr_local),
+                       sendPacketLength,
+                       sendNMEAPackets,
+                       messagetype);
 }

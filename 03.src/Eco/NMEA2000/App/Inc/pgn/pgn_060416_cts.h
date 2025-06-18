@@ -11,6 +11,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+/* Private define ------------------------------------------------------------*/
+#define PGN060416_CTS_PGN                       60416
+#define PGN060416_CTS_PRIORITY                  6
+
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN060416CTSNAME
 {
@@ -20,8 +24,6 @@ typedef struct __PGN060416CTSNAME
     uint32_t mNMEA_Reserved;                            // 16 bits
     uint32_t mPGN_of_multipacket_message;               // 24 bits
 } PGN060416CTSNAME;
-
-extern uint32_t PGN060416CTS_priority;
 
 /* Exported functions --------------------------------------------------------*/
 void PGN060416CTS_SetFieldValue(uint32_t _CTS_Group_Function_Code,

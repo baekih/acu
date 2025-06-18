@@ -186,8 +186,8 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
 
         memcpy(sendMultiPacket.mMergedMultiPacket, buf, len);
 
-        PGN060416RTS_SetFieldValue(FunctionCodeRTS, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
-        PGN060416RTS_SendNameField(getCanId(PGN060416RTS_priority, 60416, pgnId->mPS, g_n2k_addr_local));
+        PGN060416RTS_SetFieldValue(PGN060416_FUNC_CODE_RTS, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
+        PGN060416RTS_SendNameField(getCanId(PGN060416_RTS_PRIORITY, PGN060416_RTS_PGN, pgnId->mPS, g_n2k_addr_local));
 
     }
     else if (messagetype == REQUEST_MESSAGE_TYPE_BAM_PACKET) {
@@ -196,8 +196,8 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
 
         totalNumberOfFrametoTransmit = (len / 7) + (((len % 7) == 0) ? 0 : 1);
 
-        PGN060416BAM_SetFieldValue(FunctionCodeBAM, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
-        PGN060416BAM_SendNameField(getCanId(PGN060416BAM_priority, 60416, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local));
+        PGN060416BAM_SetFieldValue(PGN060416_FUNC_CODE_BAM, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
+        PGN060416BAM_SendNameField(getCanId(PGN060416_BAM_PRIORITY, PGN060416_BAM_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local));
 
         for (uint8_t packetIndex = 0; packetIndex < totalNumberOfFrametoTransmit; packetIndex++) {
             memset(&Multipacket[0], 0xff, 7);
@@ -214,7 +214,7 @@ void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t mes
             osDelay(N2K_TX_DELAY_MS);
 
             PGN060160_SetFieldValue(packetIndex + 1, &Multipacket[0]);
-            PGN060160_SendNameField(BROADCAST_DESTINATION_ADDR, g_n2k_addr_local);
+            PGN060160_SendNameField(BROADCAST_DESTINATION_ADDR);
         }
     }
 }
@@ -249,7 +249,7 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
         {
             PGN060160_GetFieldValue(pgnId, len, buf);
 
-            if (PGN060160_ProcessNameField(pgnId, len, buf) == PACKET_PROC_RESULT_MULTIPACKET_DONE) {
+            if (PGN060160_ProcessNameField(pgnId, len, buf) == PGN060160_PACKET_PROC_RESULT_MULTIPACKET_DONE) {
 
                 if (completeMultiPacketData.mRTSCTS == true) {
                     ProcessNMEA2000MultiPacket(completeMultiPacketData.mPGNMultiPacketMessage, pgnId,

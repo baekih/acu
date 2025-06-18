@@ -13,6 +13,8 @@
 #include "pgn_126208.h"
 
 /* Private define ------------------------------------------------------------*/
+#define PGN126208ACKNOWLEDGE_PRIORITY                               3
+
 #define PGN126208_ACK_ERRORCODE_NO_ERROR_ACK                        0x0
 #define PGN126208_ACK_ERRORCODE_PGN_NOT_SUPPORT                     0x1
 #define PGN126208_ACK_ERRORCODE_PGN_TEMPORARILY_NOT_AVAILABLE       0x2
@@ -34,8 +36,6 @@
 #define PGN126208_TX_ACK_ERRORCODE_TX_INTERVAL_CALC_ERROR           0x2
 #define PGN126208_TX_ACK_ERRORCODE_ACCESS_DENIED                    0x3
 #define PGN126208_TX_ACK_ERRORCODE_REQUEST_CMD_NOT_SUPPORTED        0x4
-
-#define PGN126208ACKNOWLEDGE_PRIORITY                               3
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN126208ACKNOWLEDGENAME

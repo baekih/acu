@@ -20,8 +20,6 @@ uint8_t POSITIVIE_ACKNOWLEDGMENT        = 0x00;
 uint8_t NEGATIVIE_ACKNOWLEDGMENT        = 0x01;
 uint32_t PGN_SUPPORTED_ACCESS_DENIED    = 0x02;
 
-uint32_t PGN059392_priority             = 6;
-
 /* Private functions ---------------------------------------------------------*/
 void PGN059392_SetFieldValue(uint8_t _Control_Byte,
                              uint8_t _Group_Function_Value,
@@ -47,6 +45,9 @@ void PGN059392_SetFieldValue(uint8_t _Control_Byte,
 
 void PGN059392_SendNameField(NmeaPgn* pgnId)
 {
-    NMEA2000_SendParseMessages(getCanId(PGN059392_priority, 59392, pgnId->mSA, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(
+            getCanId(PGN059392_PRIORITY, PGN059392_PGN, pgnId->mSA, g_n2k_addr_local),
+            sendPacketLength,
+            sendNMEAPackets,
+            0);
 }
-

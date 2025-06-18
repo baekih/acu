@@ -17,7 +17,6 @@
 PGN060416CTSNAME g_PGN060416CTSNAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN060416CTS_priority = 6;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN060416CTS_SetFieldValue(uint32_t _CTS_Group_Function_Code,
@@ -53,7 +52,7 @@ void PGN060416CTS_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
     uint32_t sendFrame = 0;
     uint32_t endFrame = 0;
-    uint8_t  multiPacketData[MULTI_PACKET_SIZE_BYTES];
+    uint8_t  multiPacketData[PGN060160_MULTI_PACKET_SIZE_BYTES];
     uint32_t startOffset = 0;
     uint32_t endOffset = 0;
 
@@ -62,19 +61,19 @@ void PGN060416CTS_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
         endFrame = g_PGN060416CTSNAME.mNumber_of_next_frame_to_be_transmitted + g_PGN060416CTSNAME.mNumber_of_frames_that_can_be_sent;
 
         while (sendFrame < endFrame) {
-            memset(multiPacketData, 0xff, MULTI_PACKET_SIZE_BYTES);
+            memset(multiPacketData, 0xff, PGN060160_MULTI_PACKET_SIZE_BYTES);
 
             int bufferSize = sendMultiPacket.mTotalMessageByteSize;
 
-            startOffset = (sendFrame - 1) * MULTI_PACKET_SIZE_BYTES;
-            endOffset = startOffset + MULTI_PACKET_SIZE_BYTES;
+            startOffset = (sendFrame - 1) * PGN060160_MULTI_PACKET_SIZE_BYTES;
+            endOffset = startOffset + PGN060160_MULTI_PACKET_SIZE_BYTES;
 
             memcpy(multiPacketData, sendMultiPacket.mMergedMultiPacket+startOffset,
-                    (endOffset > bufferSize) ? (bufferSize - startOffset) : MULTI_PACKET_SIZE_BYTES);
+                    (endOffset > bufferSize) ? (bufferSize - startOffset) : PGN060160_MULTI_PACKET_SIZE_BYTES);
 
             HAL_Delay(1);
             PGN060160_SetFieldValue(sendFrame, multiPacketData);
-            PGN060160_SendNameField(pgnId->mSA, g_n2k_addr_local);
+            PGN060160_SendNameField(pgnId->mSA);
 
             sendFrame++;
 

@@ -29,7 +29,7 @@ uint32_t PGN065288_ProcessNameField(uint8_t preset, uint8_t percentage)
     Add1ByteUInt(percentage);                                                     //Brightness persentage.
     Add3ByteUInt(0xFFFFF0 | (PGN065288_BRIGHT_COLOR_PALETTE << 0));               //Brightness Palette (fixed to 15)
 
-    NMEA2000_SendParseMessages(getCanId(PGN065288_PRIORITY, PGN065288_PGN, 255, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
+    NMEA2000_SendParseMessages(getCanId(PGN065288_PRIORITY, PGN065288_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_local), sendPacketLength, sendNMEAPackets, 0);
 
     return 0;
 }

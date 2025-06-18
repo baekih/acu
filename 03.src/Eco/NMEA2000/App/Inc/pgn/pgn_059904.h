@@ -11,6 +11,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+/* Private define ------------------------------------------------------------*/
+#define PGN059904_PGN                       59904
+#define PGN059904_PRIORITY                  6
+
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN059904NAME
 {
@@ -20,8 +24,7 @@ typedef struct __PGN059904NAME
 /* Exported functions --------------------------------------------------------*/
 
 void PGN059904_SetFieldValue(uint32_t _PGN);
-void PGN059904_SendNameField(uint32_t mDA);
-
+void PGN059904_SendNameField(NmeaPgn* pgnId);
 void PGN059904_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
 uint32_t PGN059904_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
 

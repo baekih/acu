@@ -11,6 +11,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+/* Private define ------------------------------------------------------------*/
+#define PGN060416_RTS_PGN                       60416
+#define PGN060416_RTS_PRIORITY                  6
+
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN060416RTSNAME
 {
@@ -20,8 +24,6 @@ typedef struct __PGN060416RTSNAME
     uint32_t mNMEA_Reserved;                            // 8  bits
     uint32_t mPGN_of_multipacket_message;               // 24 bits
 } PGN060416RTSNAME;
-
-extern uint32_t PGN060416RTS_priority;
 
 /* Exported functions --------------------------------------------------------*/
 void PGN060416RTS_SetFieldValue(uint32_t _RTS_Group_Function_Code,

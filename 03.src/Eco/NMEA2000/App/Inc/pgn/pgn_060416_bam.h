@@ -11,6 +11,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+/* Private define ------------------------------------------------------------*/
+#define PGN060416_BAM_PGN                       60416
+#define PGN060416_BAM_PRIORITY                  6
+
 /* Private typedef -----------------------------------------------------------*/
 typedef struct __PGN060416BAMNAME
 {
@@ -20,8 +24,6 @@ typedef struct __PGN060416BAMNAME
     uint32_t mNMEA_Reserved;                            // 8 bits
     uint32_t mPGN_of_multipacket_message;               // 24 bits
 } PGN060416BAMNAME;
-
-extern uint32_t PGN060416BAM_priority;
 
 /* Exported functions --------------------------------------------------------*/
 void PGN060416BAM_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);

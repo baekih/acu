@@ -15,7 +15,6 @@
 PGN060416EOMNAME g_PGN060416EOMNAME;
 
 /* Private variables ---------------------------------------------------------*/
-uint32_t PGN060416EOM_priority = 6;
 
 /* Private functions ---------------------------------------------------------*/
 void PGN060416EOM_SetFieldValue(uint32_t _EOM_Group_Function_Code,
