@@ -69,7 +69,7 @@ void runEcoTaskKey(void *argument)
         if(GPIO_PIN_SET == HAL_GPIO_ReadPin(PWR_ON_GPIO_Port, PWR_ON_Pin))
         {
             printf("Push KEY_PWR %d sec\n", timer_pwroff++);
-            if(5 < timer_pwroff) NVIC_SystemReset();
+            if(5 <= timer_pwroff) NVIC_SystemReset();
         }
         else timer_pwroff = 0;
 
