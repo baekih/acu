@@ -108,6 +108,67 @@ void runEcoTaskFlash(void *argument)
     }
 }
 
+void runEcoTaskSync(void *argument)
+{
+    /* Infinite loop */
+    for(;;)
+    {
+        if(memcmp(&g_ship.curr, &g_ship.prev, sizeof(ship_param)))
+        {
+            if(isValidDegreeAngle(g_ship.curr.heading_sensor_reading))
+            {
+                setHDGValue((double)g_ship.curr.heading_sensor_reading );
+            }
+
+            setVariation((double)g_ship.curr.magnetic_variation);
+
+            if(g_ship.curr.speed.direction == 0 || g_ship.curr.speed.direction == 1)
+            {
+                if(isValidSpeed(g_ship.curr.speed.over_ground))
+                {
+                    setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS );
+                }
+
+                if(isValidSpeed(g_ship.curr.speed.through_water))
+                {
+                    setSTWValue( ((double)g_ship.curr.speed.through_water / 100.0), SPEED_UNIT_MPS );
+                }
+            }
+
+            if(isValidLongInteger((long)g_ship.curr.water_depth))
+            {
+                if(((short)g_ship.curr.transducer_offset) <= 32764 && ((short)g_ship.curr.transducer_offset) >= -32764)
+                {
+                    setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0) + (double)((short)g_ship.curr.transducer_offset) / 1000.0 );
+                }
+                else
+                {
+                    setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0));
+                }
+            }
+
+            setPositionRapid((double)g_ship.curr.position.latitude/10000000.0, (double)g_ship.curr.position.longitude/10000000.0);
+
+            if(g_ship.curr.course.cog_reference == 0 || g_ship.curr.course.cog_reference == 1)
+            {
+                if(isValidSpeed(g_ship.curr.speed.over_ground))
+                {
+                    setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS);
+                }
+            }
+
+            setXTE((double)g_ship.curr.xte.val/100.0, (unsigned char)g_ship.curr.xte.mode);
+
+            setWindValue(g_ship.curr.wind.speed, g_ship.curr.wind.direction, g_ship.curr.wind.reference);
+
+
+            g_ship.prev = g_ship.curr;
+        }
+
+        osDelay(1);
+    }
+}
+
 void runEcoTaskNMEA2KRx(void *argument)
 {
 #if 0
@@ -187,58 +248,6 @@ void runEcoTaskNMEA2KTx(void *argument)
 #else
     for(;;)
     {
-        if(memcmp(&g_ship.curr, &g_ship.prev, sizeof(ship_param)))
-        {
-            if(isValidDegreeAngle(g_ship.curr.heading_sensor_reading))
-            {
-                setHDGValue((double)g_ship.curr.heading_sensor_reading );
-            }
-
-            setVariation((double)g_ship.curr.magnetic_variation);
-
-            if(g_ship.curr.speed.direction == 0 || g_ship.curr.speed.direction == 1)
-            {
-                if(isValidSpeed(g_ship.curr.speed.over_ground))
-                {
-                    setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS );
-                }
-
-                if(isValidSpeed(g_ship.curr.speed.through_water))
-                {
-                    setSTWValue( ((double)g_ship.curr.speed.through_water / 100.0), SPEED_UNIT_MPS );
-                }
-            }
-
-            if(isValidLongInteger((long)g_ship.curr.water_depth))
-            {
-                if(((short)g_ship.curr.transducer_offset) <= 32764 && ((short)g_ship.curr.transducer_offset) >= -32764)
-                {
-                    setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0) + (double)((short)g_ship.curr.transducer_offset) / 1000.0 );
-                }
-                else
-                {
-                    setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0));
-                }
-            }
-
-            setPositionRapid((double)g_ship.curr.position.latitude/10000000.0, (double)g_ship.curr.position.longitude/10000000.0);
-
-            if(g_ship.curr.course.cog_reference == 0 || g_ship.curr.course.cog_reference == 1)
-            {
-                if(isValidSpeed(g_ship.curr.speed.over_ground))
-                {
-                    setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS);
-                }
-            }
-
-            setXTE((double)g_ship.curr.xte.val/100.0, (unsigned char)g_ship.curr.xte.mode);
-
-            setWindValue(g_ship.curr.wind.speed, g_ship.curr.wind.direction, g_ship.curr.wind.reference);
-
-
-            g_ship.prev = g_ship.curr;
-        }
-
         osDelay(1);
     }
 #endif
