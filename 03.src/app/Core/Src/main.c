@@ -1131,8 +1131,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(LED_RG_CTL_GPIO_Port, LED_RG_CTL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, WDI_Pin|CAN1_STBY_Pin|TS_INT_Pin|LCD_STBY_Pin
-                          |TS_RSTn_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, CAN1_STBY_Pin|TS_INT_Pin|LCD_STBY_Pin|TS_RSTn_Pin
+                          |LCD_RSTn_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LCD_LR_Pin|LCD_UD_Pin, GPIO_PIN_SET);
@@ -1167,20 +1167,26 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : WDI_Pin CAN1_STBY_Pin LCD_LR_Pin LCD_UD_Pin
-                           TS_INT_Pin LCD_STBY_Pin TS_RSTn_Pin LCD_RSTn_Pin */
-  GPIO_InitStruct.Pin = WDI_Pin|CAN1_STBY_Pin|LCD_LR_Pin|LCD_UD_Pin
-                          |TS_INT_Pin|LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  /*Configure GPIO pin : PWR_ON_Pin */
+  GPIO_InitStruct.Pin = PWR_ON_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(PWR_ON_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : KEY_PWR_Pin */
   GPIO_InitStruct.Pin = KEY_PWR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(KEY_PWR_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : CAN1_STBY_Pin LCD_LR_Pin LCD_UD_Pin TS_INT_Pin
+                           LCD_STBY_Pin TS_RSTn_Pin LCD_RSTn_Pin */
+  GPIO_InitStruct.Pin = CAN1_STBY_Pin|LCD_LR_Pin|LCD_UD_Pin|TS_INT_Pin
+                          |LCD_STBY_Pin|TS_RSTn_Pin|LCD_RSTn_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PWR_HOLD_Pin */
   GPIO_InitStruct.Pin = PWR_HOLD_Pin;

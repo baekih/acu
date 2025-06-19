@@ -2,9 +2,9 @@
 *.BAK
 03.src/.settings
 03.src/app/.settings
+03.src/app/mx.scratch
 03.src/boot1/.settings
 03.src/boot2/.settings
 03.src/stldr/.settings
-02.tools/nmea2000/simulator/5.3.11/NMEA2000.mcr.lock
+02.tools/nmea2000/simulator/5.3.13/NMEA2000.mcr.lock
 *.tmp
-/02.tools/nmea2000/simulator/5.3.13/NMEA2000.mcr.lock
