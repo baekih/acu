@@ -34,6 +34,8 @@ void runEcoTaskMain(void *argument)
     initFlashData();
     NMEA2000_Open();
 
+    HAL_GPIO_WritePin(LED_RG_CTL_GPIO_Port, LED_RG_CTL_Pin, GPIO_PIN_SET);
+
     tick = osKernelGetTickCount() - osKernelGetTickCount()%10;
 
     for(;;)

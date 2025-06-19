@@ -1128,6 +1128,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOE, BUZZER_ON_Pin|LED_ON_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LED_RG_CTL_GPIO_Port, LED_RG_CTL_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, WDI_Pin|CAN1_STBY_Pin|TS_INT_Pin|LCD_STBY_Pin
                           |TS_RSTn_Pin|LCD_RSTn_Pin, GPIO_PIN_RESET);
 
@@ -1150,6 +1153,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_ON_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LED_RG_CTL_Pin */
+  GPIO_InitStruct.Pin = LED_RG_CTL_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED_RG_CTL_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : KEY_DN_Pin KEY_SEL_Pin KEY_UP_Pin KEY_PREV_Pin */
   GPIO_InitStruct.Pin = KEY_DN_Pin|KEY_SEL_Pin|KEY_UP_Pin|KEY_PREV_Pin;

@@ -66,6 +66,8 @@ void SystemClock_Config(void);
 #define LED_ON_GPIO_Port GPIOE
 #define MCU_LCD_SCL_Pin GPIO_PIN_8
 #define MCU_LCD_SCL_GPIO_Port GPIOB
+#define LED_RG_CTL_Pin GPIO_PIN_4
+#define LED_RG_CTL_GPIO_Port GPIOB
 #define KEY_DN_Pin GPIO_PIN_12
 #define KEY_DN_GPIO_Port GPIOC
 #define WDI_Pin GPIO_PIN_15
