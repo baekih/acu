@@ -1,17 +1,17 @@
-#ifndef DATABOXPRESENTER_HPP
-#define DATABOXPRESENTER_HPP
+#ifndef LOGBOXPRESENTER_HPP
+#define LOGBOXPRESENTER_HPP
 
 #include <gui/model/ModelListener.hpp>
 #include <mvp/Presenter.hpp>
 
 using namespace touchgfx;
 
-class DataboxView;
+class LogBoxView;
 
-class DataboxPresenter : public touchgfx::Presenter, public ModelListener
+class LogBoxPresenter : public touchgfx::Presenter, public ModelListener
 {
 public:
-    DataboxPresenter(DataboxView& v);
+    LogBoxPresenter(LogBoxView& v);
 
     /**
      * The activate function is called automatically when this screen is "switched in"
@@ -25,12 +25,12 @@ public:
      */
     virtual void deactivate();
 
-    virtual ~DataboxPresenter() {}
+    virtual ~LogBoxPresenter() {}
 
 private:
-    DataboxPresenter();
+    LogBoxPresenter();
 
-    DataboxView& view;
+    LogBoxView& view;
 };
 
-#endif // DATABOXPRESENTER_HPP
+#endif // LOGBOXPRESENTER_HPP

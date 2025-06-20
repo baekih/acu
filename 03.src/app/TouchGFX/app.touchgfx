@@ -427,12 +427,12 @@
         ]
       },
       {
-        "Name": "Databox",
+        "Name": "LogBox",
         "Components": [
           {
             "Type": "BoxWithBorder",
             "Name": "HEAVE_BOX",
-            "Y": 480,
+            "Y": 240,
             "Width": 400,
             "Height": 120,
             "Color": {
@@ -451,26 +451,7 @@
             "Type": "BoxWithBorder",
             "Name": "VOLTAGE_BOX",
             "X": 400,
-            "Y": 480,
-            "Width": 400,
-            "Height": 120,
-            "Color": {
-              "Red": 52,
-              "Green": 52,
-              "Blue": 51
-            },
-            "BorderColor": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "BorderSize": 2
-          },
-          {
-            "Type": "BoxWithBorder",
-            "Name": "ENVIRONMENT_BOX",
-            "X": 400,
-            "Y": 720,
+            "Y": 240,
             "Width": 400,
             "Height": 120,
             "Color": {
@@ -641,61 +622,6 @@
               "Blue": 255
             },
             "AutoSize": true
-          },
-          {
-            "Type": "BoxWithBorder",
-            "Name": "TANK_BOX",
-            "Y": 600,
-            "Width": 400,
-            "Height": 120,
-            "Color": {
-              "Red": 52,
-              "Green": 52,
-              "Blue": 51
-            },
-            "BorderColor": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "BorderSize": 2
-          },
-          {
-            "Type": "BoxWithBorder",
-            "Name": "ENGINE_BOX",
-            "Y": 720,
-            "Width": 400,
-            "Height": 120,
-            "Color": {
-              "Red": 52,
-              "Green": 52,
-              "Blue": 51
-            },
-            "BorderColor": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "BorderSize": 2
-          },
-          {
-            "Type": "BoxWithBorder",
-            "Name": "BOAT_BOX",
-            "X": 400,
-            "Y": 600,
-            "Width": 400,
-            "Height": 120,
-            "Color": {
-              "Red": 52,
-              "Green": 52,
-              "Blue": 51
-            },
-            "BorderColor": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "BorderSize": 2
           },
           {
             "Type": "BoxWithBorder",

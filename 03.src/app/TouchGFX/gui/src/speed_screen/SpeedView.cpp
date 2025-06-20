@@ -238,7 +238,7 @@ void SpeedView::handleClickEvent(const ClickEvent& evt)
     else if (evt.getType() == ClickEvent::RELEASED)
     {
         if((pressedX < 100) && (pressedX - x > 20)){
-            static_cast<FrontendApplication*>(Application::getInstance())->gotoDataboxScreenNoTransition();
+            static_cast<FrontendApplication*>(Application::getInstance())->gotoLogBoxScreenNoTransition();
         }
         else if((200 < x) && (x < 400) && (200 < y) && (y < 400)){
             if(speedType == typeSTW){
