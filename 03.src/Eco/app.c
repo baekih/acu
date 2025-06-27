@@ -42,6 +42,16 @@ void runEcoTaskMain(void *argument)
     {
         chkN2KLastAddrClaimTime();
 
+#if 0
+        if(tick%1000 == 0)
+        {
+            printf("rud inst[%03d] ang_pos:order[%03.2f:%03.2f]\n",
+                   g_rudder.instance,
+                   ((double)g_rudder.position)*180.0/M_PI/10000.0,
+                   ((double)g_rudder.angle_order)*180.0/M_PI/10000.0);
+        }
+#endif
+
         if(tick%60000 == 0)
         {
             NMEA2000_126993_heartbeat();
