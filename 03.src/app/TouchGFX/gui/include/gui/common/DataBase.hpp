@@ -40,6 +40,9 @@ extern "C" {
 #define DEPTH_UNIT_HR           3
 #define DEPTH_UNIT_PB           4
 
+#define HEADING_TRUE            0
+#define HEADING_MAGNETIC        1
+
 #define UNIT_TEMP_CELSIUS       0
 #define UNIT_TEMP_FAHRENHEIT    1
 
@@ -58,6 +61,7 @@ extern "C" {
 #define KMH_TO_MPH(Kmh)         (Kmh * 0.62137119223733)
 
 #define OUT_OF_RANGE            "*99.9"
+#define DEGREE_OUT_OF_RANGE     "---.-"
 #define SPEED_OUT_OF_RANGE      "*9.9"
 
 #define INVALID_DEGREE_VALUE    (-99999.9)
@@ -93,6 +97,9 @@ extern const double depthDisplayFeetMax;
 extern const double depthDisplayMeterMax;
 extern const double depthDisplayFathomMax;
 extern const double depthDisplayPBMax;
+
+extern const double headingDisplayMin;
+extern const double headingDisplayMax;
 
 double GetRound(double val, double roundFraction);
 

@@ -44,6 +44,9 @@ const double depthDisplayMeterMax   = 1500.0;
 const double depthDisplayFathomMax  = 820.0;
 const double depthDisplayPBMax      = 926.0;
 
+const double headingDisplayMin      = 0.0;
+const double headingDisplayMax      = 360.0;
+
 double hdgValue = INVALID_DEGREE_VALUE;
 double Variation = INVALID_DEGREE_VALUE;
 bool validHDGValue = false;
@@ -55,6 +58,7 @@ uint32_t lastReceiveHDGValue = 0;
 double stwValues[4];
 double sogValues[4];
 double depthValues[5];
+double headingValues[2];
 double wtempValues[2];
 
 double windSpeedValues[4];

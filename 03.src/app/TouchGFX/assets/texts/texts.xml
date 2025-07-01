@@ -95,16 +95,19 @@
       </Text>
     </TextGroup>
     <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_SXL1" Alignment="Left" TypographyId="TYPEPO_70PX">
+        <Translation Language="GB">˚</Translation>
+      </Text>
       <Text Id="WILDCARD_25PX" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
-      <Text Id="WILDCARD_65PX" Alignment="Right" TypographyId="TYPEPO_65PX">
+      <Text Id="WILDCARD_WATER_TEMP_80PX" Alignment="Right" TypographyId="TYPEPO_80PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
       <Text Id="WILDCARD_90PX" Alignment="Center" TypographyId="TYPEPO_90PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
-      <Text Id="WILDCARD_100PX" Alignment="Right" TypographyId="TYPEPO_100PX">
+      <Text Id="WILDCARD_80PX" Alignment="Right" TypographyId="TYPEPO_80PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
       <Text Id="WILDCARD_120PX" Alignment="Left" TypographyId="TYPEPO_120PX">
@@ -113,13 +116,13 @@
       <Text Id="WILDCARD_150PX" Alignment="Center" TypographyId="TYPEPO_150PX">
         <Translation Language="GB" Alignment="Right">&lt;*&gt;</Translation>
       </Text>
-      <Text Id="TEMP_UNIT_30PX" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">( C)</Translation>
+      <Text Id="TEMP_UNIT_65PX" Alignment="Left" TypographyId="TYPEPO_65PX">
+        <Translation Language="GB">˚C</Translation>
       </Text>
       <Text Id="DEGREE_25PX" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">˚</Translation>
       </Text>
-      <Text Id="DEGREE_30PX" Alignment="Left" TypographyId="TYPEPO_30PX">
+      <Text Id="DEGREE_70PX" Alignment="Left" TypographyId="TYPEPO_30PX">
         <Translation Language="GB">˚</Translation>
       </Text>
       <Text Id="DEGREE_65PX" Alignment="Left" TypographyId="TYPEPO_65PX">
@@ -137,10 +140,10 @@
       <Text Id="__SingleUse_LJB1" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">HDG</Translation>
       </Text>
-      <Text Id="__SingleUse_84IF" Alignment="Left" TypographyId="TYPEPO_100PX">
+      <Text Id="__SingleUse_84IF" Alignment="Left" TypographyId="TYPEPO_80PX">
         <Translation Language="GB">000</Translation>
       </Text>
-      <Text Id="__SingleUse_90QG" Alignment="Left" TypographyId="TYPEPO_100PX">
+      <Text Id="__SingleUse_90QG" Alignment="Left" TypographyId="TYPEPO_80PX">
         <Translation Language="GB">100.0</Translation>
       </Text>
       <Text Id="TEMP_UNIT_25PX" Alignment="Left" TypographyId="TYPEPO_25PX">
@@ -149,7 +152,7 @@
       <Text Id="__SingleUse_7IDS" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">W Temp</Translation>
       </Text>
-      <Text Id="__SingleUse_YACM" Alignment="Left" TypographyId="TYPEPO_100PX">
+      <Text Id="__SingleUse_YACM" Alignment="Left" TypographyId="TYPEPO_80PX">
         <Translation Language="GB">0000</Translation>
       </Text>
       <Text Id="DEPTH_UNIT_25PX" Alignment="Left" TypographyId="TYPEPO_25PX">
@@ -176,20 +179,20 @@
       <Text Id="__SingleUse_82LB" Alignment="Center" TypographyId="TYPEPO_120PX">
         <Translation Language="GB">00.0</Translation>
       </Text>
-      <Text Id="__SingleUse_5D19" Alignment="Left" TypographyId="TYPEPO_100PX">
-        <Translation Language="GB">0000</Translation>
+      <Text Id="__SingleUse_5D19" Alignment="Left" TypographyId="TYPEPO_80PX">
+        <Translation Language="GB">0.0</Translation>
       </Text>
-      <Text Id="__SingleUse_AUKH" Alignment="Left" TypographyId="TYPEPO_65PX">
-        <Translation Language="GB">100.00</Translation>
+      <Text Id="__SingleUse_AUKH" Alignment="Left" TypographyId="TYPEPO_80PX">
+        <Translation Language="GB">0.0</Translation>
       </Text>
       <Text Id="__SingleUse_TOHO" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">W Temp</Translation>
+        <Translation Language="GB">Water Temp</Translation>
       </Text>
       <Text Id="DEPTH_UNIT_30PX" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">(m)</Translation>
+        <Translation Language="GB">(˚)</Translation>
       </Text>
       <Text Id="__SingleUse_P8X0" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">Depth</Translation>
+        <Translation Language="GB">Heading True</Translation>
       </Text>
     </TextGroup>
   </Texts>

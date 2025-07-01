@@ -172,23 +172,21 @@ void SpeedView::updateSpeed(double value, int max)
     SPEED_VALUE.invalidate();
 }
 
-void SpeedView::updateDepth(double value)
+
+void SpeedView::updateHeading(double value)
 {
-    if(value < depthDisplayMin || value > depthDisplayMeterMax){
-        Unicode::snprintf(DEPTH_VALUEBuffer, DEPTH_VALUE_SIZE, OUT_OF_RANGE);
+    if(value < headingDisplayMin || headingDisplayMax < value){
+        Unicode::snprintf(HEADING_VALUEBuffer, HEADING_VALUE_SIZE, DEGREE_OUT_OF_RANGE);
+    }
+    else if(headingDisplayMax - 0.05 <= value && value < headingDisplayMax + 0.05)
+    {
+        Unicode::snprintfFloat(HEADING_VALUEBuffer, HEADING_VALUE_SIZE, "%.1f", 0.0);
     }
     else {
-        double depthValue = GetRound(value, 10.0);
-
-        if(depthValue < 100){
-            Unicode::snprintfFloat(DEPTH_VALUEBuffer, DEPTH_VALUE_SIZE, "%.1f", depthValue);
-        }
-        else{
-            Unicode::snprintf(DEPTH_VALUEBuffer, DEPTH_VALUE_SIZE, "%d", (int)depthValue);
-        }
+        Unicode::snprintfFloat(HEADING_VALUEBuffer, HEADING_VALUE_SIZE, "%.1f", value);
     }
 
-    DEPTH_VALUE.invalidate();
+    HEADING_VALUE.invalidate();
 }
 
 void SpeedView::updateWTemp(double value)
@@ -275,7 +273,7 @@ void SpeedView::handleTickEvent()
 
     updateSTW(getSTWValue(SPEED_UNIT_KNOT));
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
-    updateDepth(getDepthValue(DEPTH_UNIT_METER));
+    updateHeading(getHDGValue());
     updateWTemp(getWTempValue(UNIT_TEMP_CELSIUS));
 
 #endif

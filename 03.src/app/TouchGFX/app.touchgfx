@@ -168,12 +168,12 @@
           },
           {
             "Type": "TextArea",
-            "Name": "DEPTH_VALUE",
-            "X": 568,
-            "Y": 72,
-            "Width": 227,
+            "Name": "HEADING_VALUE",
+            "X": 554,
+            "Y": 73,
+            "Width": 214,
             "Height": 105,
-            "TextId": "WILDCARD_100PX",
+            "TextId": "WILDCARD_80PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -183,17 +183,17 @@
             "Wildcard1": {
               "TextId": "__SingleUse_5D19",
               "UseBuffer": true,
-              "BufferSize": 5
+              "BufferSize": 6
             }
           },
           {
             "Type": "TextArea",
-            "Name": "DEPTH_UNIT",
-            "X": 744,
-            "Y": 22,
-            "Width": 48,
-            "Height": 37,
-            "TextId": "DEPTH_UNIT_30PX",
+            "Name": "HEADING_DEGREE_UNIT",
+            "X": 768,
+            "Y": 79,
+            "Width": 23,
+            "Height": 79,
+            "TextId": "__SingleUse_SXL1",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -204,10 +204,10 @@
           },
           {
             "Type": "TextArea",
-            "Name": "DEPTH_TITLE",
+            "Name": "HEADING_TITLE",
             "X": 602,
             "Y": 22,
-            "Width": 80,
+            "Width": 180,
             "Height": 37,
             "TextId": "__SingleUse_P8X0",
             "TextRotation": "0",
@@ -221,11 +221,11 @@
           {
             "Type": "TextArea",
             "Name": "WTEMP_VALUE",
-            "X": 588,
-            "Y": 345,
-            "Width": 207,
-            "Height": 72,
-            "TextId": "WILDCARD_65PX",
+            "X": 560,
+            "Y": 339,
+            "Width": 175,
+            "Height": 84,
+            "TextId": "WILDCARD_WATER_TEMP_80PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -235,33 +235,17 @@
             "Wildcard1": {
               "TextId": "__SingleUse_AUKH",
               "UseBuffer": true,
-              "BufferSize": 8
+              "BufferSize": 5
             }
           },
           {
             "Type": "TextArea",
-            "Name": "DEGREE_UNIT",
-            "X": 753,
-            "Y": 256,
-            "Width": 10,
-            "Height": 37,
-            "TextId": "DEGREE_30PX",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "AutoSize": true
-          },
-          {
-            "Type": "TextArea",
             "Name": "WTEMP_UNIT",
-            "X": 743,
-            "Y": 253,
-            "Width": 49,
-            "Height": 37,
-            "TextId": "TEMP_UNIT_30PX",
+            "X": 735,
+            "Y": 351,
+            "Width": 65,
+            "Height": 74,
+            "TextId": "TEMP_UNIT_65PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -273,9 +257,9 @@
           {
             "Type": "TextArea",
             "Name": "WTEMP_TITLE",
-            "X": 601,
-            "Y": 253,
-            "Width": 109,
+            "X": 611,
+            "Y": 251,
+            "Width": 162,
             "Height": 37,
             "TextId": "__SingleUse_TOHO",
             "TextRotation": "0",
@@ -492,7 +476,7 @@
             "Y": 368,
             "Width": 303,
             "Height": 105,
-            "TextId": "WILDCARD_100PX",
+            "TextId": "WILDCARD_80PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -578,7 +562,7 @@
             "Y": 368,
             "Width": 227,
             "Height": 105,
-            "TextId": "WILDCARD_100PX",
+            "TextId": "WILDCARD_80PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -712,7 +696,7 @@
             "Y": 5,
             "Width": 178,
             "Height": 111,
-            "TextId": "WILDCARD_100PX",
+            "TextId": "WILDCARD_80PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -788,7 +772,7 @@
             "Y": 114,
             "Width": 245,
             "Height": 132,
-            "TextId": "WILDCARD_100PX",
+            "TextId": "WILDCARD_80PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -863,7 +847,7 @@
             "Y": 114,
             "Width": 245,
             "Height": 132,
-            "TextId": "WILDCARD_100PX",
+            "TextId": "WILDCARD_80PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,

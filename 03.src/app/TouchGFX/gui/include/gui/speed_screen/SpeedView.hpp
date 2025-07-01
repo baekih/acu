@@ -45,7 +45,7 @@ public:
     void updateSTW(double value);
     void updateSOG(double value);
 
-    void updateDepth(double value);
+    void updateHeading(double value);
     void updateWTemp(double value);
 
     void setSpeedType(int new_type);
