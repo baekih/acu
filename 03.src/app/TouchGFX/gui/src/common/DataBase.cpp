@@ -48,8 +48,12 @@ const double headingDisplayMin      = 0.0;
 const double headingDisplayMax      = 360.0;
 
 double hdgValue = INVALID_DEGREE_VALUE;
-double Variation = INVALID_DEGREE_VALUE;
 bool validHDGValue = false;
+
+double cogValue = INVALID_DEGREE_VALUE;
+bool validCOGValue = false;
+
+double Variation = INVALID_DEGREE_VALUE;
 
 #ifndef SIMULATOR
 uint32_t lastReceiveHDGValue = 0;
@@ -158,6 +162,20 @@ void setHDGValue(double hdg)
 double getHDGValue()
 {
     return hdgValue;
+}
+
+void setCOGValue(double cog)
+{
+    cogValue = GetRadianToDegree360(cog);
+#ifndef SIMULATOR
+    lastReceiveHDGValue = HAL_GetTick();
+#endif
+    validCOGValue = true;
+}
+
+double getCOGValue()
+{
+    return cogValue;
 }
 
 void setVariation(double variation)

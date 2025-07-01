@@ -140,7 +140,12 @@ void runEcoTaskSync(void *argument)
         {
             if(isValidDegreeAngle(g_ship.curr.heading_sensor_reading))
             {
-                setHDGValue((double)g_ship.curr.heading_sensor_reading );
+                setHDGValue((double)g_ship.curr.heading_sensor_reading + (double)g_ship.curr.magnetic_variation);
+            }
+
+            if(isValidDegreeAngle(g_ship.curr.course.over_ground))
+            {
+                setCOGValue((double)g_ship.curr.course.over_ground);
             }
 
             setVariation((double)g_ship.curr.magnetic_variation);

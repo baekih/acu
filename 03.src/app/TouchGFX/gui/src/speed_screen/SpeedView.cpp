@@ -173,7 +173,7 @@ void SpeedView::updateSpeed(double value, int max)
 }
 
 
-void SpeedView::updateHeading(double value)
+void SpeedView::updateHDG(double value)
 {
     if(value < headingDisplayMin || headingDisplayMax < value){
         Unicode::snprintf(HEADING_VALUEBuffer, HEADING_VALUE_SIZE, DEGREE_OUT_OF_RANGE);
@@ -189,21 +189,17 @@ void SpeedView::updateHeading(double value)
     HEADING_VALUE.invalidate();
 }
 
-void SpeedView::updateWTemp(double value)
+void SpeedView::updateCOG(double value)
 {
-    double tempC = GetRound(value, 10.0);
-
-    const char MAX_TEMP_VALUE[] = "*99.9";
-    const char MIN_TEMP_VALUE[] = "-*9.9";
-
-    if(tempC > tempCelsiusDisplayMax){
-        Unicode::snprintf(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, MAX_TEMP_VALUE);
+    if(value < headingDisplayMin || headingDisplayMax < value){
+        Unicode::snprintf(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, DEGREE_OUT_OF_RANGE);
     }
-    else if(tempC < tempCelsiusDisplayMin){
-        Unicode::snprintf(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, MIN_TEMP_VALUE);
+    else if(headingDisplayMax - 0.05 <= value && value < headingDisplayMax + 0.05)
+    {
+        Unicode::snprintfFloat(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, "%.1f", 0.0);
     }
-    else{
-        Unicode::snprintfFloat(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, "%.1f", tempC);
+    else {
+        Unicode::snprintfFloat(WTEMP_VALUEBuffer, WTEMP_VALUE_SIZE, "%.1f", value);
     }
 
     WTEMP_VALUE.invalidate();
@@ -273,8 +269,8 @@ void SpeedView::handleTickEvent()
 
     updateSTW(getSTWValue(SPEED_UNIT_KNOT));
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
-    updateHeading(getHDGValue());
-    updateWTemp(getWTempValue(UNIT_TEMP_CELSIUS));
+    updateHDG(getHDGValue());
+    updateCOG(getCOGValue());
 
 #endif
 }

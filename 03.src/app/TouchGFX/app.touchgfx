@@ -93,7 +93,7 @@
           {
             "Type": "TextArea",
             "Name": "SPEED_TITLE",
-            "X": 244,
+            "X": 250,
             "Y": 359,
             "Width": 80,
             "Height": 45,
@@ -130,8 +130,8 @@
           {
             "Type": "TextArea",
             "Name": "SPEED_VALUE",
-            "X": 169,
-            "Y": 206,
+            "X": 147,
+            "Y": 219,
             "Width": 245,
             "Height": 132,
             "TextId": "WILDCARD_120PX",
@@ -150,9 +150,28 @@
           {
             "Type": "Line",
             "Name": "TEXT_LINE_CENTER",
-            "X": 582,
-            "Y": 220,
-            "Width": 213,
+            "X": 564,
+            "Y": 137,
+            "Width": 227,
+            "Height": 43,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "StartX": 5.0,
+            "StartY": 20.0,
+            "EndX": 230.0,
+            "EndY": 20.0,
+            "LineWidth": 4.0,
+            "LineEndingStyle": "Round"
+          },
+          {
+            "Type": "Line",
+            "Name": "TEXT_LINE_CENTER_1",
+            "X": 586,
+            "Y": 295,
+            "Width": 207,
             "Height": 43,
             "Color": {
               "Red": 255,
@@ -169,11 +188,11 @@
           {
             "Type": "TextArea",
             "Name": "HEADING_VALUE",
-            "X": 554,
-            "Y": 73,
-            "Width": 214,
-            "Height": 105,
-            "TextId": "WILDCARD_80PX",
+            "X": 595,
+            "Y": 207,
+            "Width": 175,
+            "Height": 109,
+            "TextId": "WILDCARD_HEADING_65PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -189,8 +208,8 @@
           {
             "Type": "TextArea",
             "Name": "HEADING_DEGREE_UNIT",
-            "X": 768,
-            "Y": 79,
+            "X": 770,
+            "Y": 209,
             "Width": 23,
             "Height": 79,
             "TextId": "__SingleUse_SXL1",
@@ -204,9 +223,25 @@
           },
           {
             "Type": "TextArea",
+            "Name": "HEADING_DEGREE_UNIT_1",
+            "X": 770,
+            "Y": 47,
+            "Width": 23,
+            "Height": 79,
+            "TextId": "__SingleUse_O0VI",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
             "Name": "HEADING_TITLE",
-            "X": 602,
-            "Y": 22,
+            "X": 611,
+            "Y": 170,
             "Width": 180,
             "Height": 37,
             "TextId": "__SingleUse_P8X0",
@@ -221,11 +256,11 @@
           {
             "Type": "TextArea",
             "Name": "WTEMP_VALUE",
-            "X": 560,
-            "Y": 339,
+            "X": 595,
+            "Y": 44,
             "Width": 175,
-            "Height": 84,
-            "TextId": "WILDCARD_WATER_TEMP_80PX",
+            "Height": 89,
+            "TextId": "WILDCARD_COG_65PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -235,31 +270,15 @@
             "Wildcard1": {
               "TextId": "__SingleUse_AUKH",
               "UseBuffer": true,
-              "BufferSize": 5
+              "BufferSize": 6
             }
           },
           {
             "Type": "TextArea",
-            "Name": "WTEMP_UNIT",
-            "X": 735,
-            "Y": 351,
-            "Width": 65,
-            "Height": 74,
-            "TextId": "TEMP_UNIT_65PX",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "AutoSize": true
-          },
-          {
-            "Type": "TextArea",
             "Name": "WTEMP_TITLE",
-            "X": 611,
-            "Y": 251,
-            "Width": 162,
+            "X": 519,
+            "Y": 7,
+            "Width": 272,
             "Height": 37,
             "TextId": "__SingleUse_TOHO",
             "TextRotation": "0",
@@ -476,7 +495,7 @@
             "Y": 368,
             "Width": 303,
             "Height": 105,
-            "TextId": "WILDCARD_80PX",
+            "TextId": "WILDCARD_HEADING_65PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -562,7 +581,7 @@
             "Y": 368,
             "Width": 227,
             "Height": 105,
-            "TextId": "WILDCARD_80PX",
+            "TextId": "WILDCARD_HEADING_65PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -696,7 +715,7 @@
             "Y": 5,
             "Width": 178,
             "Height": 111,
-            "TextId": "WILDCARD_80PX",
+            "TextId": "WILDCARD_HEADING_65PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -772,7 +791,7 @@
             "Y": 114,
             "Width": 245,
             "Height": 132,
-            "TextId": "WILDCARD_80PX",
+            "TextId": "WILDCARD_HEADING_65PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -847,7 +866,7 @@
             "Y": 114,
             "Width": 245,
             "Height": 132,
-            "TextId": "WILDCARD_80PX",
+            "TextId": "WILDCARD_HEADING_65PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,

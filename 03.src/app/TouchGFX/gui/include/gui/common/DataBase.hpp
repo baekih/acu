@@ -127,9 +127,14 @@ double adjustDisplayAngleDegree(double angle);
 
 void setHDGValue(double hdg);
 double getHDGValue();
+
 bool isTimeInHDG();
 void setValidHDG(bool valid);
 bool isValidHDG();
+
+void setCOGValue(double cog);
+double getCOGValue();
+
 void setVariation(double variation);
 double getVariation();
 
