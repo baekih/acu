@@ -517,7 +517,7 @@ void setBuzzer(uint8_t bzr_vol)
     bzr_vol_prev = bzr_vol;
 
     sConfigOC.Pulse = (125*bzr_vol)/100;
-    printf("set bzr_vol[%d] Pulse[%d]\n", bzr_vol, sConfigOC.Pulse);
+//    printf("set bzr_vol[%d] Pulse[%d]\n", bzr_vol, sConfigOC.Pulse);
 
     HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
     HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);

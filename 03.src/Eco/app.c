@@ -34,8 +34,6 @@ void runEcoTaskMain(void *argument)
     initFlashData();
     NMEA2000_Open();
 
-    HAL_GPIO_WritePin(LED_RG_CTL_GPIO_Port, LED_RG_CTL_Pin, GPIO_PIN_SET);
-
     tick = osKernelGetTickCount() - osKernelGetTickCount()%10;
 
     for(;;)
@@ -72,6 +70,12 @@ void runEcoTaskKey(void *argument)
 {
     uint8_t  timer_pwroff = 0;
 
+    HAL_GPIO_WritePin(LED_RG_CTL_GPIO_Port, LED_RG_CTL_Pin, GPIO_PIN_SET);
+
+    setBuzzer(100);
+    osDelay(100);
+    setBuzzer(0);
+
     for(;;)
     {
 //        printf("%s():%d\n",__func__,__LINE__);
@@ -79,7 +83,14 @@ void runEcoTaskKey(void *argument)
         if(GPIO_PIN_SET == HAL_GPIO_ReadPin(PWR_ON_GPIO_Port, PWR_ON_Pin))
         {
             printf("Push KEY_PWR %d sec\n", timer_pwroff++);
-            if(5 <= timer_pwroff) NVIC_SystemReset();
+            if(5 <= timer_pwroff)
+            {
+                setBuzzer(100);
+                osDelay(500);
+                setBuzzer(0);
+
+                NVIC_SystemReset();
+            }
         }
         else timer_pwroff = 0;
 
