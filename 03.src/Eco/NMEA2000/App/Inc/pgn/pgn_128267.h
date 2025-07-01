@@ -8,11 +8,11 @@
 #ifndef NMEA2000_INC_PGN_PGN_128267_H_
 #define NMEA2000_INC_PGN_PGN_128267_H_
 
+
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "app.h"
 
 /* Private define ------------------------------------------------------------*/
+#define PGN128267_PGN                       128267
 #define PGN128267_PRIORITY                  7
 
 /* Private typedef -----------------------------------------------------------*/
@@ -24,5 +24,6 @@
 /* Exported functions --------------------------------------------------------*/
 void PGN128267_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
 void PGN128267_ProcessNameField(NmeaPgn* pgnId);
+
 
 #endif /* NMEA2000_INC_PGN_PGN_128267_H_ */

@@ -7,462 +7,493 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "common.h"
-
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
-#include "multipacketdata.h"
-#include "fastpacketdata.h"
 
-#include "pgn_059904.h"
-#include "pgn_060160.h"
-#include "pgn_060416.h"
-#include "pgn_060416_rts.h"
-#include "pgn_060416_bam.h"
-#include "pgn_060928.h"
-#include "pgn_061184_stgf.h"
-#include "pgn_065240.h"
-#include "pgn_065285.h"
-#include "pgn_065286.h"
-#include "pgn_065287.h"
-#include "pgn_126208.h"
-#include "pgn_126993.h"
-#include "pgn_126720.h"
-#include "pgn_127250.h"
-#include "pgn_128259.h"
-#include "pgn_128267.h"
-#include "pgn_130816.h"
+#define PGN_COUNT_MAX                       64
 
-#define PGN_COUNT_MAX		64
-
-uint8_t g_access_level = 0; // temp.
-
-RxProtocol g_RxCan[CAN_RX_BUF_MAX];   // Rx array
-
-uint16_t  rxCanLastIndex = 0;
-uint16_t  rxCanFirstIndex = 0;
-
-TxProtocol g_TxCan[CAN_TX_BUF_MAX];	// Tx array
-uint8_t txCanBufferCount = 0;
+/* Private function prototypes -----------------------------------------------*/
+typedef struct __PGNCounter
+{
+    uint32_t PGN;
+    uint32_t value;
+} PGNCounter;
 
 /* Private variables ---------------------------------------------------------*/
-PGNCounter g_PGNCount[PGN_COUNT_MAX];	// Rx array
+uint8_t g_access_level = 0; // temp.
+CANBuffer g_canbuf = {.rx_idx_head = 0, .rx_idx_tail = 0, .tx_idx = 0};
+uint8_t g_n2k_addr_curr;
+uint8_t g_n2k_addr_eprom = N2K_ADDR_DEFAULT;
+bool  g_n2k_addr_is_claiming = true;
+uint32_t g_n2k_addr_claim_time_last = 0;
 
-uint32_t RxCanReceiveCount = 0;
-
-uint32_t MAX_HIGH_SOURCE_ADDR = 252;
-uint32_t ADDRESS_CLAIM_FAIL_ADDR = 254;
-uint32_t localSourceAddr = 0;
-uint32_t savedSourceAddr = 0;
-
-uint32_t mIsNoAddress = false;
-
-uint32_t mDataLastReceivedTime = 0;
-
-uint32_t MaxPGNSequenceCounters = 0;
-uint32_t *PGNSequenceCounters = 0;
-
-uint8_t g_hwver_str[7];
-uint8_t g_bootver_str[7];
-uint8_t g_appver_str[7];
-
-uint8_t uniquenum[3];
-
-uint8_t nmea2000_addr = 100;
-
-uint8_t		DevInstance = 0;
-uint8_t		SysInstance = 0;
+PGN060928NAME g_pgn060928_curr = {
+    .mUnique_Number = N2K_UNIQUE_NUMBER & 0x1FFFFF,
+    .mManufacturer_Code = N2K_MFG_CODE_FURUNO,
+    .mDevice_Instance_Lower = N2K_DEVICE_INSTANCE & 0x7,
+    .mDevice_Instance_Upper = (N2K_DEVICE_INSTANCE & 0xF8) >> 3,
+    .mDevice_Function = N2K_DEVICE_FUNCTION,
+    .mNMEA_Reserved = 0,
+    .mDevice_Class = N2K_DEVICE_CLASS,
+    .mSystem_Instance = N2K_SYSTEM_INSTANCE & 0x0F,
+    .mIndustry_Group = N2K_INDUSTRY_GROUP,
+    .mISO_Self_Configuration = N2K_ISO_SELF_CONFIG
+};
 
 uint8_t g_switch_bank[6];
+uint8_t g_lcd_img_idx;
 
 /* Private functions ---------------------------------------------------------*/
 void NMEA2000_Open(void)
 {
-	savedSourceAddr = nmea2000_addr;
-	localSourceAddr = savedSourceAddr;
+    g_n2k_addr_curr = g_n2k_addr_eprom;
 
-	sprintf((char*)&mManufacturersModelVersion[0], "%s", g_hwver_str);
-	sprintf((char*)&mManufacturersSoftwareVersionCode[0], "%s:%s", g_appver_str, g_bootver_str);
+    sprintf((char*)g_ver.hw, "%02d", HW_VERSION);
+    sprintf((char*)g_ver.boot, "%02d", BOOT_VERSION);
+    sprintf((char*)g_ver.app, "%02d", APP_VERSION);
 
-	mUnique_Number = (uniquenum[2]<<16 | uniquenum[1]<<8 | uniquenum[0]) & 0x1FFFFF;
-	mDevice_Intance = DevInstance & 0x7F;
-	mSystem_Instance = SysInstance & 0x0F;
+    sprintf((char*)&mManufacturersModelVersion[0], "%s", g_ver.hw);
+    sprintf((char*)&mManufacturersSoftwareVersionCode[0], "%s:%s", g_ver.app, g_ver.boot);
 
-	InitializeMyNMEAData();
-	InitMultiPacketArray();
+    InitMultiPacketArray();
 
-	PGN060928_SetInitialField();
-	PGN060928_SendAddressClaim();
+    PGN060928_SetInitialField();
+    PGN060928_SendAddressClaim();
 }
 
 void NMEA2000_126993_heartbeat(void)
 {
-  static uint8_t ucHeartBeatSequence = 0;
+    static uint8_t ucHeartBeatSequence = 0;
 
-  PGN126993_ProcessNameField(ucHeartBeatSequence,
-		  	  	  	  	  	 PGN126993_CAN_CTLR_STATE_CLASS1_ERR_ACTIVE,
-                             PGN126993_EQUIP_STATUS_OPERAIONAL);
+    PGN126993_ProcessNameField(ucHeartBeatSequence,
+                               PGN126993_CAN_CTLR_STATE_CLASS1_ERR_ACTIVE,
+                               PGN126993_EQUIP_STATUS_OPERAIONAL);
 
-  if(ucHeartBeatSequence == PGN126993_HEARTBEAT_CNT_MAX)  ucHeartBeatSequence = 0;
-  else                                                    ucHeartBeatSequence++;
+    if(ucHeartBeatSequence == PGN126993_HEARTBEAT_CNT_MAX)  ucHeartBeatSequence = 0;
+    else                                                    ucHeartBeatSequence++;
 
-  return;
+    return;
 }
 
 
 uint32_t FastPacketSequenceCounter(uint32_t pgnNumber)
 {
-	for (uint8_t i = 0; i < PGN_COUNT_MAX; i++) {
-		if (g_PGNCount[i].PGN == pgnNumber){
-			g_PGNCount[i].value = g_PGNCount[i].value + 1;
+    static PGNCounter pgn_cnt[PGN_COUNT_MAX];   // Rx array
 
-			return (g_PGNCount[i].value % 8);
-		}
-		else {
-			if (g_PGNCount[i].PGN == 0) {
-				g_PGNCount[i].PGN = pgnNumber;
-				g_PGNCount[i].value = 0;
+    for (uint8_t i = 0; i < PGN_COUNT_MAX; i++) {
+        if (pgn_cnt[i].PGN == pgnNumber){
+            pgn_cnt[i].value = pgn_cnt[i].value + 1;
 
-				return 0;
-			}
-		}
-	}
+            return (pgn_cnt[i].value % 8);
+        }
+        else {
+            if (pgn_cnt[i].PGN == 0) {
+                pgn_cnt[i].PGN = pgnNumber;
+                pgn_cnt[i].value = 0;
 
-	return 0;
+                return 0;
+            }
+        }
+    }
+
+    return 0;
 }
-
-#define SEND_DELAY_TIME		1 // ms
 
 void NMEA2000_SendParseMessages(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint8_t isFastPacket)
 {
-	if ((mAddress_Claiming == true) && (pgnId->mPGN != 60928)){
-	    printf("%s():%d Error\n", __func__, __LINE__);
-		return;
-	}
+    bool is_no_addr = false;
 
-	if(mIsNoAddress == true){
-        printf("%s():%d Error\n", __func__, __LINE__);
-		return;
-	}
+    if ((g_n2k_addr_is_claiming == true) && (pgnId->mPGN != 60928)){
+        return;
+    }
 
-	if (pgnId->mSA == ADDRESS_CLAIM_FAIL_ADDR){
-		mIsNoAddress = true;
-	}
+    if(is_no_addr == true){
+        return;
+    }
+
+    if (pgnId->mSA == N2K_ADDR_CLAIM_FAIL){
+        is_no_addr = true;
+    }
 
 #if 0
-  printf("[Send %06ld,%03ld,%03ld]", pgnId->mPGN, pgnId->mSA, pgnId->mPS);
+    printf("[Send %06ld,%03ld,%03ld]", pgnId->mPGN, pgnId->mSA, pgnId->mPS);
 
-  for (uint8_t i = 0; i < len; i++){
-	  printf("%02X ", buf[i]);
-  }
-  printf(" (%03ld)\r\n", len);
+    for (uint8_t i = 0; i < len; i++){
+      printf("%02X ", buf[i]);
+    }
+    printf(" (%03ld)\n", len);
 #endif
 
-	if (isFastPacket == 0) {
-		CAN1_SendFrame(pgnId->mCanNumericID, buf, 8);
-	}
-	else{
-		uint8_t  firstFastPacket[8];
-		uint8_t  otherFastPacket[8];
-		uint32_t seqNumber = 0;
+    if (isFastPacket == 0) {
+        CAN1_SendFrame(pgnId->mCanNumericID, buf, 8);
+    }
+    else{
+        uint8_t  firstFastPacket[8];
+        uint8_t  otherFastPacket[8];
+        uint32_t seqNumber = 0;
 
-		seqNumber = FastPacketSequenceCounter(pgnId->mPGN);
+        seqNumber = FastPacketSequenceCounter(pgnId->mPGN);
 
-//		printf("PGN : %d, seqNumber : %d\n", pgnId->mPGN, seqNumber);
+//      printf("PGN : %d, seqNumber : %d\n", pgnId->mPGN, seqNumber);
 
-		firstFastPacket[0] = (uint8_t) (seqNumber << 5);
-		firstFastPacket[1] = (uint8_t) len;
+        firstFastPacket[0] = (uint8_t) (seqNumber << 5);
+        firstFastPacket[1] = (uint8_t) len;
 
-		memcpy(firstFastPacket + 2, buf, 6);
+        memcpy(firstFastPacket + 2, buf, 6);
 
-		CAN1_SendFrame(pgnId->mCanNumericID, firstFastPacket, 8);
+        CAN1_SendFrame(pgnId->mCanNumericID, firstFastPacket, 8);
 
-		uint32_t over2ndPacketSize = len - 6;
+        uint32_t over2ndPacketSize = len - 6;
 
-		if(over2ndPacketSize > 0) {
-			uint8_t packetNumber = (uint8_t)((over2ndPacketSize / 7) + (((over2ndPacketSize%7) == 0) ? 0 : 1));
+        if(over2ndPacketSize > 0) {
+            uint8_t packetNumber = (uint8_t)((over2ndPacketSize / 7) + (((over2ndPacketSize%7) == 0) ? 0 : 1));
 
-			for (uint8_t packetIndex = 0; packetIndex < packetNumber; packetIndex++) {
+            for (uint8_t packetIndex = 0; packetIndex < packetNumber; packetIndex++) {
 
-				memset(otherFastPacket, 0xFF, 8);
-				otherFastPacket[0] = (uint8_t) ((uint8_t) (seqNumber << 5) | (uint8_t) ((packetIndex + 1) & 0x1F));
+                memset(otherFastPacket, 0xFF, 8);
+                otherFastPacket[0] = (uint8_t) ((uint8_t) (seqNumber << 5) | (uint8_t) ((packetIndex + 1) & 0x1F));
 
-				uint32_t remainCopySize = len - (6 + (packetIndex * 7));
+                uint32_t remainCopySize = len - (6 + (packetIndex * 7));
 
-				memcpy(otherFastPacket + 1, buf + 6 + (packetIndex * 7), (remainCopySize >= 7) ? 7 : remainCopySize);
+                memcpy(otherFastPacket + 1, buf + 6 + (packetIndex * 7), (remainCopySize >= 7) ? 7 : remainCopySize);
 
-				osDelay(SEND_DELAY_TIME);
+                osDelay(N2K_TX_DELAY_MS);
 
-				CAN1_SendFrame(pgnId->mCanNumericID, otherFastPacket, 8);
-			}
-		}
-	}
+                CAN1_SendFrame(pgnId->mCanNumericID, otherFastPacket, 8);
+            }
+        }
+    }
 }
 
 void SendNonSingleFrame(NmeaPgn* pgnId, uint32_t len, uint8_t *buf, uint32_t messagetype)
 {
-	uint32_t totalNumberOfFrametoTransmit = 0;
-	uint8_t  Multipacket[7];
-	uint8_t  NonSingleFrameBuf[1785] = {0,};
+    uint32_t totalNumberOfFrametoTransmit = 0;
+    uint8_t  Multipacket[7];
+    uint8_t  NonSingleFrameBuf[1785] = {0,};
 
-	if (messagetype == REQUEST_MESSAGE_TYPE_FASTPACKET) {
-		NMEA2000_SendParseMessages(pgnId, len, buf, 1) ;
-	}
-	else if (messagetype == REQUEST_MESSAGE_TYPE_RTSCTS_PACKET) {
-		totalNumberOfFrametoTransmit = (len / 7) + (((len % 7) == 0) ? 0 : 1);
+    if (messagetype == REQUEST_MESSAGE_TYPE_FASTPACKET) {
+        NMEA2000_SendParseMessages(pgnId, len, buf, 1) ;
+    }
+    else if (messagetype == REQUEST_MESSAGE_TYPE_RTSCTS_PACKET) {
+        totalNumberOfFrametoTransmit = (len / 7) + (((len % 7) == 0) ? 0 : 1);
 
-		InitializeSendMultiPacketData(len, totalNumberOfFrametoTransmit, pgnId->mPGN, pgnId->mSA, pgnId->mPS, true);
+        InitializeSendMultiPacketData(len, totalNumberOfFrametoTransmit, pgnId->mPGN, pgnId->mSA, pgnId->mPS, true);
 
-		memcpy(sendMultiPacket.mMergedMultiPacket, buf, len);
+        memcpy(sendMultiPacket.mMergedMultiPacket, buf, len);
 
-		PGN060416RTS_SetFieldValue(FunctionCodeRTS, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
-		PGN060416RTS_SendNameField(getCanId(PGN060416RTS_priority, 60416, pgnId->mPS, localSourceAddr));
+        PGN060416RTS_SetFieldValue(PGN060416_FUNC_CODE_RTS, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
+        PGN060416RTS_SendNameField(getCanId(PGN060416_RTS_PRIORITY, PGN060416_RTS_PGN, pgnId->mPS, g_n2k_addr_curr));
 
-	}
-	else if (messagetype == REQUEST_MESSAGE_TYPE_BAM_PACKET) {
-		memset(&NonSingleFrameBuf[0], 0xff, len);
-		memcpy(&NonSingleFrameBuf[0], buf, len);
+    }
+    else if (messagetype == REQUEST_MESSAGE_TYPE_BAM_PACKET) {
+        memset(&NonSingleFrameBuf[0], 0xff, len);
+        memcpy(&NonSingleFrameBuf[0], buf, len);
 
-		totalNumberOfFrametoTransmit = (len / 7) + (((len % 7) == 0) ? 0 : 1);
+        totalNumberOfFrametoTransmit = (len / 7) + (((len % 7) == 0) ? 0 : 1);
 
-		PGN060416BAM_SetFieldValue(FunctionCodeBAM, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
-		PGN060416BAM_SendNameField(getCanId(PGN060416BAM_priority, 60416, BROADCAST_DESTINATION_ADDR, localSourceAddr));
+        PGN060416BAM_SetFieldValue(PGN060416_FUNC_CODE_BAM, len, totalNumberOfFrametoTransmit, 0xFF, pgnId->mPGN);
+        PGN060416BAM_SendNameField(getCanId(PGN060416_BAM_PRIORITY, PGN060416_BAM_PGN, BROADCAST_DESTINATION_ADDR, g_n2k_addr_curr));
 
-		for (uint8_t packetIndex = 0; packetIndex < totalNumberOfFrametoTransmit; packetIndex++) {
-			memset(&Multipacket[0], 0xff, 7);
-			if ((len - (packetIndex * 7)) >= 7) {
-				for (uint8_t i = 0; i < 7; i++) {
-					Multipacket[i] = NonSingleFrameBuf[i + (packetIndex * 7)];
-				}
-			} else {
-				for (uint8_t i = 0; i < (len - (packetIndex * 7)); i++) {
-					Multipacket[i] = NonSingleFrameBuf[i + (packetIndex * 7)];
-				}
-			}
+        for (uint8_t packetIndex = 0; packetIndex < totalNumberOfFrametoTransmit; packetIndex++) {
+            memset(&Multipacket[0], 0xff, 7);
+            if ((len - (packetIndex * 7)) >= 7) {
+                for (uint8_t i = 0; i < 7; i++) {
+                    Multipacket[i] = NonSingleFrameBuf[i + (packetIndex * 7)];
+                }
+            } else {
+                for (uint8_t i = 0; i < (len - (packetIndex * 7)); i++) {
+                    Multipacket[i] = NonSingleFrameBuf[i + (packetIndex * 7)];
+                }
+            }
 
-			osDelay(SEND_DELAY_TIME);
+            osDelay(N2K_TX_DELAY_MS);
 
-			PGN060160_SetFieldValue(packetIndex + 1, &Multipacket[0]);
-			PGN060160_SendNameField(BROADCAST_DESTINATION_ADDR, localSourceAddr);
-		}
-	}
+            PGN060160_SetFieldValue(packetIndex + 1, &Multipacket[0]);
+            PGN060160_SendNameField(BROADCAST_DESTINATION_ADDR);
+        }
+    }
 }
 
 void ProcessNMEA2000MultiPacket(uint32_t proc_pgn_number, NmeaPgn* pgnId, uint16_t size, uint8_t *buf, uint32_t messagetype)
 {
-	switch(proc_pgn_number) {
-		case 126208:
-			PGN126208_GetFieldValue(pgnId, size, buf,  messagetype);
-			PGN126208_ProcessNameField(pgnId, size, buf, messagetype);
-			break;
-		case 65240:
-			PGN065240_GetFieldValue(pgnId, size, buf);
-			PGN065240_ProcessNameField();
-			break;
-	}
+    switch(proc_pgn_number) {
+        case 126208:
+            PGN126208_GetFieldValue(pgnId, size, buf,  messagetype);
+            PGN126208_ProcessNameField(pgnId, size, buf, messagetype);
+            break;
+        case 65240:
+            PGN065240_GetFieldValue(pgnId, size, buf);
+            PGN065240_ProcessNameField();
+            break;
+    }
 }
 
 void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
 {
-  switch(pgnId->mPGN)
-	{
-		case 59392: // ISO Acknowledgement for Certification
-			break;
-		case 59904:	// ISO Request
-		{
-			PGN059904_GetFieldValue(pgnId, len, buf);
-			PGN059904_ProcessNameField(pgnId, len, buf);
-		}
-			break;
-		case 60160: // ISO Transport Protocol, Data Transfer
-		{
-			PGN060160_GetFieldValue(pgnId, len, buf);
+    switch(pgnId->mPGN)
+    {
+        case 59392: // ISO Acknowledgement for Certification
+            break;
+        case 59904: // ISO Request
+        {
+            PGN059904_GetFieldValue(pgnId, len, buf);
+            PGN059904_ProcessNameField(pgnId, len, buf);
+        }
+            break;
+        case 60160: // ISO Transport Protocol, Data Transfer
+        {
+            PGN060160_GetFieldValue(pgnId, len, buf);
 
-			if (PGN060160_ProcessNameField(pgnId, len, buf) == PACKET_PROC_RESULT_MULTIPACKET_DONE) {
+            if (PGN060160_ProcessNameField(pgnId, len, buf) == PGN060160_PACKET_PROC_RESULT_MULTIPACKET_DONE) {
 
-				if (completeMultiPacketData.mRTSCTS == true) {
-					ProcessNMEA2000MultiPacket(completeMultiPacketData.mPGNMultiPacketMessage, pgnId,
-							completeMultiPacketData.mTotalMessageByteSize, completeMultiPacketData.mMergedMultiPacket, REQUEST_MESSAGE_TYPE_RTSCTS_PACKET);
-				}
-				else {
-					ProcessNMEA2000MultiPacket(completeMultiPacketData.mPGNMultiPacketMessage, pgnId,
-							completeMultiPacketData.mTotalMessageByteSize, completeMultiPacketData.mMergedMultiPacket, REQUEST_MESSAGE_TYPE_BAM_PACKET);
-				}
-			}
-		}
-			break;
-		case 60416:	// ISO Transport Protocol, Connection Management - BAM group function
-		{
-			PGN060416_GetFieldValue(pgnId, len, buf);
-			PGN060416_ProcessNameField(pgnId, len, buf);
-		}
-			break;
-		case 60928:	// ISO Address Claim
-			if(pgnId->mSA == localSourceAddr) {  // Address crash.
-				PGN060928_GetFieldValue(pgnId, len, buf, &g_PGN060928NAME);
+                if (completeMultiPacketData.mRTSCTS == true) {
+                    ProcessNMEA2000MultiPacket(completeMultiPacketData.mPGNMultiPacketMessage, pgnId,
+                            completeMultiPacketData.mTotalMessageByteSize, completeMultiPacketData.mMergedMultiPacket, REQUEST_MESSAGE_TYPE_RTSCTS_PACKET);
+                }
+                else {
+                    ProcessNMEA2000MultiPacket(completeMultiPacketData.mPGNMultiPacketMessage, pgnId,
+                            completeMultiPacketData.mTotalMessageByteSize, completeMultiPacketData.mMergedMultiPacket, REQUEST_MESSAGE_TYPE_BAM_PACKET);
+                }
+            }
+        }
+            break;
+        case 60416: // ISO Transport Protocol, Connection Management - BAM group function
+        {
+            PGN060416_GetFieldValue(pgnId, len, buf);
+            PGN060416_ProcessNameField(pgnId, len, buf);
+        }
+            break;
+        case 60928: // ISO Address Claim
+            if(pgnId->mSA == g_n2k_addr_curr) {  // Address crash.
+                PGN060928NAME pgn60928_name;
+                PGN060928_GetFieldValue(pgnId, len, buf, &pgn60928_name);
 
-				if (g_PGN060928NAME.mUnique_Number <= mMyPGN060928.mUnique_Number) {
-					if (localSourceAddr != ADDRESS_CLAIM_FAIL_ADDR) {
-						localSourceAddr++;
+                if (pgn60928_name.mUnique_Number <= g_pgn060928_curr.mUnique_Number) {
+                    if (g_n2k_addr_curr != N2K_ADDR_CLAIM_FAIL) {
+                        g_n2k_addr_curr++;
 
-//						Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
-//						EEPROM_Write_Byte(EEPROM_NMEA2000ADDR_ADDR, localSourceAddr, 0);
+//                      Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
+//                      EEPROM_Write_Byte(EEPROM_NMEA2000ADDR_ADDR, localSourceAddr, 0);
+                        g_n2k_addr_eprom = g_n2k_addr_curr;
 
-						nmea2000_addr = localSourceAddr;
+                        printf("New NMEA2000 addr:%ld\r\n", g_n2k_addr_curr);
+                    }
 
-						printf("New NMEA2000 addr:%ld\r\n", localSourceAddr);
-					}
+                    if (g_n2k_addr_curr >= N2K_ADDR_MAX_HIGH_SOURCE && g_n2k_addr_curr < N2K_ADDR_CLAIM_FAIL) {
+                        g_n2k_addr_curr = 0;
 
-					if (localSourceAddr >= MAX_HIGH_SOURCE_ADDR && localSourceAddr < ADDRESS_CLAIM_FAIL_ADDR) {
-						localSourceAddr = 0;
+//                      Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
+//                      EEPROM_Write_Byte(EEPROM_NMEA2000ADDR_ADDR, localSourceAddr, 0);
+                        g_n2k_addr_eprom = g_n2k_addr_curr;
 
-//						Warning!! Do not direct access EEPROM in Processing to Receive NMEA2000 Data.
-//						EEPROM_Write_Byte(EEPROM_NMEA2000ADDR_ADDR, localSourceAddr, 0);
+                        printf("New NMEA2000 addr:%ld\r\n", g_n2k_addr_curr);
+                    } else if (g_n2k_addr_curr == N2K_ADDR_DEFAULT) {
+                        g_n2k_addr_curr = N2K_ADDR_CLAIM_FAIL;
+                    }
+                }
 
-						nmea2000_addr = localSourceAddr;
+                PGN060928_SetInitialField();
+                PGN060928_SendAddressClaim();
 
-						printf("New NMEA2000 addr:%ld\r\n", localSourceAddr);
-					} else if (localSourceAddr == savedSourceAddr) {
-						localSourceAddr = ADDRESS_CLAIM_FAIL_ADDR;
-					}
-				}
+                break;
+            }
 
-				PGN060928_SetInitialField();
-				PGN060928_SendAddressClaim();
+            // check and change HIDHostAddress
+/*          if(g_hidhost_canname_req == true){
+                if(g_hidhost_addr == BROADCAST_DESTINATION_ADDR && g_spayload_curr.hidhost.canhostnamefield == *((uint64_t *)buf)){
+                    g_hidhost_addr = pgnId->mSA;
+                    g_hidhost_canname_req = false;
+                }
+                else if(g_hidhost_addr == pgnId->mSA && g_spayload_curr.hidhost.canhostnamefield == 0xFFFFFFFFFFFFFFFF){
+                    g_spayload_curr.hidhost.canhostnamefield = *((uint64_t *)buf);
+                    g_hidhost_canname_req = false;
+                }
 
-				break;
-			}
+                if(g_hidhost_canname_req == false){
+                    printf("Set HIDHost Addr[%d] CANName[0x%lx%lx]\r\n", g_hidhost_addr,
+                            (uint32_t)(g_spayload_curr.hidhost.canhostnamefield >> 32),
+                            (uint32_t)g_spayload_curr.hidhost.canhostnamefield);
+                }
+            }*/
 
-			// check and change HIDHostAddress
-/*			if(g_hidhost_canname_req == true){
-				if(g_hidhost_addr == BROADCAST_DESTINATION_ADDR && g_spayload_curr.hidhost.canhostnamefield == *((uint64_t *)buf)){
-					g_hidhost_addr = pgnId->mSA;
-					g_hidhost_canname_req = false;
-				}
-				else if(g_hidhost_addr == pgnId->mSA && g_spayload_curr.hidhost.canhostnamefield == 0xFFFFFFFFFFFFFFFF){
-					g_spayload_curr.hidhost.canhostnamefield = *((uint64_t *)buf);
-					g_hidhost_canname_req = false;
-				}
+            break;
+        case 65240 : // ISO Commanded Address
+        {
+            ;
+        }
+            break;
+        case 65287 : // HID Target Status (Proprietary PGN)
+        {
+/*          if(isFECPPGN(buf)){
+                if(canhostnamefield == 0xFFFFFFFFFFFFFFFF){
+                    PGN065287_FEC_GetFieldValue(pgnId, buf, len);
+                }
+            }*/
+        }
+            break;
+        case 126208:											// InOutput (For Certification)
+        {
+            if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE) {
+                uint8_t* completePacket = GetCompletedFastPacket();
+                uint16_t packetSize = GetCompletedFastPacketSize();
 
-				if(g_hidhost_canname_req == false){
-					printf("Set HIDHost Addr[%d] CANName[0x%lx%lx]\r\n", g_hidhost_addr,
-							(uint32_t)(g_spayload_curr.hidhost.canhostnamefield >> 32),
-							(uint32_t)g_spayload_curr.hidhost.canhostnamefield);
-				}
-			}*/
+                PGN126208_GetFieldValue(pgnId, packetSize, completePacket, REQUEST_MESSAGE_TYPE_FASTPACKET);
+                PGN126208_ProcessNameField(pgnId, packetSize, completePacket, REQUEST_MESSAGE_TYPE_FASTPACKET);
+            }
+        }
+            break;
+        case 126720 : // (Proprietary PGN)
+            if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE)
+            {
+                uint8_t* completePacket = GetCompletedFastPacket();
+                uint16_t packetSize = GetCompletedFastPacketSize();
 
-			break;
-		case 61184:	// Self Test Group Function(Proprietary PGN)
-		{
-			PGN061184STGF_GetFieldValue(pgnId, len, buf);
+                PGN126720_GetFieldValue(pgnId, packetSize, completePacket);
 
-			if(g_PGN061184STGFNAME.m61184Manufacturer_Code == mApp_FEC_Manufacturer_Code &&
-					g_PGN061184STGFNAME.m61184Industry_Group == mIndustry_Group &&
-					g_PGN061184STGFNAME.m61184Identification_Code == 0 &&
-					(g_PGN061184STGFNAME.m61184Control_Function == 0 || g_PGN061184STGFNAME.m61184Control_Function == 1)){
-				PGN061184STGF_ProcessNameField(pgnId->mSA);
-			}
-		}
-			break;
-		case 65240 : // ISO Commanded Address
-		{
-			;
-		}
-			break;
-		case 65287 : // HID Target Status (Proprietary PGN)
-		{
-/*			if(isFECPPGN(buf)){
-				if(canhostnamefield == 0xFFFFFFFFFFFFFFFF){
-					PGN065287_FEC_GetFieldValue(pgnId, buf, len);
-				}
-			}*/
-		}
-			break;
-		case 126208:											// InOutput (For Certification)
-		{
-			if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE) {
-				uint8_t* completePacket = GetCompletedFastPacket();
-				uint16_t packetSize = GetCompletedFastPacketSize();
+//              printf("PGN126720:MfgCode[%d] INDCode[%d] CMDFunc[%d]\r\n",
+//              pgn126720.mManufacturer_Code, pgn126720.IdentifyCode, pgn126720.ControlFunction);
+            }
+            break;
+        case 127245 :
+            {
+                PGN127245_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 127250 :
+            {
+                PGN127250_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 127258 :
+            {
+                PGN127258_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 128259 :
+            {
+                PGN128259_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 128267 :
+            {
+                PGN128267_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 129025 :
+            {
+                PGN129025_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 129026 :
+            {
+                PGN129026_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 129029 :
+            {
+                if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE){
+                    uint8_t* completePacket = GetCompletedFastPacket();
+                    uint16_t packetSize = GetCompletedFastPacketSize();
 
-				PGN126208_GetFieldValue(pgnId, packetSize, completePacket, REQUEST_MESSAGE_TYPE_FASTPACKET);
-				PGN126208_ProcessNameField(pgnId, packetSize, completePacket, REQUEST_MESSAGE_TYPE_FASTPACKET);
-			}
-		}
-			break;
-		case 126720 : // (Proprietary PGN)
-			if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE)
-			{
-				uint8_t* completePacket = GetCompletedFastPacket();
-				uint16_t packetSize = GetCompletedFastPacketSize();
+                    PGN129029_GetFieldValue(pgnId, packetSize, completePacket);
+                }
+            }
+            break;
+        case 129283 :
+            {
+                PGN129283_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 129284 :
+            {
+                if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE)
+                {
+                    uint8_t* completePacket = GetCompletedFastPacket();
+                    uint16_t packetSize = GetCompletedFastPacketSize();
 
-				PGN126720_GetFieldValue(pgnId, packetSize, completePacket);
+                    PGN129284_GetFieldValue(pgnId, packetSize, completePacket);
+                }
+            }
+            break;
+        case 129285 :
+            {
+                if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE)
+                {
+                    uint8_t* completePacket = GetCompletedFastPacket();
+                    uint16_t packetSize = GetCompletedFastPacketSize();
 
-//				printf("PGN126720:MfgCode[%d] INDCode[%d] CMDFunc[%d]\r\n",
-//				pgn126720.mManufacturer_Code, pgn126720.IdentifyCode, pgn126720.ControlFunction);
-			}
-			break;
-		case 127250 :
-			{
-				PGN127250_GetFieldValue(pgnId, len, buf);
-			}
-			break;
-		case 128259 :
-			{
-				PGN128259_GetFieldValue(pgnId, len, buf);
-			}
-			break;
-		case 128267 :
-			{
-				PGN128267_GetFieldValue(pgnId, len, buf);
-			}
-			break;
-		case 130816: // (Proprietary PGN)
-			if(ProcessFastPacketData(pgnId, len, buf) == FASTPACKET_PROC_RESULT_DONE)
-			{
-				PGN130816_ProcessNameField(pgnId);
-			}
-			break;
-		case 65286 : // (Proprietary PGN) for Boot-loader - AIRMAR: Boot State Request
-		{
-			if(isAirmarPPGN(buf)){
-				PGN065286_ProcessNameField();
-			}
-		}
-			break;
-		default:
-			break;
-	}
+                    PGN129285_GetFieldValue(pgnId, packetSize, completePacket);
+                }
+            }
+            break;
+        case 130306 :
+            {
+                PGN130306_GetFieldValue(pgnId, len, buf);
+            }
+            break;
+        case 65286 : // (Proprietary PGN) for Boot-loader - AIRMAR: Boot State Request
+        {
+            if(isAirmarPPGN(buf)){
+                PGN065286_ProcessNameField();
+            }
+        }
+            break;
+        default:
+            break;
+    }
 }
-
 
 void NMEA2000_ReceiveParseMessages(uint32_t canId, uint8_t *buf, uint8_t len)
 {
-	NmeaPgn* pgnId = CanIDToNmeaPGN(canId);
+    NmeaPgn* pgnId = CanIDToNmeaPGN(canId);
 
 #if 0
-	RxCanReceiveCount++;
+    printf("[ RCV %06ld,%03ld,%03ld]", pgnId->mPGN, pgnId->mSA, pgnId->mPS);
 
-	if (RxCanReceiveCount >= 0) {
-		printf("[ RCV %06ld,%03ld,%03ld]", pgnId->mPGN, pgnId->mSA, pgnId->mPS);
-		for (uint8_t i = 0; i < len; i++){
-			printf("%02X ", buf[i]);
-		}
-		printf("\r\n");
-	}
+    for (uint8_t i = 0; i < len; i++){
+        printf("%02X ", buf[i]);
+    }
+    printf("\r\n");
 #endif
 
-	if(pgnId->mPF <= 239)
-	{
-		if(pgnId->mPS == localSourceAddr || pgnId->mPS == 255)
-		{
-			ProcessNMEA2000SinglePacket(pgnId, len, buf);
-		}
-	}
-	else
-	{
-		ProcessNMEA2000SinglePacket(pgnId, len, buf);
-	}
+    if(pgnId->mPF <= 239)
+    {
+        if(pgnId->mPS == g_n2k_addr_curr || pgnId->mPS == 255)
+        {
+            ProcessNMEA2000SinglePacket(pgnId, len, buf);
+        }
+    }
+    else
+    {
+        ProcessNMEA2000SinglePacket(pgnId, len, buf);
+    }
 }
 
+void runN2KCANRXBuffer(void)
+{
+    static uint32_t remain = 0;
+
+    if(g_canbuf.rx_idx_tail >= g_canbuf.rx_idx_head)
+    {
+        remain =  g_canbuf.rx_idx_tail - g_canbuf.rx_idx_head;
+    }
+    else
+    {
+        remain = (CAN_BUF_RX_MAX - g_canbuf.rx_idx_head);
+        remain += g_canbuf.rx_idx_tail;
+    }
+
+    if(remain != 0){
+        NMEA2000_ReceiveParseMessages(g_canbuf.rx[g_canbuf.rx_idx_head].canid, g_canbuf.rx[g_canbuf.rx_idx_head].dat, g_canbuf.rx[g_canbuf.rx_idx_head].len);
+
+        g_canbuf.rx_idx_head++;
+        g_canbuf.rx_idx_head %= CAN_BUF_RX_MAX;
+    }
+}
+
+void chkN2KLastAddrClaimTime(void)
+{
+    if ((osKernelGetTickCount() - g_n2k_addr_claim_time_last) > 250)
+    {
+        g_n2k_addr_is_claiming = false;
+    }
+}

@@ -6,9 +6,26 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
-#ifdef ECO_APP
-
 #include "eco.h"
+
+/* variables -----------------------------------------------------------------*/
+rudder g_rudder = {
+    .instance           = 0,
+    .direction_order    = 0x0,
+    .angle_order        = N2K_DATA_NOT_AVAILABLE_INT16,
+    .position           = N2K_DATA_NOT_AVAILABLE_INT16
+};
+
+ship_status g_ship = {
+    .curr =
+    {
+            .heading_sensor_reading = 0
+    },
+    .prev =
+    {
+            .heading_sensor_reading = 0
+    }
+};
 
 void runEcoTaskMain(void *argument)
 {
@@ -21,19 +38,25 @@ void runEcoTaskMain(void *argument)
 
     for(;;)
     {
-        tick += 10;
+        chkN2KLastAddrClaimTime();
 
-        if ((osKernelGetTickCount() - mLast_Send_Address_Claim_Time) > 250)
+#if 0
+        if(tick%1000 == 0)
         {
-            mAddress_Claiming = false;
+            printf("rud inst[%03d] ang_pos:order[%03.2f:%03.2f]\n",
+                   g_rudder.instance,
+                   ((double)g_rudder.position)*180.0/M_PI/10000.0,
+                   ((double)g_rudder.angle_order)*180.0/M_PI/10000.0);
         }
+#endif
 
-        if(tick%3000 == 0)
+        if(tick%60000 == 0)
         {
             NMEA2000_126993_heartbeat();
             printf("[%08ld]NMEA2000_126993_heartbeat() called \n", tick);
         }
 
+        tick += 10;
         osDelayUntil(tick);
     }
 }
@@ -47,14 +70,27 @@ void runEcoTaskKey(void *argument)
 {
     uint8_t  timer_pwroff = 0;
 
+    HAL_GPIO_WritePin(LED_RG_CTL_GPIO_Port, LED_RG_CTL_Pin, GPIO_PIN_SET);
+
+    setBuzzer(100);
+    osDelay(100);
+    setBuzzer(0);
+
     for(;;)
     {
 //        printf("%s():%d\n",__func__,__LINE__);
 
-        if(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+        if(GPIO_PIN_SET == HAL_GPIO_ReadPin(PWR_ON_GPIO_Port, PWR_ON_Pin))
         {
             printf("Push KEY_PWR %d sec\n", timer_pwroff++);
-            if(3 < timer_pwroff) NVIC_SystemReset();
+            if(5 <= timer_pwroff)
+            {
+                setBuzzer(100);
+                osDelay(500);
+                setBuzzer(0);
+
+                NVIC_SystemReset();
+            }
         }
         else timer_pwroff = 0;
 
@@ -91,6 +127,67 @@ void runEcoTaskFlash(void *argument)
     for(;;)
     {
         updateFlashData();
+        osDelay(1);
+    }
+}
+
+void runEcoTaskSync(void *argument)
+{
+    /* Infinite loop */
+    for(;;)
+    {
+        if(memcmp(&g_ship.curr, &g_ship.prev, sizeof(ship_param)))
+        {
+            if(isValidDegreeAngle(g_ship.curr.heading_sensor_reading))
+            {
+                setHDGValue((double)g_ship.curr.heading_sensor_reading );
+            }
+
+            setVariation((double)g_ship.curr.magnetic_variation);
+
+            if(g_ship.curr.speed.direction == 0 || g_ship.curr.speed.direction == 1)
+            {
+                if(isValidSpeed(g_ship.curr.speed.over_ground))
+                {
+                    setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS );
+                }
+
+                if(isValidSpeed(g_ship.curr.speed.through_water))
+                {
+                    setSTWValue( ((double)g_ship.curr.speed.through_water / 100.0), SPEED_UNIT_MPS );
+                }
+            }
+
+            if(isValidLongInteger((long)g_ship.curr.water_depth))
+            {
+                if(((short)g_ship.curr.transducer_offset) <= 32764 && ((short)g_ship.curr.transducer_offset) >= -32764)
+                {
+                    setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0) + (double)((short)g_ship.curr.transducer_offset) / 1000.0 );
+                }
+                else
+                {
+                    setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0));
+                }
+            }
+
+            setPositionRapid((double)g_ship.curr.position.latitude/10000000.0, (double)g_ship.curr.position.longitude/10000000.0);
+
+            if(g_ship.curr.course.cog_reference == 0 || g_ship.curr.course.cog_reference == 1)
+            {
+                if(isValidSpeed(g_ship.curr.speed.over_ground))
+                {
+                    setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS);
+                }
+            }
+
+            setXTE((double)g_ship.curr.xte.val/100.0, (unsigned char)g_ship.curr.xte.mode);
+
+            setWindValue(g_ship.curr.wind.speed, g_ship.curr.wind.direction, g_ship.curr.wind.reference);
+
+
+            g_ship.prev = g_ship.curr;
+        }
+
         osDelay(1);
     }
 }
@@ -137,27 +234,10 @@ void runEcoTaskNMEA2KRx(void *argument)
         }
     }
 #else
-    int remain = 0;
-
     for(;;)
     {
-
-        if(rxCanLastIndex >= rxCanFirstIndex)
-        {
-            remain =  rxCanLastIndex - rxCanFirstIndex;
-        }
-        else
-        {
-            remain = (CAN_RX_BUF_MAX - rxCanFirstIndex);
-            remain += rxCanLastIndex;
-        }
-
-        if(remain != 0){
-            NMEA2000_ReceiveParseMessages(g_RxCan[rxCanFirstIndex].canid, g_RxCan[rxCanFirstIndex].dat, g_RxCan[rxCanFirstIndex].len);
-
-            rxCanFirstIndex++;
-            rxCanFirstIndex %= CAN_RX_BUF_MAX;
-        }
+        runN2KCANRXBuffer();
+        osDelay(1);
     }
 
 #endif
@@ -193,8 +273,5 @@ void runEcoTaskNMEA2KTx(void *argument)
     {
         osDelay(1);
     }
-
 #endif
 }
-
-#endif // ECO_APP

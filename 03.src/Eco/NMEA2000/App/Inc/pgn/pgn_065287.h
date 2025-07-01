@@ -10,12 +10,11 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
-#include "app.h"
 
 /* Private define ------------------------------------------------------------*/
 #define PGN065287_PGN                     65287
 #define PGN065287_PRIORITY                7
+
 #define PGN065287_FIELD_MIN               3
 #define PGN065287_FIELD_MAX               5
 

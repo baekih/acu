@@ -7,12 +7,14 @@
 
 #ifndef NMEA2000_INC_PGN_PGN_126993_H_
 #define NMEA2000_INC_PGN_PGN_126993_H_
+
+
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
 /* Private define ------------------------------------------------------------*/
 #define PGN126993_PGN                                   126993
 #define PGN126993_PRIORITY                              7
+
 #define PGN126993_FIELD_MIN                             5
 #define PGN126993_FIELD_MAX                             5
 #define PGN126993_UPDATE_RATE                           60000
@@ -33,5 +35,6 @@
 
 /* Exported functions --------------------------------------------------------*/
 uint32_t PGN126993_ProcessNameField(uint8_t, uint8_t, uint8_t);
+
 
 #endif /* NMEA2000_INC_PGN_PGN_126993_H_ */

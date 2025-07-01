@@ -14,8 +14,8 @@
 extern "C" {
 #endif
 
-#define BOARD_ID_DIN15           1
-#define BOARD_ID_DIN10           2
+#define BOARD_ID_ACU15           1
+#define BOARD_ID_ACU10           2
 #define BOARD_ID_INVAL           0xFF
 
 #define FLASH_START_ADRESS        0x08000000
@@ -113,6 +113,7 @@ extern "C" {
 #define LCD_TST_IMG_BLUE        4
 #define LCD_TST_IMG_GRAY        5
 #define LCD_TST_IMG_CHESS       6
+#define LCD_TST_IMG_TS          7
 
 #define TS_INVAL_I2C_ADR            0xFF
 
@@ -198,7 +199,7 @@ enum{
     FLASHIF_PROTECTION_RDPENABLED   = 0x4,
 };
 
-typedef struct _IOSAddrClame
+typedef struct _ISOAddrClame
 {
     uint8_t DevInstance;
     uint8_t SysInstance;
@@ -213,7 +214,7 @@ typedef struct _common_dat
     uint16_t appver;
 // 8byte
     uint8_t  uniquenum[3];
-    uint8_t  rsv1;
+    uint8_t  lcd_img_idx;
 // 12byte
     ISOAdrClame adrclame;
     uint8_t  rsv2[2];
@@ -226,6 +227,12 @@ typedef struct _common_dat
     uint32_t crc32;
 } common_dat __attribute__((aligned(1)));
 
+typedef struct _nav_dat
+{
+    uint16_t    hdg_magnetic;
+    int16_t     variation;
+} nav_dat __attribute__((aligned(1)));
+
 typedef struct _key_stat
 {
     bool prv;
@@ -234,19 +241,24 @@ typedef struct _key_stat
 
 extern UART_HandleTypeDef huart1, huart2;
 extern CAN_HandleTypeDef hcan1;
-extern QSPI_HandleTypeDef hqspi;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim14;
+
+#if defined (ECO_APP) | defined (ECO_BOOT2)
+extern QSPI_HandleTypeDef hqspi;
 extern I2C_HandleTypeDef hi2c1;
 extern CRC_HandleTypeDef hcrc;
 extern LTDC_HandleTypeDef hltdc;
+#else
+#error ECO_XXX NOT defined!
+#endif
+
 
 extern const common_dat g_common_dat_def;
 extern common_dat g_common_dat;
 extern uint8_t g_board_id;
 extern key_stat g_key_stat[KEY_MAX];
 extern uint8_t g_switch_bank[];
-extern uint8_t g_lcd_img_idx;
 
 void printk(const char* pstr, ...);
 uint32_t eraseFlash(uint32_t);
@@ -265,7 +277,7 @@ void setLCDBL(uint8_t);
 void initFlashData(void);
 void updateFlashData(void);
 void setLCDTestImage(uint8_t);
-#if !defined (ECO_BOOT2)
+#if defined (ECO_APP)
 void CAN1_SendFrame(uint32_t, uint8_t*, uint8_t);
 #endif
 

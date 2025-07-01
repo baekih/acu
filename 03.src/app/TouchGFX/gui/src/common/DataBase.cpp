@@ -21,30 +21,31 @@
 const int typeSTW = 0;
 const int typeSOG = 1;
 
-const double meterToFeetFactor 		= 3.28083989501312;
-const double meterToFathom 			= 0.546806649168854;
-const double meterToHR 				= 0.65997888;
-const double meterToPB 				= 0.617283950617284;
+const double meterToFeetFactor      = 3.28083989501312;
+const double meterToFathom          = 0.546806649168854;
+const double meterToHR              = 0.65997888;
+const double meterToPB              = 0.617283950617284;
 
-const double tempFahrenheitMax 		= 130.0;
-const double tempFahrenheitMin 		= 0.0;
+const double tempFahrenheitMax      = 130.0;
+const double tempFahrenheitMin      = 0.0;
 
-const double tempCelsiusDisplayMax 	= 50.0;
-const double tempCelsiusDisplayMin 	= -20.0;
+const double tempCelsiusDisplayMax  = 50.0;
+const double tempCelsiusDisplayMin  = -20.0;
 
 const double tempCelsiusNMEA0183Max = 99.99;
 const double tempCelsiusNMEA0183Min = -9.99;
 
-const double speedDisplayMax 		= 999.0;
-const double speedDisplayMin 		= 0.0;
+const double speedDisplayMax        = 999.0;
+const double speedDisplayMin        = 0.0;
 
-const double depthDisplayMin 		= 0.0;
-const double depthDisplayFeetMax 	= 4921.0;
-const double depthDisplayMeterMax 	= 1500.0;
-const double depthDisplayFathomMax 	= 820.0;
-const double depthDisplayPBMax 		= 926.0;
+const double depthDisplayMin        = 0.0;
+const double depthDisplayFeetMax    = 4921.0;
+const double depthDisplayMeterMax   = 1500.0;
+const double depthDisplayFathomMax  = 820.0;
+const double depthDisplayPBMax      = 926.0;
 
 double hdgValue = INVALID_DEGREE_VALUE;
+double Variation = INVALID_DEGREE_VALUE;
 bool validHDGValue = false;
 
 #ifndef SIMULATOR
@@ -61,171 +62,194 @@ double windSpeedValues[4];
 double latitudeDegree = INVALID_DEGREE_VALUE;
 double longitudeDegree = INVALID_DEGREE_VALUE;
 
+XTE g_XTE = {.dat = 0, .mode = 0};
+
 double GetRound(double val, double roundFraction)
 {
-	return ((double)round(val * roundFraction) / roundFraction);
+    return ((double)round(val * roundFraction) / roundFraction);
 }
 
 inline bool isTempFahrenheitValidScope(double tempF){
-	return (tempF >= tempFahrenheitMin && tempF <= tempFahrenheitMax);
+    return (tempF >= tempFahrenheitMin && tempF <= tempFahrenheitMax);
 }
 
 inline bool isTempCelsiusValidScope(double tempC){
-	return (tempC >= tempCelsiusDisplayMin && tempC <= tempCelsiusDisplayMax);
+    return (tempC >= tempCelsiusDisplayMin && tempC <= tempCelsiusDisplayMax);
 }
 
 inline bool isTempCelsiusNMEA0183OutputValidScope(double tempC){
-	return (tempC >= tempCelsiusNMEA0183Min && tempC <= tempCelsiusNMEA0183Max);
+    return (tempC >= tempCelsiusNMEA0183Min && tempC <= tempCelsiusNMEA0183Max);
 }
 
 inline double FahrenheitToCelsius(double tempFahrenheit) {
-	return ((tempFahrenheit - 32) / 1.8);
+    return ((tempFahrenheit - 32) / 1.8);
 }
 
 inline double FahrenheitToCelsiusSpan(double tempFahrenheit) {
-	return (tempFahrenheit / 1.8);
+    return (tempFahrenheit / 1.8);
 }
 
 inline double CelsiusToFahrenheit(double tempCelsius){
-	return ((tempCelsius * 1.8) + 32);
+    return ((tempCelsius * 1.8) + 32);
 }
 
 inline double CelsiusToFahrenheitSpan(double tempCelsius){
-	return (tempCelsius * 1.8);
+    return (tempCelsius * 1.8);
 }
 inline double KelvinToCelsius(double tempKelvin){
-	return (tempKelvin - 273.15);
+    return (tempKelvin - 273.15);
 }
 
 inline double CelsiusToKelvin(double tempC){
-	return 273.15 + tempC;
+    return 273.15 + tempC;
 }
 
 inline double FahrenheitToKelvin(double tempF){
-	return 273.15 + FahrenheitToCelsius(tempF);
+    return 273.15 + FahrenheitToCelsius(tempF);
 }
 
-double GetRadianToDegree360(int radian){
-	return ((((double)radian / 10000) / (2*M_PI)) * 360);
+double GetRadianToDegree360(double radian){
+    return ((((double)radian / 10000) / (2*M_PI)) * 360);
 }
 
-double GetRadianToDegree180(int radian){
-	return (((double)((short)radian)/10000) / M_PI) * 180;
+double GetRadianToDegree180(double radian){
+    return (((double)((short)radian)/10000) / M_PI) * 180;
 }
 
 double GetCorrection0to360(double degree){
-	degree = GetRound(degree, 10.0);
+    degree = GetRound(degree, 10.0);
 
-	if(degree >= 360.0 ) degree -= 360;
-	if(degree < 0) degree += 360;
+    if(degree >= 360.0 ) degree -= 360;
+    if(degree < 0) degree += 360;
 
-	return degree;
+    return degree;
 }
 
 
 double adjustDisplayAngleDegree(double angle) {
-	double res = angle;
+    double res = angle;
 
-	if (res >= 360.0) {
-		res = res - 360.0;
-	} else if (res <= 0.0) {
-		res = 360.0 + res;
-	}
+    if (res >= 360.0) {
+        res = res - 360.0;
+    } else if (res <= 0.0) {
+        res = 360.0 + res;
+    }
 
-	if ((double)round(res * 10) / 10 == 360.0) {
-		res = 0.0;
-	}
+    if ((double)round(res * 10) / 10 == 360.0) {
+        res = 0.0;
+    }
 
-	return res;
+    return res;
 }
 
 void setHDGValue(double hdg)
 {
-	hdgValue = GetRadianToDegree360(hdg);
+    hdgValue = GetRadianToDegree360(hdg);
 #ifndef SIMULATOR
-	lastReceiveHDGValue = HAL_GetTick();
+    lastReceiveHDGValue = HAL_GetTick();
 #endif
-	validHDGValue = true;
+    validHDGValue = true;
 }
 
 double getHDGValue()
 {
-	return hdgValue;
+    return hdgValue;
+}
+
+void setVariation(double variation)
+{
+    Variation = GetRadianToDegree360(variation);
+}
+
+double getVariation()
+{
+    return Variation;
 }
 
 void setValidHDG(bool valid)
 {
-	validHDGValue = valid;
+    validHDGValue = valid;
 }
 
 bool isValidHDG()
 {
 #ifndef SIMULATOR
-	return validHDGValue;
+    return validHDGValue;
 #else
-	return true;
+    return true;
 #endif
+}
+
+void setXTE(double xte, unsigned char xte_mode)
+{
+    g_XTE.dat = xte;
+    g_XTE.mode = xte_mode;
+}
+
+XTE getXTE()
+{
+    return g_XTE;
 }
 
 bool isTimeInHDG()
 {
 #ifndef SIMULATOR
-	return ((HAL_GetTick() - lastReceiveHDGValue) <= NON_RECEIVE_NMEA_TIMEOUT_5_SEC);
+    return ((HAL_GetTick() - lastReceiveHDGValue) <= NON_RECEIVE_NMEA_TIMEOUT_5_SEC);
 #else
-	return true;
+    return true;
 #endif
 }
 
 void setSTWValue(double value, int type)
 {
-	if(type == SPEED_UNIT_MPS){
-		double knot = MPS_TO_KNOT(value);
+    if(type == SPEED_UNIT_MPS){
+        double knot = MPS_TO_KNOT(value);
 
-		stwValues[SPEED_UNIT_KNOT] = knot;
-		stwValues[SPEED_UNIT_KMH] = KNOT_TO_KMH(knot);
-		stwValues[SPEED_UNIT_MPH] = KNOT_TO_MPH(knot);
-		stwValues[SPEED_UNIT_MPS] = value;
-	}
+        stwValues[SPEED_UNIT_KNOT] = knot;
+        stwValues[SPEED_UNIT_KMH] = KNOT_TO_KMH(knot);
+        stwValues[SPEED_UNIT_MPH] = KNOT_TO_MPH(knot);
+        stwValues[SPEED_UNIT_MPS] = value;
+    }
 }
 
 double getSTWValue(int type)
 {
-	return stwValues[type];
+    return stwValues[type];
 }
 
 void setSOGValue(double value, int type)
 {
-	if(type == SPEED_UNIT_MPS){
-		double knot = MPS_TO_KNOT(value);
+    if(type == SPEED_UNIT_MPS){
+        double knot = MPS_TO_KNOT(value);
 
-		sogValues[SPEED_UNIT_KNOT] = knot;
-		sogValues[SPEED_UNIT_KMH] = KNOT_TO_KMH(knot);
-		sogValues[SPEED_UNIT_MPH] = KNOT_TO_MPH(knot);
-		sogValues[SPEED_UNIT_MPS] = value;
-	}
+        sogValues[SPEED_UNIT_KNOT] = knot;
+        sogValues[SPEED_UNIT_KMH] = KNOT_TO_KMH(knot);
+        sogValues[SPEED_UNIT_MPH] = KNOT_TO_MPH(knot);
+        sogValues[SPEED_UNIT_MPS] = value;
+    }
 }
 
 double getSOGValue(int type)
 {
-	return sogValues[type];
+    return sogValues[type];
 }
 
 void setWindValue(double windSpeed, int windDirection, int windRef)
 {
-	if(isValidSpeed(windSpeed)){
-		double mps = windSpeed / 100;
-		double knot = MPS_TO_KNOT(mps);
+    if(isValidSpeed(windSpeed)){
+        double mps = windSpeed / 100;
+        double knot = MPS_TO_KNOT(mps);
 
-		windSpeedValues[SPEED_UNIT_KNOT] = knot;
-		windSpeedValues[SPEED_UNIT_KMH] = KNOT_TO_KMH(knot);
-		windSpeedValues[SPEED_UNIT_MPH] = KNOT_TO_MPH(knot);
-		windSpeedValues[SPEED_UNIT_MPS] = mps;
-	}
+        windSpeedValues[SPEED_UNIT_KNOT] = knot;
+        windSpeedValues[SPEED_UNIT_KMH] = KNOT_TO_KMH(knot);
+        windSpeedValues[SPEED_UNIT_MPH] = KNOT_TO_MPH(knot);
+        windSpeedValues[SPEED_UNIT_MPS] = mps;
+    }
 }
 
 double getWindSpeedValue(int type)
 {
-	return windSpeedValues[type];
+    return windSpeedValues[type];
 }
 
 void setDepthMeterValue(double depthMeter)
@@ -239,38 +263,47 @@ void setDepthMeterValue(double depthMeter)
 
 double getDepthValue(int type)
 {
-	return depthValues[type];
+    return depthValues[type];
 }
 
 void setWTempValue(double wtemp, int type)
 {
-	if(type == UNIT_TEMP_CELSIUS){
-		wtempValues[UNIT_TEMP_CELSIUS] = KelvinToCelsius(wtemp);
-		wtempValues[UNIT_TEMP_FAHRENHEIT] = CelsiusToFahrenheit(wtempValues[UNIT_TEMP_CELSIUS]);
-	}
+    if(type == UNIT_TEMP_CELSIUS){
+        wtempValues[UNIT_TEMP_CELSIUS] = KelvinToCelsius(wtemp);
+        wtempValues[UNIT_TEMP_FAHRENHEIT] = CelsiusToFahrenheit(wtempValues[UNIT_TEMP_CELSIUS]);
+    }
 }
 
 double getWTempValue(int type)
 {
-	return wtempValues[type];
+    return wtempValues[type];
 }
 
 void setPosition(double latitude, double longitude, int MethodGNSS)
 {
-	if ((MethodGNSS >= 1 && MethodGNSS <= 5) || MethodGNSS == 8){
-		if(isPositionValid(latitude, longitude)){
-			latitudeDegree = latitude;
-			longitudeDegree = longitude;
-		}
-	}
+    if ((MethodGNSS >= 1 && MethodGNSS <= 5) || MethodGNSS == 8){
+        if(isPositionValid(latitude, longitude)){
+            latitudeDegree = latitude;
+            longitudeDegree = longitude;
+        }
+    }
+}
+
+void setPositionRapid(double latitude, double longitude)
+{
+    if(isPositionValid(latitude, longitude))
+    {
+        latitudeDegree = latitude;
+        longitudeDegree = longitude;
+    }
 }
 
 double getLatitude()
 {
-	return latitudeDegree;
+    return latitudeDegree;
 }
 
 double getLongitude()
 {
-	return longitudeDegree;
+    return longitudeDegree;
 }

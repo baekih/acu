@@ -55,6 +55,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+void SystemClock_Config(void);
 
 /* USER CODE END EFP */
 
@@ -65,10 +66,12 @@ void Error_Handler(void);
 #define LED_ON_GPIO_Port GPIOE
 #define MCU_LCD_SCL_Pin GPIO_PIN_8
 #define MCU_LCD_SCL_GPIO_Port GPIOB
+#define LED_RG_CTL_Pin GPIO_PIN_4
+#define LED_RG_CTL_GPIO_Port GPIOB
 #define KEY_DN_Pin GPIO_PIN_12
 #define KEY_DN_GPIO_Port GPIOC
-#define WDI_Pin GPIO_PIN_15
-#define WDI_GPIO_Port GPIOA
+#define PWR_ON_Pin GPIO_PIN_15
+#define PWR_ON_GPIO_Port GPIOA
 #define MCU_LCD_SDA_Pin GPIO_PIN_9
 #define MCU_LCD_SDA_GPIO_Port GPIOB
 #define LED_PWM_Pin GPIO_PIN_7

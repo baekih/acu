@@ -2,8 +2,881 @@
   "Application": {
     "Screens": [
       {
-        "Name": "screen",
-        "Components": [],
+        "Name": "Speed",
+        "CanvasBufferSize": 12000,
+        "Components": [
+          {
+            "Type": "Image",
+            "Name": "BACK_IMAGE",
+            "Width": 800,
+            "Height": 480,
+            "RelativeFilename": "speed_background.png"
+          },
+          {
+            "Type": "Circle",
+            "Name": "CIRCLE_BACKGROUND_1_1",
+            "Width": 580,
+            "Height": 576,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "CenterX": 290.0,
+            "CenterY": 288.0,
+            "Radius": 272.0,
+            "LineWidth": 4.0,
+            "StartAngle": -120.3,
+            "EndAngle": 120.4,
+            "CapPrecision": "Butt"
+          },
+          {
+            "Type": "Shape",
+            "Name": "SPEED_INDICATOR",
+            "X": 219,
+            "Y": 14,
+            "Width": 144,
+            "Height": 144,
+            "Color": {
+              "Red": 239,
+              "Green": 67,
+              "Blue": 68
+            },
+            "Points": [
+              {
+                "Y": -72.0
+              },
+              {
+                "X": 10.0,
+                "Y": 72.0
+              },
+              {
+                "X": -10.0,
+                "Y": 72.0
+              }
+            ],
+            "XScale": 1.0,
+            "YScale": 1.0,
+            "XOrigin": 72.0,
+            "YOrigin": 72.0
+          },
+          {
+            "Type": "Circle",
+            "Name": "INDICATOR_GUIDE",
+            "Width": 580,
+            "Height": 576,
+            "CenterX": 290.0,
+            "CenterY": 289.0,
+            "Radius": 128.0,
+            "LineWidth": 4.0,
+            "EndAngle": 360.0,
+            "CapPrecision": "Butt"
+          },
+          {
+            "Type": "Line",
+            "Name": "TEXT_LINE",
+            "X": 233,
+            "Y": 344,
+            "Width": 109,
+            "Height": 15,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "StartY": 9.0,
+            "EndX": 380.0,
+            "EndY": 9.0,
+            "LineWidth": 4.0,
+            "LineEndingStyle": "Round"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "SPEED_TITLE",
+            "X": 244,
+            "Y": 359,
+            "Width": 80,
+            "Height": 45,
+            "TextId": "__SingleUse_IOE7",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_4MKK",
+              "UseBuffer": true,
+              "BufferSize": 4
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "SPEED_UNIT",
+            "X": 420,
+            "Y": 425,
+            "Width": 33,
+            "Height": 37,
+            "TextId": "__SingleUse_A4E5",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "SPEED_VALUE",
+            "X": 169,
+            "Y": 206,
+            "Width": 245,
+            "Height": 132,
+            "TextId": "WILDCARD_120PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_82LB",
+              "UseBuffer": true,
+              "BufferSize": 6
+            }
+          },
+          {
+            "Type": "Line",
+            "Name": "TEXT_LINE_CENTER",
+            "X": 582,
+            "Y": 220,
+            "Width": 213,
+            "Height": 43,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "StartX": 5.0,
+            "StartY": 20.0,
+            "EndX": 210.0,
+            "EndY": 20.0,
+            "LineWidth": 4.0,
+            "LineEndingStyle": "Round"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEPTH_VALUE",
+            "X": 568,
+            "Y": 72,
+            "Width": 227,
+            "Height": 105,
+            "TextId": "WILDCARD_100PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_5D19",
+              "UseBuffer": true,
+              "BufferSize": 5
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEPTH_UNIT",
+            "X": 744,
+            "Y": 22,
+            "Width": 48,
+            "Height": 37,
+            "TextId": "DEPTH_UNIT_30PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEPTH_TITLE",
+            "X": 602,
+            "Y": 22,
+            "Width": 80,
+            "Height": 37,
+            "TextId": "__SingleUse_P8X0",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_VALUE",
+            "X": 588,
+            "Y": 345,
+            "Width": 207,
+            "Height": 72,
+            "TextId": "WILDCARD_65PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_AUKH",
+              "UseBuffer": true,
+              "BufferSize": 8
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEGREE_UNIT",
+            "X": 753,
+            "Y": 256,
+            "Width": 10,
+            "Height": 37,
+            "TextId": "DEGREE_30PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_UNIT",
+            "X": 743,
+            "Y": 253,
+            "Width": 49,
+            "Height": 37,
+            "TextId": "TEMP_UNIT_30PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_TITLE",
+            "X": 601,
+            "Y": 253,
+            "Width": 109,
+            "Height": 37,
+            "TextId": "__SingleUse_TOHO",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          }
+        ],
+        "Interactions": [],
+        "CustomActions": [
+          {
+            "Name": "action1"
+          }
+        ]
+      },
+      {
+        "Name": "Compass",
+        "CanvasBufferSize": 12000,
+        "Components": [
+          {
+            "Type": "Image",
+            "Name": "BACK_IMAGE",
+            "Width": 800,
+            "Height": 480,
+            "RelativeFilename": "compass_background.png"
+          },
+          {
+            "Type": "Circle",
+            "Name": "CIRCLE_BACKGROUND",
+            "Width": 800,
+            "Height": 600,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "CenterX": 400.0,
+            "CenterY": 440.0,
+            "Radius": 430.0,
+            "LineWidth": 4.0,
+            "StartAngle": -270.0,
+            "EndAngle": 90.0,
+            "CapPrecision": "Butt"
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_UNIT",
+            "X": 517,
+            "Y": 288,
+            "Width": 50,
+            "Height": 77,
+            "TextId": "DEGREE_150PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_TYPE",
+            "X": 215,
+            "Y": 398,
+            "Width": 35,
+            "Height": 45,
+            "TextId": "__SingleUse_O7PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_TITLE",
+            "X": 345,
+            "Y": 249,
+            "Width": 81,
+            "Height": 45,
+            "TextId": "__SingleUse_9XEG",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_VALUE",
+            "X": 256,
+            "Y": 288,
+            "Width": 270,
+            "Height": 155,
+            "TextId": "WILDCARD_150PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_KBPR",
+              "UseBuffer": true,
+              "BufferSize": 4
+            }
+          },
+          {
+            "Type": "Line",
+            "Name": "TEXT_LINE",
+            "X": 210,
+            "Y": 449,
+            "Width": 380,
+            "Height": 18,
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "StartY": 9.0,
+            "EndX": 380.0,
+            "EndY": 9.0,
+            "LineWidth": 4.0,
+            "LineEndingStyle": "Round"
+          },
+          {
+            "Type": "ScalableImage",
+            "Name": "NORTH_MARK",
+            "X": 341,
+            "Y": 6,
+            "Width": 118,
+            "Height": 154,
+            "Filename": "north_compass.png",
+            "ScalingAlgorithm": "Nearest-neighbor"
+          }
+        ],
+        "Interactions": [],
+        "CustomActions": [
+          {
+            "Name": "action1"
+          }
+        ]
+      },
+      {
+        "Name": "LogBox",
+        "Components": [
+          {
+            "Type": "BoxWithBorder",
+            "Name": "HEAVE_BOX",
+            "Y": 240,
+            "Width": 400,
+            "Height": 120,
+            "Color": {
+              "Red": 52,
+              "Green": 52,
+              "Blue": 51
+            },
+            "BorderColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "BorderSize": 2
+          },
+          {
+            "Type": "BoxWithBorder",
+            "Name": "VOLTAGE_BOX",
+            "X": 400,
+            "Y": 240,
+            "Width": 400,
+            "Height": 120,
+            "Color": {
+              "Red": 52,
+              "Green": 52,
+              "Blue": 51
+            },
+            "BorderColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "BorderSize": 2
+          },
+          {
+            "Type": "BoxWithBorder",
+            "Name": "WTEMP_BOX",
+            "X": 400,
+            "Y": 360,
+            "Width": 400,
+            "Height": 120,
+            "Color": {
+              "Red": 52,
+              "Green": 52,
+              "Blue": 51
+            },
+            "BorderColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "BorderSize": 2
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_VALUE",
+            "X": 430,
+            "Y": 368,
+            "Width": 303,
+            "Height": 105,
+            "TextId": "WILDCARD_100PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_90QG",
+              "UseBuffer": true,
+              "BufferSize": 8
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_DEGREE",
+            "X": 760,
+            "Y": 361,
+            "Width": 8,
+            "Height": 31,
+            "TextId": "DEGREE_25PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_UNIT",
+            "X": 751,
+            "Y": 360,
+            "Width": 40,
+            "Height": 31,
+            "TextId": "TEMP_UNIT_25PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WTEMP_TITLE",
+            "X": 410,
+            "Y": 363,
+            "Width": 91,
+            "Height": 31,
+            "TextId": "__SingleUse_7IDS",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "BoxWithBorder",
+            "Name": "DEPTH_BOX",
+            "Y": 360,
+            "Width": 400,
+            "Height": 120,
+            "Color": {
+              "Red": 52,
+              "Green": 52,
+              "Blue": 51
+            },
+            "BorderColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "BorderSize": 2
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEPTH_VALUE",
+            "X": 103,
+            "Y": 368,
+            "Width": 227,
+            "Height": 105,
+            "TextId": "WILDCARD_100PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_YACM",
+              "UseBuffer": true,
+              "BufferSize": 5
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEPTH_UNIT",
+            "X": 344,
+            "Y": 363,
+            "Width": 40,
+            "Height": 31,
+            "TextId": "DEPTH_UNIT_25PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "DEPTH_TITLE",
+            "X": 10,
+            "Y": 363,
+            "Width": 66,
+            "Height": 31,
+            "TextId": "__SingleUse_GZED",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "BoxWithBorder",
+            "Name": "COURSE_BOX",
+            "Width": 400,
+            "Height": 120,
+            "Color": {
+              "Red": 52,
+              "Green": 52,
+              "Blue": 51
+            },
+            "BorderColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "BorderSize": 2
+          },
+          {
+            "Type": "BoxWithBorder",
+            "Name": "HEADING_BOX",
+            "X": 400,
+            "Width": 400,
+            "Height": 120,
+            "Color": {
+              "Red": 52,
+              "Green": 52,
+              "Blue": 51
+            },
+            "BorderColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "BorderSize": 2
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_UNIT",
+            "X": 701,
+            "Y": 5,
+            "Width": 50,
+            "Height": 38,
+            "TextId": "DEGREE_65PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_TYPE",
+            "X": 468,
+            "Y": 7,
+            "Width": 22,
+            "Height": 31,
+            "TextId": "__SingleUse_EMOW",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_TITLE",
+            "X": 410,
+            "Y": 7,
+            "Width": 51,
+            "Height": 31,
+            "TextId": "__SingleUse_LJB1",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "HDG_VALUE",
+            "X": 511,
+            "Y": 5,
+            "Width": 178,
+            "Height": 111,
+            "TextId": "WILDCARD_100PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_84IF",
+              "UseBuffer": true,
+              "BufferSize": 4
+            }
+          },
+          {
+            "Type": "BoxWithBorder",
+            "Name": "WIND_BOX",
+            "X": 400,
+            "Y": 120,
+            "Width": 400,
+            "Height": 120,
+            "Color": {
+              "Red": 52,
+              "Green": 52,
+              "Blue": 51
+            },
+            "BorderColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "BorderSize": 2
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WIND_TITLE",
+            "X": 410,
+            "Y": 121,
+            "Width": 52,
+            "Height": 31,
+            "TextId": "WILDCARD_25PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_ZLEP",
+              "UseBuffer": true,
+              "BufferSize": 4
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WIND_UNIT",
+            "X": 742,
+            "Y": 121,
+            "Width": 45,
+            "Height": 31,
+            "TextId": "__SingleUse_L3RH",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "WIND_VALUE",
+            "X": 462,
+            "Y": 114,
+            "Width": 245,
+            "Height": 132,
+            "TextId": "WILDCARD_100PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "TEXT_SPEED_VALUE_100PX",
+              "UseBuffer": true,
+              "BufferSize": 6
+            }
+          },
+          {
+            "Type": "BoxWithBorder",
+            "Name": "SPEED_BOX",
+            "Y": 120,
+            "Width": 400,
+            "Height": 120,
+            "Color": {
+              "Red": 52,
+              "Green": 52,
+              "Blue": 51
+            },
+            "BorderColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "BorderSize": 2
+          },
+          {
+            "Type": "TextArea",
+            "Name": "SPEED_TITLE",
+            "X": 13,
+            "Y": 121,
+            "Width": 52,
+            "Height": 31,
+            "TextId": "WILDCARD_25PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true,
+            "Wildcard1": {
+              "TextId": "__SingleUse_QYI4",
+              "UseBuffer": true,
+              "BufferSize": 4
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "SPEED_UNIT",
+            "X": 342,
+            "Y": 121,
+            "Width": 45,
+            "Height": 31,
+            "TextId": "SPEED_UNIT_25PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "SPEED_VALUE",
+            "X": 76,
+            "Y": 114,
+            "Width": 245,
+            "Height": 132,
+            "TextId": "WILDCARD_100PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "TEXT_SPEED_VALUE_100PX",
+              "UseBuffer": true,
+              "BufferSize": 6
+            }
+          }
+        ],
         "Interactions": []
       }
     ],
@@ -14,7 +887,7 @@
       "Height": 480
     },
     "SelectedColorDepth": 16,
-    "StartupScreenName": "screen",
+    "StartupScreenName": "Speed",
     "SelectedStartupLanguage": "GB",
     "TouchGfxPath": "../Middlewares/ST/touchgfx",
     "UIPath": ".",
@@ -60,5 +933,5 @@
     "OptionalComponents": [],
     "AdditionalFeatures": []
   },
-  "Version": "4.23.0"
+  "Version": "4.25.0"
 }

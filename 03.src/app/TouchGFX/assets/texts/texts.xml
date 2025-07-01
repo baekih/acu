@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextDatabase xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="texts.xsd" Version="4.23.0">
+<TextDatabase xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="texts.xsd" Version="4.25.0">
   <Languages>
     <Language Id="GB" />
   </Languages>
@@ -72,17 +72,20 @@
       <Text Id="TEXT_SPEED_0" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB" Alignment="Center">0</Translation>
       </Text>
-      <Text Id="TEXT_SPEED_5" Alignment="Left" TypographyId="TYPEPO_40PX">
-        <Translation Language="GB">5</Translation>
-      </Text>
       <Text Id="TEXT_SPEED_10" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">10</Translation>
       </Text>
-      <Text Id="TEXT_SPEED_15" Alignment="Left" TypographyId="TYPEPO_40PX">
-        <Translation Language="GB">15</Translation>
-      </Text>
       <Text Id="TEXT_SPEED_20" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">20</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_30" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">30</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_40" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">40</Translation>
+      </Text>
+      <Text Id="TEXT_SPEED_50" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">50</Translation>
       </Text>
       <Text Id="__SingleUse_IOE7" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
@@ -168,10 +171,10 @@
         <Translation Language="GB">000</Translation>
       </Text>
       <Text Id="__SingleUse_4MKK" Alignment="Left" TypographyId="TYPEPO_40PX">
-        <Translation Language="GB">STW</Translation>
+        <Translation Language="GB">SOG</Translation>
       </Text>
       <Text Id="__SingleUse_82LB" Alignment="Center" TypographyId="TYPEPO_120PX">
-        <Translation Language="GB">*9.9</Translation>
+        <Translation Language="GB">00.0</Translation>
       </Text>
       <Text Id="__SingleUse_5D19" Alignment="Left" TypographyId="TYPEPO_100PX">
         <Translation Language="GB">0000</Translation>

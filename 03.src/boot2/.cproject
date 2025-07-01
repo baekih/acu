@@ -57,7 +57,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F7xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
-									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
+									<listOptionValue builtIn="false" value="../../Eco/BSP/acu"/>
 									<listOptionValue builtIn="false" value="../../Eco/Res/Fonts"/>
 									<listOptionValue builtIn="false" value="../../Eco/NMEA2K/Inc"/>
 								</option>
@@ -82,7 +82,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F7xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
-									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
+									<listOptionValue builtIn="false" value="../../Eco/BSP/acu"/>
 									<listOptionValue builtIn="false" value="../../Eco/Res/Fonts"/>
 									<listOptionValue builtIn="false" value="../../Eco/NMEA2K/Inc"/>
 								</option>
@@ -170,7 +170,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F7xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
-									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
+									<listOptionValue builtIn="false" value="../../Eco/BSP/acu"/>
 									<listOptionValue builtIn="false" value="../../Eco/Res/Fonts"/>
 									<listOptionValue builtIn="false" value="../../Eco/NMEA2K/Inc"/>
 								</option>
@@ -194,7 +194,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32F7xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../../Eco/Inc"/>
-									<listOptionValue builtIn="false" value="../../Eco/BSP/fi-din"/>
+									<listOptionValue builtIn="false" value="../../Eco/BSP/acu"/>
 									<listOptionValue builtIn="false" value="../../Eco/Res/Fonts"/>
 									<listOptionValue builtIn="false" value="../../Eco/NMEA2K/Inc"/>
 								</option>

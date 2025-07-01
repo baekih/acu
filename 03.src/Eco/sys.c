@@ -6,15 +6,66 @@
  */
 #include "eco.h"
 
-const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .jmp_adr = APP_START_ADDR, .rsv1 = 0, .rsv2 = {0, 0}};
+#if defined (ECO_APP) | defined(ECO_BOOT2)
+const common_dat g_common_dat_def = {.lcd_bl = 50, .bzr_vol = 0, .lcd_img_idx = 0, .jmp_adr = APP_START_ADDR, .rsv2 = {0, 0}};
 common_dat g_common_dat;
-
-uint8_t g_lcd_img_idx = 0;
 
 key_stat g_key_stat[KEY_MAX];
 uint32_t sys_lcd_width;
 uint8_t g_ts_i2c_adr = 0xFF;
 uint8_t g_board_id = BOARD_ID_INVAL;
+
+version g_ver;
+
+nav_dat g_nav = {
+    .hdg_magnetic    = 0,
+    .variation       = 0,
+};
+
+#else
+#error no ECO_XXX defined.
+#endif
+
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_pwrsav_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
 
 void printk(const char* pstr, ...)
 {
@@ -28,6 +79,7 @@ void printk(const char* pstr, ...)
     while(HAL_BUSY == HAL_UART_Transmit(&huart1, (uint8_t*)&buf[0], strlen(buf), 1000)) osDelay(1);
 }
 
+#if defined (ECO_APP) | defined(ECO_BOOT2)
 void initTouchSensor(void)
 {
     uint8_t res[4] = {0};
@@ -48,20 +100,62 @@ void initTouchSensor(void)
     if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_ST1633_I2C_ADR)<<1, TS_ST1633_RES_REG, 1, &res[0], TS_ST1633_RES_LEN, 10))
     {
         g_ts_i2c_adr = TS_ST1633_I2C_ADR;
-        g_board_id = BOARD_ID_DIN15;
+        g_board_id = BOARD_ID_ACU15;
     }
     else if(HAL_OK == HAL_I2C_Mem_Read(&hi2c1, (TS_GT911_I2C_ADR)<<1, TS_GT911_RES_REG, 2, &res[0], TS_GT911_RES_LEN, 10))
     {
         g_ts_i2c_adr = TS_GT911_I2C_ADR;
-        g_board_id = BOARD_ID_DIN15;
+        g_board_id = BOARD_ID_ACU15;
     }
     else
     {
         g_ts_i2c_adr = TS_INVAL_I2C_ADR;
-        g_board_id = BOARD_ID_DIN10;
+        g_board_id = BOARD_ID_ACU10;
         printk("no TS detected.\r\n");
         return;
     }
+
+    if(g_board_id == BOARD_ID_ACU10)
+    {
+        SystemClock_pwrsav_Config();
+
+        GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+        __HAL_RCC_GPIOC_CLK_ENABLE();
+        GPIO_InitStruct.Pin = KEY_PWR_Pin;
+        GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+        while(GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+        {
+            HAL_Delay(100);
+        }
+
+        while(GPIO_PIN_SET == HAL_GPIO_ReadPin(KEY_PWR_GPIO_Port, KEY_PWR_Pin))
+        {
+            HAL_Delay(100);
+        }
+
+        SystemClock_Config();
+    }
+
+    if     (g_board_id==BOARD_ID_ACU10)
+    {
+#ifdef DEBUG
+        printk("ECO-ACU10 app DBG " __DATE__ " " __TIME__ "\r\n");
+#else
+        printk("ECO-ACU10 app " __DATE__ "\r\n");
+#endif
+    }
+    else if(g_board_id==BOARD_ID_ACU15)
+    {
+#ifdef DEBUG
+        printk("ECO-ACU app DBG " __DATE__ " " __TIME__ "\r\n");
+#else
+        printk("ECO-ACU app " __DATE__ "\r\n");
+#endif
+    }
+
 }
 
 bool getTouchSensor(uint16_t* x, uint16_t* y)
@@ -119,7 +213,9 @@ bool getTouchSensor(uint16_t* x, uint16_t* y)
 
     return true;
 }
+#endif
 
+#if defined (ECO_BOOT2) | defined (ECO_APP)
 uint32_t eraseFlash(uint32_t addr)
 {
     uint32_t SectorError;
@@ -219,7 +315,9 @@ int32_t eraseFlashApp(void)
 
     return FLASHIF_OK;
 }
+#endif
 
+#if defined (ECO_BOOT2) | defined (ECO_APP)
 static uint8_t QSPI_WriteEnable(void)
 {
     QSPI_CommandTypeDef scmd;
@@ -396,7 +494,9 @@ void initQSPI(void)
 
     QSPI_EnableMemoryMappedMode();
 }
+#endif
 
+#if defined (ECO_APP) | defined(ECO_BOOT2)
 bool getKeyPending(uint8_t idx)
 {
     bool ret = g_key_stat[idx].cur;
@@ -417,7 +517,7 @@ void setBuzzer(uint8_t bzr_vol)
     bzr_vol_prev = bzr_vol;
 
     sConfigOC.Pulse = (125*bzr_vol)/100;
-    printf("set bzr_vol[%d] Pulse[%d]\n", bzr_vol, sConfigOC.Pulse);
+//    printf("set bzr_vol[%d] Pulse[%d]\n", bzr_vol, sConfigOC.Pulse);
 
     HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_3);
     HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_3);
@@ -429,13 +529,19 @@ void setBuzzer(uint8_t bzr_vol)
 void setLCDBL(uint8_t lcd_bl)
 {
     static uint8_t lcd_bl_prev = 0;
+    uint8_t lcd_bl_log = 0;
+
     TIM_OC_InitTypeDef sConfigOC = {TIM_OCMODE_PWM1, 0, TIM_OCPOLARITY_HIGH, TIM_OCFAST_DISABLE, 0, 0};
 
     if(100 < lcd_bl) lcd_bl = 100;
     if(lcd_bl_prev == lcd_bl) return;
     lcd_bl_prev = lcd_bl;
 
-    sConfigOC.Pulse = (100*lcd_bl)/100;
+    lcd_bl_log = (lcd_bl + 9)/10;
+
+    if(lcd_bl_log == 0) sConfigOC.Pulse = 0;
+    else if(lcd_bl_log == 10) sConfigOC.Pulse = 512-1;
+    else sConfigOC.Pulse = (1<<(lcd_bl_log-1));
     printf("set lcd_bl[%d] Pulse[%d]\n", lcd_bl, sConfigOC.Pulse);
 
     HAL_TIM_PWM_Stop(&htim14, TIM_CHANNEL_1);
@@ -443,7 +549,9 @@ void setLCDBL(uint8_t lcd_bl)
     HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
     return;
 }
+#endif
 
+#if defined (ECO_APP) | defined(ECO_BOOT2)
 void initFlashData(void)
 {
     common_dat *pcommon_dat = (common_dat*)FLASH_DATA_ADDR;
@@ -486,7 +594,9 @@ void updateFlashData(void)
 
     return;
 }
+#endif
 
+#if defined (ECO_BOOT2)
 void setLCDTestImage(uint8_t img_sel)
 {
     uint16_t *pbuf = (uint16_t*)0xC0000000;
@@ -622,10 +732,22 @@ void setLCDTestImage(uint8_t img_sel)
         printf("gray\n");
         break;
     }
+    case LCD_TST_IMG_TS:
+        BSP_LCD_Clear(0x00FFFFFF);
+        BSP_LCD_SetTextColor(0x00000000);
+        BSP_LCD_SetBackColor(0xFFFFFFFF);
+
+        BSP_LCD_DrawLine(0, 0, 799, 479);
+        BSP_LCD_DrawLine(799, 0, 0, 479);
+
+        printf("ts_test\n");
+
+        break;
     case LCD_TST_IMG_DEF:
-        if(g_board_id == BOARD_ID_DIN15)
+        if(g_board_id == BOARD_ID_ACU15)
         {
             memcpy((uint32_t*)0xC0000000, &image_autopilot_800x480[0], 800*480*2);
+//            memcpy((uint32_t*)0xC0000000, &image_kitten_800x480[0], 800*480*2);
             printf("autopilot\n");
         }
         else
@@ -637,19 +759,21 @@ void setLCDTestImage(uint8_t img_sel)
         break;
     }
 }
+#endif
 
+#if defined (ECO_APP) | defined(ECO_BOOT2)
 int32_t doSwitchBankControl(uint64_t *prxdat64)
 {
     g_common_dat.bzr_vol = (uint8_t)(*prxdat64 & 0xFF);
 
     if     ((*prxdat64 & SW_KEY_UP_MASK) != 0)
     {
-        g_lcd_img_idx == 6 ? g_lcd_img_idx = 0 : g_lcd_img_idx++;
+        g_common_dat.lcd_img_idx == 7 ? g_common_dat.lcd_img_idx = 0 : g_common_dat.lcd_img_idx++;
         *prxdat64 &= (~(SW_KEY_UP_MASK));
     }
     else if((*prxdat64 & SW_KEY_DN_MASK) != 0)
     {
-        g_lcd_img_idx == 0 ? g_lcd_img_idx = 6 : g_lcd_img_idx--;
+        g_common_dat.lcd_img_idx == 0 ? g_common_dat.lcd_img_idx = 7 : g_common_dat.lcd_img_idx--;
         *prxdat64 &= (~(SW_KEY_DN_MASK));
     }
 
@@ -662,6 +786,7 @@ int32_t setLCDBrightness(uint8_t lcd_bl)
 
     return 0;
 }
+#endif
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
@@ -681,27 +806,27 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         if(osOK != osMessageQueuePut(EcoQueueNMEA2KRX1Handle, (uint8_t*)(&RxPacket) + i, 0, 0)) Error_Handler();
     }
 #else
-    g_RxCan[rxCanLastIndex].canid = RxHeader.ExtId;
-    g_RxCan[rxCanLastIndex].len = RxHeader.DLC;
-    memcpy(g_RxCan[rxCanLastIndex].dat, RxPacket.dat, sizeof(RxPacket.dat));
+    g_canbuf.rx[g_canbuf.rx_idx_tail].canid = RxHeader.ExtId;
+    g_canbuf.rx[g_canbuf.rx_idx_tail].len = RxHeader.DLC;
+    memcpy(g_canbuf.rx[g_canbuf.rx_idx_tail].dat, RxPacket.dat, sizeof(RxPacket.dat));
 
-    rxCanLastIndex++;
-    rxCanLastIndex %= CAN_RX_BUF_MAX;
+    g_canbuf.rx_idx_tail++;
+    g_canbuf.rx_idx_tail %= CAN_BUF_RX_MAX;
 
-    if(rxCanLastIndex == rxCanFirstIndex)
+    if(g_canbuf.rx_idx_tail == g_canbuf.rx_idx_head)
     {
-        rxCanFirstIndex++;
-        rxCanFirstIndex %= CAN_RX_BUF_MAX;
+        g_canbuf.rx_idx_head++;
+        g_canbuf.rx_idx_head %= CAN_BUF_RX_MAX;
     }
 #endif
 }
 
-#if !defined (ECO_BOOT2)
+#if defined (ECO_APP)
 void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
 {
     uint16_t count = 100;
 
-    while(HAL_CAN_IsTxMessagePending(&hcan1, g_TxCan[txCanBufferCount].TxMailbox) == 1)
+    while(HAL_CAN_IsTxMessagePending(&hcan1, g_canbuf.tx[g_canbuf.tx_idx].TxMailbox) == 1)
      {
         osDelay(1);
 
@@ -717,17 +842,18 @@ void CAN1_SendFrame(uint32_t rawCanId,  uint8_t *buf, uint8_t len)
     printf("\n");
 #endif
 
-    g_TxCan[txCanBufferCount].TxHeader.ExtId = rawCanId;
-    g_TxCan[txCanBufferCount].TxHeader.IDE = CAN_ID_EXT;
-    g_TxCan[txCanBufferCount].TxHeader.DLC = len;
+    g_canbuf.tx[g_canbuf.tx_idx].TxHeader.ExtId = rawCanId;
+    g_canbuf.tx[g_canbuf.tx_idx].TxHeader.IDE = CAN_ID_EXT;
+    g_canbuf.tx[g_canbuf.tx_idx].TxHeader.DLC = len;
 
-    memcpy(g_TxCan[txCanBufferCount].TxData, buf, len);
+    memcpy(g_canbuf.tx[g_canbuf.tx_idx].TxData, buf, len);
 
-    if(HAL_CAN_AddTxMessage(&hcan1, &g_TxCan[txCanBufferCount].TxHeader,
-            g_TxCan[txCanBufferCount].TxData, &g_TxCan[txCanBufferCount].TxMailbox) != HAL_OK)
+    if(HAL_CAN_AddTxMessage(&hcan1, &g_canbuf.tx[g_canbuf.tx_idx].TxHeader,
+                            g_canbuf.tx[g_canbuf.tx_idx].TxData, &g_canbuf.tx[g_canbuf.tx_idx].TxMailbox) != HAL_OK)
     {
         printf(" Error HAL_CAN_AddTxMessage hcan1 !!\r\n");
         osDelay(1);
     }
 }
 #endif
+

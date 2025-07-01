@@ -10,28 +10,23 @@
 
 #include "eco.h"
 
-#if 0
-#pragma pack(push,1)
-typedef struct __RxProtocol
-{
-    uint32_t canid;
-    uint8_t  dat[8];
-    uint8_t  len;
-} RxProtocol ;
+#define HW_VERSION                  01
+#define BOOT_VERSION                01
+#define APP_VERSION                 01
 
-typedef struct __TxProtocol
+typedef struct _version
 {
-    uint32_t canid;
-    uint8_t  dat[8];
-    uint8_t  len;
-} TxProtocol ;
-#pragma pack(pop)
-#endif
+    uint8_t hw[7];
+    uint8_t boot[7];
+    uint8_t app[7];
+} version  __attribute__((aligned(1)));
 
 extern osMessageQueueId_t EcoQueueUART1Handle;
 extern osMessageQueueId_t EcoQueueNMEA2KRX1Handle;
 extern osMessageQueueId_t EcoQueueNMEA2KTX1Handle;
 extern const osMessageQueueAttr_t EcoQueueNMEA2KRX1_attributes;
+
+extern version g_ver;
 
 void EcoQueuePut(osMessageQueueId_t handle, uint8_t* pbuf, uint8_t len);
 void EcoQueueWait(osMessageQueueId_t handle, uint8_t* pbuf, uint8_t len);

@@ -7,12 +7,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "nmea2000.h"
-#include "nmea2000_deviceinfo.h"
-#include "nmea2000_pgnbase.h"
-#include "nmea2000_namebase.h"
-#include "multipacketdata.h"
-
-#include "pgn_130822.h"
 
 /* Private typedef -----------------------------------------------------------*/
 
@@ -21,22 +15,21 @@
 /* Private functions ---------------------------------------------------------*/
 void PGN130822_ProcessNameField(NmeaPgn* pgnId)
 {
-//	printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
-	InitializeSendNameBitPosition();
-	InitializeSendNameField();
+//  printf("%s:%d Enter... \r\n",__FUNCTION__,__LINE__);
+    InitializeSendNameField();
 
-	Add2ByteUInt(PPGN_FURUNO_MFGCODE);
-	Add1ByteUInt(0); // 1
-	Add1ByteUInt(0); // 2
-	Add1ByteUInt(0); // 3
-	Add1ByteUInt(0); // 4
-	Add1ByteUInt(0); // 5
-	Add1ByteUInt(0); // 6
-	Add1ByteUInt(0); // 7
-	Add1ByteUInt(0); // 8
+    Add2ByteUInt(PPGN_FURUNO_MFGCODE);
+    Add1ByteUInt(0); // 1
+    Add1ByteUInt(0); // 2
+    Add1ByteUInt(0); // 3
+    Add1ByteUInt(0); // 4
+    Add1ByteUInt(0); // 5
+    Add1ByteUInt(0); // 6
+    Add1ByteUInt(0); // 7
+    Add1ByteUInt(0); // 8
 
-	SendNonSingleFrame(getCanId(PGN130822_PRIORITY, PGN130822_PGN, pgnId->mSA, localSourceAddr), sendPacketLength,
-					 sendNMEAPackets,
-					 REQUEST_MESSAGE_TYPE_FASTPACKET);
-
+    SendNonSingleFrame(getCanId(PGN130822_PRIORITY, PGN130822_PGN, pgnId->mSA, g_n2k_addr_curr),
+                       sendPacketLength,
+                       sendNMEAPackets,
+                       REQUEST_MESSAGE_TYPE_FASTPACKET);
 }
