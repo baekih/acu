@@ -37,6 +37,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>app.touchgfx</name>
+			<type>1</type>
+			<location>C:/dev/work/st-1.19.0/fi-din/03.src/app/TouchGFX/app.touchgfx</location>
+		</link>
+		<link>
 			<name>Eco/BSP</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
