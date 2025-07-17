@@ -33,13 +33,13 @@ void FrontendApplication::gotoSpeedScreenNoTransitionImpl()
     touchgfx::makeTransition<SpeedView, SpeedPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }
 
-void FrontendApplication::gotoLogBoxScreenNoTransition()
+void FrontendApplication::gotoControlScreenNoTransition()
 {
-    transitionCallback = touchgfx::Callback<FrontendApplication>(this, &FrontendApplication::gotoLogBoxScreenNoTransitionImpl);
+    transitionCallback = touchgfx::Callback<FrontendApplication>(this, &FrontendApplication::gotoControlScreenNoTransitionImpl);
     pendingScreenTransitionCallback = &transitionCallback;
 }
 
-void FrontendApplication::gotoLogBoxScreenNoTransitionImpl()
+void FrontendApplication::gotoControlScreenNoTransitionImpl()
 {
-    touchgfx::makeTransition<LogBoxView, LogBoxPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
+    touchgfx::makeTransition<ControlView, ControlPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }

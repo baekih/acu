@@ -24,7 +24,7 @@ public :
     // Speed
     void gotoSpeedScreenNoTransition();
     void gotoCompassScreenNoTransition();
-    void gotoLogBoxScreenNoTransition();
+    void gotoControlScreenNoTransition();
 
 protected:
     touchgfx::Callback<FrontendApplication> transitionCallback;
@@ -32,7 +32,7 @@ protected:
     // Compass
     void gotoSpeedScreenNoTransitionImpl();
     void gotoCompassScreenNoTransitionImpl();
-    void gotoLogBoxScreenNoTransitionImpl();
+    void gotoControlScreenNoTransitionImpl();
 };
 
 #endif // FRONTENDAPPLICATION_HPP
