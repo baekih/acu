@@ -10,6 +10,7 @@
 class ControlView : public ControlViewBase, protected ViewCommon
 {
 	int speedType;
+	int hdgt_tgt;
 
 private :
     void updateSpeed(double value, int max);
@@ -27,8 +28,10 @@ public:
     void handleTickEvent();
 
     touchgfx::Callback<ControlView, const touchgfx::Slider&, int> sliderValueChangedCallback;
+    touchgfx::Callback<ControlView, const touchgfx::AbstractButton&> buttonCallback;
 
     void sliderValueChangedCallbackHandler(const touchgfx::Slider& src, int value);
+    void buttonCallbackHandler(const touchgfx::AbstractButton& src);
 
 protected:
 };

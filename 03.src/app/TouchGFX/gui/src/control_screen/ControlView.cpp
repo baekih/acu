@@ -1,7 +1,8 @@
 #include <gui/control_screen/ControlView.hpp>
 
 ControlView::ControlView():
-    sliderValueChangedCallback(this, &ControlView::sliderValueChangedCallbackHandler)
+    sliderValueChangedCallback(this, &ControlView::sliderValueChangedCallbackHandler),
+    buttonCallback(this, &ControlView::buttonCallbackHandler)
 {
 
 }
@@ -10,6 +11,9 @@ void ControlView::setupScreen()
 {
     ControlViewBase::setupScreen();
     HDGT_TGT_SLIDER.setNewValueCallback(sliderValueChangedCallback);
+    BTN_STOP.setAction(buttonCallback);
+    BTN_HDGT_LEFT.setAction(buttonCallback);
+    BTN_HDGT_RIGHT.setAction(buttonCallback);
 }
 
 void ControlView::tearDownScreen()
@@ -32,7 +36,8 @@ void ControlView::updateHDGTcur(double hdgValue)
 void ControlView::updateHDGTtgt(double hdgValue)
 {
     if(isTimeInHDG() && isValidHDG()){
-        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", (int)adjustDisplayAngleDegree(GetRound(hdgValue, 1)));
+        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", (int)hdgValue);
+//        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", (int)adjustDisplayAngleDegree(GetRound(hdgValue, 1)));
     }
     else {
         Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "---");
@@ -52,8 +57,65 @@ void ControlView::sliderValueChangedCallbackHandler(const touchgfx::Slider& src,
 {
     if (&src == &HDGT_TGT_SLIDER)
     {
-        printf("ControlView:callback\r\n");
-        updateHDGTtgt((double)value);
+        printf("HDGT_TGT_SLIDER[%d:%d]\r\n", hdgt_tgt, value);
+        if(-180 <= value && value < 0)
+        {
+            hdgt_tgt = value + 360;
+        }
+        else
+        {
+            hdgt_tgt = value;
+        }
+
+        updateHDGTtgt((double)hdgt_tgt);
+    }
+}
+
+void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
+{
+    if (&src == &BTN_STOP)
+    {
+        printf("BTN_STOP\r\n");
+    }
+
+    if (&src == &BTN_HDGT_LEFT)
+    {
+        if(--hdgt_tgt == -1) hdgt_tgt = 359;
+
+        printf("BTN_HDGT_LEFT hdgt_tgt[%d]\r\n", hdgt_tgt);
+
+        updateHDGTtgt((double)hdgt_tgt);
+
+        if(180 < hdgt_tgt)
+        {
+            HDGT_TGT_SLIDER.setValue((int16_t)(hdgt_tgt - 360));
+        }
+        else
+        {
+            HDGT_TGT_SLIDER.setValue((int16_t)hdgt_tgt);
+        }
+
+        HDGT_TGT_SLIDER.invalidate();
+    }
+
+    if (&src == &BTN_HDGT_RIGHT)
+    {
+        if(++hdgt_tgt == 360) hdgt_tgt = 0;
+
+        printf("BTN_HDGT_RIGHT hdgt_tgt[%d]\r\n", hdgt_tgt);
+
+        updateHDGTtgt((double)hdgt_tgt);
+
+        if(180 < hdgt_tgt)
+        {
+            HDGT_TGT_SLIDER.setValue((int16_t)(hdgt_tgt - 360));
+        }
+        else
+        {
+            HDGT_TGT_SLIDER.setValue((int16_t)hdgt_tgt);
+        }
+
+        HDGT_TGT_SLIDER.invalidate();
     }
 }
 

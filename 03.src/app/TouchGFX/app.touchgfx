@@ -430,6 +430,26 @@
               "Blue": 255
             },
             "TextRotation": "0"
+          },
+          {
+            "Type": "Button",
+            "Name": "BTN_HDGT_LEFT",
+            "X": 19,
+            "Y": 341,
+            "Width": 56,
+            "Height": 130,
+            "Pressed": "btn_left.png",
+            "Released": "btn_left_pressed.png"
+          },
+          {
+            "Type": "Button",
+            "Name": "BTN_HDGT_RIGHT",
+            "X": 100,
+            "Y": 341,
+            "Width": 56,
+            "Height": 130,
+            "Pressed": "btn_right.png",
+            "Released": "btn_right_pressed.png"
           }
         ],
         "Interactions": [],
