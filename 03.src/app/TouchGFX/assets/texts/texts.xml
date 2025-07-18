@@ -95,17 +95,32 @@
       </Text>
     </TextGroup>
     <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_G79V" Alignment="Center" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">STOP</Translation>
+      </Text>
+      <Text Id="__SingleUse_SB5O" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">00.0</Translation>
+      </Text>
+      <Text Id="__SingleUse_78P5" Alignment="Right" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">&lt;*&gt;˚</Translation>
+      </Text>
+      <Text Id="__SingleUse_6NXS" Alignment="Right" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">&lt;*&gt;˚</Translation>
+      </Text>
+      <Text Id="__SingleUse_P74B" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">00.0</Translation>
+      </Text>
       <Text Id="__SingleUse_RLPY" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">TGT</Translation>
       </Text>
       <Text Id="__SingleUse_72X7" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">HDGT TGT INPUT</Translation>
+        <Translation Language="GB">HDGT Target INPUT</Translation>
       </Text>
       <Text Id="__SingleUse_3WXV" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">CUR</Translation>
       </Text>
       <Text Id="__SingleUse_6E48" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">RUD</Translation>
+        <Translation Language="GB">RUDDER</Translation>
       </Text>
       <Text Id="__SingleUse_HTYD" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">-30˚                         0˚                         30˚</Translation>

@@ -5,6 +5,7 @@
 #include <gui/control_screen/ControlPresenter.hpp>
 
 #include <gui/common/ViewCommon.hpp>
+#include "printf.h"
 
 class ControlView : public ControlViewBase, protected ViewCommon
 {
@@ -19,12 +20,15 @@ public:
     virtual void setupScreen();
     virtual void tearDownScreen();
 
-    void updateHDGTcurr(double hdgValue);
+    void updateHDGTcur(double hdgValue);
+    void updateHDGTtgt(double hdgValue);
     void updateSOG(double value);
 
     void handleTickEvent();
 
-//    virtual void handleClickEvent(const ClickEvent& evt);
+    touchgfx::Callback<ControlView, const touchgfx::Slider&, int> sliderValueChangedCallback;
+
+    void sliderValueChangedCallbackHandler(const touchgfx::Slider& src, int value);
 
 protected:
 };

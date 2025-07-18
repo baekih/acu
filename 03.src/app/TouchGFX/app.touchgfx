@@ -149,6 +149,46 @@
           },
           {
             "Type": "TextArea",
+            "Name": "RUD_CUR_VALUE",
+            "X": 610,
+            "Y": 60,
+            "Width": 76,
+            "Height": 34,
+            "TextId": "__SingleUse_6NXS",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_P74B",
+              "UseBuffer": true,
+              "BufferSize": 6
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "RUD_TGT_VALUE",
+            "X": 610,
+            "Y": 17,
+            "Width": 76,
+            "Height": 34,
+            "TextId": "__SingleUse_78P5",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_SB5O",
+              "UseBuffer": true,
+              "BufferSize": 6
+            }
+          },
+          {
+            "Type": "TextArea",
             "Name": "COG_VALUE",
             "X": 96,
             "Y": 240,
@@ -184,7 +224,7 @@
             "Wildcard1": {
               "TextId": "__SingleUse_353F",
               "UseBuffer": true,
-              "BufferSize": 3
+              "BufferSize": 5
             }
           },
           {
@@ -226,7 +266,7 @@
             "Name": "RUD_TEXT",
             "X": 24,
             "Y": 43,
-            "Width": 59,
+            "Width": 115,
             "Height": 37,
             "TextId": "__SingleUse_6E48",
             "TextRotation": "0",
@@ -240,8 +280,8 @@
           {
             "Type": "TextArea",
             "Name": "RUD_TGT_TEXT",
-            "X": 616,
-            "Y": 23,
+            "X": 700,
+            "Y": 20,
             "Width": 47,
             "Height": 31,
             "TextId": "__SingleUse_RLPY",
@@ -256,7 +296,7 @@
           {
             "Type": "TextArea",
             "Name": "RUD_CUR_TEXT",
-            "X": 615,
+            "X": 699,
             "Y": 63,
             "Width": 48,
             "Height": 31,
@@ -320,9 +360,9 @@
           {
             "Type": "TextArea",
             "Name": "HDGT_TGT_INPUT_TEXT",
-            "X": 282,
+            "X": 277,
             "Y": 354,
-            "Width": 237,
+            "Width": 267,
             "Height": 37,
             "TextId": "__SingleUse_72X7",
             "TextRotation": "0",
@@ -368,22 +408,31 @@
             "IndicatorMax": 400,
             "ValueMax": 30,
             "ValueMin": -30
-          }
-        ],
-        "Interactions": [
+          },
           {
-            "InteractionName": "Interaction_slider_hdgt_tgt",
-            "Trigger": {
-              "Type": "TriggerSliderValueChanged",
-              "TriggerComponent": "HDGT_TGT_SLIDER"
+            "Type": "ButtonWithLabel",
+            "Name": "BTN_STOP",
+            "X": 635,
+            "Y": 382,
+            "Width": 144,
+            "Height": 60,
+            "Pressed": "__generated\\dark_theme_images_widgets_button_regular_height_60_tiny_round_active.png",
+            "Released": "__generated\\dark_theme_images_widgets_button_regular_height_60_tiny_round_action.png",
+            "TextId": "__SingleUse_G79V",
+            "ReleasedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
             },
-            "Action": {
-              "Type": "ActionExecuteCode",
-              "Includes": "",
-              "Code": "//ToDo"
-            }
+            "PressedColor": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "TextRotation": "0"
           }
         ],
+        "Interactions": [],
         "CustomActions": [
           {
             "Name": "action1"
