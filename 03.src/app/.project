@@ -72,6 +72,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/common.c</locationURI>
 		</link>
 		<link>
+			<name>Eco/control.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/control.c</locationURI>
+		</link>
+		<link>
 			<name>Eco/printf.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/printf.c</locationURI>
@@ -100,6 +105,11 @@
 			<name>Eco/Inc/common.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/common.h</locationURI>
+		</link>
+		<link>
+			<name>Eco/Inc/control.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/Inc/control.h</locationURI>
 		</link>
 		<link>
 			<name>Eco/Inc/eco.h</name>
@@ -512,6 +522,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_127250.h</locationURI>
 		</link>
 		<link>
+			<name>Eco/NMEA2000/App/Inc/pgn/pgn_127251.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_127251.h</locationURI>
+		</link>
+		<link>
 			<name>Eco/NMEA2000/App/Inc/pgn/pgn_127258.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Inc/pgn/pgn_127258.h</locationURI>
@@ -690,6 +705,11 @@
 			<name>Eco/NMEA2000/App/Src/pgn/pgn_127250.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_127250.c</locationURI>
+		</link>
+		<link>
+			<name>Eco/NMEA2000/App/Src/pgn/pgn_127251.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Eco/NMEA2000/App/Src/pgn/pgn_127251.c</locationURI>
 		</link>
 		<link>
 			<name>Eco/NMEA2000/App/Src/pgn/pgn_127258.c</name>

@@ -121,6 +121,13 @@ const osThreadAttr_t EcoTackSync_attributes = {
   .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for EcoTaskControl */
+osThreadId_t EcoTaskControlHandle;
+const osThreadAttr_t EcoTaskControl_attributes = {
+  .name = "EcoTaskControl",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for EcoQueueUART1 */
 osMessageQueueId_t EcoQueueUART1Handle;
 uint8_t EcoQueueUART1Buffer[ 256 * sizeof( uint8_t ) ];
@@ -182,6 +189,7 @@ extern void runEcoTaskFlash(void *argument);
 extern void runEcoTaskKey(void *argument);
 extern void runEcoTaskTGFX(void *argument);
 extern void runEcoTaskSync(void *argument);
+extern void runEcoTaskControl(void *argument);
 
 /* USER CODE BEGIN PFP */
 void SystemClock_pwrsav_Config(void);
@@ -302,6 +310,9 @@ int main(void)
 
   /* creation of EcoTackSync */
   EcoTackSyncHandle = osThreadNew(runEcoTaskSync, NULL, &EcoTackSync_attributes);
+
+  /* creation of EcoTaskControl */
+  EcoTaskControlHandle = osThreadNew(runEcoTaskControl, NULL, &EcoTaskControl_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

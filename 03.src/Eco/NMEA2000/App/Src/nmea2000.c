@@ -363,6 +363,11 @@ void ProcessNMEA2000SinglePacket(NmeaPgn* pgnId, uint32_t len, uint8_t *buf)
                 PGN127250_GetFieldValue(pgnId, len, buf);
             }
             break;
+        case 127251 :
+            {
+                PGN127251_GetFieldValue(pgnId, len, buf);
+            }
+            break;
         case 127258 :
             {
                 PGN127258_GetFieldValue(pgnId, len, buf);

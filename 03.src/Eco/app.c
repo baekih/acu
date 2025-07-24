@@ -197,6 +197,21 @@ void runEcoTaskSync(void *argument)
     }
 }
 
+void runEcoTaskControl(void *argument)
+{
+    float aft_val;
+
+    uint32_t tick_tgt= osKernelGetTickCount();
+    for(;;)
+    {
+        tick_tgt += 1000;
+        osDelayUntil(tick_tgt);
+        printf("%s()\r\n",__FUNCTION__);
+        aft_val = calFuzzy(g_fuzzy_control.gain_hdg * 0.0, g_fuzzy_control.gain_d_hdg *0.0);
+
+    }
+}
+
 void runEcoTaskNMEA2KRx(void *argument)
 {
 #if 0

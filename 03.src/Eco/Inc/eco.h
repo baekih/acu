@@ -24,6 +24,7 @@
 #include "common.h"
 #if defined (ECO_APP)
 #include "app.h"
+#include "control.h"
 #include "nmea2000.h"
 #include "stm32f767_acu_sdram.h"
 
