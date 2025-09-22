@@ -125,7 +125,7 @@ const osThreadAttr_t EcoTackSync_attributes = {
 osThreadId_t EcoTaskControlHandle;
 const osThreadAttr_t EcoTaskControl_attributes = {
   .name = "EcoTaskControl",
-  .stack_size = 128 * 4,
+  .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for EcoQueueUART1 */

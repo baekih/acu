@@ -53,7 +53,7 @@ void runEcoTaskMain(void *argument)
         if(tick%60000 == 0)
         {
             NMEA2000_126993_heartbeat();
-            printf("[%08ld]NMEA2000_126993_heartbeat() called \n", tick);
+//            printf("[%08ld]NMEA2000_126993_heartbeat() called \n", tick);
         }
 
         tick += 10;
@@ -199,15 +199,52 @@ void runEcoTaskSync(void *argument)
 
 void runEcoTaskControl(void *argument)
 {
-    float aft_val;
-
     uint32_t tick_tgt= osKernelGetTickCount();
+
+    osDelay(200);
+
+#if 1
+    printf("fuzzy control table\r\n");
+    printf("       E|");
+    for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.5)
+    {
+        printf("%6.2f ", hdgerr);
+        osDelay(1);
+    }
+    printf("\r\n\r\n");
+
+    for(float roterr=-6.0; roterr <= 6.0; roterr += 0.5)
+    {
+        printf("dE%6.2f|", roterr);
+        for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.5)
+        {
+//            printf("%6.2f ", calFuzzy2(hdgerr, roterr));
+            printf("%6.2f ", calPI(hdgerr, roterr));
+            osDelay(5);
+        }
+        printf("\r\n");
+    }
+#else
+//    printf("R%6.2f|", 0.0);
+    for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.1)
+    {
+//        printf("%6.2f ", calFuzzy(hdgerr, roterr));
+//        printf("%6.2f ", calHDGErrInference(hdgerr));
+//        calHDGErrInference(hdgerr);
+        calFuzzy(hdgerr, 0.0);
+        osDelay(10);
+    }
+    printf("\r\n");
+#endif
     for(;;)
     {
+//        g_fuzzy_control.rud_order = RUD_GAIN * calFuzzy(FUZZY_GAIN_HDG * -1.1, FUZZY_GAIN_ROT * -1.1);
+//        if     (RUD_ORDER_MAX < g_fuzzy_control.rud_order) g_fuzzy_control.rud_order = RUD_ORDER_MAX;
+//        else if(g_fuzzy_control.rud_order < RUD_ORDER_MIN) g_fuzzy_control.rud_order = RUD_ORDER_MIN;
+
+//        printf("%s() rud_order[%f]\r\n",__FUNCTION__, g_fuzzy_control.rud_order);
         tick_tgt += 1000;
         osDelayUntil(tick_tgt);
-        printf("%s()\r\n",__FUNCTION__);
-        aft_val = calFuzzy(g_fuzzy_control.gain_hdg * 0.0, g_fuzzy_control.gain_d_hdg *0.0);
 
     }
 }
