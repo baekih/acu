@@ -19,11 +19,11 @@ rudder g_rudder = {
 ship_status g_ship = {
     .curr =
     {
-            .heading_sensor_reading = 0
+        .heading_sensor_reading = 0
     },
     .prev =
     {
-            .heading_sensor_reading = 0
+        .heading_sensor_reading = 0
     }
 };
 
@@ -140,6 +140,7 @@ void runEcoTaskSync(void *argument)
         {
             if(isValidDegreeAngle(g_ship.curr.heading_sensor_reading))
             {
+//                    printf("call setHDGValue()\n");
                 setHDGValue((double)g_ship.curr.heading_sensor_reading + (double)g_ship.curr.magnetic_variation);
             }
 
@@ -218,8 +219,8 @@ void runEcoTaskControl(void *argument)
         printf("dE%6.2f|", roterr);
         for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.5)
         {
-//            printf("%6.2f ", calFuzzy2(hdgerr, roterr));
-            printf("%6.2f ", calPI(hdgerr, roterr));
+            printf("%6.2f ", calFuzzy(hdgerr, roterr));
+//            printf("%6.2f ", calPI(hdgerr, roterr));
             osDelay(5);
         }
         printf("\r\n");

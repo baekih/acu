@@ -114,7 +114,7 @@
         <Translation Language="GB">TGT</Translation>
       </Text>
       <Text Id="__SingleUse_72X7" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">HDGT Target INPUT</Translation>
+        <Translation Language="GB">HDGT TGT INPUT</Translation>
       </Text>
       <Text Id="__SingleUse_3WXV" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">CUR</Translation>
@@ -132,10 +132,10 @@
         <Translation Language="GB">000</Translation>
       </Text>
       <Text Id="__SingleUse_HHWK" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">000</Translation>
+        <Translation Language="GB">---</Translation>
       </Text>
       <Text Id="__SingleUse_0ACJ" Alignment="Left" TypographyId="TYPEPO_65PX">
-        <Translation Language="GB">000</Translation>
+        <Translation Language="GB">---</Translation>
       </Text>
       <Text Id="__SingleUse_OQ9F" Alignment="Left" TypographyId="TYPEPO_30PX">
         <Translation Language="GB">SOG</Translation>
@@ -144,10 +144,10 @@
         <Translation Language="GB">COG</Translation>
       </Text>
       <Text Id="__SingleUse_Q5ML" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">HDGT_TGT</Translation>
+        <Translation Language="GB">HDGT TGT</Translation>
       </Text>
       <Text Id="__SingleUse_MP55" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">HDGT_CUR</Translation>
+        <Translation Language="GB">HDGT CUR</Translation>
       </Text>
       <Text Id="SOG_65PX" Alignment="Right" TypographyId="TYPEPO_65PX">
         <Translation Language="GB">&lt;*&gt;</Translation>

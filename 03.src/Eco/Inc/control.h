@@ -58,18 +58,39 @@ typedef struct __fuzzy_rot_err_rule
 
 typedef struct __fuzzy_rule
 {
-    float a;
-    float b;
+    float aa;
+    float ab;
+    float ba;
+    float bb;
 } fuzzy_rule;
 
-typedef struct __fuzzy_var
+typedef struct __fuzzy_weight
+{
+    float aa;
+    float ab;
+    float ba;
+    float bb;
+} fuzzy_weight;
+
+typedef struct __fuzzy_val
+{
+    float aa;
+    float ab;
+    float ba;
+    float bb;
+} fuzzy_val;
+
+typedef struct __fuzzy
 {
     fuzzy_hdg hdg;
     fuzzy_rot rot;
     fuzzy_hdg_err_rule hdg_err_rule;
     fuzzy_rot_err_rule rot_err_rule;
     fuzzy_rule rule;
-} fuzzy_var;
+    fuzzy_weight weight;
+    fuzzy_val val;
+    float weight_tot;
+} fuzzy;
 
 typedef struct __fuzzy_control
 {
