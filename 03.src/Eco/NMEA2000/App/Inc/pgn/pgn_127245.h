@@ -21,7 +21,7 @@
 
 /* Exported functions --------------------------------------------------------*/
 void PGN127245_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf);
-void PGN127245_ProcessNameField(NmeaPgn* pgnId);
+void PGN127245_ProcessNameField(void);
 
 
 #endif /* NMEA2000_INC_PGN_PGN_127245_H_ */

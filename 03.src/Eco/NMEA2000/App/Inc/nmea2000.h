@@ -94,7 +94,7 @@ extern "C" {
 #define N2K_INDUSTRY_GROUP                  4       //4:marine
 #define N2K_ISO_SELF_CONFIG                 1       //1:reserved
 
-#define N2K_ADDR_DEFAULT                    110
+#define N2K_ADDR_DEFAULT                    112
 #define N2K_ADDR_MAX_HIGH_SOURCE            252
 #define N2K_ADDR_CLAIM_FAIL                 254
 

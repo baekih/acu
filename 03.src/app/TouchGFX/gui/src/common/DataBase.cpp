@@ -50,6 +50,8 @@ const double headingDisplayMax      = 360.0;
 double hdgValue = INVALID_DEGREE_VALUE;
 bool validHDGValue = false;
 
+float rudcurValue = INVALID_DEGREE_VALUE;
+
 double cogValue = INVALID_DEGREE_VALUE;
 bool validCOGValue = false;
 
@@ -254,6 +256,16 @@ void setSOGValue(double value, int type)
 double getSOGValue(int type)
 {
     return sogValues[type];
+}
+
+void setRUDcurValue(float rudder_cur)
+{
+    rudcurValue = rudder_cur;
+}
+
+float getRUDcurValue(void)
+{
+    return rudcurValue;
 }
 
 void setWindValue(double windSpeed, int windDirection, int windRef)

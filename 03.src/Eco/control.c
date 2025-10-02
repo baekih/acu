@@ -10,7 +10,7 @@
 #define CTL_IHBAEK
 
 fuzzy g_fuzzy;
-fuzzy_control g_fuzzy_control;
+control g_control;
 
 void calHDGErrInference(float hdg_err)
 {
@@ -230,7 +230,7 @@ float convertRule2Val(int rule)
     return 0.0; //never reach. avoid warning only.
 }
 
-float calPI(float hdg_err, float rot_err)  //PID control
+float calPID(float hdg_err, float rot_err)  //PID control
 {
     float rud_val = K_H * hdg_err + K_R * rot_err;
 
@@ -275,5 +275,5 @@ float calFuzzy(float hdg_err, float rot_err)
 
 //    printf("err hdg:rot[%4.2f:%4.2f] aft[%4.2f] aft_r1 a[%4.2f] b[%4.2f]\r\n", hdg_err, rot_err, aft_val, aft_r1_val_a, aft_r1_val_b);
 
-    return aft_val;
+    return aft_val*DEG2RAD;
 }

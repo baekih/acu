@@ -147,6 +147,9 @@ XTE getXTE(void);
 void setSOGValue(double value, int type);
 double getSOGValue(int type);
 
+void setRUDcurValue(float rudder_cur);
+float getRUDcurValue(void);
+
 void setDepthMeterValue(double depthMeter);
 double getDepthValue(int type);
 

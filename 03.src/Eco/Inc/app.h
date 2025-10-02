@@ -57,6 +57,12 @@ typedef struct __ship_wind
     uint8_t reference;
 } ship_wind;
 
+typedef struct __ship_rudder
+{
+    int16_t cur;
+    int16_t tgt;
+} ship_rudder;
+
 typedef struct __ship_param
 {
     uint16_t heading_sensor_reading;
@@ -67,6 +73,7 @@ typedef struct __ship_param
     ship_position position;
     ship_xte xte;
     ship_wind wind;
+    ship_rudder rudder;
     uint32_t water_depth;
     uint16_t transducer_offset;
 } ship_param;

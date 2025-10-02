@@ -54,9 +54,6 @@ uint32_t PGN059904_ProcessNameField(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
         case 126998:
             PGN126998_ProcessNameField(pgnId, REQUEST_MESSAGE_TYPE_FASTPACKET);
             break;
-        case 127245:
-            PGN127245_ProcessNameField(pgnId);
-            break;
         case 130822:
             PGN130822_ProcessNameField(pgnId);
             break;

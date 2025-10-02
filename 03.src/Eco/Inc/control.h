@@ -25,6 +25,9 @@
 #define RUD_ORDER_MAX   (20.0)
 #define RUD_ORDER_MIN   (-20.0)
 
+#define DEG2RAD         (M_PI/180.0)
+#define RAD2DEG         (180.0/M_PI)
+
 #define K_H             (5.0)
 #define K_R             (1.0)
 #define RUD_MAX         (15.0)
@@ -32,31 +35,31 @@
 /* struct --------------------------------------------------------------------*/
 
 /* typedef -------------------------------------------------------------------*/
-typedef struct __fuzzy_hdg
+typedef struct _fuzzy_hdg
 {
     float a;
     float b;
 } fuzzy_hdg;
 
-typedef struct __fuzzy_rot
+typedef struct _fuzzy_rot
 {
     float a;
     float b;
 } fuzzy_rot;
 
-typedef struct __fuzzy_hdg_err_rule
+typedef struct _fuzzy_hdg_err_rule
 {
     int a;
     int b;
 } fuzzy_hdg_err_rule;
 
-typedef struct __fuzzy_rot_err_rule
+typedef struct _fuzzy_rot_err_rule
 {
     int a;
     int b;
 } fuzzy_rot_err_rule;
 
-typedef struct __fuzzy_rule
+typedef struct _fuzzy_rule
 {
     float aa;
     float ab;
@@ -64,7 +67,7 @@ typedef struct __fuzzy_rule
     float bb;
 } fuzzy_rule;
 
-typedef struct __fuzzy_weight
+typedef struct _fuzzy_weight
 {
     float aa;
     float ab;
@@ -72,7 +75,7 @@ typedef struct __fuzzy_weight
     float bb;
 } fuzzy_weight;
 
-typedef struct __fuzzy_val
+typedef struct _fuzzy_val
 {
     float aa;
     float ab;
@@ -80,7 +83,7 @@ typedef struct __fuzzy_val
     float bb;
 } fuzzy_val;
 
-typedef struct __fuzzy
+typedef struct _fuzzy
 {
     fuzzy_hdg hdg;
     fuzzy_rot rot;
@@ -92,15 +95,15 @@ typedef struct __fuzzy
     float weight_tot;
 } fuzzy;
 
-typedef struct __fuzzy_control
+typedef struct _control
 {
     float rud_order;
-} fuzzy_control;
+} control;
 
 /* macro ---------------------------------------------------------------------*/
 
 /* variables -----------------------------------------------------------------*/
-extern fuzzy_control g_fuzzy_control;
+extern control g_control;
 
 /* function prototypes -------------------------------------------------------*/
 float calFuzzy(float hdg_err, float rot_err);

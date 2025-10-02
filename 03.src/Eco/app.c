@@ -19,13 +19,99 @@ rudder g_rudder = {
 ship_status g_ship = {
     .curr =
     {
-        .heading_sensor_reading = 0
+        .heading_sensor_reading = 0,
+        .rudder = {.cur = 0.0, .tgt = 0.0},
     },
     .prev =
     {
-        .heading_sensor_reading = 0
+        .heading_sensor_reading = 0,
+        .rudder = {.cur = 0.0, .tgt = 0.0},
     }
 };
+
+void printFuzzyControlTable(void)
+{
+    printf("fuzzy control table\r\n");
+    printf("       E|");
+    for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.5)
+    {
+        printf("%6.2f ", hdgerr);
+        osDelay(1);
+    }
+    printf("\r\n\r\n");
+
+    for(float roterr=-6.0; roterr <= 6.0; roterr += 0.5)
+    {
+        printf("dE%6.2f|", roterr);
+        for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.5)
+        {
+            printf("%6.2f ", calFuzzy(hdgerr, roterr));
+//            printf("%6.2f ", calPI(hdgerr, roterr));
+            osDelay(5);
+        }
+        printf("\r\n");
+    }
+}
+
+void syncShipState(void)
+{
+    if(isValidDegreeAngle(g_ship.curr.heading_sensor_reading))
+    {
+        setHDGValue((double)g_ship.curr.heading_sensor_reading + (double)g_ship.curr.magnetic_variation);
+    }
+
+    if(isValidDegreeAngle(g_ship.curr.course.over_ground))
+    {
+        setCOGValue((double)g_ship.curr.course.over_ground);
+    }
+
+    setVariation((double)g_ship.curr.magnetic_variation);
+
+    if(g_ship.curr.speed.direction == 0 || g_ship.curr.speed.direction == 1)
+    {
+        if(isValidSpeed(g_ship.curr.speed.over_ground))
+        {
+            setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS );
+        }
+
+        if(isValidSpeed(g_ship.curr.speed.through_water))
+        {
+            setSTWValue( ((double)g_ship.curr.speed.through_water / 100.0), SPEED_UNIT_MPS );
+        }
+    }
+
+    if(isValidLongInteger((long)g_ship.curr.water_depth))
+    {
+        if(((short)g_ship.curr.transducer_offset) <= 32764 && ((short)g_ship.curr.transducer_offset) >= -32764)
+        {
+            setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0) + (double)((short)g_ship.curr.transducer_offset) / 1000.0 );
+        }
+        else
+        {
+            setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0));
+        }
+    }
+
+    setPositionRapid((double)g_ship.curr.position.latitude/10000000.0, (double)g_ship.curr.position.longitude/10000000.0);
+
+    if(g_ship.curr.course.cog_reference == 0 || g_ship.curr.course.cog_reference == 1)
+    {
+        if(isValidSpeed(g_ship.curr.speed.over_ground))
+        {
+            setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS);
+        }
+    }
+
+    setXTE((double)g_ship.curr.xte.val/100.0, (unsigned char)g_ship.curr.xte.mode);
+
+    setWindValue(g_ship.curr.wind.speed, g_ship.curr.wind.direction, g_ship.curr.wind.reference);
+
+    setRUDcurValue(((float)g_ship.curr.rudder.cur)/10000.0);
+
+    g_ship.prev = g_ship.curr;
+
+    return;
+}
 
 void runEcoTaskMain(void *argument)
 {
@@ -133,65 +219,14 @@ void runEcoTaskFlash(void *argument)
 
 void runEcoTaskSync(void *argument)
 {
+    syncShipState();
+
     /* Infinite loop */
     for(;;)
     {
         if(memcmp(&g_ship.curr, &g_ship.prev, sizeof(ship_param)))
         {
-            if(isValidDegreeAngle(g_ship.curr.heading_sensor_reading))
-            {
-//                    printf("call setHDGValue()\n");
-                setHDGValue((double)g_ship.curr.heading_sensor_reading + (double)g_ship.curr.magnetic_variation);
-            }
-
-            if(isValidDegreeAngle(g_ship.curr.course.over_ground))
-            {
-                setCOGValue((double)g_ship.curr.course.over_ground);
-            }
-
-            setVariation((double)g_ship.curr.magnetic_variation);
-
-            if(g_ship.curr.speed.direction == 0 || g_ship.curr.speed.direction == 1)
-            {
-                if(isValidSpeed(g_ship.curr.speed.over_ground))
-                {
-                    setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS );
-                }
-
-                if(isValidSpeed(g_ship.curr.speed.through_water))
-                {
-                    setSTWValue( ((double)g_ship.curr.speed.through_water / 100.0), SPEED_UNIT_MPS );
-                }
-            }
-
-            if(isValidLongInteger((long)g_ship.curr.water_depth))
-            {
-                if(((short)g_ship.curr.transducer_offset) <= 32764 && ((short)g_ship.curr.transducer_offset) >= -32764)
-                {
-                    setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0) + (double)((short)g_ship.curr.transducer_offset) / 1000.0 );
-                }
-                else
-                {
-                    setDepthMeterValue(((double)g_ship.curr.water_depth / 100.0));
-                }
-            }
-
-            setPositionRapid((double)g_ship.curr.position.latitude/10000000.0, (double)g_ship.curr.position.longitude/10000000.0);
-
-            if(g_ship.curr.course.cog_reference == 0 || g_ship.curr.course.cog_reference == 1)
-            {
-                if(isValidSpeed(g_ship.curr.speed.over_ground))
-                {
-                    setSOGValue( ((double)g_ship.curr.speed.over_ground / 100.0), SPEED_UNIT_MPS);
-                }
-            }
-
-            setXTE((double)g_ship.curr.xte.val/100.0, (unsigned char)g_ship.curr.xte.mode);
-
-            setWindValue(g_ship.curr.wind.speed, g_ship.curr.wind.direction, g_ship.curr.wind.reference);
-
-
-            g_ship.prev = g_ship.curr;
+            syncShipState();
         }
 
         osDelay(1);
@@ -204,47 +239,20 @@ void runEcoTaskControl(void *argument)
 
     osDelay(200);
 
-#if 1
-    printf("fuzzy control table\r\n");
-    printf("       E|");
-    for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.5)
-    {
-        printf("%6.2f ", hdgerr);
-        osDelay(1);
-    }
-    printf("\r\n\r\n");
+//    printFuzzyControlTable();
 
-    for(float roterr=-6.0; roterr <= 6.0; roterr += 0.5)
-    {
-        printf("dE%6.2f|", roterr);
-        for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.5)
-        {
-            printf("%6.2f ", calFuzzy(hdgerr, roterr));
-//            printf("%6.2f ", calPI(hdgerr, roterr));
-            osDelay(5);
-        }
-        printf("\r\n");
-    }
-#else
-//    printf("R%6.2f|", 0.0);
-    for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.1)
-    {
-//        printf("%6.2f ", calFuzzy(hdgerr, roterr));
-//        printf("%6.2f ", calHDGErrInference(hdgerr));
-//        calHDGErrInference(hdgerr);
-        calFuzzy(hdgerr, 0.0);
-        osDelay(10);
-    }
-    printf("\r\n");
-#endif
     for(;;)
     {
-//        g_fuzzy_control.rud_order = RUD_GAIN * calFuzzy(FUZZY_GAIN_HDG * -1.1, FUZZY_GAIN_ROT * -1.1);
-//        if     (RUD_ORDER_MAX < g_fuzzy_control.rud_order) g_fuzzy_control.rud_order = RUD_ORDER_MAX;
-//        else if(g_fuzzy_control.rud_order < RUD_ORDER_MIN) g_fuzzy_control.rud_order = RUD_ORDER_MIN;
-
-//        printf("%s() rud_order[%f]\r\n",__FUNCTION__, g_fuzzy_control.rud_order);
         tick_tgt += 1000;
+
+        g_control.rud_order = RUD_GAIN * calFuzzy(FUZZY_GAIN_HDG * 0.1, FUZZY_GAIN_ROT * 0.1);
+
+//        printf("%s() rud order[%5.1f]deg\r\n",__FUNCTION__, g_control.rud_order*RAD2DEG);
+
+//        g_rudder.angle_order = (int16_t)(g_control.rud_order*10000.0);
+//        PGN127245_ProcessNameField();
+
+
         osDelayUntil(tick_tgt);
 
     }

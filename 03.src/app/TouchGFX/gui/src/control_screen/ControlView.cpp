@@ -1,5 +1,12 @@
 #include <gui/control_screen/ControlView.hpp>
 
+#include <math.h>
+
+#include "printf.h"
+
+#define DEG2RAD     (M_PI/180.0)
+#define RAD2DEG     (180.0/M_PI)
+
 ControlView::ControlView():
     sliderValueChangedCallback(this, &ControlView::sliderValueChangedCallbackHandler),
     buttonCallback(this, &ControlView::buttonCallbackHandler)
@@ -51,6 +58,17 @@ void ControlView::updateSOG(double sogValue)
     Unicode::snprintfFloat(SOG_VALUEBuffer, SOG_VALUE_SIZE, "%02.1f", sogValue);
 
     SOG_VALUE.invalidate();
+}
+
+void ControlView::updateRUDcur(float rud_cur_val)
+{
+    float rud_cur_deg_val = rud_cur_val*RAD2DEG;
+
+    Unicode::snprintfFloat(RUD_CUR_VALUEBuffer, RUD_CUR_VALUE_SIZE, "%04.1f", rud_cur_deg_val);
+    RUD_CUR_VALUE.invalidate();
+
+    RUD_CUR.setValue((int16_t)rud_cur_deg_val);
+    RUD_CUR.invalidate();
 }
 
 void ControlView::sliderValueChangedCallbackHandler(const touchgfx::Slider& src, int value)
@@ -166,6 +184,7 @@ void ControlView::handleTickEvent()
 #else
     updateHDGTcur(getHDGValue());
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
+    updateRUDcur(getRUDcurValue());
 
 #endif
 }
