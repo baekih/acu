@@ -269,7 +269,7 @@ void SpeedView::handleTickEvent()
 
     updateSTW(getSTWValue(SPEED_UNIT_KNOT));
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
-    updateHDG(getHDGValue());
+    updateHDG(getHDGcurValue());
     updateCOG(getCOGValue());
 
 #endif

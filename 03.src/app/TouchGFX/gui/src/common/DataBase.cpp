@@ -49,8 +49,11 @@ const double depthDisplayPBMax      = 926.0;
 const double headingDisplayMin      = 0.0;
 const double headingDisplayMax      = 360.0;
 
-double hdgValue = INVALID_DEGREE_VALUE;
-bool validHDGValue = false;
+double hdgcurValue = INVALID_DEGREE_VALUE;
+bool validHDGcurValue = false;
+
+double hdgtgtValue = INVALID_DEGREE_VALUE;
+bool validHDGtgtValue = false;
 
 float rudcurValue = NAN;
 float rudtgtValue = NAN;
@@ -61,7 +64,7 @@ bool validCOGValue = false;
 double Variation = INVALID_DEGREE_VALUE;
 
 #ifndef SIMULATOR
-uint32_t lastReceiveHDGValue = 0;
+uint32_t lastReceiveHDGcurValue = 0;
 #endif
 
 double stwValues[4];
@@ -155,25 +158,36 @@ double adjustDisplayAngleDegree(double angle) {
     return res;
 }
 
-void setHDGValue(double hdg)
+void setHDGcurValue(double hdg_cur)
 {
-    hdgValue = GetRadianToDegree360(hdg);
+    hdgcurValue = GetRadianToDegree360(hdg_cur);
 #ifndef SIMULATOR
-    lastReceiveHDGValue = HAL_GetTick();
+    lastReceiveHDGcurValue = HAL_GetTick();
 #endif
-    validHDGValue = true;
+    validHDGcurValue = true;
 }
 
-double getHDGValue()
+double getHDGcurValue()
 {
-    return hdgValue;
+    return hdgcurValue;
+}
+
+void setHDGtgtValue(double hdg_tgt)
+{
+    hdgtgtValue = hdg_tgt;
+    validHDGtgtValue = true;
+}
+
+double getHDGtgtValue()
+{
+    return hdgtgtValue;
 }
 
 void setCOGValue(double cog)
 {
     cogValue = GetRadianToDegree360(cog);
 #ifndef SIMULATOR
-    lastReceiveHDGValue = HAL_GetTick();
+    lastReceiveHDGcurValue = HAL_GetTick();
 #endif
     validCOGValue = true;
 }
@@ -195,13 +209,13 @@ double getVariation()
 
 void setValidHDG(bool valid)
 {
-    validHDGValue = valid;
+    validHDGcurValue = valid;
 }
 
 bool isValidHDG()
 {
 #ifndef SIMULATOR
-    return validHDGValue;
+    return validHDGcurValue;
 #else
     return true;
 #endif
@@ -221,7 +235,7 @@ XTE getXTE()
 bool isTimeInHDG()
 {
 #ifndef SIMULATOR
-    return ((HAL_GetTick() - lastReceiveHDGValue) <= NON_RECEIVE_NMEA_TIMEOUT_5_SEC);
+    return ((HAL_GetTick() - lastReceiveHDGcurValue) <= NON_RECEIVE_NMEA_TIMEOUT_5_SEC);
 #else
     return true;
 #endif

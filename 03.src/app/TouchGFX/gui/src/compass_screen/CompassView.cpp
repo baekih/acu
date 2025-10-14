@@ -195,7 +195,7 @@ void CompassView::handleTickEvent()
         count = 698;
     }
 #else
-    updateHDG(getHDGValue());
+    updateHDG(getHDGcurValue());
 
 #endif
 }

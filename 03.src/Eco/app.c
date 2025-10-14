@@ -56,7 +56,7 @@ void syncShipState(void)
 {
     if(isValidDegreeAngle(g_ship.curr.heading_sensor_reading))
     {
-        setHDGValue((double)g_ship.curr.heading_sensor_reading + (double)g_ship.curr.magnetic_variation);
+        setHDGcurValue((double)g_ship.curr.heading_sensor_reading + (double)g_ship.curr.magnetic_variation);
     }
 
     if(isValidDegreeAngle(g_ship.curr.course.over_ground))
@@ -110,6 +110,8 @@ void syncShipState(void)
 
     setRUDtgtValue(((float)g_ship.curr.rudder.tgt)/10000.0);
 
+    g_ship.curr.heading_sensor_target = (uint16_t)getHDGtgtValue();
+
     g_ship.prev = g_ship.curr;
 
     return;
@@ -128,15 +130,17 @@ void runEcoTaskMain(void *argument)
     {
         chkN2KLastAddrClaimTime();
 
-#if 0
         if(tick%1000 == 0)
         {
+//            printf("heading_sensor_target[%d]\n",g_ship.curr.heading_sensor_target);
+
+#if 0
             printf("rud inst[%03d] ang_pos:order[%03.2f:%03.2f]\n",
                    g_rudder.instance,
                    ((double)g_rudder.position)*180.0/M_PI/10000.0,
                    ((double)g_rudder.angle_order)*180.0/M_PI/10000.0);
-        }
 #endif
+        }
 
         if(tick%60000 == 0)
         {
@@ -260,7 +264,7 @@ void runEcoTaskControl(void *argument)
         g_ship.curr.rudder.tgt = (int16_t)round(rud_ctrl_tgt_deg*DEG2RAD*10000.0);
         PGN127245_ProcessNameField();
 
-        printf("%s() rud_ctrl_tgt_deg[%5.1f]deg \r\n",__FUNCTION__, rud_ctrl_tgt_deg);
+//        printf("%s() rud_ctrl_tgt_deg[%5.1f]deg \r\n",__FUNCTION__, rud_ctrl_tgt_deg);
 
         osDelayUntil(tick_tgt);
         tick_tgt += 1000;

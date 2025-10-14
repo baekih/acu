@@ -193,7 +193,9 @@ void ControlView::handleTickEvent()
     }
 
 #else
-    updateHDGTcur(getHDGValue());
+    setHDGtgtValue((double)hdgt_tgt);
+
+    updateHDGTcur(getHDGcurValue());
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
     updateRUDcur(getRUDcurValue());
     updateRUDtgt(getRUDtgtValue());
