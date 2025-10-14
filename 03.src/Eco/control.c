@@ -10,7 +10,6 @@
 #define CTL_IHBAEK
 
 fuzzy g_fuzzy;
-control g_control;
 
 void calHDGErrInference(float hdg_err)
 {
@@ -232,21 +231,21 @@ float convertRule2Val(int rule)
 
 float calPID(float hdg_err, float rot_err)  //PID control
 {
-    float rud_val = K_H * hdg_err + K_R * rot_err;
+    float rud_val = (-K_H) * hdg_err + (-K_R) * rot_err;
 
     if(fabs(rud_val) > RUD_MAX) rud_val = copysignf(RUD_MAX, rud_val);
 
     return rud_val;
 }
 
-float calFuzzy(float hdg_err, float rot_err)
+float calFuzzy(float hdg_err_deg, float rot_err_deg)
 {
 //    printf("%s()\r\n",__FUNCTION__);
 
-    float aft_val;
+    float aft_val_deg;
 
-    calHDGErrInference(hdg_err);
-    calROTErrInference(rot_err);
+    calHDGErrInference(hdg_err_deg);
+    calROTErrInference(rot_err_deg);
 
     g_fuzzy.weight.aa = fminf(g_fuzzy.hdg.a, g_fuzzy.rot.a);
     g_fuzzy.weight.ab = fminf(g_fuzzy.hdg.a, g_fuzzy.rot.b);
@@ -267,13 +266,11 @@ float calFuzzy(float hdg_err, float rot_err)
 
     if(0.01 < g_fuzzy.weight_tot)
     {
-        aft_val = g_fuzzy.weight.aa*g_fuzzy.val.aa + g_fuzzy.weight.ab*g_fuzzy.val.ab + g_fuzzy.weight.ba*g_fuzzy.val.ba + g_fuzzy.weight.bb*g_fuzzy.val.bb;
-        aft_val = aft_val/g_fuzzy.weight_tot;
+        aft_val_deg = g_fuzzy.weight.aa*g_fuzzy.val.aa + g_fuzzy.weight.ab*g_fuzzy.val.ab + g_fuzzy.weight.ba*g_fuzzy.val.ba + g_fuzzy.weight.bb*g_fuzzy.val.bb;
+        aft_val_deg = aft_val_deg/g_fuzzy.weight_tot;
     }
     else
-        aft_val = 0.0;
+        aft_val_deg = 0.0;
 
-//    printf("err hdg:rot[%4.2f:%4.2f] aft[%4.2f] aft_r1 a[%4.2f] b[%4.2f]\r\n", hdg_err, rot_err, aft_val, aft_r1_val_a, aft_r1_val_b);
-
-    return aft_val*DEG2RAD;
+    return aft_val_deg;
 }

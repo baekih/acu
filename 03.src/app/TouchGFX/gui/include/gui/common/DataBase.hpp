@@ -150,6 +150,9 @@ double getSOGValue(int type);
 void setRUDcurValue(float rudder_cur);
 float getRUDcurValue(void);
 
+void setRUDtgtValue(float rudder_tgt);
+float getRUDtgtValue(void);
+
 void setDepthMeterValue(double depthMeter);
 double getDepthValue(int type);
 

@@ -11,6 +11,8 @@
 #include "gui/common/DataBase.hpp"
 #include "gui/common/validate_data.h"
 
+#include "printf.h"
+
 #ifndef SIMULATOR
 #include "stm32f7xx_hal.h"
 #endif
@@ -50,7 +52,8 @@ const double headingDisplayMax      = 360.0;
 double hdgValue = INVALID_DEGREE_VALUE;
 bool validHDGValue = false;
 
-float rudcurValue = INVALID_DEGREE_VALUE;
+float rudcurValue = NAN;
+float rudtgtValue = NAN;
 
 double cogValue = INVALID_DEGREE_VALUE;
 bool validCOGValue = false;
@@ -266,6 +269,16 @@ void setRUDcurValue(float rudder_cur)
 float getRUDcurValue(void)
 {
     return rudcurValue;
+}
+
+void setRUDtgtValue(float rudder_tgt)
+{
+    rudtgtValue = rudder_tgt;
+}
+
+float getRUDtgtValue(void)
+{
+    return rudtgtValue;
 }
 
 void setWindValue(double windSpeed, int windDirection, int windRef)

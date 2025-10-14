@@ -28,10 +28,12 @@ void PGN127245_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
     }
 #endif
     if(g_rudder.instance != rud_instance) return;
-//    g_rudder.direction_order = rud_direction_order;
-//    g_rudder.angle_order = rud_angle_order;
-    g_rudder.position = rud_position;
 
+    if(pgnId->mSA != 115) return;
+
+    if(32765 <= rud_position) return;
+
+    g_rudder.position = rud_position;
     g_ship.curr.rudder.cur = g_rudder.position;
 }
 
@@ -40,9 +42,10 @@ void PGN127245_ProcessNameField(void)
     InitializeSendNameField();
 
     g_rudder.angle_order = g_ship.curr.rudder.tgt;
+    g_rudder.position = g_ship.curr.rudder.cur;
 
     Add1ByteUInt(g_rudder.instance);
-    Add1ByteUInt(g_rudder.direction_order & 0xF8);
+    Add1ByteUInt(g_rudder.direction_order | 0xF8);
     Add2ByteUInt(g_rudder.angle_order);
     Add2ByteUInt(g_rudder.position);
     Add2ByteUInt(0xFFFF);

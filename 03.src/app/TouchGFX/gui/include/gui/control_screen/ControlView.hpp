@@ -25,6 +25,7 @@ public:
     void updateHDGTtgt(double hdgValue);
     void updateSOG(double value);
     void updateRUDcur(float rudcurValue);
+    void updateRUDtgt(float rudtgtValue);
 
     void handleTickEvent();
 

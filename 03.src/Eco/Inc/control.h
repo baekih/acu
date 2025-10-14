@@ -19,6 +19,10 @@
 #define PM              (2)
 #define PB              (3)
 
+//#define CTRL_FUZZY
+//#define CTRL_PID
+#define CTRL_TEST
+
 #define FUZZY_GAIN_HDG  (1.0)
 #define FUZZY_GAIN_ROT  (1.0)
 #define RUD_GAIN        (1.0)
@@ -28,7 +32,7 @@
 #define DEG2RAD         (M_PI/180.0)
 #define RAD2DEG         (180.0/M_PI)
 
-#define K_H             (5.0)
+#define K_H             (1.0)
 #define K_R             (1.0)
 #define RUD_MAX         (15.0)
 

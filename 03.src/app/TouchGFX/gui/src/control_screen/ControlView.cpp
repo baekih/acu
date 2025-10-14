@@ -67,8 +67,19 @@ void ControlView::updateRUDcur(float rud_cur_val)
     Unicode::snprintfFloat(RUD_CUR_VALUEBuffer, RUD_CUR_VALUE_SIZE, "%04.1f", rud_cur_deg_val);
     RUD_CUR_VALUE.invalidate();
 
-    RUD_CUR.setValue((int16_t)rud_cur_deg_val);
+    RUD_CUR.setValue((int16_t)(round(rud_cur_deg_val)));
     RUD_CUR.invalidate();
+}
+
+void ControlView::updateRUDtgt(float rud_tgt_val)
+{
+    float rud_tgt_deg_val = rud_tgt_val*RAD2DEG;
+
+    Unicode::snprintfFloat(RUD_TGT_VALUEBuffer, RUD_TGT_VALUE_SIZE, "%04.1f", rud_tgt_deg_val);
+    RUD_TGT_VALUE.invalidate();
+
+    RUD_TGT.setValue((int16_t)(round(rud_tgt_deg_val)));
+    RUD_TGT.invalidate();
 }
 
 void ControlView::sliderValueChangedCallbackHandler(const touchgfx::Slider& src, int value)
@@ -185,6 +196,7 @@ void ControlView::handleTickEvent()
     updateHDGTcur(getHDGValue());
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
     updateRUDcur(getRUDcurValue());
+    updateRUDtgt(getRUDtgtValue());
 
 #endif
 }

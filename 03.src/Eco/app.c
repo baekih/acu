@@ -40,13 +40,12 @@ void printFuzzyControlTable(void)
     }
     printf("\r\n\r\n");
 
-    for(float roterr=-6.0; roterr <= 6.0; roterr += 0.5)
+    for(float roterr_deg=-6.0; roterr_deg <= 6.0; roterr_deg += 0.5)
     {
-        printf("dE%6.2f|", roterr);
-        for(float hdgerr=-6.0; hdgerr <= 6.0; hdgerr += 0.5)
+        printf("dE%6.2f|", roterr_deg);
+        for(float hdgerr_deg=-6.0; hdgerr_deg <= 6.0; hdgerr_deg += 0.5)
         {
-            printf("%6.2f ", calFuzzy(hdgerr, roterr));
-//            printf("%6.2f ", calPI(hdgerr, roterr));
+            printf("%6.2f ", calFuzzy(hdgerr_deg, roterr_deg));
             osDelay(5);
         }
         printf("\r\n");
@@ -106,7 +105,10 @@ void syncShipState(void)
 
     setWindValue(g_ship.curr.wind.speed, g_ship.curr.wind.direction, g_ship.curr.wind.reference);
 
+//    printf("rudcurValue[%f:%d]\n", ((float)g_ship.curr.rudder.cur)/10000.0, g_ship.curr.rudder.cur);
     setRUDcurValue(((float)g_ship.curr.rudder.cur)/10000.0);
+
+    setRUDtgtValue(((float)g_ship.curr.rudder.tgt)/10000.0);
 
     g_ship.prev = g_ship.curr;
 
@@ -236,6 +238,8 @@ void runEcoTaskSync(void *argument)
 void runEcoTaskControl(void *argument)
 {
     uint32_t tick_tgt= osKernelGetTickCount();
+    uint32_t cnt=0;
+    float rud_ctrl_tgt_deg;
 
     osDelay(200);
 
@@ -243,18 +247,24 @@ void runEcoTaskControl(void *argument)
 
     for(;;)
     {
-        tick_tgt += 1000;
+#if defined CTRL_FUZZY
+        rud_ctrl_tgt_deg = RUD_GAIN * calFuzzy(FUZZY_GAIN_HDG * 0.1, FUZZY_GAIN_ROT * 0.1);
+#elif defined CTRL_PID
+        rud_ctrl_tgt_deg = RAD2DEG * RUD_GAIN * calPID(g_ship.curr.heading_sensor_reading, g_ship.curr.rate_of_turn);
+#elif defined CTRL_TEST
+        rud_ctrl_tgt_deg = 15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
+#else
+#error "RUD_CTRL_??? must be defined."
+#endif
 
-        g_control.rud_order = RUD_GAIN * calFuzzy(FUZZY_GAIN_HDG * 0.1, FUZZY_GAIN_ROT * 0.1);
+        g_ship.curr.rudder.tgt = (int16_t)round(rud_ctrl_tgt_deg*DEG2RAD*10000.0);
+        PGN127245_ProcessNameField();
 
-//        printf("%s() rud order[%5.1f]deg\r\n",__FUNCTION__, g_control.rud_order*RAD2DEG);
-
-//        g_rudder.angle_order = (int16_t)(g_control.rud_order*10000.0);
-//        PGN127245_ProcessNameField();
-
+        printf("%s() rud_ctrl_tgt_deg[%5.1f]deg \r\n",__FUNCTION__, rud_ctrl_tgt_deg);
 
         osDelayUntil(tick_tgt);
-
+        tick_tgt += 1000;
+        cnt++;
     }
 }
 
