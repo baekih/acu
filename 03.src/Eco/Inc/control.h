@@ -19,21 +19,23 @@
 #define PM              (2)
 #define PB              (3)
 
-//#define CTRL_FUZZY
+#define CTRL_FUZZY
 //#define CTRL_PID
-#define CTRL_TEST
+//#define CTRL_TEST
 
-#define FUZZY_GAIN_HDG  (1.0)
-#define FUZZY_GAIN_ROT  (1.0)
-#define RUD_GAIN        (1.0)
-#define RUD_ORDER_MAX   (20.0)
-#define RUD_ORDER_MIN   (-20.0)
+#define FUZZY_GAIN_HDG      (1.0)
+#define FUZZY_GAIN_ROT      (1.0)
+#define RUD_FUZZY_GAIN      (1.0)
+#define RUD_FUZZY_HDG_ADJ   (0.2)
+#define RUD_FUZZY_ROT_ADJ   (0.2)
+#define RUD_ORDER_MAX       (20.0)
+#define RUD_ORDER_MIN       (-20.0)
 
 #define DEG2RAD         (M_PI/180.0)
 #define RAD2DEG         (180.0/M_PI)
 
-#define K_H             (1.0)
-#define K_R             (1.0)
+#define K_HDG           (1.0)
+#define K_ROT           (1.0)
 #define RUD_MAX         (15.0)
 
 /* struct --------------------------------------------------------------------*/
@@ -111,6 +113,6 @@ extern control g_control;
 
 /* function prototypes -------------------------------------------------------*/
 float calFuzzy(float hdg_err, float rot_err);
-float calPI(float hdg_err, float rot_err);
+float calPID(float hdg_err, float rot_err);
 
 #endif /* APPLICATION_USER_ECOTRONIX_INC_CONTROL_H_ */

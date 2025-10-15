@@ -231,9 +231,9 @@ float convertRule2Val(int rule)
 
 float calPID(float hdg_err, float rot_err)  //PID control
 {
-    float rud_val = (-K_H) * hdg_err + (-K_R) * rot_err;
+    float rud_val = (-K_HDG) * hdg_err + (-K_ROT) * rot_err;
 
-    if(fabs(rud_val) > RUD_MAX) rud_val = copysignf(RUD_MAX, rud_val);
+    if(fabs(rud_val) > RUD_MAX*DEG2RAD) rud_val = copysignf(RUD_MAX*DEG2RAD, rud_val);
 
     return rud_val;
 }
@@ -272,5 +272,5 @@ float calFuzzy(float hdg_err_deg, float rot_err_deg)
     else
         aft_val_deg = 0.0;
 
-    return aft_val_deg;
+    return -aft_val_deg;
 }

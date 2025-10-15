@@ -150,9 +150,9 @@ void initTouchSensor(void)
     else if(g_board_id==BOARD_ID_ACU15)
     {
 #ifdef DEBUG
-        printk("ECO-ACU app DBG " __DATE__ " " __TIME__ "\r\n");
+        printk("ECO-ACU app DBG ver:" VERSION " " __DATE__ " " __TIME__ "\r\n");
 #else
-        printk("ECO-ACU app " __DATE__ "\r\n");
+        printk("ECO-ACU app ver:" VERSION " " __DATE__ "\r\n");
 #endif
     }
 

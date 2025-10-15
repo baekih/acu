@@ -10,4 +10,6 @@
 
 #include <main.h>
 
+#define VERSION     "0.90"
+
 #endif /* APP_INC_FEATURES_H_ */

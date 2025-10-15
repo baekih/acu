@@ -243,7 +243,7 @@ void runEcoTaskControl(void *argument)
 {
     uint32_t tick_tgt= osKernelGetTickCount();
     uint32_t cnt=0;
-    float rud_ctrl_tgt_deg;
+    float rud_tgt_deg;
 
     osDelay(200);
 
@@ -251,18 +251,31 @@ void runEcoTaskControl(void *argument)
 
     for(;;)
     {
+        float hdgt_cur = ((float)g_ship.curr.heading_sensor_reading)/10000.0;
+        float hdgt_tgt_deg = (float)g_ship.curr.heading_sensor_target;
+        float rot_cur = ((float)g_ship.curr.rate_of_turn)/32000000.0;
+        float hdgt_cur_deg = hdgt_cur*RAD2DEG;
+        float hdgt_tgt = hdgt_tgt_deg*DEG2RAD;
+        float rot_cur_deg = rot_cur*RAD2DEG;
+        float hdgt_err = hdgt_tgt - hdgt_cur;
+        float rot_err = 0.0 - rot_cur;
+
+        if(180.0*DEG2RAD < fabsf(hdgt_err)) hdgt_err += 360.0*DEG2RAD;
+
 #if defined CTRL_FUZZY
-        rud_ctrl_tgt_deg = RUD_GAIN * calFuzzy(FUZZY_GAIN_HDG * 0.1, FUZZY_GAIN_ROT * 0.1);
+        rud_tgt_deg = calFuzzy(RUD_FUZZY_HDG_ADJ*hdgt_err*RAD2DEG, RUD_FUZZY_ROT_ADJ*rot_err*RAD2DEG);
 #elif defined CTRL_PID
-        rud_ctrl_tgt_deg = RAD2DEG * RUD_GAIN * calPID(g_ship.curr.heading_sensor_reading, g_ship.curr.rate_of_turn);
+        rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err);
 #elif defined CTRL_TEST
         rud_ctrl_tgt_deg = 15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
 #else
 #error "RUD_CTRL_??? must be defined."
 #endif
 
-        g_ship.curr.rudder.tgt = (int16_t)round(rud_ctrl_tgt_deg*DEG2RAD*10000.0);
+        g_ship.curr.rudder.tgt = (int16_t)round(rud_tgt_deg*DEG2RAD*10000.0);
         PGN127245_ProcessNameField();
+
+        printf("hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n", hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
 
 //        printf("%s() rud_ctrl_tgt_deg[%5.1f]deg \r\n",__FUNCTION__, rud_ctrl_tgt_deg);
 
