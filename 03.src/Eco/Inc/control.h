@@ -26,7 +26,9 @@
 #define FUZZY_GAIN_HDG      (1.0)
 #define FUZZY_GAIN_ROT      (1.0)
 #define RUD_FUZZY_GAIN      (1.0)
-#define RUD_FUZZY_HDG_ADJ   (0.2)
+//#define RUD_FUZZY_HDG_ADJ   (0.2)
+#define RUD_FUZZY_HDG_ADJ   (0.1)
+//#define RUD_FUZZY_HDG_ADJ   (0.05)
 #define RUD_FUZZY_ROT_ADJ   (0.2)
 #define RUD_ORDER_MAX       (20.0)
 #define RUD_ORDER_MIN       (-20.0)
@@ -34,8 +36,8 @@
 #define DEG2RAD         (M_PI/180.0)
 #define RAD2DEG         (180.0/M_PI)
 
-#define K_HDG           (1.0)
-#define K_ROT           (1.0)
+#define K_HDG           (0.5)
+#define K_ROT           (0.2)
 #define RUD_MAX         (15.0)
 
 /* struct --------------------------------------------------------------------*/
