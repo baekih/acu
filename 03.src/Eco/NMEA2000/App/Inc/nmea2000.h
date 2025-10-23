@@ -98,9 +98,13 @@ extern "C" {
 #define N2K_ADDR_MAX_HIGH_SOURCE            252
 #define N2K_ADDR_CLAIM_FAIL                 254
 
-#define N2K_DATA_NOT_AVAILABLE_INT16        32767
-#define N2K_DO_NOT_CHANGE_INT16             32766
-#define N2K_OUT_OF_ORDER_INT16              32765
+#define N2K_DATA_NOT_AVAILABLE_UINT16       0xFFFF
+#define N2K_DO_NOT_CHANGE_UINT16            0xFFFE
+#define N2K_OUT_OF_ORDER_UINT16             0xFFFD
+
+#define N2K_DATA_NOT_AVAILABLE_INT16        0x7FFF
+#define N2K_DO_NOT_CHANGE_INT16             0x7FFE
+#define N2K_OUT_OF_ORDER_INT16              0x7FFD
 
 /* Private function prototypes -----------------------------------------------*/
 typedef struct __RxProtocol

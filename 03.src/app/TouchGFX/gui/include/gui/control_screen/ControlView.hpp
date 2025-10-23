@@ -21,7 +21,6 @@ public:
     virtual void setupScreen();
     virtual void tearDownScreen();
 
-    void updateHDGTcur(double hdgValue);
     void updateHDGTtgt(double hdgValue);
     void updateSOG(double value);
     void updateRUDcur(float rudcurValue);

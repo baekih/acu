@@ -143,16 +143,11 @@ void CompassView::updateBearingLine(double degree)
         drawBearingText(degree * -1, text * 30, textComassDegree[text]);
     }
 }
+
 void CompassView::updateHDG(double hdgValue)
 {
-    if(isTimeInHDG() && isValidHDG()){
-        Unicode::snprintf(HDG_VALUEBuffer, HDG_VALUE_SIZE, "%d", (int)adjustDisplayAngleDegree(GetRound(hdgValue, 1)));
-        updateBearingLine(hdgValue);
-    }
-    else {
-        Unicode::snprintf(HDG_VALUEBuffer, HDG_VALUE_SIZE, "---");
-        hideCompassLine();
-    }
+    Unicode::snprintf(HDG_VALUEBuffer, HDG_VALUE_SIZE, "---");
+    hideCompassLine();
 
     HDG_VALUE.invalidate();
 }
@@ -195,7 +190,6 @@ void CompassView::handleTickEvent()
         count = 698;
     }
 #else
-    updateHDG(getHDGcurValue());
 
 #endif
 }

@@ -125,15 +125,8 @@ double GetCorrection0to360(double degree);
 
 double adjustDisplayAngleDegree(double angle);
 
-void setHDGcurValue(double hdg_cur);
-double getHDGcurValue();
-
 void setHDGtgtValue(double hdg_tgt);
 double getHDGtgtValue();
-
-bool isTimeInHDG();
-void setValidHDG(bool valid);
-bool isValidHDG();
 
 void setCOGValue(double cog);
 double getCOGValue();

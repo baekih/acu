@@ -65,7 +65,6 @@ typedef struct __ship_rudder
 
 typedef struct __ship_param
 {
-    uint16_t heading_sensor_reading;
     uint16_t heading_sensor_target;
     int32_t rate_of_turn;
     int16_t  magnetic_variation;
@@ -85,11 +84,22 @@ typedef struct __ship_status
     ship_param prev;
 } ship_status;
 
+typedef struct _boat_status
+{
+    uint16_t heading_sensor_reading_em4;
+    uint16_t heading_target_em4;
+    int32_t  rate_of_turn;
+    int16_t  magnetic_variation;
+    uint16_t speed_through_water;
+    uint16_t speed_over_ground;
+} boat_status;
+
 /* macro ---------------------------------------------------------------------*/
 
 /* variables -----------------------------------------------------------------*/
 extern rudder g_rudder;
 extern ship_status g_ship;
+extern boat_status g_boat;
 
 /* function prototypes -------------------------------------------------------*/
 void runEcoTaskDefault(void *argument);

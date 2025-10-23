@@ -19,14 +19,17 @@ rudder g_rudder = {
 ship_status g_ship = {
     .curr =
     {
-        .heading_sensor_reading = 0,
         .rudder = {.cur = 0.0, .tgt = 0.0},
     },
     .prev =
     {
-        .heading_sensor_reading = 0,
         .rudder = {.cur = 0.0, .tgt = 0.0},
     }
+};
+
+boat_status g_boat = {
+    .heading_sensor_reading_em4 = N2K_DATA_NOT_AVAILABLE_UINT16,
+//    .heading_target_em4  = N2K_DATA_NOT_AVAILABLE_UINT16,
 };
 
 void printFuzzyControlTable(void)
@@ -54,11 +57,6 @@ void printFuzzyControlTable(void)
 
 void syncShipState(void)
 {
-    if(isValidDegreeAngle(g_ship.curr.heading_sensor_reading))
-    {
-        setHDGcurValue((double)g_ship.curr.heading_sensor_reading + (double)g_ship.curr.magnetic_variation);
-    }
-
     if(isValidDegreeAngle(g_ship.curr.course.over_ground))
     {
         setCOGValue((double)g_ship.curr.course.over_ground);
@@ -251,7 +249,7 @@ void runEcoTaskControl(void *argument)
 
     for(;;)
     {
-        float hdgt_cur = ((float)g_ship.curr.heading_sensor_reading)/10000.0;
+        float hdgt_cur = ((float)g_boat.heading_sensor_reading_em4)/10000.0;
         float hdgt_tgt_deg = (float)g_ship.curr.heading_sensor_target;
         float rot_cur = ((float)g_ship.curr.rate_of_turn)/32000000.0;
         float hdgt_cur_deg = hdgt_cur*RAD2DEG;

@@ -49,7 +49,6 @@ const double depthDisplayPBMax      = 926.0;
 const double headingDisplayMin      = 0.0;
 const double headingDisplayMax      = 360.0;
 
-double hdgcurValue = INVALID_DEGREE_VALUE;
 bool validHDGcurValue = false;
 
 double hdgtgtValue = INVALID_DEGREE_VALUE;
@@ -160,16 +159,10 @@ double adjustDisplayAngleDegree(double angle) {
 
 void setHDGcurValue(double hdg_cur)
 {
-    hdgcurValue = GetRadianToDegree360(hdg_cur);
 #ifndef SIMULATOR
     lastReceiveHDGcurValue = HAL_GetTick();
 #endif
     validHDGcurValue = true;
-}
-
-double getHDGcurValue()
-{
-    return hdgcurValue;
 }
 
 void setHDGtgtValue(double hdg_tgt)
@@ -207,20 +200,6 @@ double getVariation()
     return Variation;
 }
 
-void setValidHDG(bool valid)
-{
-    validHDGcurValue = valid;
-}
-
-bool isValidHDG()
-{
-#ifndef SIMULATOR
-    return validHDGcurValue;
-#else
-    return true;
-#endif
-}
-
 void setXTE(double xte, unsigned char xte_mode)
 {
     g_XTE.dat = xte;
@@ -230,15 +209,6 @@ void setXTE(double xte, unsigned char xte_mode)
 XTE getXTE()
 {
     return g_XTE;
-}
-
-bool isTimeInHDG()
-{
-#ifndef SIMULATOR
-    return ((HAL_GetTick() - lastReceiveHDGcurValue) <= NON_RECEIVE_NMEA_TIMEOUT_5_SEC);
-#else
-    return true;
-#endif
 }
 
 void setSTWValue(double value, int type)

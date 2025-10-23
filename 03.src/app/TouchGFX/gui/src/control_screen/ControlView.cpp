@@ -1,11 +1,6 @@
 #include <gui/control_screen/ControlView.hpp>
 
-#include <math.h>
-
-#include "printf.h"
-
-#define DEG2RAD     (M_PI/180.0)
-#define RAD2DEG     (180.0/M_PI)
+#include "eco.h"
 
 ControlView::ControlView():
     sliderValueChangedCallback(this, &ControlView::sliderValueChangedCallbackHandler),
@@ -28,21 +23,9 @@ void ControlView::tearDownScreen()
     ControlViewBase::tearDownScreen();
 }
 
-void ControlView::updateHDGTcur(double hdgValue)
-{
-    if(isTimeInHDG() && isValidHDG()){
-        Unicode::snprintf(HDGT_CUR_VALUEBuffer, HDGT_CUR_VALUE_SIZE, "%d", (int)adjustDisplayAngleDegree(GetRound(hdgValue, 1)));
-    }
-    else {
-        Unicode::snprintf(HDGT_CUR_VALUEBuffer, HDGT_CUR_VALUE_SIZE, "---");
-    }
-
-    HDGT_CUR_VALUE.invalidate();
-}
-
 void ControlView::updateHDGTtgt(double hdgValue)
 {
-    if(isTimeInHDG() && isValidHDG()){
+    if(true){
         Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", (int)hdgValue);
 //        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", (int)adjustDisplayAngleDegree(GetRound(hdgValue, 1)));
     }
@@ -169,36 +152,27 @@ void ControlView::handleClickEvent(const ClickEvent& evt)
 */
 void ControlView::handleTickEvent()
 {
-#ifdef SIMULATOR
-    static int stw = 0;
+//    static uint32_t cnt = 0;
 
-    stw++;
-
-    if((stw % 10) == 0){
-        updateSTW((double)stw / 100);
-        updateWindSpeed((double)stw / 100);
-        if(stw >= 2000){
-            stw = 0;
-        }
-    }
-
-    static int count = 0;
-
-    updateHDG(((((double)(count) / 10000) / (2*M_PI)) * 360));
-
-    count++;
-
-    if(count > 62832){
-        count = 0;
-    }
-
-#else
     setHDGtgtValue((double)hdgt_tgt);
 
-    updateHDGTcur(getHDGcurValue());
+    // update heading sensor reading
+    if(g_boat.heading_sensor_reading_em4 < N2K_OUT_OF_ORDER_UINT16)
+    {
+        Unicode::snprintf(HDGT_CUR_VALUEBuffer, HDGT_CUR_VALUE_SIZE, "%d",
+                          (uint16_t)lround(((float)g_boat.heading_sensor_reading_em4)/10000.0*RAD2DEG));
+    }
+    else
+    {
+        Unicode::snprintf(HDGT_CUR_VALUEBuffer, HDGT_CUR_VALUE_SIZE, "---");
+    }
+    HDGT_CUR_VALUE.invalidate();
+
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
     updateRUDcur(getRUDcurValue());
     updateRUDtgt(getRUDtgtValue());
 
-#endif
+//    if(0 == cnt%50) printf("[%06ld]ControlView::handleTickEvent()\n", cnt);
+//    cnt++;
+
 }
