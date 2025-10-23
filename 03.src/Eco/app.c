@@ -28,8 +28,9 @@ ship_status g_ship = {
 };
 
 boat_status g_boat = {
-    .heading_sensor_reading_em4 = N2K_DATA_NOT_AVAILABLE_UINT16,
-    .heading_target_em4  = N2K_DATA_NOT_AVAILABLE_UINT16,
+    .heading_sensor_reading_em4     = N2K_DATA_NOT_AVAILABLE_UINT16,
+    .heading_target_em4             = N2K_DATA_NOT_AVAILABLE_UINT16,
+    .rate_of_turn                   = N2K_DATA_NOT_AVAILABLE_INT16,
 };
 
 void printFuzzyControlTable(void)
@@ -266,7 +267,7 @@ void runEcoTaskControl(void *argument)
     {
         float hdgt_cur = ((float)g_boat.heading_sensor_reading_em4)/10000.0;
         float hdgt_tgt = ((float)g_boat.heading_target_em4)/10000.0;
-        float rot_cur  = ((float)g_ship.curr.rate_of_turn)/32000000.0;
+        float rot_cur  = ((float)g_boat.rate_of_turn)/32000000.0;
         float hdgt_cur_deg = hdgt_cur*RAD2DEG;
         float hdgt_tgt_deg = hdgt_tgt*RAD2DEG;
         float rot_cur_deg = rot_cur*RAD2DEG;
@@ -275,22 +276,29 @@ void runEcoTaskControl(void *argument)
 
         if(180.0*DEG2RAD < fabsf(hdgt_err)) hdgt_err += 360.0*DEG2RAD;
 
+        if(isRADem4Valid(g_boat.heading_sensor_reading_em4) && isRADem4Valid(g_boat.heading_target_em4))
+        {
 #if defined CTRL_FUZZY
-        rud_tgt_deg = calFuzzy(RUD_FUZZY_HDG_ADJ*hdgt_err*RAD2DEG, RUD_FUZZY_ROT_ADJ*rot_err*RAD2DEG);
+            rud_tgt_deg = calFuzzy(RUD_FUZZY_HDG_ADJ*hdgt_err*RAD2DEG, RUD_FUZZY_ROT_ADJ*rot_err*RAD2DEG);
 #elif defined CTRL_PID
-        rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err);
+            rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err);
 #elif defined CTRL_TEST
-        rud_ctrl_tgt_deg = 15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
+            rud_ctrl_tgt_deg = 15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
 #else
 #error "RUD_CTRL_??? must be defined."
 #endif
+            g_ship.curr.rudder.tgt = (int16_t)round(rud_tgt_deg*DEG2RAD*10000.0);
 
-        g_ship.curr.rudder.tgt = (int16_t)round(rud_tgt_deg*DEG2RAD*10000.0);
+            printf("%s() CTRL ON: hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
+        }
+        else
+        {
+            g_ship.curr.rudder.tgt = N2K_DATA_NOT_AVAILABLE_INT16;
+
+            printf("%s() CTRL OFF\n",__FUNCTION__);
+        }
+
         PGN127245_ProcessNameField();
-
-        printf("%s() hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
-
-//        printf("%s() rud_ctrl_tgt_deg[%5.1f]deg \r\n",__FUNCTION__, rud_ctrl_tgt_deg);
 
         osDelayUntil(tick_tgt);
         tick_tgt += 1000;

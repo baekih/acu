@@ -69,8 +69,6 @@ typedef struct __ship_rudder
 
 typedef struct __ship_param
 {
-    uint16_t heading_sensor_target;
-    int32_t rate_of_turn;
     int16_t  magnetic_variation;
     ship_speed speed;
     ship_course course;

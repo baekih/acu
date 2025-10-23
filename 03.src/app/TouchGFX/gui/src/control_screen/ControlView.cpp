@@ -166,10 +166,10 @@ void ControlView::handleTickEvent()
 //    static uint32_t cnt = 0;
 
     // update heading sensor reading
-    if(g_boat.heading_sensor_reading_em4 < N2K_OUT_OF_ORDER_UINT16)
+    if(isRADem4Valid(g_boat.heading_sensor_reading_em4))
     {
         Unicode::snprintf(HDGT_CUR_VALUEBuffer, HDGT_CUR_VALUE_SIZE, "%d",
-                          (uint16_t)lround(((float)g_boat.heading_sensor_reading_em4)/10000.0*RAD2DEG));
+                          (uint16_t)roundRADem4toDEG(g_boat.heading_sensor_reading_em4));
     }
     else
     {

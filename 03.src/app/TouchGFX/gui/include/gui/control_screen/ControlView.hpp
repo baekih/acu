@@ -5,7 +5,6 @@
 #include <gui/control_screen/ControlPresenter.hpp>
 
 #include <gui/common/ViewCommon.hpp>
-//#include "printf.h"
 
 class ControlView : public ControlViewBase, protected ViewCommon
 {
