@@ -49,11 +49,6 @@ const double depthDisplayPBMax      = 926.0;
 const double headingDisplayMin      = 0.0;
 const double headingDisplayMax      = 360.0;
 
-bool validHDGcurValue = false;
-
-double hdgtgtValue = INVALID_DEGREE_VALUE;
-bool validHDGtgtValue = false;
-
 float rudcurValue = NAN;
 float rudtgtValue = NAN;
 
@@ -155,25 +150,6 @@ double adjustDisplayAngleDegree(double angle) {
     }
 
     return res;
-}
-
-void setHDGcurValue(double hdg_cur)
-{
-#ifndef SIMULATOR
-    lastReceiveHDGcurValue = HAL_GetTick();
-#endif
-    validHDGcurValue = true;
-}
-
-void setHDGtgtValue(double hdg_tgt)
-{
-    hdgtgtValue = hdg_tgt;
-    validHDGtgtValue = true;
-}
-
-double getHDGtgtValue()
-{
-    return hdgtgtValue;
 }
 
 void setCOGValue(double cog)

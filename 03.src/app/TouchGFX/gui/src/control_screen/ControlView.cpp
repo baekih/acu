@@ -23,10 +23,10 @@ void ControlView::tearDownScreen()
     ControlViewBase::tearDownScreen();
 }
 
-void ControlView::updateHDGTtgt(double hdgValue)
+void ControlView::dispHDGTtgt(int hdg_tgt)
 {
     if(true){
-        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", (int)hdgValue);
+        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", hdg_tgt);
 //        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", (int)adjustDisplayAngleDegree(GetRound(hdgValue, 1)));
     }
     else {
@@ -69,63 +69,56 @@ void ControlView::sliderValueChangedCallbackHandler(const touchgfx::Slider& src,
 {
     if (&src == &HDGT_TGT_SLIDER)
     {
-        printf("HDGT_TGT_SLIDER[%d:%d]\r\n", hdgt_tgt, value);
+        printf("HDGT_TGT_SLIDER[%d]\r\n", value);
+
         if(-180 <= value && value < 0)
         {
-            hdgt_tgt = value + 360;
-        }
-        else
-        {
-            hdgt_tgt = value;
+            value += 360;
         }
 
-        updateHDGTtgt((double)hdgt_tgt);
+        g_boat.heading_target_em4 = (uint16_t)lround((float)value*DEG2RAD*10000.0);
+
+        dispHDGTtgt(value);
     }
 }
 
 void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 {
-    if (&src == &BTN_STOP)
+    if(&src == &BTN_STOP)
     {
         printf("BTN_STOP\r\n");
     }
-
-    if (&src == &BTN_HDGT_LEFT)
+    else if(&src == &BTN_HDGT_LEFT)
     {
+        int hdgt_tgt = (int)lround((float)g_boat.heading_target_em4/10000.0*RAD2DEG);
+
         if(--hdgt_tgt == -1) hdgt_tgt = 359;
 
-        printf("BTN_HDGT_LEFT hdgt_tgt[%d]\r\n", hdgt_tgt);
+        g_boat.heading_target_em4 = (uint16_t)lround((float)hdgt_tgt*DEG2RAD*10000.0);
 
-        updateHDGTtgt((double)hdgt_tgt);
+        dispHDGTtgt(hdgt_tgt);
 
-        if(180 < hdgt_tgt)
-        {
-            HDGT_TGT_SLIDER.setValue((int16_t)(hdgt_tgt - 360));
-        }
-        else
-        {
-            HDGT_TGT_SLIDER.setValue((int16_t)hdgt_tgt);
-        }
+        printf("BTN_HDGT_LEFT hdgt_tgt[%d] em4[%d]\r\n", hdgt_tgt, g_boat.heading_target_em4);
+
+        if(180 < hdgt_tgt)  HDGT_TGT_SLIDER.setValue((int16_t)(hdgt_tgt - 360));
+        else                HDGT_TGT_SLIDER.setValue((int16_t)hdgt_tgt);
 
         HDGT_TGT_SLIDER.invalidate();
     }
-
-    if (&src == &BTN_HDGT_RIGHT)
+    else if (&src == &BTN_HDGT_RIGHT)
     {
+        int hdgt_tgt = (int)lround((float)g_boat.heading_target_em4/10000.0*RAD2DEG);
+
         if(++hdgt_tgt == 360) hdgt_tgt = 0;
 
-        printf("BTN_HDGT_RIGHT hdgt_tgt[%d]\r\n", hdgt_tgt);
+        g_boat.heading_target_em4 = (uint16_t)lround((float)hdgt_tgt*DEG2RAD*10000.0);
 
-        updateHDGTtgt((double)hdgt_tgt);
+        dispHDGTtgt(hdgt_tgt);
 
-        if(180 < hdgt_tgt)
-        {
-            HDGT_TGT_SLIDER.setValue((int16_t)(hdgt_tgt - 360));
-        }
-        else
-        {
-            HDGT_TGT_SLIDER.setValue((int16_t)hdgt_tgt);
-        }
+        printf("BTN_HDGT_RIGHT hdgt_tgt[%d] em4[%d]\r\n", hdgt_tgt, g_boat.heading_target_em4);
+
+        if(180 < hdgt_tgt)  HDGT_TGT_SLIDER.setValue((int16_t)(hdgt_tgt - 360));
+        else                HDGT_TGT_SLIDER.setValue((int16_t)hdgt_tgt);
 
         HDGT_TGT_SLIDER.invalidate();
     }
@@ -153,8 +146,6 @@ void ControlView::handleClickEvent(const ClickEvent& evt)
 void ControlView::handleTickEvent()
 {
 //    static uint32_t cnt = 0;
-
-    setHDGtgtValue((double)hdgt_tgt);
 
     // update heading sensor reading
     if(g_boat.heading_sensor_reading_em4 < N2K_OUT_OF_ORDER_UINT16)

@@ -9,8 +9,8 @@
 
 class ControlView : public ControlViewBase, protected ViewCommon
 {
-	int speedType;
-	int hdgt_tgt;
+    int speedType;
+    int hdgt_tgt;
 
 private :
     void updateSpeed(double value, int max);
@@ -21,7 +21,7 @@ public:
     virtual void setupScreen();
     virtual void tearDownScreen();
 
-    void updateHDGTtgt(double hdgValue);
+    void dispHDGTtgt(int hdg_tgt);
     void updateSOG(double value);
     void updateRUDcur(float rudcurValue);
     void updateRUDtgt(float rudtgtValue);

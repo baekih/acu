@@ -108,8 +108,6 @@ void syncShipState(void)
 
     setRUDtgtValue(((float)g_ship.curr.rudder.tgt)/10000.0);
 
-    g_ship.curr.heading_sensor_target = (uint16_t)getHDGtgtValue();
-
     g_ship.prev = g_ship.curr;
 
     return;
@@ -250,10 +248,10 @@ void runEcoTaskControl(void *argument)
     for(;;)
     {
         float hdgt_cur = ((float)g_boat.heading_sensor_reading_em4)/10000.0;
-        float hdgt_tgt_deg = (float)g_ship.curr.heading_sensor_target;
-        float rot_cur = ((float)g_ship.curr.rate_of_turn)/32000000.0;
+        float hdgt_tgt = ((float)g_boat.heading_target_em4)/10000.0;
+        float rot_cur  = ((float)g_ship.curr.rate_of_turn)/32000000.0;
         float hdgt_cur_deg = hdgt_cur*RAD2DEG;
-        float hdgt_tgt = hdgt_tgt_deg*DEG2RAD;
+        float hdgt_tgt_deg = hdgt_tgt*RAD2DEG;
         float rot_cur_deg = rot_cur*RAD2DEG;
         float hdgt_err = hdgt_tgt - hdgt_cur;
         float rot_err = 0.0 - rot_cur;
@@ -273,7 +271,7 @@ void runEcoTaskControl(void *argument)
         g_ship.curr.rudder.tgt = (int16_t)round(rud_tgt_deg*DEG2RAD*10000.0);
         PGN127245_ProcessNameField();
 
-        printf("hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n", hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
+//        printf("%s() hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
 
 //        printf("%s() rud_ctrl_tgt_deg[%5.1f]deg \r\n",__FUNCTION__, rud_ctrl_tgt_deg);
 

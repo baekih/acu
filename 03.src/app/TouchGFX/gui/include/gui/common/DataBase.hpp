@@ -125,9 +125,6 @@ double GetCorrection0to360(double degree);
 
 double adjustDisplayAngleDegree(double angle);
 
-void setHDGtgtValue(double hdg_tgt);
-double getHDGtgtValue();
-
 void setCOGValue(double cog);
 double getCOGValue();
 
