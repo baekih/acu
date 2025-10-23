@@ -29,7 +29,7 @@ ship_status g_ship = {
 
 boat_status g_boat = {
     .heading_sensor_reading_em4 = N2K_DATA_NOT_AVAILABLE_UINT16,
-//    .heading_target_em4  = N2K_DATA_NOT_AVAILABLE_UINT16,
+    .heading_target_em4  = N2K_DATA_NOT_AVAILABLE_UINT16,
 };
 
 void printFuzzyControlTable(void)
@@ -53,6 +53,16 @@ void printFuzzyControlTable(void)
         }
         printf("\r\n");
     }
+}
+
+int64_t roundRADem4toDEG(float val)
+{
+    return (int64_t)lround((float)val/10000.0*RAD2DEG);
+}
+
+int64_t roundDEGtoRADem4(float val)
+{
+    return (int64_t)lround((float)val*10000.0*DEG2RAD);
 }
 
 void syncShipState(void)
@@ -271,7 +281,7 @@ void runEcoTaskControl(void *argument)
         g_ship.curr.rudder.tgt = (int16_t)round(rud_tgt_deg*DEG2RAD*10000.0);
         PGN127245_ProcessNameField();
 
-//        printf("%s() hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
+        printf("%s() hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
 
 //        printf("%s() rud_ctrl_tgt_deg[%5.1f]deg \r\n",__FUNCTION__, rud_ctrl_tgt_deg);
 
