@@ -5,7 +5,7 @@
 #include <gui/control_screen/ControlPresenter.hpp>
 
 #include <gui/common/ViewCommon.hpp>
-#include "printf.h"
+//#include "printf.h"
 
 class ControlView : public ControlViewBase, protected ViewCommon
 {
@@ -20,7 +20,8 @@ public:
     virtual void setupScreen();
     virtual void tearDownScreen();
 
-    void dispHDGTtgt(int hdg_tgt);
+    void dispHdgtTgtVal(int hdg_tgt_deg);
+    void dispHdgtTgtSlider(int hdg_tgt_deg);
     void updateSOG(double value);
     void updateRUDcur(float rudcurValue);
     void updateRUDtgt(float rudtgtValue);

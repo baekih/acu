@@ -106,8 +106,9 @@ extern ship_status g_ship;
 extern boat_status g_boat;
 
 /* function prototypes -------------------------------------------------------*/
-int64_t roundRADem4toDEG(float val);
-int64_t roundDEGtoRADem4(float val);
+int32_t roundRADem4toDEG(int32_t val);
+int32_t roundDEGtoRADem4(int32_t val);
+bool isRADem4Valid(int32_t val);
 
 void runEcoTaskDefault(void *argument);
 void runEcoTaskUART(void *argument);

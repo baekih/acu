@@ -55,14 +55,21 @@ void printFuzzyControlTable(void)
     }
 }
 
-int64_t roundRADem4toDEG(float val)
+int32_t roundRADem4toDEG(int32_t val)
 {
-    return (int64_t)lround((float)val/10000.0*RAD2DEG);
+    return (int32_t)lround((float)val/10000.0*RAD2DEG);
 }
 
-int64_t roundDEGtoRADem4(float val)
+int32_t roundDEGtoRADem4(int32_t val)
 {
-    return (int64_t)lround((float)val*10000.0*DEG2RAD);
+    return (int32_t)lround((float)val*10000.0*DEG2RAD);
+}
+
+bool isRADem4Valid(int32_t val)
+{
+    if(N2K_OUT_OF_ORDER_UINT16 <= val) return false;
+
+    return true;
 }
 
 void syncShipState(void)
