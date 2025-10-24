@@ -107,6 +107,8 @@ extern boat_status g_boat;
 int32_t roundRADem4toDEG(int32_t val);
 int32_t roundDEGtoRADem4(int32_t val);
 bool isRADem4Valid(int32_t val);
+float roundRotRad2Deg(int32_t val);
+bool isRotValid(int32_t val);
 
 void runEcoTaskDefault(void *argument);
 void runEcoTaskUART(void *argument);

@@ -177,6 +177,17 @@ void ControlView::handleTickEvent()
     }
     HDGT_CUR_VALUE.invalidate();
 
+    if(isRotValid(g_boat.rate_of_turn))
+    {
+        Unicode::snprintfFloat(ROT_VALUEBuffer, ROT_VALUE_SIZE, "%04.2f",
+                          roundRotRad2Deg(g_boat.rate_of_turn));
+    }
+    else
+    {
+        Unicode::snprintf(ROT_VALUEBuffer, ROT_VALUE_SIZE, "-.--");
+    }
+    ROT_VALUE.invalidate();
+
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
     updateRUDcur(getRUDcurValue());
     updateRUDtgt(getRUDtgtValue());

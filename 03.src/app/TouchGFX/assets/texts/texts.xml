@@ -95,6 +95,24 @@
       </Text>
     </TextGroup>
     <TextGroup Id="Unsorted">
+      <Text Id="HDGT_TGT_40" Alignment="Right" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">&lt;*&gt;</Translation>
+      </Text>
+      <Text Id="ROT_UNIT2" Alignment="Left" TypographyId="TYPEPO_25PX">
+        <Translation Language="GB">deg/sec</Translation>
+      </Text>
+      <Text Id="ResourceId1" Alignment="Left" TypographyId="TYPEPO_65PX">
+        <Translation Language="GB">New Text</Translation>
+      </Text>
+      <Text Id="ROT_UNIT1" Alignment="Left" TypographyId="TYPEPO_65PX">
+        <Translation Language="GB">˚</Translation>
+      </Text>
+      <Text Id="__SingleUse_TH5O" Alignment="Left" TypographyId="TYPEPO_40PX">
+        <Translation Language="GB">---.-</Translation>
+      </Text>
+      <Text Id="__SingleUse_NKZP" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">ROT</Translation>
+      </Text>
       <Text Id="__SingleUse_G79V" Alignment="Center" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">STOP</Translation>
       </Text>
@@ -125,16 +143,16 @@
       <Text Id="__SingleUse_HTYD" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">-30˚                         0˚                         30˚</Translation>
       </Text>
-      <Text Id="__SingleUse_353F" Alignment="Left" TypographyId="TYPEPO_30PX">
+      <Text Id="__SingleUse_353F" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">00.0</Translation>
       </Text>
-      <Text Id="__SingleUse_FXOL" Alignment="Left" TypographyId="TYPEPO_30PX">
+      <Text Id="__SingleUse_FXOL" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">000</Translation>
       </Text>
-      <Text Id="__SingleUse_HHWK" Alignment="Left" TypographyId="TYPEPO_30PX">
+      <Text Id="__SingleUse_HHWK" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">---</Translation>
       </Text>
-      <Text Id="__SingleUse_0ACJ" Alignment="Left" TypographyId="TYPEPO_65PX">
+      <Text Id="__SingleUse_0ACJ" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">---</Translation>
       </Text>
       <Text Id="__SingleUse_OQ9F" Alignment="Left" TypographyId="TYPEPO_30PX">
@@ -144,12 +162,12 @@
         <Translation Language="GB">COG</Translation>
       </Text>
       <Text Id="__SingleUse_Q5ML" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">HDGT TGT</Translation>
+        <Translation Language="GB">HDGT&#10;TGT</Translation>
       </Text>
       <Text Id="__SingleUse_MP55" Alignment="Left" TypographyId="TYPEPO_30PX">
-        <Translation Language="GB">HDGT CUR</Translation>
+        <Translation Language="GB">HDGT&#10;CUR</Translation>
       </Text>
-      <Text Id="SOG_65PX" Alignment="Right" TypographyId="TYPEPO_65PX">
+      <Text Id="SOG_40" Alignment="Right" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
       <Text Id="HDGT_TGT_UNIT_65PX" Alignment="Left" TypographyId="TYPEPO_65PX">
@@ -161,10 +179,10 @@
       <Text Id="COG_UNIT_65PX" Alignment="Left" TypographyId="TYPEPO_65PX">
         <Translation Language="GB">˚</Translation>
       </Text>
-      <Text Id="COG_65PX" Alignment="Right" TypographyId="TYPEPO_65PX">
+      <Text Id="COG_40" Alignment="Right" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
-      <Text Id="HDGT_TGT_65PX" Alignment="Right" TypographyId="TYPEPO_65PX">
+      <Text Id="ROT_40" Alignment="Right" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
       <Text Id="__SingleUse_O0VI" Alignment="Left" TypographyId="TYPEPO_70PX">
@@ -182,7 +200,7 @@
       <Text Id="WILDCARD_90PX" Alignment="Center" TypographyId="TYPEPO_90PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
-      <Text Id="HDGT_CUR_65PX" Alignment="Right" TypographyId="TYPEPO_65PX">
+      <Text Id="HDGT_CUR_40PX" Alignment="Right" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
       <Text Id="WILDCARD_120PX" Alignment="Left" TypographyId="TYPEPO_100PX">
@@ -227,7 +245,7 @@
       <Text Id="__SingleUse_82LB" Alignment="Center" TypographyId="TYPEPO_100PX">
         <Translation Language="GB">00.0</Translation>
       </Text>
-      <Text Id="__SingleUse_5D19" Alignment="Left" TypographyId="TYPEPO_65PX">
+      <Text Id="__SingleUse_5D19" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">0.0</Translation>
       </Text>
       <Text Id="__SingleUse_AUKH" Alignment="Left" TypographyId="TYPEPO_65PX">
@@ -257,5 +275,6 @@
     <Typography Id="TYPEPO_120PX" Font="Roboto-Bold.ttf" Size="120" Bpp="1" IsVector="no" Direction="LTR" FallbackCharacter="." WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
     <Typography Id="TYPEPO_150PX" Font="Roboto-Bold.ttf" Size="150" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
     <Typography Id="TYPEPO_160PX" Font="Roboto-Bold.ttf" Size="160" Bpp="1" IsVector="no" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9,0x21-0x2F,A-Z" />
+    <Typography Id="TYPEPO_50PX" Font="Roboto-Bold.ttf" Size="50" Bpp="4" IsVector="no" Direction="LTR" FallbackCharacter="?" />
   </Typographies>
 </TextDatabase>

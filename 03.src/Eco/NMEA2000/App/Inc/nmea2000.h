@@ -106,6 +106,10 @@ extern "C" {
 #define N2K_DO_NOT_CHANGE_INT16             0x7FFE
 #define N2K_OUT_OF_ORDER_INT16              0x7FFD
 
+#define N2K_DATA_NOT_AVAILABLE_INT32        0x7FFFFFFF
+#define N2K_DO_NOT_CHANGE_INT32             0x7FFFFFFE
+#define N2K_OUT_OF_ORDER_INT32              0x7FFFFFFD
+
 /* Private function prototypes -----------------------------------------------*/
 typedef struct __RxProtocol
 {

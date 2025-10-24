@@ -13,6 +13,38 @@
           },
           {
             "Type": "TextArea",
+            "Name": "HDGT_TGT_UNIT",
+            "X": 458,
+            "Y": 121,
+            "Width": 22,
+            "Height": 74,
+            "TextId": "HDGT_TGT_UNIT_65PX",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "ROT_UNIT2",
+            "X": 688,
+            "Y": 133,
+            "Width": 91,
+            "Height": 31,
+            "TextId": "ROT_UNIT2",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
             "Name": "HEADING_TGT_TITLE",
             "X": 196,
             "Y": 434,
@@ -46,11 +78,11 @@
           {
             "Type": "TextArea",
             "Name": "HDGT_TGT_VALUE",
-            "X": 480,
-            "Y": 114,
-            "Width": 245,
-            "Height": 132,
-            "TextId": "HDGT_TGT_65PX",
+            "X": 358,
+            "Y": 127,
+            "Width": 100,
+            "Height": 68,
+            "TextId": "HDGT_TGT_40",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -66,7 +98,7 @@
           {
             "Type": "TextArea",
             "Name": "HDGT_CUR_UNIT",
-            "X": 342,
+            "X": 196,
             "Y": 121,
             "Width": 22,
             "Height": 74,
@@ -82,8 +114,8 @@
           {
             "Type": "TextArea",
             "Name": "COG_UNIT",
-            "X": 342,
-            "Y": 246,
+            "X": 213,
+            "Y": 230,
             "Width": 22,
             "Height": 74,
             "TextId": "COG_UNIT_65PX",
@@ -97,25 +129,9 @@
           },
           {
             "Type": "TextArea",
-            "Name": "HDGT_TGT_UNIT",
-            "X": 725,
-            "Y": 121,
-            "Width": 22,
-            "Height": 74,
-            "TextId": "HDGT_TGT_UNIT_65PX",
-            "TextRotation": "0",
-            "Color": {
-              "Red": 255,
-              "Green": 255,
-              "Blue": 255
-            },
-            "AutoSize": true
-          },
-          {
-            "Type": "TextArea",
             "Name": "SOG_UNIT",
-            "X": 736,
-            "Y": 275,
+            "X": 456,
+            "Y": 252,
             "Width": 49,
             "Height": 31,
             "TextId": "SOG_UNIT_25PX",
@@ -130,11 +146,11 @@
           {
             "Type": "TextArea",
             "Name": "HDGT_CUR_VALUE",
-            "X": 96,
-            "Y": 114,
-            "Width": 245,
-            "Height": 132,
-            "TextId": "HDGT_CUR_65PX",
+            "X": 104,
+            "Y": 127,
+            "Width": 92,
+            "Height": 68,
+            "TextId": "HDGT_CUR_40PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -190,11 +206,11 @@
           {
             "Type": "TextArea",
             "Name": "COG_VALUE",
-            "X": 96,
+            "X": 120,
             "Y": 240,
-            "Width": 245,
-            "Height": 132,
-            "TextId": "COG_65PX",
+            "Width": 93,
+            "Height": 55,
+            "TextId": "COG_40",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -210,11 +226,11 @@
           {
             "Type": "TextArea",
             "Name": "SOG_VALUE",
-            "X": 480,
+            "X": 330,
             "Y": 240,
-            "Width": 245,
-            "Height": 132,
-            "TextId": "SOG_65PX",
+            "Width": 115,
+            "Height": 55,
+            "TextId": "SOG_40",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -249,9 +265,9 @@
             "Type": "TextArea",
             "Name": "HDGT_CUR_TEXT",
             "X": 24,
-            "Y": 133,
-            "Width": 145,
-            "Height": 37,
+            "Y": 127,
+            "Width": 80,
+            "Height": 74,
             "TextId": "__SingleUse_MP55",
             "TextRotation": "0",
             "Color": {
@@ -313,7 +329,7 @@
             "Type": "TextArea",
             "Name": "COG_TEXT",
             "X": 24,
-            "Y": 246,
+            "Y": 258,
             "Width": 61,
             "Height": 37,
             "TextId": "__SingleUse_U165",
@@ -328,8 +344,8 @@
           {
             "Type": "TextArea",
             "Name": "SOG_TEXT",
-            "X": 410,
-            "Y": 246,
+            "X": 257,
+            "Y": 258,
             "Width": 59,
             "Height": 37,
             "TextId": "__SingleUse_OQ9F",
@@ -344,11 +360,47 @@
           {
             "Type": "TextArea",
             "Name": "HDGT_TGT_TEXT",
-            "X": 410,
-            "Y": 133,
-            "Width": 143,
-            "Height": 37,
+            "X": 277,
+            "Y": 127,
+            "Width": 80,
+            "Height": 74,
             "TextId": "__SingleUse_Q5ML",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "AutoSize": true
+          },
+          {
+            "Type": "TextArea",
+            "Name": "ROT_VALUE",
+            "X": 577,
+            "Y": 127,
+            "Width": 106,
+            "Height": 68,
+            "TextId": "ROT_40",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Wildcard1": {
+              "TextId": "__SingleUse_TH5O",
+              "UseBuffer": true,
+              "BufferSize": 5
+            }
+          },
+          {
+            "Type": "TextArea",
+            "Name": "ROT_TEXT",
+            "X": 519,
+            "Y": 127,
+            "Width": 58,
+            "Height": 37,
+            "TextId": "__SingleUse_NKZP",
             "TextRotation": "0",
             "Color": {
               "Red": 255,
@@ -650,7 +702,7 @@
             "Y": 207,
             "Width": 175,
             "Height": 109,
-            "TextId": "HDGT_CUR_65PX",
+            "TextId": "HDGT_CUR_40PX",
             "TextRotation": "0",
             "Color": {
               "Red": 255,

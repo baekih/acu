@@ -73,6 +73,19 @@ bool isRADem4Valid(int32_t val)
     return true;
 }
 
+float roundRotRad2Deg(int32_t val)
+{
+    return (float)val/32000000.0*RAD2DEG;
+}
+
+bool isRotValid(int32_t val)
+{
+    if(N2K_OUT_OF_ORDER_INT32 <= val) return false;
+
+    return true;
+}
+
+
 void syncShipState(void)
 {
     if(isValidDegreeAngle(g_ship.curr.course.over_ground))
