@@ -23,39 +23,6 @@ void ControlView::tearDownScreen()
     ControlViewBase::tearDownScreen();
 }
 
-void ControlView::dispHdgtTgtVal(int hdg_tgt_deg)
-{
-//    printf("%s() hdg_tgt_deg[0x%x]\n",__FUNCTION__, hdg_tgt_deg);
-    if(hdg_tgt_deg == 0x7FFFFFFF)
-    {
-        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "---");
-    }
-    else
-    {
-        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", hdg_tgt_deg);
-    }
-
-    HDGT_TGT_VALUE.invalidate();
-}
-
-void ControlView::dispHdgtTgtSlider(int hdg_tgt_deg)
-{
-//    printf("%s() hdg_tgt_deg[0x%x]\n",__FUNCTION__, hdg_tgt_deg);
-    if(hdg_tgt_deg != 0x7FFFFFFF)
-    {
-        if(180 < hdg_tgt_deg)
-        {
-            HDGT_TGT_SLIDER.setValue((int16_t)(hdg_tgt_deg -= 360));
-        }
-        else
-        {
-            HDGT_TGT_SLIDER.setValue((int16_t)hdg_tgt_deg);
-        }
-    }
-
-    HDGT_TGT_SLIDER.invalidate();
-}
-
 void ControlView::updateSOG(double sogValue)
 {
     Unicode::snprintfFloat(SOG_VALUEBuffer, SOG_VALUE_SIZE, "%02.1f", sogValue);
@@ -107,36 +74,26 @@ void ControlView::sliderValueChangedCallbackHandler(const touchgfx::Slider& src,
         printf("HDGT_TGT_SLIDER[%d]\r\n", hdgt_tgt_deg);
 
         if(hdgt_tgt_deg < 0) hdgt_tgt_deg += 360;
-        g_boat.heading_target = (uint16_t)roundDEGtoRADem4(hdgt_tgt_deg);
-
-        dispHdgtTgtVal(hdgt_tgt_deg);
+        g_boat.heading_target = (uint16_t)roundDEGtoRADem4((float)hdgt_tgt_deg);
     }
 }
 
 void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 {
-    int hdgt_tgt_deg = 0;
-
     if(&src == &BTN_STOP)
     {
         printf("BTN_STOP\r\n");
         g_boat.heading_target = N2K_DATA_NOT_AVAILABLE_UINT16;
-        hdgt_tgt_deg = 0x7FFFFFFF;
-        dispHdgtTgtVal(hdgt_tgt_deg);
-//        dispHdgtTgtSlider(hdgt_tgt_deg);
     }
     else if(&src == &BTN_HDGT_LEFT)
     {
         if(!isRADem4Valid(g_boat.heading_target)) g_boat.heading_target = 0;
 
-        hdgt_tgt_deg = (int)roundRADem4toDEG(g_boat.heading_target);
+        int hdgt_tgt_deg = (int)roundRADem4toDEG((float)g_boat.heading_target);
 
         if(--hdgt_tgt_deg == -1) hdgt_tgt_deg = 359;
 
-        g_boat.heading_target = (uint16_t)roundDEGtoRADem4(hdgt_tgt_deg);
-
-        dispHdgtTgtVal(hdgt_tgt_deg);
-        dispHdgtTgtSlider(hdgt_tgt_deg);
+        g_boat.heading_target = (uint16_t)roundDEGtoRADem4((float)hdgt_tgt_deg);
 
         printf("BTN_HDGT_LEFT hdgt_tgt_deg[%d]\r\n", hdgt_tgt_deg);
     }
@@ -144,14 +101,11 @@ void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
     {
         if(!isRADem4Valid(g_boat.heading_target)) g_boat.heading_target = 0;
 
-        hdgt_tgt_deg = (int)roundRADem4toDEG(g_boat.heading_target);
+        int hdgt_tgt_deg = (int)roundRADem4toDEG((float)g_boat.heading_target);
 
         if(++hdgt_tgt_deg == 360) hdgt_tgt_deg = 0;
 
-        g_boat.heading_target = (uint16_t)roundDEGtoRADem4(hdgt_tgt_deg);
-
-        dispHdgtTgtVal(hdgt_tgt_deg);
-        dispHdgtTgtSlider(hdgt_tgt_deg);
+        g_boat.heading_target = (uint16_t)roundDEGtoRADem4((float)hdgt_tgt_deg);
 
         printf("BTN_HDGT_RIGHT hdgt_tgt_deg[%d]\r\n", hdgt_tgt_deg);
     }
@@ -181,7 +135,7 @@ void ControlView::handleTickEvent()
 //    static uint32_t cnt = 0;
 
     // update heading sensor reading
-    if(isRADem4Valid(g_boat.heading_true))
+    if(isHeadingValid(g_boat.heading_true))
     {
         Unicode::snprintf(HDGT_CUR_VALUEBuffer, HDGT_CUR_VALUE_SIZE, "%d",
                           (uint16_t)roundRADem4toDEG(g_boat.heading_true));
@@ -240,6 +194,34 @@ void ControlView::handleTickEvent()
 
         RUD_TGT.setValue(0);
         RUD_TGT.invalidate();
+    }
+
+    if(isHeadingValid(g_boat.heading_target))
+    {
+        static int32_t heading_target_deg_prev = 0;
+
+        int32_t heading_target_deg = roundRADem4toDEG((float)g_boat.heading_target);
+
+        if(heading_target_deg_prev != heading_target_deg)
+        {
+            heading_target_deg_prev = heading_target_deg;
+
+            Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "%d", heading_target_deg);
+            HDGT_TGT_VALUE.invalidate();
+
+            if(180 < heading_target_deg) heading_target_deg -= 360;
+            HDGT_TGT_SLIDER.setValue(heading_target_deg);
+            HDGT_TGT_SLIDER.invalidate();
+        }
+
+    }
+    else
+    {
+        Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "---");
+        HDGT_TGT_VALUE.invalidate();
+
+//        HDGT_TGT_SLIDER.setValue(0);
+//        HDGT_TGT_SLIDER.invalidate();
     }
 
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));

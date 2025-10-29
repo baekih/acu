@@ -107,8 +107,8 @@ extern ship_status g_ship;
 extern boat_status g_boat;
 
 /* function prototypes -------------------------------------------------------*/
-int32_t roundRADem4toDEG(int32_t val);
-int32_t roundDEGtoRADem4(int32_t val);
+int32_t roundRADem4toDEG(float val);
+int32_t roundDEGtoRADem4(float val);
 bool isRADem4Valid(int32_t val);
 float roundRotRad2Deg(int32_t val);
 float roundRudderRad2Deg(int16_t val);

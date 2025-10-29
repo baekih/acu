@@ -19,8 +19,6 @@ public:
     virtual void setupScreen();
     virtual void tearDownScreen();
 
-    void dispHdgtTgtVal(int hdg_tgt_deg);
-    void dispHdgtTgtSlider(int hdg_tgt_deg);
     void updateSOG(double value);
     void updateRUDcur(float rudcurValue);
     void updateRUDtgt(float rudtgtValue);

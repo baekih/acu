@@ -27,7 +27,7 @@ void PGN127250_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
       {
           int32_t heading_true = (int32_t)g_boat.heading_sensor_reading + (int32_t)g_boat.heading_variation;
 
-          if(360 < roundRADem4toDEG(heading_true))
+          if(360 < roundRADem4toDEG((float)heading_true))
           {
               g_boat.heading_true = (uint16_t)(heading_true - 360);
           }

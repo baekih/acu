@@ -64,14 +64,14 @@ bool isINT32Valid(int32_t val)
     return true;
 }
 
-int32_t roundRADem4toDEG(int32_t val)
+int32_t roundRADem4toDEG(float val)
 {
-    return (int32_t)lround((float)val/10000.0*RAD2DEG);
+    return (int32_t)lround(val/10000.0*RAD2DEG);
 }
 
-int32_t roundDEGtoRADem4(int32_t val)
+int32_t roundDEGtoRADem4(float val)
 {
-    return (int32_t)lround((float)val*10000.0*DEG2RAD);
+    return (int32_t)lround(val*10000.0*DEG2RAD);
 }
 
 float roundRotRad2Deg(int32_t val)
