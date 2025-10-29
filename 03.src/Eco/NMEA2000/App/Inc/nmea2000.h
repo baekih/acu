@@ -89,8 +89,8 @@ extern "C" {
 #define N2K_UNIQUE_NUMBER                   1048577
 #define N2K_DEVICE_INSTANCE                 1
 #define N2K_SYSTEM_INSTANCE                 1
-#define N2K_DEVICE_CLASS                    40      //40:rudder control
-#define N2K_DEVICE_FUNCTION                 150     //150:auto rudder
+#define N2K_DEVICE_CLASS                    40      //40:steering and control survace
+#define N2K_DEVICE_FUNCTION                 150     //150:autopilot
 #define N2K_INDUSTRY_GROUP                  4       //4:marine
 #define N2K_ISO_SELF_CONFIG                 1       //1:reserved
 
@@ -109,6 +109,9 @@ extern "C" {
 #define N2K_DATA_NOT_AVAILABLE_INT32        0x7FFFFFFF
 #define N2K_DO_NOT_CHANGE_INT32             0x7FFFFFFE
 #define N2K_OUT_OF_ORDER_INT32              0x7FFFFFFD
+
+#define N2K_127245_RUDDER_INSTANCE          0
+#define N2K_127245_DIRECTION_ORDER_NONE     0x0
 
 /* Private function prototypes -----------------------------------------------*/
 typedef struct __RxProtocol

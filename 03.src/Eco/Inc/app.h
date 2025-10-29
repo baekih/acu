@@ -75,7 +75,6 @@ typedef struct __ship_param
     ship_position position;
     ship_xte xte;
     ship_wind wind;
-    ship_rudder rudder;
     uint32_t water_depth;
     uint16_t transducer_offset;
 } ship_param;
@@ -94,6 +93,10 @@ typedef struct _boat_status
     int16_t  magnetic_variation;
     uint16_t speed_through_water;
     uint16_t speed_over_ground;
+    uint8_t  rudder_instance;
+    uint8_t  rudder_direction_order;
+    int16_t  rudder_angle_order;
+    int16_t  rudder_position;
 } boat_status;
 
 /* macro ---------------------------------------------------------------------*/
@@ -108,7 +111,9 @@ int32_t roundRADem4toDEG(int32_t val);
 int32_t roundDEGtoRADem4(int32_t val);
 bool isRADem4Valid(int32_t val);
 float roundRotRad2Deg(int32_t val);
+float roundRudderRad2Deg(int16_t val);
 bool isRotValid(int32_t val);
+bool isRudderValid(int16_t val);
 
 void runEcoTaskDefault(void *argument);
 void runEcoTaskUART(void *argument);

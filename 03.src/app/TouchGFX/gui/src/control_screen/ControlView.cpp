@@ -76,13 +76,28 @@ void ControlView::updateRUDcur(float rud_cur_val)
 
 void ControlView::updateRUDtgt(float rud_tgt_val)
 {
-    float rud_tgt_deg_val = rud_tgt_val*RAD2DEG;
+    float rud_tgt_deg_val;
 
-    Unicode::snprintfFloat(RUD_TGT_VALUEBuffer, RUD_TGT_VALUE_SIZE, "%04.1f", rud_tgt_deg_val);
-    RUD_TGT_VALUE.invalidate();
+    if(rud_tgt_val == NAN)
+    {
+        rud_tgt_deg_val = rud_tgt_val*RAD2DEG;
 
-    RUD_TGT.setValue((int16_t)(round(rud_tgt_deg_val)));
-    RUD_TGT.invalidate();
+        Unicode::snprintf(RUD_TGT_VALUEBuffer, RUD_TGT_VALUE_SIZE, "--.-");
+        RUD_TGT_VALUE.invalidate();
+
+        RUD_TGT.setValue(0);
+        RUD_TGT.invalidate();
+    }
+    else
+    {
+        rud_tgt_deg_val = rud_tgt_val*RAD2DEG;
+
+        Unicode::snprintfFloat(RUD_TGT_VALUEBuffer, RUD_TGT_VALUE_SIZE, "%04.1f", rud_tgt_deg_val);
+        RUD_TGT_VALUE.invalidate();
+
+        RUD_TGT.setValue((int16_t)(round(rud_tgt_deg_val)));
+        RUD_TGT.invalidate();
+    }
 }
 
 void ControlView::sliderValueChangedCallbackHandler(const touchgfx::Slider& src, int hdgt_tgt_deg)
@@ -188,9 +203,29 @@ void ControlView::handleTickEvent()
     }
     ROT_VALUE.invalidate();
 
+    if(isRudderValid(g_boat.rudder_position))
+    {
+        Unicode::snprintfFloat(RUD_CUR_VALUEBuffer, RUD_CUR_VALUE_SIZE, "%04.2f",
+                          roundRotRad2Deg(g_boat.rudder_position));
+    }
+    else
+    {
+        Unicode::snprintf(RUD_CUR_VALUEBuffer, RUD_CUR_VALUE_SIZE, "--.-");
+    }
+    RUD_CUR_VALUE.invalidate();
+
+    if(isRudderValid(g_boat.rudder_angle_order))
+    {
+        Unicode::snprintfFloat(RUD_TGT_VALUEBuffer, RUD_TGT_VALUE_SIZE, "%04.2f",
+                          roundRotRad2Deg(g_boat.rudder_angle_order));
+    }
+    else
+    {
+        Unicode::snprintf(RUD_TGT_VALUEBuffer, RUD_TGT_VALUE_SIZE, "--.-");
+    }
+    RUD_TGT_VALUE.invalidate();
+
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
-    updateRUDcur(getRUDcurValue());
-    updateRUDtgt(getRUDtgtValue());
 
 //    if(0 == cnt%50) printf("[%06ld]ControlView::handleTickEvent()\n", cnt);
 //    cnt++;

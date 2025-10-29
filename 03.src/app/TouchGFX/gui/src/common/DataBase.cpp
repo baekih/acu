@@ -221,26 +221,6 @@ double getSOGValue(int type)
     return sogValues[type];
 }
 
-void setRUDcurValue(float rudder_cur)
-{
-    rudcurValue = rudder_cur;
-}
-
-float getRUDcurValue(void)
-{
-    return rudcurValue;
-}
-
-void setRUDtgtValue(float rudder_tgt)
-{
-    rudtgtValue = rudder_tgt;
-}
-
-float getRUDtgtValue(void)
-{
-    return rudtgtValue;
-}
-
 void setWindValue(double windSpeed, int windDirection, int windRef)
 {
     if(isValidSpeed(windSpeed)){

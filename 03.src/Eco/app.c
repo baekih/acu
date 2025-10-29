@@ -9,21 +9,20 @@
 #include "eco.h"
 
 /* variables -----------------------------------------------------------------*/
+#if 0
 rudder g_rudder = {
     .instance           = 0,
     .direction_order    = 0x0,
     .angle_order        = N2K_DATA_NOT_AVAILABLE_INT16,
     .position           = N2K_DATA_NOT_AVAILABLE_INT16
 };
-
+#endif
 ship_status g_ship = {
     .curr =
     {
-        .rudder = {.cur = 0.0, .tgt = 0.0},
     },
     .prev =
     {
-        .rudder = {.cur = 0.0, .tgt = 0.0},
     }
 };
 
@@ -31,6 +30,10 @@ boat_status g_boat = {
     .heading_sensor_reading_em4     = N2K_DATA_NOT_AVAILABLE_UINT16,
     .heading_target_em4             = N2K_DATA_NOT_AVAILABLE_UINT16,
     .rate_of_turn                   = N2K_DATA_NOT_AVAILABLE_INT16,
+    .rudder_instance                = N2K_127245_RUDDER_INSTANCE,
+    .rudder_direction_order         = N2K_127245_DIRECTION_ORDER_NONE,
+    .rudder_angle_order             = N2K_DATA_NOT_AVAILABLE_INT16,
+    .rudder_position                = N2K_DATA_NOT_AVAILABLE_INT16,
 };
 
 void printFuzzyControlTable(void)
@@ -78,9 +81,21 @@ float roundRotRad2Deg(int32_t val)
     return (float)val/32000000.0*RAD2DEG;
 }
 
+float roundRudderRad2Deg(int16_t val)
+{
+    return (float)val/10000.0*RAD2DEG;
+}
+
 bool isRotValid(int32_t val)
 {
     if(N2K_OUT_OF_ORDER_INT32 <= val) return false;
+
+    return true;
+}
+
+bool isRudderValid(int16_t val)
+{
+    if(N2K_OUT_OF_ORDER_INT16 <= val) return false;
 
     return true;
 }
@@ -133,11 +148,6 @@ void syncShipState(void)
     setXTE((double)g_ship.curr.xte.val/100.0, (unsigned char)g_ship.curr.xte.mode);
 
     setWindValue(g_ship.curr.wind.speed, g_ship.curr.wind.direction, g_ship.curr.wind.reference);
-
-//    printf("rudcurValue[%f:%d]\n", ((float)g_ship.curr.rudder.cur)/10000.0, g_ship.curr.rudder.cur);
-    setRUDcurValue(((float)g_ship.curr.rudder.cur)/10000.0);
-
-    setRUDtgtValue(((float)g_ship.curr.rudder.tgt)/10000.0);
 
     g_ship.prev = g_ship.curr;
 
@@ -296,17 +306,17 @@ void runEcoTaskControl(void *argument)
 #elif defined CTRL_PID
             rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err);
 #elif defined CTRL_TEST
-            rud_ctrl_tgt_deg = 15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
+            rud_tgt_deg = 15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
 #else
 #error "RUD_CTRL_??? must be defined."
 #endif
-            g_ship.curr.rudder.tgt = (int16_t)round(rud_tgt_deg*DEG2RAD*10000.0);
+            g_boat.rudder_angle_order = (int16_t)roundDEGtoRADem4(rud_tgt_deg);
 
             printf("%s() CTRL ON: hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
         }
         else
         {
-            g_ship.curr.rudder.tgt = N2K_DATA_NOT_AVAILABLE_INT16;
+            g_boat.rudder_angle_order = N2K_DATA_NOT_AVAILABLE_INT16;
 
             printf("%s() CTRL OFF\n",__FUNCTION__);
         }
