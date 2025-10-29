@@ -18,9 +18,11 @@ void PGN127258_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 //    uint8_t  SequenceID         =  GetBuf_1ByteUInt(len, 0, buf);                    // 8  bits
 //    uint16_t VariationSource    = (GetBuf_1ByteUInt(len, 1, buf) & 0x0F);            // 4  bits
 //    uint16_t AgeofService       =  GetBuf_2ByteUInt(len, 2, buf);                    // 16 bits
-      g_ship.curr.magnetic_variation          =  GetBuf_2ByteUInt(len, 4, buf);                    // 16 bits
+//      g_ship.curr.magnetic_variation          =  GetBuf_2ByteUInt(len, 4, buf);                    // 16 bits
+    int16_t heading_variation    =  GetBuf_2ByteUInt(len, 4, buf);                    // 16 bits
 //    uint16_t NMEAReserved       =  GetBuf_2ByteUInt(len, 6, buf);                    // 16 bits
 
+    if(isVariationValid(heading_variation)) g_boat.heading_variation = heading_variation;
 //    printf("PGN127258[%d] VarSrc[%d] Variation[%3.1f]deg\n", SequenceID, VariationSource, (float)Variation / 10000.0 * 180.0 / (M_PI) );
 
 }

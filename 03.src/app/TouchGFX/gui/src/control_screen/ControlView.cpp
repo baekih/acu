@@ -25,7 +25,7 @@ void ControlView::tearDownScreen()
 
 void ControlView::dispHdgtTgtVal(int hdg_tgt_deg)
 {
-    printf("%s() hdg_tgt_deg[0x%x]\n",__FUNCTION__, hdg_tgt_deg);
+//    printf("%s() hdg_tgt_deg[0x%x]\n",__FUNCTION__, hdg_tgt_deg);
     if(hdg_tgt_deg == 0x7FFFFFFF)
     {
         Unicode::snprintf(HDGT_TGT_VALUEBuffer, HDGT_TGT_VALUE_SIZE, "---");
@@ -40,7 +40,7 @@ void ControlView::dispHdgtTgtVal(int hdg_tgt_deg)
 
 void ControlView::dispHdgtTgtSlider(int hdg_tgt_deg)
 {
-    printf("%s() hdg_tgt_deg[0x%x]\n",__FUNCTION__, hdg_tgt_deg);
+//    printf("%s() hdg_tgt_deg[0x%x]\n",__FUNCTION__, hdg_tgt_deg);
     if(hdg_tgt_deg != 0x7FFFFFFF)
     {
         if(180 < hdg_tgt_deg)
@@ -107,7 +107,7 @@ void ControlView::sliderValueChangedCallbackHandler(const touchgfx::Slider& src,
         printf("HDGT_TGT_SLIDER[%d]\r\n", hdgt_tgt_deg);
 
         if(hdgt_tgt_deg < 0) hdgt_tgt_deg += 360;
-        g_boat.heading_target_em4 = (uint16_t)roundDEGtoRADem4(hdgt_tgt_deg);
+        g_boat.heading_target = (uint16_t)roundDEGtoRADem4(hdgt_tgt_deg);
 
         dispHdgtTgtVal(hdgt_tgt_deg);
     }
@@ -120,20 +120,20 @@ void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
     if(&src == &BTN_STOP)
     {
         printf("BTN_STOP\r\n");
-        g_boat.heading_target_em4 = N2K_DATA_NOT_AVAILABLE_UINT16;
+        g_boat.heading_target = N2K_DATA_NOT_AVAILABLE_UINT16;
         hdgt_tgt_deg = 0x7FFFFFFF;
         dispHdgtTgtVal(hdgt_tgt_deg);
 //        dispHdgtTgtSlider(hdgt_tgt_deg);
     }
     else if(&src == &BTN_HDGT_LEFT)
     {
-        if(!isRADem4Valid(g_boat.heading_target_em4)) g_boat.heading_target_em4 = 0;
+        if(!isRADem4Valid(g_boat.heading_target)) g_boat.heading_target = 0;
 
-        hdgt_tgt_deg = (int)roundRADem4toDEG(g_boat.heading_target_em4);
+        hdgt_tgt_deg = (int)roundRADem4toDEG(g_boat.heading_target);
 
         if(--hdgt_tgt_deg == -1) hdgt_tgt_deg = 359;
 
-        g_boat.heading_target_em4 = (uint16_t)roundDEGtoRADem4(hdgt_tgt_deg);
+        g_boat.heading_target = (uint16_t)roundDEGtoRADem4(hdgt_tgt_deg);
 
         dispHdgtTgtVal(hdgt_tgt_deg);
         dispHdgtTgtSlider(hdgt_tgt_deg);
@@ -142,13 +142,13 @@ void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
     }
     else if (&src == &BTN_HDGT_RIGHT)
     {
-        if(!isRADem4Valid(g_boat.heading_target_em4)) g_boat.heading_target_em4 = 0;
+        if(!isRADem4Valid(g_boat.heading_target)) g_boat.heading_target = 0;
 
-        hdgt_tgt_deg = (int)roundRADem4toDEG(g_boat.heading_target_em4);
+        hdgt_tgt_deg = (int)roundRADem4toDEG(g_boat.heading_target);
 
         if(++hdgt_tgt_deg == 360) hdgt_tgt_deg = 0;
 
-        g_boat.heading_target_em4 = (uint16_t)roundDEGtoRADem4(hdgt_tgt_deg);
+        g_boat.heading_target = (uint16_t)roundDEGtoRADem4(hdgt_tgt_deg);
 
         dispHdgtTgtVal(hdgt_tgt_deg);
         dispHdgtTgtSlider(hdgt_tgt_deg);
@@ -181,10 +181,10 @@ void ControlView::handleTickEvent()
 //    static uint32_t cnt = 0;
 
     // update heading sensor reading
-    if(isRADem4Valid(g_boat.heading_sensor_reading_em4))
+    if(isRADem4Valid(g_boat.heading_true))
     {
         Unicode::snprintf(HDGT_CUR_VALUEBuffer, HDGT_CUR_VALUE_SIZE, "%d",
-                          (uint16_t)roundRADem4toDEG(g_boat.heading_sensor_reading_em4));
+                          (uint16_t)roundRADem4toDEG(g_boat.heading_true));
     }
     else
     {
@@ -194,36 +194,53 @@ void ControlView::handleTickEvent()
 
     if(isRotValid(g_boat.rate_of_turn))
     {
-        Unicode::snprintfFloat(ROT_VALUEBuffer, ROT_VALUE_SIZE, "%04.2f",
-                          roundRotRad2Deg(g_boat.rate_of_turn));
+        Unicode::snprintfFloat(ROT_VALUEBuffer, ROT_VALUE_SIZE, "%04.1f",
+                               roundRotRad2Deg(g_boat.rate_of_turn));
     }
     else
     {
-        Unicode::snprintf(ROT_VALUEBuffer, ROT_VALUE_SIZE, "-.--");
+        Unicode::snprintf(ROT_VALUEBuffer, ROT_VALUE_SIZE, "--.-");
     }
     ROT_VALUE.invalidate();
 
     if(isRudderValid(g_boat.rudder_position))
     {
-        Unicode::snprintfFloat(RUD_CUR_VALUEBuffer, RUD_CUR_VALUE_SIZE, "%04.2f",
-                          roundRotRad2Deg(g_boat.rudder_position));
+        float rudder_position = roundRudderRad2Deg(g_boat.rudder_position);
+
+        Unicode::snprintfFloat(RUD_CUR_VALUEBuffer, RUD_CUR_VALUE_SIZE, "%04.1f",
+                               roundRudderRad2Deg(g_boat.rudder_position));
+        RUD_CUR_VALUE.invalidate();
+
+        RUD_CUR.setValue(rudder_position);
+        RUD_CUR.invalidate();
     }
     else
     {
         Unicode::snprintf(RUD_CUR_VALUEBuffer, RUD_CUR_VALUE_SIZE, "--.-");
+        RUD_CUR_VALUE.invalidate();
+
+        RUD_CUR.setValue(0);
+        RUD_CUR.invalidate();
     }
-    RUD_CUR_VALUE.invalidate();
 
     if(isRudderValid(g_boat.rudder_angle_order))
     {
-        Unicode::snprintfFloat(RUD_TGT_VALUEBuffer, RUD_TGT_VALUE_SIZE, "%04.2f",
-                          roundRotRad2Deg(g_boat.rudder_angle_order));
+        float rudder_angle_order = roundRudderRad2Deg(g_boat.rudder_angle_order);
+
+        Unicode::snprintfFloat(RUD_TGT_VALUEBuffer, RUD_TGT_VALUE_SIZE, "%04.1f", rudder_angle_order);
+        RUD_TGT_VALUE.invalidate();
+
+        RUD_TGT.setValue(rudder_angle_order);
+        RUD_TGT.invalidate();
     }
     else
     {
         Unicode::snprintf(RUD_TGT_VALUEBuffer, RUD_TGT_VALUE_SIZE, "--.-");
+        RUD_TGT_VALUE.invalidate();
+
+        RUD_TGT.setValue(0);
+        RUD_TGT.invalidate();
     }
-    RUD_TGT_VALUE.invalidate();
 
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
 

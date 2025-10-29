@@ -55,8 +55,6 @@ float rudtgtValue = NAN;
 double cogValue = INVALID_DEGREE_VALUE;
 bool validCOGValue = false;
 
-double Variation = INVALID_DEGREE_VALUE;
-
 #ifndef SIMULATOR
 uint32_t lastReceiveHDGcurValue = 0;
 #endif
@@ -164,16 +162,6 @@ void setCOGValue(double cog)
 double getCOGValue()
 {
     return cogValue;
-}
-
-void setVariation(double variation)
-{
-    Variation = GetRadianToDegree360(variation);
-}
-
-double getVariation()
-{
-    return Variation;
 }
 
 void setXTE(double xte, unsigned char xte_mode)

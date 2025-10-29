@@ -128,9 +128,6 @@ double adjustDisplayAngleDegree(double angle);
 void setCOGValue(double cog);
 double getCOGValue();
 
-void setVariation(double variation);
-double getVariation();
-
 void setSTWValue(double value, int type);
 double getSTWValue(int type);
 

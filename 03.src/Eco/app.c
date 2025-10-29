@@ -9,26 +9,13 @@
 #include "eco.h"
 
 /* variables -----------------------------------------------------------------*/
-#if 0
-rudder g_rudder = {
-    .instance           = 0,
-    .direction_order    = 0x0,
-    .angle_order        = N2K_DATA_NOT_AVAILABLE_INT16,
-    .position           = N2K_DATA_NOT_AVAILABLE_INT16
-};
-#endif
-ship_status g_ship = {
-    .curr =
-    {
-    },
-    .prev =
-    {
-    }
-};
+ship_status g_ship;
 
 boat_status g_boat = {
-    .heading_sensor_reading_em4     = N2K_DATA_NOT_AVAILABLE_UINT16,
-    .heading_target_em4             = N2K_DATA_NOT_AVAILABLE_UINT16,
+    .heading_sensor_reading         = N2K_DATA_NOT_AVAILABLE_UINT16,
+    .heading_target                 = N2K_DATA_NOT_AVAILABLE_UINT16,
+    .heading_variation              = N2K_HEADING_VARIATION_PRESET,
+    .heading_true                   = N2K_DATA_NOT_AVAILABLE_UINT16,
     .rate_of_turn                   = N2K_DATA_NOT_AVAILABLE_INT16,
     .rudder_instance                = N2K_127245_RUDDER_INSTANCE,
     .rudder_direction_order         = N2K_127245_DIRECTION_ORDER_NONE,
@@ -59,6 +46,24 @@ void printFuzzyControlTable(void)
     }
 }
 
+bool isUINT16Valid(uint16_t val)
+{
+    if(N2K_OUT_OF_ORDER_UINT16 <= val) return false;
+    return true;
+}
+
+bool isINT16Valid(int16_t val)
+{
+    if(N2K_OUT_OF_ORDER_INT16 <= val) return false;
+    return true;
+}
+
+bool isINT32Valid(int32_t val)
+{
+    if(N2K_OUT_OF_ORDER_INT32 <= val) return false;
+    return true;
+}
+
 int32_t roundRADem4toDEG(int32_t val)
 {
     return (int32_t)lround((float)val/10000.0*RAD2DEG);
@@ -69,13 +74,6 @@ int32_t roundDEGtoRADem4(int32_t val)
     return (int32_t)lround((float)val*10000.0*DEG2RAD);
 }
 
-bool isRADem4Valid(int32_t val)
-{
-    if(N2K_OUT_OF_ORDER_UINT16 <= val) return false;
-
-    return true;
-}
-
 float roundRotRad2Deg(int32_t val)
 {
     return (float)val/32000000.0*RAD2DEG;
@@ -83,23 +81,33 @@ float roundRotRad2Deg(int32_t val)
 
 float roundRudderRad2Deg(int16_t val)
 {
-    return (float)val/10000.0*RAD2DEG;
+    return ((float)val)/10000.0*RAD2DEG;
+}
+
+bool isRADem4Valid(int32_t val)
+{
+    return isUINT16Valid(val);
+}
+
+bool isHeadingValid(uint16_t val)
+{
+    return isUINT16Valid(val);
 }
 
 bool isRotValid(int32_t val)
 {
-    if(N2K_OUT_OF_ORDER_INT32 <= val) return false;
-
-    return true;
+    return isINT32Valid(val);
 }
 
 bool isRudderValid(int16_t val)
 {
-    if(N2K_OUT_OF_ORDER_INT16 <= val) return false;
-
-    return true;
+    return isINT16Valid(val);
 }
 
+bool isVariationValid(int16_t val)
+{
+    return isINT16Valid(val);
+}
 
 void syncShipState(void)
 {
@@ -107,8 +115,6 @@ void syncShipState(void)
     {
         setCOGValue((double)g_ship.curr.course.over_ground);
     }
-
-    setVariation((double)g_ship.curr.magnetic_variation);
 
     if(g_ship.curr.speed.direction == 0 || g_ship.curr.speed.direction == 1)
     {
@@ -288,43 +294,50 @@ void runEcoTaskControl(void *argument)
 
     for(;;)
     {
-        float hdgt_cur = ((float)g_boat.heading_sensor_reading_em4)/10000.0;
-        float hdgt_tgt = ((float)g_boat.heading_target_em4)/10000.0;
-        float rot_cur  = ((float)g_boat.rate_of_turn)/32000000.0;
-        float hdgt_cur_deg = hdgt_cur*RAD2DEG;
-        float hdgt_tgt_deg = hdgt_tgt*RAD2DEG;
-        float rot_cur_deg = rot_cur*RAD2DEG;
-        float hdgt_err = hdgt_tgt - hdgt_cur;
-        float rot_err = 0.0 - rot_cur;
-
-        if(180.0*DEG2RAD < fabsf(hdgt_err)) hdgt_err += 360.0*DEG2RAD;
-
-        if(isRADem4Valid(g_boat.heading_sensor_reading_em4) && isRADem4Valid(g_boat.heading_target_em4))
+        if(isHeadingValid(g_boat.heading_true))
         {
-#if defined CTRL_FUZZY
-            rud_tgt_deg = calFuzzy(RUD_FUZZY_HDG_ADJ*hdgt_err*RAD2DEG, RUD_FUZZY_ROT_ADJ*rot_err*RAD2DEG);
-#elif defined CTRL_PID
-            rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err);
-#elif defined CTRL_TEST
-            rud_tgt_deg = 15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
-#else
-#error "RUD_CTRL_??? must be defined."
-#endif
-            g_boat.rudder_angle_order = (int16_t)roundDEGtoRADem4(rud_tgt_deg);
+            float hdgt_cur = ((float)g_boat.heading_true)/10000.0;
+            float hdgt_tgt = ((float)g_boat.heading_target)/10000.0;
+            float rot_cur  = ((float)g_boat.rate_of_turn)/32000000.0;
+            float hdgt_cur_deg = hdgt_cur*RAD2DEG;
+            float hdgt_tgt_deg = hdgt_tgt*RAD2DEG;
+            float rot_cur_deg = rot_cur*RAD2DEG;
+            float hdgt_err = hdgt_tgt - hdgt_cur;
+            float rot_err = 0.0 - rot_cur;
 
-            printf("%s() CTRL ON: hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
+            if(180.0*DEG2RAD < fabsf(hdgt_err)) hdgt_err += 360.0*DEG2RAD;
+
+            if(isRADem4Valid(g_boat.heading_target))
+            {
+#if defined CTRL_FUZZY
+                rud_tgt_deg = calFuzzy(RUD_FUZZY_HDG_ADJ*hdgt_err*RAD2DEG, RUD_FUZZY_ROT_ADJ*rot_err*RAD2DEG);
+#elif defined CTRL_PID
+                rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err);
+#elif defined CTRL_TEST
+                rud_tgt_deg = 15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
+#else
+#error "CTRL_FUZZY/PID/TEST one must be defined."
+#endif
+                g_boat.rudder_angle_order = (int16_t)roundDEGtoRADem4(rud_tgt_deg);
+
+                printf("%s() CTRL ON: hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
+            }
+            else
+            {
+                g_boat.rudder_angle_order = N2K_DATA_NOT_AVAILABLE_INT16;
+
+                printf("%s() CTRL OFF - heading target off\n",__FUNCTION__);
+            }
+
+            PGN127245_ProcessNameField();
         }
         else
         {
-            g_boat.rudder_angle_order = N2K_DATA_NOT_AVAILABLE_INT16;
-
-            printf("%s() CTRL OFF\n",__FUNCTION__);
+            printf("%s() CTRL OFF - heading true not available\n",__FUNCTION__);
         }
 
-        PGN127245_ProcessNameField();
-
         osDelayUntil(tick_tgt);
-        tick_tgt += 1000;
+        tick_tgt += 250;
         cnt++;
     }
 }

@@ -69,7 +69,6 @@ typedef struct __ship_rudder
 
 typedef struct __ship_param
 {
-    int16_t  magnetic_variation;
     ship_speed speed;
     ship_course course;
     ship_position position;
@@ -87,10 +86,11 @@ typedef struct __ship_status
 
 typedef struct _boat_status
 {
-    uint16_t heading_sensor_reading_em4;
-    uint16_t heading_target_em4;
+    uint16_t heading_sensor_reading;
+    uint16_t heading_target;
+    int16_t  heading_variation;
+    uint16_t heading_true;
     int32_t  rate_of_turn;
-    int16_t  magnetic_variation;
     uint16_t speed_through_water;
     uint16_t speed_over_ground;
     uint8_t  rudder_instance;
@@ -112,8 +112,10 @@ int32_t roundDEGtoRADem4(int32_t val);
 bool isRADem4Valid(int32_t val);
 float roundRotRad2Deg(int32_t val);
 float roundRudderRad2Deg(int16_t val);
+bool isHeadingValid(uint16_t val);
 bool isRotValid(int32_t val);
 bool isRudderValid(int16_t val);
+bool isVariationValid(int16_t val);
 
 void runEcoTaskDefault(void *argument);
 void runEcoTaskUART(void *argument);

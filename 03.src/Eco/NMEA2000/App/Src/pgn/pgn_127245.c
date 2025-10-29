@@ -16,7 +16,7 @@
 void PGN127245_GetFieldValue(NmeaPgn* pgnId, uint8_t len, uint8_t *buf)
 {
     uint8_t     rud_instance        =  GetBuf_1ByteUInt(len, 0, buf);                    // 8  bits
-    uint8_t     rud_direction_order = (GetBuf_1ByteUInt(len, 1, buf) && 0x03) >> 0;      // 8  bits
+//    uint8_t     rud_direction_order = (GetBuf_1ByteUInt(len, 1, buf) && 0x03) >> 0;      // 8  bits
     int16_t     rud_position        =  GetBuf_2ByteUInt(len, 4, buf);                    // 16 bits
 
 #if 0

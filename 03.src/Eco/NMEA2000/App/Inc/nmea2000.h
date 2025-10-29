@@ -98,6 +98,8 @@ extern "C" {
 #define N2K_ADDR_MAX_HIGH_SOURCE            252
 #define N2K_ADDR_CLAIM_FAIL                 254
 
+#define N2K_HEADING_VARIATION_PRESET        (-1560) //WMM2015
+
 #define N2K_DATA_NOT_AVAILABLE_UINT16       0xFFFF
 #define N2K_DO_NOT_CHANGE_UINT16            0xFFFE
 #define N2K_OUT_OF_ORDER_UINT16             0xFFFD
