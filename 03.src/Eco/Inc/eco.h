@@ -18,7 +18,6 @@
 #include "main.h"
 #include "cmsis_os.h"
 
-#include "features.h"
 #include "sys.h"
 #include "printf.h"
 #include "common.h"

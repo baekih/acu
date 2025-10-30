@@ -320,7 +320,10 @@ void runEcoTaskControl(void *argument)
 #endif
                 g_boat.rudder_angle_order = (int16_t)roundDEGtoRADem4(rud_tgt_deg);
 
-                printf("%s() CTRL ON: hdgt_cur[%03.1f] hdgt_tgt[%03.1f] hdgt_err[%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
+                PGN127237_ProcessNameField();
+                PGN127245_ProcessNameField();
+
+                printf("%s() CTRL ON: hdgt[cur:%03.1f tgt:%03.1f err:%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
             }
             else
             {
@@ -328,8 +331,6 @@ void runEcoTaskControl(void *argument)
 
                 printf("%s() CTRL OFF - heading target off\n",__FUNCTION__);
             }
-
-            PGN127245_ProcessNameField();
         }
         else
         {

@@ -8,7 +8,8 @@
 #ifndef APPLICATION_USER_ECOTRONIX_INC_COMMON_H_
 #define APPLICATION_USER_ECOTRONIX_INC_COMMON_H_
 
-#include "eco.h"
+#include "main.h"
+#include "cmsis_os.h"
 
 #define HW_VERSION                  01
 #define BOOT_VERSION                01

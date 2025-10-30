@@ -8,8 +8,6 @@
 #ifndef APP_INC_SYS_H_
 #define APP_INC_SYS_H_
 
-#include "features.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif

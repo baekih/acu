@@ -8,6 +8,8 @@
 #ifndef APPLICATION_USER_ECOTRONIX_INC_BOOT2_H_
 #define APPLICATION_USER_ECOTRONIX_INC_BOOT2_H_
 
+#define VERSION     "0.91"
+
 #define DEFAULT_BOOT_DELAY_MS     (2000)
 #define BOOT_STATE                1
 
