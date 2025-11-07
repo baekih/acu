@@ -233,7 +233,7 @@ float calPID(float hdg_err, float rot_err)  //PID control
 {
     float rud_val = (-K_HDG) * hdg_err + (-K_ROT) * rot_err;
 
-    if(fabs(rud_val) > RUD_MAX*DEG2RAD) rud_val = copysignf(RUD_MAX*DEG2RAD, rud_val);
+    if(fabsf(rud_val) > RUD_MAX*DEG2RAD) rud_val = copysignf(RUD_MAX*DEG2RAD, rud_val);
 
     return rud_val;
 }
@@ -271,6 +271,67 @@ float calFuzzy(float hdg_err_deg, float rot_err_deg)
     }
     else
         aft_val_deg = 0.0;
+
+#if 1
+    // ----------------------------------------------------
+    // 🔸 퍼지 PI 통합 : 적분항 + 데드밴드 + Anti-windup
+    // ----------------------------------------------------
+    static float integral = 0.0f;
+    bool     m_inZoLock = false;
+    uint32_t m_zoLockStartMs = 0;
+
+    const float Ts = 0.25f;
+    const float Kp = 1.0f;
+    const float Ki = 0.05f;
+
+    // ① Deadband 설정
+    const float DEAD_BAND = 0.5f;
+    if (fabsf(hdg_err_deg) < DEAD_BAND)
+        hdg_err_deg = 0.0f;
+
+    // ② 적분항 계산 (Anti-windup 포함)
+    integral += hdg_err_deg * Ts;
+    const float INTEGRAL_LIMIT = 50.0f;
+    if (integral > INTEGRAL_LIMIT) integral = INTEGRAL_LIMIT;
+    if (integral < -INTEGRAL_LIMIT) integral = -INTEGRAL_LIMIT;
+
+    // ③ 퍼지-PI 출력 계산
+    float u = Kp * aft_val_deg + Ki * integral;
+
+    // ④ 출력 제한 (러더 각도 한계)
+    if (u > 17.0f) u = 17.0f;
+    if (u < -17.0f) u = -17.0f;
+
+    // ⑤ Zero-output Lock 방지
+    const float ZO_OUT_THR = 0.3f;
+    const float E_MIN = 1.0f;
+    const uint32_t ZO_LOCK_MS = 1500;
+    const float WAKE_EPS = 0.3f;
+    uint32_t now = HAL_GetTick();
+
+    bool nearZeroOut = (fabsf(u) < ZO_OUT_THR);
+    bool meaningfulE = (fabsf(hdg_err_deg) >= E_MIN);
+
+    if (nearZeroOut && meaningfulE) {
+        if (!m_inZoLock) {
+            m_inZoLock = true;
+            m_zoLockStartMs = now;
+        }
+    }
+    else {
+        m_inZoLock = false;
+        m_zoLockStartMs = 0;
+    }
+
+    if (m_inZoLock && (now - m_zoLockStartMs >= ZO_LOCK_MS)) {
+        float bias = (hdg_err_deg > 0.f ? +WAKE_EPS : -WAKE_EPS);
+        u += bias;
+        printf("[WAKE] ZO-lock detected: e=%.2f u+=%.2f -> %.2f\n", hdg_err_deg, bias, u);
+    }
+
+    aft_val_deg = u;
+#endif
+
 
     return -aft_val_deg;
 }
