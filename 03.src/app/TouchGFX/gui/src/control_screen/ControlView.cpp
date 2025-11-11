@@ -16,6 +16,7 @@ void ControlView::setupScreen()
     BTN_STOP.setAction(buttonCallback);
     BTN_HDGT_LEFT.setAction(buttonCallback);
     BTN_HDGT_RIGHT.setAction(buttonCallback);
+    TGL_CTL.setAction(buttonCallback);
 }
 
 void ControlView::tearDownScreen()
@@ -82,7 +83,7 @@ void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 {
     if(&src == &BTN_STOP)
     {
-        printf("BTN_STOP\r\n");
+        printf("BTN_STOP\n");
         g_boat.heading_target = N2K_DATA_NOT_AVAILABLE_UINT16;
     }
     else if(&src == &BTN_HDGT_LEFT)
@@ -95,7 +96,7 @@ void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 
         g_boat.heading_target = (uint16_t)roundDEGtoRADem4((float)hdgt_tgt_deg);
 
-        printf("BTN_HDGT_LEFT hdgt_tgt_deg[%d]\r\n", hdgt_tgt_deg);
+        printf("BTN_HDGT_LEFT hdgt_tgt_deg[%d]\n", hdgt_tgt_deg);
     }
     else if (&src == &BTN_HDGT_RIGHT)
     {
@@ -108,6 +109,17 @@ void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
         g_boat.heading_target = (uint16_t)roundDEGtoRADem4((float)hdgt_tgt_deg);
 
         printf("BTN_HDGT_RIGHT hdgt_tgt_deg[%d]\r\n", hdgt_tgt_deg);
+    }
+    else if(&src == &TGL_CTL)
+    {
+        if(TGL_CTL.getState())
+        {
+            printf("TGL_CTL PID[%d]\n", TGL_CTL.getState());
+        }
+        else
+        {
+            printf("TGL_CTL FUZZY[%d]\n", TGL_CTL.getState());
+        }
     }
 }
 

@@ -95,6 +95,9 @@
       </Text>
     </TextGroup>
     <TextGroup Id="Unsorted">
+      <Text Id="__SingleUse_8HTH" Alignment="Left" TypographyId="TYPEPO_25PX">
+        <Translation Language="GB">FUZZY    PID</Translation>
+      </Text>
       <Text Id="HDGT_TGT_40" Alignment="Right" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
       </Text>
@@ -141,7 +144,7 @@
         <Translation Language="GB">RUDDER</Translation>
       </Text>
       <Text Id="__SingleUse_HTYD" Alignment="Left" TypographyId="TYPEPO_25PX">
-        <Translation Language="GB">-30˚                         0˚                         30˚</Translation>
+        <Translation Language="GB">-30˚        -15˚          0˚           15˚        30˚</Translation>
       </Text>
       <Text Id="__SingleUse_353F" Alignment="Left" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">00.0</Translation>
@@ -228,7 +231,7 @@
         <Translation Language="GB">(m)</Translation>
       </Text>
       <Text Id="__SingleUse_GZED" Alignment="Left" TypographyId="TYPEPO_25PX">
-        <Translation Language="GB">-180˚                       0˚                       180˚</Translation>
+        <Translation Language="GB">180˚       270˚         0˚            90˚       180˚</Translation>
       </Text>
       <Text Id="SOG_UNIT_25PX" Alignment="Left" TypographyId="TYPEPO_25PX">
         <Translation Language="GB">knot</Translation>

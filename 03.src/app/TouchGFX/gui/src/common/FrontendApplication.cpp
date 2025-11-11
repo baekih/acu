@@ -1,10 +1,10 @@
 #include <gui/common/FrontendApplication.hpp>
 #include <gui/common/FrontendHeap.hpp>
 #include <touchgfx/transitions/NoTransition.hpp>
-#include <gui/compass_screen/CompassView.hpp>
-#include <gui/compass_screen/CompassPresenter.hpp>
-#include <gui/speed_screen/SpeedView.hpp>
-#include <gui/speed_screen/SpeedPresenter.hpp>
+//#include <gui/compass_screen/CompassView.hpp>
+//#include <gui/compass_screen/CompassPresenter.hpp>
+//#include <gui/speed_screen/SpeedView.hpp>
+//#include <gui/speed_screen/SpeedPresenter.hpp>
 
 FrontendApplication::FrontendApplication(Model& m, FrontendHeap& heap)
     : FrontendApplicationBase(m, heap)

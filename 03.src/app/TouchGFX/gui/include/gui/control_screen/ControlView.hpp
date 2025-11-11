@@ -8,10 +8,8 @@
 
 class ControlView : public ControlViewBase, protected ViewCommon
 {
-    int speedType;
 
 private :
-    void updateSpeed(double value, int max);
 
 public:
     ControlView();
