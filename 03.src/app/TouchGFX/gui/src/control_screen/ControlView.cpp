@@ -114,11 +114,11 @@ void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
     {
         if(TGL_CTL.getState())
         {
-            printf("TGL_CTL PID[%d]\n", TGL_CTL.getState());
+            printf("TGL_CTL PID\n");
         }
         else
         {
-            printf("TGL_CTL FUZZY[%d]\n", TGL_CTL.getState());
+            printf("TGL_CTL FUZZY\n");
         }
     }
 }
@@ -142,6 +142,7 @@ void ControlView::handleClickEvent(const ClickEvent& evt)
     }
 }
 */
+
 void ControlView::handleTickEvent()
 {
 //    static uint32_t cnt = 0;
@@ -237,6 +238,15 @@ void ControlView::handleTickEvent()
     }
 
     updateSOG(getSOGValue(SPEED_UNIT_KNOT));
+
+    if(TGL_CTL.getState())
+    {
+        g_boat.control_method = CTL_METHOD_PID;
+    }
+    else
+    {
+        g_boat.control_method = CTL_METHOD_FUZZY;
+    }
 
 //    if(0 == cnt%50) printf("[%06ld]ControlView::handleTickEvent()\n", cnt);
 //    cnt++;

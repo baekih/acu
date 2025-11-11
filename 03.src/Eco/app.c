@@ -21,6 +21,7 @@ boat_status g_boat = {
     .rudder_direction_order         = N2K_127245_DIRECTION_ORDER_NONE,
     .rudder_angle_order             = N2K_DATA_NOT_AVAILABLE_INT16,
     .rudder_position                = N2K_DATA_NOT_AVAILABLE_INT16,
+    .control_method                 = CTL_METHOD_FUZZY,
 };
 
 void printFuzzyControlTable(void)
@@ -290,6 +291,7 @@ void runEcoTaskControl(void *argument)
 
     osDelay(200);
 
+
 //    printFuzzyControlTable();
 
     for(;;)
@@ -309,32 +311,38 @@ void runEcoTaskControl(void *argument)
 
             if(isRADem4Valid(g_boat.heading_target))
             {
-#if defined CTRL_FUZZY
-                rud_tgt_deg = calFuzzy(RUD_FUZZY_HDG_ADJ*hdgt_err*RAD2DEG, RUD_FUZZY_ROT_ADJ*rot_err*RAD2DEG);
-#elif defined CTRL_PID
-                rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err);
-#elif defined CTRL_TEST
-                rud_tgt_deg = 15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
-#else
-#error "CTRL_FUZZY/PID/TEST one must be defined."
-#endif
+                switch(g_boat.control_method)
+                {
+                case CTL_METHOD_FUZZY:
+                    rud_tgt_deg = calFuzzy(RUD_FUZZY_HDG_ADJ*hdgt_err*RAD2DEG, RUD_FUZZY_ROT_ADJ*rot_err*RAD2DEG);
+                    break;
+                case CTL_METHOD_PID:
+                    rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err);
+                    break;
+                default:
+                    rud_tgt_deg = 0.0;//15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
+                    break;
+                }
+
                 g_boat.rudder_angle_order = (int16_t)roundDEGtoRADem4(rud_tgt_deg);
 
                 PGN127237_ProcessNameField();
                 PGN127245_ProcessNameField();
 
-                printf("%s() CTRL ON: hdgt[cur:%03.1f tgt:%03.1f err:%03.1f] rot[%03.1f] rud[%03.1f]\n",__FUNCTION__, hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
+                printf("[%06d]CTRL %s: hdgt[cur:%03.1f tgt:%03.1f err:%03.1f] rot[%03.1f] rud[%03.1f]\n", cnt,
+                       g_boat.control_method == CTL_METHOD_FUZZY ? "FUZZY" : "PID",
+                        hdgt_cur_deg, hdgt_tgt_deg, hdgt_err*RAD2DEG, rot_cur_deg, rud_tgt_deg);
             }
             else
             {
                 g_boat.rudder_angle_order = N2K_DATA_NOT_AVAILABLE_INT16;
 
-                printf("%s() CTRL OFF - heading target off\n",__FUNCTION__);
+                printf("[%06d]CTRL OFF - heading target off\n", cnt);
             }
         }
         else
         {
-            printf("%s() CTRL OFF - heading true not available\n",__FUNCTION__);
+            printf("[%06d]CTRL OFF - heading true not available\n", cnt);
         }
 
         osDelayUntil(tick_tgt);

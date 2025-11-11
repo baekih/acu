@@ -19,10 +19,6 @@
 #define PM              (2)
 #define PB              (3)
 
-#define CTRL_FUZZY
-//#define CTRL_PID
-//#define CTRL_TEST
-
 #define FUZZY_GAIN_HDG      (1.0)
 #define FUZZY_GAIN_ROT      (1.0)
 #define RUD_FUZZY_GAIN      (1.0)

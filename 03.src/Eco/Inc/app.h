@@ -18,6 +18,8 @@ extern "C" {
 /* define --------------------------------------------------------------------*/
 #define VERSION     "0.91"
 
+#define CTL_METHOD_FUZZY    0
+#define CTL_METHOD_PID      1
 /* struct --------------------------------------------------------------------*/
 
 /* typedef -------------------------------------------------------------------*/
@@ -99,6 +101,7 @@ typedef struct _boat_status
     uint8_t  rudder_direction_order;
     int16_t  rudder_angle_order;
     int16_t  rudder_position;
+    uint8_t  control_method;
 } boat_status;
 
 /* macro ---------------------------------------------------------------------*/
