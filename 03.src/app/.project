@@ -39,7 +39,7 @@
 		<link>
 			<name>app.touchgfx</name>
 			<type>1</type>
-			<location>C:/dev/work/st/fi-din/03.src/app/TouchGFX/app.touchgfx</location>
+			<locationURI>PROJECT_LOC/TouchGFX/app.touchgfx</locationURI>
 		</link>
 		<link>
 			<name>Eco/BSP</name>
