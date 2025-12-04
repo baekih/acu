@@ -32,7 +32,19 @@
 #define DEG2RAD         (M_PI/180.0)
 #define RAD2DEG         (180.0/M_PI)
 
-#define K_HDG           (0.5)
+/*
+    Kh:0.2 Kr:0.2
+    2.5knot: hdg_err_bias:3deg   osc:none
+    5.0knot: hdg_err_bias:15deg  osc:none
+    Kh:0.5 Kr:0.2
+    2.5knot: hdg_err_bias:1deg   osc:none
+    5.0knot: hdg_err_bias:2~5deg osc:tiny
+    Kh:1.0 Kr:0.2
+    2.5knot: hdg_err_bias:none   osc:none
+    5.0knot: hdg_err_bias:????   osc:yes
+ */
+
+#define K_HDG           (0.2)
 #define K_ROT           (0.2)
 #define RUD_MAX         (15.0)
 
@@ -111,6 +123,6 @@ extern control g_control;
 
 /* function prototypes -------------------------------------------------------*/
 float calFuzzy(float hdg_err, float rot_err);
-float calPID(float hdg_err, float rot_err);
+float calPID(float hdg_err, float rot_err, float hdg_ierr, float k_hdg, float k_rot, float k_ihdg);
 
 #endif /* APPLICATION_USER_ECOTRONIX_INC_CONTROL_H_ */

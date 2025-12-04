@@ -2,6 +2,9 @@
 
 #include "eco.h"
 
+
+
+
 ControlView::ControlView():
     sliderValueChangedCallback(this, &ControlView::sliderValueChangedCallbackHandler),
     buttonCallback(this, &ControlView::buttonCallbackHandler)
@@ -87,6 +90,13 @@ void ControlView::sliderValueChangedCallbackHandler(const touchgfx::Slider& src,
 
 void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
 {
+    static uint32_t tick_prev;
+    uint32_t tick_curr = osKernelGetTickCount();
+
+    if(tick_curr < tick_prev + TOUCH_GLITCH_TIME_MS) return;
+
+    tick_prev = tick_curr;
+
     if(&src == &BTN_STOP)
     {
         printf("BTN_STOP\n");
@@ -118,26 +128,38 @@ void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
     }
     else if (&src == &BTN_KH_DEC)
     {
+        if(0 < k_hdge_idx) --k_hdge_idx;
+
         printf("BTN_KH_DEC\r\n");
     }
     else if (&src == &BTN_KH_INC)
     {
+        if(k_hdge_idx < K_IDX_MAX-1) ++k_hdge_idx;
+
         printf("BTN_KH_INC\r\n");
     }
     else if (&src == &BTN_KR_DEC)
     {
+        if(0 < k_rote_idx) --k_rote_idx;
+
         printf("BTN_KR_DEC\r\n");
     }
     else if (&src == &BTN_KR_INC)
     {
+        if(k_rote_idx < K_IDX_MAX-1) ++k_rote_idx;
+
         printf("BTN_KR_INC\r\n");
     }
     else if (&src == &BTN_KI_DEC)
     {
+        if(0 < k_hdgi_idx) --k_hdgi_idx;
+
         printf("BTN_KI_DEC\r\n");
     }
     else if (&src == &BTN_KI_INC)
     {
+        if(k_hdgi_idx < K_IDX_MAX-1) ++k_hdgi_idx;
+
         printf("BTN_KI_INC\r\n");
     }
     else if(&src == &TGL_CTL)
@@ -277,6 +299,18 @@ void ControlView::handleTickEvent()
     {
         g_boat.control_method = CTL_METHOD_FUZZY;
     }
+
+    g_boat.k_heading = k_hdge_gain[k_hdge_idx];
+    Unicode::snprintfFloat(KH_VARBuffer, KH_VAR_SIZE, "%f", g_boat.k_heading);
+    KH_VAR.invalidate();
+
+    g_boat.k_rateofturn = k_rote_gain[k_rote_idx];
+    Unicode::snprintfFloat(KR_VARBuffer, KR_VAR_SIZE, "%f", g_boat.k_rateofturn);
+    KR_VAR.invalidate();
+
+    g_boat.k_heading_integral = k_hdgi_gain[k_hdgi_idx];
+    Unicode::snprintfFloat(KI_VARBuffer, KI_VAR_SIZE, "%f", g_boat.k_heading_integral);
+    KI_VAR.invalidate();
 
 //    if(0 == cnt%50) printf("[%06ld]ControlView::handleTickEvent()\n", cnt);
 //    cnt++;

@@ -229,9 +229,9 @@ float convertRule2Val(int rule)
     return 0.0; //never reach. avoid warning only.
 }
 
-float calPID(float hdg_err, float rot_err)  //PID control
+float calPID(float hdg_err, float rot_err, float hdg_ierr, float k_hdg, float k_rot, float k_ihdg)  //PID control
 {
-    float rud_val = (-K_HDG) * hdg_err + (-K_ROT) * rot_err;
+    float rud_val = (-k_hdg) * hdg_err + (-k_rot) * rot_err + (-k_ihdg) * hdg_ierr;
 
     if(fabsf(rud_val) > RUD_MAX*DEG2RAD) rud_val = copysignf(RUD_MAX*DEG2RAD, rud_val);
 

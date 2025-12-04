@@ -516,10 +516,10 @@
           {
             "Type": "TextArea",
             "Name": "KH_VAR",
-            "X": 665,
-            "Y": 193,
-            "Width": 77,
-            "Height": 37,
+            "X": 638,
+            "Y": 179,
+            "Width": 104,
+            "Height": 45,
             "TextId": "__SingleUse_6ZYK",
             "TextRotation": "0",
             "Color": {
@@ -537,8 +537,8 @@
           {
             "Type": "Button",
             "Name": "BTN_KH_DEC",
-            "X": 630,
-            "Y": 194,
+            "X": 596,
+            "Y": 188,
             "Width": 36,
             "Height": 36,
             "Pressed": "__generated\\alternate_theme_images_widgets_button_icon_rounded_micro_fill_pressed.png",
@@ -548,8 +548,8 @@
           {
             "Type": "Button",
             "Name": "BTN_KH_INC",
-            "X": 743,
-            "Y": 194,
+            "X": 747,
+            "Y": 188,
             "Width": 36,
             "Height": 36,
             "Pressed": "__generated\\alternate_theme_images_widgets_button_icon_rounded_micro_fill_pressed.png",
@@ -559,10 +559,10 @@
           {
             "Type": "TextArea",
             "Name": "KH_TXT",
-            "X": 594,
-            "Y": 193,
-            "Width": 36,
-            "Height": 37,
+            "X": 540,
+            "Y": 179,
+            "Width": 47,
+            "Height": 45,
             "TextId": "__SingleUse_G8XJ",
             "TextRotation": "0",
             "Color": {
@@ -575,10 +575,10 @@
           {
             "Type": "TextArea",
             "Name": "KR_TXT",
-            "X": 594,
-            "Y": 243,
-            "Width": 30,
-            "Height": 37,
+            "X": 540,
+            "Y": 235,
+            "Width": 40,
+            "Height": 45,
             "TextId": "__SingleUse_SGY1",
             "TextRotation": "0",
             "Color": {
@@ -591,10 +591,10 @@
           {
             "Type": "TextArea",
             "Name": "KI_TXT",
-            "X": 594,
-            "Y": 292,
-            "Width": 27,
-            "Height": 37,
+            "X": 540,
+            "Y": 288,
+            "Width": 36,
+            "Height": 45,
             "TextId": "__SingleUse_E2IN",
             "TextRotation": "0",
             "Color": {
@@ -607,10 +607,10 @@
           {
             "Type": "TextArea",
             "Name": "KR_VAR",
-            "X": 665,
-            "Y": 243,
-            "Width": 77,
-            "Height": 37,
+            "X": 638,
+            "Y": 235,
+            "Width": 104,
+            "Height": 45,
             "TextId": "__SingleUse_VFNB",
             "TextRotation": "0",
             "Color": {
@@ -628,10 +628,10 @@
           {
             "Type": "TextArea",
             "Name": "KI_VAR",
-            "X": 665,
-            "Y": 292,
-            "Width": 77,
-            "Height": 37,
+            "X": 638,
+            "Y": 288,
+            "Width": 104,
+            "Height": 45,
             "TextId": "__SingleUse_RRP5",
             "TextRotation": "0",
             "Color": {
@@ -649,7 +649,7 @@
           {
             "Type": "Button",
             "Name": "BTN_KR_DEC",
-            "X": 629,
+            "X": 596,
             "Y": 244,
             "Width": 36,
             "Height": 36,
@@ -660,7 +660,7 @@
           {
             "Type": "Button",
             "Name": "BTN_KR_INC",
-            "X": 743,
+            "X": 747,
             "Y": 244,
             "Width": 36,
             "Height": 36,
@@ -671,8 +671,8 @@
           {
             "Type": "Button",
             "Name": "BTN_KI_DEC",
-            "X": 629,
-            "Y": 292,
+            "X": 596,
+            "Y": 297,
             "Width": 36,
             "Height": 36,
             "Pressed": "__generated\\alternate_theme_images_widgets_button_icon_rounded_micro_fill_pressed.png",
@@ -682,8 +682,8 @@
           {
             "Type": "Button",
             "Name": "BTN_KI_INC",
-            "X": 742,
-            "Y": 292,
+            "X": 747,
+            "Y": 297,
             "Width": 36,
             "Height": 36,
             "Pressed": "__generated\\alternate_theme_images_widgets_button_icon_rounded_micro_fill_pressed.png",

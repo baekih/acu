@@ -102,6 +102,10 @@ typedef struct _boat_status
     int16_t  rudder_angle_order;
     int16_t  rudder_position;
     uint8_t  control_method;
+    float  k_heading;
+    float  k_rateofturn;
+    float  k_heading_integral;
+
 } boat_status;
 
 /* macro ---------------------------------------------------------------------*/

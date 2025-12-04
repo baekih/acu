@@ -306,6 +306,9 @@ void runEcoTaskControl(void *argument)
             float rot_cur_deg = rot_cur*RAD2DEG;
             float hdgt_err = hdgt_tgt - hdgt_cur;
             float rot_err = 0.0 - rot_cur;
+            float k_heading = g_boat.k_heading;
+            float k_rateofturn = g_boat.k_rateofturn;
+            float k_heading_integral = g_boat.k_heading_integral;
 
             if(180.0*DEG2RAD < fabsf(hdgt_err)) hdgt_err += 360.0*DEG2RAD;
 
@@ -317,7 +320,7 @@ void runEcoTaskControl(void *argument)
                     rud_tgt_deg = calFuzzy(RUD_FUZZY_HDG_ADJ*hdgt_err*RAD2DEG, RUD_FUZZY_ROT_ADJ*rot_err*RAD2DEG);
                     break;
                 case CTL_METHOD_PID:
-                    rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err);
+                    rud_tgt_deg = RAD2DEG * calPID(hdgt_err, rot_err, 0, k_heading, k_rateofturn, k_heading_integral);
                     break;
                 default:
                     rud_tgt_deg = 0.0;//15.0*sinf(2.0*M_PI*((float)cnt)*0.01);
