@@ -16,6 +16,12 @@ void ControlView::setupScreen()
     BTN_STOP.setAction(buttonCallback);
     BTN_HDGT_LEFT.setAction(buttonCallback);
     BTN_HDGT_RIGHT.setAction(buttonCallback);
+    BTN_KH_DEC.setAction(buttonCallback);
+    BTN_KH_INC.setAction(buttonCallback);
+    BTN_KR_DEC.setAction(buttonCallback);
+    BTN_KR_INC.setAction(buttonCallback);
+    BTN_KI_DEC.setAction(buttonCallback);
+    BTN_KI_INC.setAction(buttonCallback);
     TGL_CTL.setAction(buttonCallback);
 }
 
@@ -109,6 +115,30 @@ void ControlView::buttonCallbackHandler(const touchgfx::AbstractButton& src)
         g_boat.heading_target = (uint16_t)roundDEGtoRADem4((float)hdgt_tgt_deg);
 
         printf("BTN_HDGT_RIGHT hdgt_tgt_deg[%d]\r\n", hdgt_tgt_deg);
+    }
+    else if (&src == &BTN_KH_DEC)
+    {
+        printf("BTN_KH_DEC\r\n");
+    }
+    else if (&src == &BTN_KH_INC)
+    {
+        printf("BTN_KH_INC\r\n");
+    }
+    else if (&src == &BTN_KR_DEC)
+    {
+        printf("BTN_KR_DEC\r\n");
+    }
+    else if (&src == &BTN_KR_INC)
+    {
+        printf("BTN_KR_INC\r\n");
+    }
+    else if (&src == &BTN_KI_DEC)
+    {
+        printf("BTN_KI_DEC\r\n");
+    }
+    else if (&src == &BTN_KI_INC)
+    {
+        printf("BTN_KI_INC\r\n");
     }
     else if(&src == &TGL_CTL)
     {

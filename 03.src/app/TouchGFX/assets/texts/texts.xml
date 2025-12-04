@@ -95,8 +95,32 @@
       </Text>
     </TextGroup>
     <TextGroup Id="Unsorted">
-      <Text Id="__SingleUse_8HTH" Alignment="Left" TypographyId="TYPEPO_25PX">
-        <Translation Language="GB">FUZZY    PID</Translation>
+      <Text Id="__SingleUse_CYVQ" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_RRP5" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_HW78" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_VFNB" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_E2IN" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">Ki</Translation>
+      </Text>
+      <Text Id="__SingleUse_SGY1" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">Kr</Translation>
+      </Text>
+      <Text Id="__SingleUse_U67S" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">0.000</Translation>
+      </Text>
+      <Text Id="__SingleUse_G8XJ" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">Kh</Translation>
+      </Text>
+      <Text Id="__SingleUse_6ZYK" Alignment="Left" TypographyId="TYPEPO_30PX">
+        <Translation Language="GB">&lt;value&gt;</Translation>
       </Text>
       <Text Id="HDGT_TGT_40" Alignment="Right" TypographyId="TYPEPO_40PX">
         <Translation Language="GB">&lt;*&gt;</Translation>
